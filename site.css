@@ -195,6 +195,14 @@ code {
   display: none;
 }
 
+/* AI 에이전트용 설명서 — 페이지가 아니라 문서라 점선 알약으로 구분한다 */
+.k-nav a[data-demo-nav-ai] {
+  margin-inline-start: 0.4rem;
+  border: 1px dashed var(--k-ink-2);
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
 /* ── 공통 부품 ────────────────────────────────────────── */
 .k-btn {
   display: inline-flex;

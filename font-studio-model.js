@@ -89,6 +89,7 @@
     "--fy-hoek-rotate",
     "--fy-hoek-scale-x",
     "--fy-hoek-scale-y",
+    "--fy-glow",
     "--fy-optical-sprite-zoom",
     "--fy-optical-sprite-crop-x",
     "--fy-optical-sprite-crop-y",

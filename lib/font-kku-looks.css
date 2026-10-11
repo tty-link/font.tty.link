@@ -30,23 +30,17 @@
   :where(.kku-look-neon:not([data-fy-material])) {
     color: #ffc2f1;
     text-shadow: 0 0 0.04em #fff, 0 0 0.12em #ff4fd8, 0 0 0.3em #ff2fb0, 0 0 0.6em #b0007a;
+    --fy-font-glow: drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.12em color-mix(in srgb, currentColor 80%, transparent)) drop-shadow(0 0 0.25em color-mix(in srgb, currentColor 55%, transparent));
   }
   :where(.kku-look-neon:not([data-fy-material])) [part~="jamo"] {
+    color: #ff4fd8;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke-color: #ff6fdf;
+    text-shadow: 0 0 0.04em #fff;
   }
   :where(.kku-look-neon:not([data-fy-material])) [part~="jungseong"] {
+    color: #3fd8ff;
     -webkit-text-stroke-color: #6ff4ff;
-    text-shadow: 0 0 0.04em #fff, 0 0 0.12em #5ef2ff, 0 0 0.3em #19c6ff, 0 0 0.6em #0077b6;
-  }
-  :where(.kku-look-neon:not([data-fy-material])) [part~="jungseong"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
-    text-shadow: 0 0 0.04em #fff, 0 0.04em 0.12em #5ef2ff, 0 0.12em 0.26em #19c6ff;
-  }
-  :where(.kku-look-neon:not([data-fy-material])) [part~="jungseong"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
-    text-shadow: 0 0 0.04em #fff, 0 -0.04em 0.12em #5ef2ff, 0 -0.12em 0.26em #19c6ff;
-  }
-  :where(.kku-look-neon:not([data-fy-material])) [part~="jungseong"]:is([data-fy-pos="ttr"][data-jamo="ᅥ"], [data-jamo="ᅨ"]:is([data-fy-pos="tro"], [data-fy-pos="trc"])) {
-    text-shadow: 0 0 0.04em #fff, 0.04em 0 0.12em #5ef2ff, 0.12em 0 0.26em #19c6ff;
   }
   :where(.kku-look-neon[data-fy-material]) {
     color: #ffc2f1;

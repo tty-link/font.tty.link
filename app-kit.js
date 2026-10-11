@@ -23,7 +23,7 @@
 
   /* 기기 글꼴 재료 글꼴 — 글꼴 없는 모드에서 그림 자소 글꼴로 바꾼다 */
   var SYSTEM_FONTS = ["sebul", "gothic", "neon", "sticker", "malang", "retro", "saekdong", "geumbak", "glitch", "riso", "blueprint", "default", "classic", "gothic2"];
-  var NAV_EN = { index: "Intro", showcase: "Cases", fonts: "Fonts", effects: "Motion", docs: "Docs", "font-studio": "Studio" };
+  var NAV_EN = { index: "Intro", showcase: "Cases", fonts: "Fonts", effects: "Motion", docs: "Docs", "font-studio": "Studio", skill: "AI guide" };
   var LAYOUT_LABELS = {
     dubeol: { ko: "두벌식", en: "2-set" },
     "sebeol-390": { ko: "세벌식 390", en: "3-set 390" },
@@ -81,9 +81,9 @@
         swapFont(host, target);
       }
     });
-    Array.prototype.forEach.call(document.querySelectorAll("[data-demo-nav-link]"), function (link) {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-demo-nav-link], [data-demo-nav-ai]"), function (link) {
       var label = link.querySelector(".demo-nav-label");
-      var en = NAV_EN[link.getAttribute("data-demo-nav-link")];
+      var en = link.hasAttribute("data-demo-nav-ai") ? NAV_EN.skill : NAV_EN[link.getAttribute("data-demo-nav-link")];
       if (label && en) {
         label.textContent = en;
       }

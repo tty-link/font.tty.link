@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="alternate" type="text/markdown" href="lib/skill/SKILL.md" title="AI 에이전트용 사용 설명서 (SKILL.md)" />
     <title>font-kku — 자음 19, 모음 21로 한글 11,172자를 그리는 자소 조립 런타임</title>
     <meta name="description" content="폰꾸(font-kku)는 한글을 초성·중성·종성으로 나눠 다시 조립해 그립니다. 글꼴 파일 없이 스크립트 한 줄로 웹 제목을 꾸미고, AI에게 설명서 링크를 주어 문서를 꾸미거나 나만의 글꼴을 만들고, 봇·터미널에서 한글을 크게 강조합니다." />
     <meta property="og:title" content="폰꾸 — 글꼴 파일 없이, 한 줄로 꾸미는 한글" />
@@ -26,7 +27,7 @@
           <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20">꾸</font-kku></span>
           <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
         </a>
-        <nav class="k-nav" aria-label="사이트" data-demo-nav></nav>
+        <nav class="k-nav" aria-label="사이트" data-demo-nav><a href="lib/skill/SKILL.md" data-demo-nav-ai>AI 설명서 (SKILL.md)</a></nav>
       </div>
     </header>
 
@@ -567,8 +568,10 @@
                 <pre id="ai-prompt"></pre>
               </div>
               <p class="k-note">
-                AI가 링크를 열지 못하면(웹 검색이 꺼져 있거나 npm 공개 전)
-                <button type="button" class="k-inline-btn" data-copy-skill>설명서 내용 복사</button>로 내용을 통째로 붙여 넣으세요.
+                AI가 링크를 열지 못하면(웹 검색이 꺼져 있을 때)
+                <button type="button" class="k-inline-btn" data-copy-skill>설명서 전체 복사</button>로 목차와 주제 파일을 통째로 붙여 넣으세요.
+                웹을 열 수 있는 AI에게는 사이트 주소 <code>https://font.tty.link/</code>만 줘도 됩니다 — 머리말의 "AI 설명서"와
+                <code>llms.txt</code>가 설명서를 가리킵니다.
                 Claude Code는 <code>skills/font-kku-use</code> 폴더를 <code>~/.claude/skills/</code>에 넣어 두면 링크 없이 씁니다.
               </p>
             </div>

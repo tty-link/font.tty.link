@@ -76,6 +76,7 @@ stages"로 끝난다. 릴리스 판정은 필요한 환경(macOS)에서 생략 �
 | HTML spec | `.venv/bin/python scripts/generate_html_cases.py` | 생성 전후 `html-cases.json` hash 동일 |
 | Browser smoke | `.venv/bin/python -m pytest tests/test_playwright_smoke.py -q` | file/server 런타임과 데모 화면 통과 |
 | Static HTML parity | `.venv/bin/python tests/static_html_parity.py` | 커밋된 HTML 케이스 전체의 DOM/style/geometry 정합 |
+| Sprite cell coverage | `.venv/bin/python tests/sprite_cell_coverage.py` | sprite-system과 파생 그림 자소 글꼴마다 11,172자가 고르는 자소판 칸(`r<행>-<자모>`)이 SVG에 모두 있음 — 빈칸은 겹침·획 굵기 감사가 잡지 못한다 |
 | Visual regression | `.venv/bin/python tests/visual_regression.py` | 현재 플랫폼 기준선의 픽셀 임계값 통과 |
 | Overlap audit | `.venv/bin/python scripts/glyph_overlap_audit.py --policy tests/overlap-policy.json` | 모든 글꼴의 음절 내부 잉크 겹침이 정책 안 (darwin 전용, 다른 플랫폼은 사유와 함께 SKIPPED) |
 | Stroke audit | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json` | 자기 획을 가진 글꼴(기반·그림 자소 파생)의 자모·자리별 획 굵기가 고르다 — 가로모음 막대·세로모음 기둥·자음 획이 기준(세로모음 기둥)에서 허용 폭 안, 의도한 차이는 사유와 함께 정책에 (darwin 전용) |

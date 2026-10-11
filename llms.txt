@@ -1,0 +1,39 @@
+# 폰꾸 (font-kku)
+
+> 한글을 초성·중성·종성으로 나눠 다시 조립해 그리는 브라우저 런타임이다. 스크립트 한 줄로 웹 제목과 강조 문구를 네온·스티커·색동·도장 같은 글꼴로 꾸미고, 꾸밈·움직임·상호작용을 조합하고, 나만의 꾸밈 글꼴이나 직접 그린 그림 자소 글꼴을 만들고, 봇·터미널에서 한글을 크게 강조한다.
+
+AI agents: before building anything with font-kku, read the usage guide [SKILL.md](https://font.tty.link/lib/skill/SKILL.md). It is a table of contents — open only the topic files your task needs.
+
+AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)를 먼저 읽는다. SKILL.md는 목차다 — 할 일에 맞는 주제 파일만 더 연다. 런타임은 `<script src="https://font.tty.link/lib/font-kku.js" data-fonts="neon sticker"></script>` 한 줄로 붙인다.
+
+## 사용 설명서
+
+- [SKILL.md](https://font.tty.link/lib/skill/SKILL.md): 목차, 가장 짧은 사용법, 꼭 지킬 것, 주소
+- [setup.md](https://font.tty.link/lib/skill/setup.md): 스크립트 한 줄 설치, 속성 표, 동적 변경·재시도
+- [fonts.md](https://font.tty.link/lib/skill/fonts.md): 기본 제공 글꼴과 필요한 바탕
+- [compose.md](https://font.tty.link/lib/skill/compose.md): 꾸밈·변주·움직임·상호작용·테마
+- [styling.md](https://font.tty.link/lib/skill/styling.md): 페이지 CSS로 자소 색 바꾸기, 씨앗
+- [custom-font.md](https://font.tty.link/lib/skill/custom-font.md): 나만의 꾸밈 글꼴
+- [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md): 자모를 SVG로 그려 그림 자소 글꼴 만들기, 글꼴 파일 내보내기
+- [examples.md](https://font.tty.link/lib/skill/examples.md): 완성 HTML과 사례 템플릿 14종
+- [terminal.md](https://font.tty.link/lib/skill/terminal.md): 봇·터미널에서 한글 크게
+- [no-hangul-device.md](https://font.tty.link/lib/skill/no-hangul-device.md): 한글 글꼴·입력기 없는 기기
+- [troubleshooting.md](https://font.tty.link/lib/skill/troubleshooting.md): 확인과 문제 해결
+
+## 라이브러리
+
+- [font-kku.js](https://font.tty.link/lib/font-kku.js): 런타임. 글꼴 CSS(`profiles/<글꼴>.css`)와 확장은 같은 폴더에서 런타임이 받는다
+- [spec/themes.json](https://font.tty.link/lib/spec/themes.json): 이름 있는 조합(테마) 목록
+- [spec/fonts.json](https://font.tty.link/lib/spec/fonts.json): 글꼴 목록
+
+## 데모
+
+- [소개](https://font.tty.link/): 대표 쓰임과 AI 프롬프트
+- [사례](https://font.tty.link/showcase.html): 완성 템플릿 14종(소스를 본보기로 읽는다)
+- [글꼴](https://font.tty.link/fonts.html): 테마 갤러리, 조합기, 글꼴 견본
+- [움직임](https://font.tty.link/effects.html): 자모 움직임과 상호작용
+- [문서](https://font.tty.link/docs.html): 설치·속성·꾸미기·API
+
+## Optional
+
+- [README](https://font.tty.link/lib/README.md): 전체 설명과 계약

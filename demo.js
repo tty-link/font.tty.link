@@ -57,6 +57,11 @@
     }
   }
 
+  /* AI 에이전트용 사용 설명서 — 페이지 이동이 아니라 문서 링크라 data-demo-nav-link 없이 메뉴 끝에 둔다.
+   * JS 없이 페이지를 글로 읽는 도구를 위해 공개 페이지의 <nav> 원본과 <head>(rel="alternate")에도 같은
+   * 링크를 적어 두었다 — 메뉴를 그리면 이 함수가 원본 링크를 덮는다. 사이트 루트의 llms.txt도 같은 곳을 가리킨다. */
+  var AI_GUIDE_HREF = "lib/skill/SKILL.md";
+
   function navMarkup(activeSlug) {
     var activeNav = aliases[activeSlug] || activeSlug;
     return pages
@@ -68,7 +73,9 @@
           "</a>"
         );
       })
-      .join("");
+      .join("") +
+      '<a href="' + AI_GUIDE_HREF + '" data-demo-nav-ai title="AI 에이전트용 사용 설명서(SKILL.md) — AI에게 이 주소를 주세요">' +
+      '<span class="demo-nav-label">AI 설명서</span></a>';
   }
 
   function debugToggleMarkup(enabled) {

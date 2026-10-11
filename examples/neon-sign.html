@@ -84,16 +84,12 @@
     .since { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.4em; color: #ffb3ee; }
     .shop-name { margin: 0; line-height: 1; }
 
-    /* "영업 중"은 초록 관 — 페이지 CSS가 글꼴의 관 색을 덮는다 */
+    /* "영업 중"은 초록 관 — 페이지 CSS가 글꼴의 관 색(외곽선)과 빛 색(color)을 덮는다.
+     * 네온의 빛번짐은 자모의 color를 따르는 빛 칠이라, 중의 ㅜ처럼 잘라 그린 모음도 빛이 끊기지 않는다 */
     .open-sign { margin: 0; color: var(--green); text-shadow: 0 0 0.12em #3dff8f; }
     .open-sign [part~="jamo"] {
+      color: var(--green);
       -webkit-text-stroke-color: var(--green);
-      text-shadow: 0 0 0.04em #fff, 0 0 0.12em #3dff8f, 0 0 0.3em #12d66b, 0 0 0.6em #00873f;
-    }
-    /* 받침 위 가로 모음(중의 ㅜ)은 글꼴이 아래를 잘라 그린다 — 넓은 빛번짐이 자른 상자에서
-     * 끊기지 않게 중성 빛은 가깝게만 낸다 */
-    .open-sign [part~="jungseong"] {
-      text-shadow: 0 0 0.04em #fff, 0 0 0.1em #3dff8f, 0 0 0.18em #12d66b;
     }
 
     /* 고장 난 관 — '업'의 받침 ㅂ 하나만 불규칙하게 깜빡인다. 글자 칸의 data-source로
@@ -137,6 +133,7 @@
     .wall.is-off .sign [part~="jamo"] {
       -webkit-text-stroke-color: #5a4c5c;
       text-shadow: none;
+      --fy-glow: none;
       animation: none;
     }
     .wall.is-off .shop-name, .wall.is-off .open-sign { color: #5a4c5c; text-shadow: none; }

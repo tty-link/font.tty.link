@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="alternate" type="text/markdown" href="lib/skill/SKILL.md" title="AI 에이전트용 사용 설명서 (SKILL.md)" />
   <title>문서 — 폰꾸 font-kku</title>
   <meta name="description" content="폰꾸(font-kku) 문서 — 한 줄 설치, 바탕 요소와 속성, 글꼴 고르기, 줄바꿈, 페이지 CSS로 꾸미기, 조합(글꼴·꾸밈·변주·움직임·상호작용·바탕과 테마), 움직임과 변주, 평문 모드, AI와 쓰기, 글꼴 만들기, JavaScript API 레퍼런스." />
   <script src="lib/font-kku.js" data-fonts="sebul" data-addons="looks motion fx"></script>
@@ -17,7 +18,7 @@
         <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20">꾸</font-kku></span>
         <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
       </a>
-      <nav class="k-nav" aria-label="사이트" data-demo-nav></nav>
+      <nav class="k-nav" aria-label="사이트" data-demo-nav><a href="lib/skill/SKILL.md" data-demo-nav-ai>AI 설명서 (SKILL.md)</a></nav>
     </div>
   </header>
 
@@ -1248,12 +1249,24 @@ message = "```\n" + "\n".join(render_text("배포 완료")) + "\n```"</code></pr
 가게 이름 '딸기 공방'으로 기반 글꼴과 나란히 비교하는 미리보기 HTML도 함께.</code></pre>
         </div>
 
+        <h3 id="ai-site-only">사이트 주소만 줄 때</h3>
+        <p>
+          웹을 열 수 있는 AI에게는 <code>https://font.tty.link/</code>만 주고 "이 사이트의 폰꾸로 만들어 줘"라고 해도 됩니다.
+          AI 에이전트를 위한 표준 태그는 따로 없어서, 에이전트가 흔히 보는 세 곳에 같은 설명서를 걸어 두었습니다.
+        </p>
+        <ul>
+          <li>모든 공개 페이지 머리말의 <strong>AI 설명서</strong> 링크 — 페이지를 글로 바꿔 읽는 도구도 첫 링크로 봅니다.</li>
+          <li>사이트 루트의 <a href="./llms.txt"><code>llms.txt</code></a> — AI용 사이트 안내 파일 관례(llmstxt.org).</li>
+          <li><code>&lt;head&gt;</code>의 <code>&lt;link rel="alternate" type="text/markdown"&gt;</code> — HTML을 직접 읽는 도구용.</li>
+        </ul>
+
         <h3 id="ai-no-link">AI가 링크를 열지 못할 때</h3>
         <p>
-          웹 검색이 꺼져 있거나 npm 공개 전이라 CDN 주소가 열리지 않으면, 설명서 내용을 통째로 대화창에 붙여 넣습니다.
+          웹 검색이 꺼져 있어 주소가 열리지 않으면, 설명서를 통째로 대화창에 붙여 넣습니다. 아래 버튼은 목차(SKILL.md)와
+          주제 파일을 한 글로 이어 복사합니다.
         </p>
         <p class="d-actions">
-          <button type="button" class="k-btn k-btn--primary" data-copy-skill>설명서 내용 복사</button>
+          <button type="button" class="k-btn k-btn--primary" data-copy-skill>설명서 전체 복사</button>
           <a class="k-btn" href="lib/skill/SKILL.md">설명서 열기</a>
         </p>
 

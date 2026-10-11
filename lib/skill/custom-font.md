@@ -28,7 +28,7 @@
 | 초성·중성·받침 색 | `color` (`[part~="choseong"]`, `[part~="head"]`, `[part~="jungseong"]`, `[part~="jongseong"]`) |
 | 굵기 | 바탕 요소에 `--fy-weight: 300~900` |
 | 외곽선 | `--fy-stroke: 0.03em` + `-webkit-text-stroke-color` |
-| 속 빈 글자(네온) | `-webkit-text-fill-color: transparent` + 외곽선 + `text-shadow` 빛번짐 |
+| 속 빈 글자(네온) | `-webkit-text-fill-color: transparent` + 외곽선 + 관 속 흰 심 `text-shadow: 0 0 0.04em #fff` + 빛번짐은 바탕 요소에 `--fy-glow: drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.15em currentColor)`(빛 색은 자모 `color`) |
 | 스티커 테두리 | 8방향 흰 `text-shadow` (`0.05em 0 #fff, -0.05em 0 #fff, 0 0.05em #fff, …`) |
 | 입체 그림자 | 같은 방향으로 겹친 `text-shadow` (`0.02em 0.02em 0 색, 0.04em 0.04em 0 색, …`) |
 | 손맛 흔들림 | `seed` + `jamo-seeds` 속성 + 변주 클래스 `class="kku-vary-tilt kku-vary-bob"`(꾸밈 확장 `data-addons="looks"`, 겹침 검사를 거친 폭). 굵기·너비·색조·농담은 `kku-vary-weight`·`kku-vary-width`·`kku-vary-hue`·`kku-vary-ink` — [compose.md](https://font.tty.link/lib/skill/compose.md) |
@@ -39,7 +39,7 @@
 - 자모 위치(`--fy-top`, `--fy-left`)와 크기는 바꾸지 않는다 — 조립이 무너진다.
 - 기울기는 변주 클래스에 맡긴다. 직접 기울일 때는 ±3° 이하, 세로 모음 옆 초성부터 준다 — 자모가 이웃 자모에 쉽게 닿는다(겹침 검사에서 ±3°로도 '꽤'·'셊'의 자모가 15% 넘게 포개졌다).
 - 굵기·외곽선은 작은 크기(24px)에서도 획이 뭉치지 않는지 본다.
-- 빛번짐(`text-shadow`)은 가깝게 둔다. 모음 일부를 잘라 그리는 글꼴은 넓은 빛번짐이 자른 선에서 곧게 끊겨 보인다.
+- 넓은 빛번짐은 `text-shadow`가 아니라 `--fy-glow`로 준다. `text-shadow`는 글자와 함께 잘려, 모음 일부를 잘라 그리는 글꼴(세벌·고딕)에서 자른 선에 곧게 끊겨 보인다. `--fy-glow`는 자른 뒤에 빛을 그린다.
 
 ## 결과 내기
 

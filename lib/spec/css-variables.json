@@ -610,6 +610,40 @@
       "declaredBy": "font"
     },
     {
+      "name": "--fy-font-glow",
+      "status": "stable",
+      "kind": "author",
+      "type": "filter",
+      "default": "none",
+      "surfaces": ["base-css", "runtime"],
+      "level": "font",
+      "scope": "host",
+      "declaredBy": "font"
+    },
+    {
+      "name": "--fy-ink-visibility",
+      "status": "stable",
+      "kind": "runtime",
+      "type": "keyword",
+      "default": "visible",
+      "values": ["visible", "hidden"],
+      "surfaces": ["base-css", "runtime"],
+      "level": "runtime",
+      "scope": "node",
+      "declaredBy": "runtime"
+    },
+    {
+      "name": "--fy-glow",
+      "status": "stable",
+      "kind": "author",
+      "type": "filter",
+      "default": "none",
+      "surfaces": ["base-css", "runtime"],
+      "level": "page",
+      "scope": "page",
+      "declaredBy": "page"
+    },
+    {
       "name": "--fy-sprite-fill",
       "status": "stable",
       "kind": "author",

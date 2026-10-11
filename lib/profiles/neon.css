@@ -388,39 +388,28 @@
 }
 /* END GENERATED: scripts/build_derived_fonts.js */
 
-/* 꾸밈 — 네온관. 속을 비운 획(외곽선)이 관이 되고, 빛번짐을 겹 그림자로 낸다.
- * 어두운 바탕에서 쓴다. 관 굵기는 sebul의 slot 외곽선 보정(0.026–0.047em)이다.
- * 초성·받침은 분홍, 중성은 하늘색 관. 페이지가 색을 바꾸려면 페이지 CSS에서
- * [part~="jamo"]의 -webkit-text-stroke-color와 text-shadow를 덮는다.
- * 비한글 글자는 host의 칠(채운 분홍 + 빛번짐)을 상속한다. */
+/* 꾸밈 — 네온관. 속을 비운 획(외곽선)이 관이 되고, 관 속 흰 심은 좁은 text-shadow, 빛번짐은
+ * 빛 칠(--fy-font-glow, ADR-021)의 drop-shadow 겹이다. 빛 칠은 글자를 자른 뒤에 빛을 그려, 세벌 배치가
+ * slot clip으로 자르는 모음(노·두·유의 ㅗ·ㅜ, 워의 ㅓ, 계의 ㅖ)도 자른 선에서 빛이 끊기지 않는다.
+ * 빛 색은 자모의 color(currentColor)를 따르고 바깥 겹일수록 옅다. 어두운 바탕에서 쓴다. 관 굵기는
+ * sebul의 slot 외곽선 보정(0.026–0.047em)이다. 초성·받침은 분홍, 중성은 하늘색 관.
+ * 페이지가 색을 바꾸려면 [part~="jamo"]의 color(빛)와 -webkit-text-stroke-color(관)를 덮는다.
+ * 빛을 끄려면 바탕 요소에 --fy-glow: none.
+ * 비한글 글자는 host의 칠(채운 분홍 + text-shadow 빛번짐)을 상속한다. */
 @layer font-kku.font {
   :where([data-fy-font="neon"]) {
     color: #ffc2f1;
     text-shadow: 0 0 0.04em #fff, 0 0 0.12em #ff4fd8, 0 0 0.3em #ff2fb0, 0 0 0.6em #b0007a;
+    --fy-font-glow: drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.12em color-mix(in srgb, currentColor 80%, transparent)) drop-shadow(0 0 0.25em color-mix(in srgb, currentColor 55%, transparent));
   }
   :where([data-fy-font="neon"]) [part~="jamo"] {
+    color: #ff4fd8;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke-color: #ff6fdf;
+    text-shadow: 0 0 0.04em #fff;
   }
   :where([data-fy-font="neon"]) [part~="jungseong"] {
+    color: #3fd8ff;
     -webkit-text-stroke-color: #6ff4ff;
-    text-shadow: 0 0 0.04em #fff, 0 0 0.12em #5ef2ff, 0 0 0.3em #19c6ff, 0 0 0.6em #0077b6;
-  }
-}
-
-@layer font-kku.jamo {
-  /* 자른 획 둘레의 빛 — 세벌 배치는 ㅗ·ㅛ 꼭지 위, ㅜ·ㅠ 내림획 아래, 워의 ㅓ·계의 ㅖ 왼쪽을 slot clip으로
-   * 자른다. clip은 그림자를 그린 뒤에 자르므로 넓은 빛번짐이 자른 선에서 곧게 끊겨 어두운 상자가 보였다
-   * (노·두·유). 이 모음은 가장 넓은 빛(0.6em)을 빼고 남은 빛을 자르는 쪽 반대로 민다 — 자른 선에 닿는
-   * 빛이 줄어 끊김이 거의 보이지 않는다. 빛을 자른 뒤에 그리는 SVG 필터는 Safari가 data: 주소로 받지
-   * 못하고, 페이지가 text-shadow로 관 빛을 바꾸는 계약도 깨져 쓰지 않는다. */
-  :where([data-fy-font="neon"]) [part~="jungseong"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
-    text-shadow: 0 0 0.04em #fff, 0 0.04em 0.12em #5ef2ff, 0 0.12em 0.26em #19c6ff;
-  }
-  :where([data-fy-font="neon"]) [part~="jungseong"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
-    text-shadow: 0 0 0.04em #fff, 0 -0.04em 0.12em #5ef2ff, 0 -0.12em 0.26em #19c6ff;
-  }
-  :where([data-fy-font="neon"]) [part~="jungseong"]:is([data-fy-pos="ttr"][data-jamo="ᅥ"], [data-jamo="ᅨ"]:is([data-fy-pos="tro"], [data-fy-pos="trc"])) {
-    text-shadow: 0 0 0.04em #fff, 0.04em 0 0.12em #5ef2ff, 0.12em 0 0.26em #19c6ff;
   }
 }

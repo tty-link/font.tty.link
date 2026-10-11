@@ -20,8 +20,8 @@
 .title [part~="jungseong"] { color: #1d4ed8; }
 .title [part~="jongseong"] { color: #f59e0b; }
 
-/* 네온 색 바꾸기 */
-.title [part~="jamo"] { -webkit-text-stroke-color: #7cf7d4; }
+/* 네온 색 바꾸기 — 관은 외곽선 색, 빛은 color를 따른다 */
+.title [part~="jamo"] { -webkit-text-stroke-color: #7cf7d4; color: #3dffc0; }
 
 /* 크레용 색 바꾸기 — 크레용은 자소판을 마스크로 써서 color가 그대로 크레용 색이 된다 */
 .title [part~="jungseong"] { color: #8e44ad; }
@@ -29,6 +29,7 @@
 
 - 선택자는 바탕 요소의 클래스(`.title`)에서 시작한다. `span { … }`처럼 요소 이름만 쓰지 않는다.
 - 자모 위치(`--fy-top`, `--fy-left`)와 크기는 바꾸지 않는다 — 조립이 무너진다.
+- 네온(`neon`·`kku-look-neon`)의 빛번짐은 자모를 자른 뒤에 그리는 빛 칠이다. 빛 모양은 `--fy-glow`(drop-shadow 목록)로 바꾸고, `--fy-glow: none`이면 끈다. 자모 `text-shadow`는 글자와 함께 잘리므로 넓은 빛에 쓰지 않는다. 네온 자모 하나를 숨길 때는 `visibility` 대신 `opacity: 0`을 쓴다.
 - 색·외곽선·그림자·굵기 같은 재료 전체 표는 [custom-font.md](https://font.tty.link/lib/skill/custom-font.md).
 
 자소마다 무작위로 살짝 기울이기:

@@ -221,6 +221,13 @@ a {
   color: var(--demo-ink);
 }
 
+/* AI 에이전트용 설명서 — 공개 페이지와 같은 점선 알약 */
+.demo-nav a[data-demo-nav-ai] {
+  margin-inline-start: 0.3rem;
+  border: 1px dashed var(--demo-ink-soft);
+  font-size: 0.85rem;
+}
+
 /* 공개 페이지(site.css .k-nav)와 같은 표시: 지금 페이지는 적색 밑줄, 작업실은 테두리 알약 */
 .demo-nav a[aria-current="page"] {
   color: var(--demo-ink);

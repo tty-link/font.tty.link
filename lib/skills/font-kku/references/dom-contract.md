@@ -64,6 +64,7 @@
 - `data-fy-material="sprite|bundled"`, `data-fy-sprite-kinds="consonant vowel [coda-cluster]"` — font의 `--fy-material`이 `system`이 아닐 때만(sprite kinds는 sprite 재료일 때만). 코어 sprite 재료 규칙의 게이트다. `system` font(sebul, gothic)에는 붙지 않으므로 사이드카 DOM 계약은 그대로다
 - `data-fy-sprite-paint="mask"` — sprite font의 바탕 요소에 `--fy-sprite-paint: mask`가 걸렸을 때(ADR-014). 부분 벡터 세트에서는 누락 칸의 자소판 마스크에 적용된다. 코어 마스크 규칙의 게이트다
 - `data-fy-material="vector"`, `data-fy-jamo-set="<name>"` — sprite font에 `jamo-set`이 걸리고 그 자모 세트가 등록돼 있을 때(ADR-013). 실제 SVG가 있는 노드에만 `data-fy-vector-cell`이 붙고 벡터 규칙이 적용된다. 없는 칸은 기반 자소판을 유지한다. 등록된 칸의 노드마다 `<svg part="vector" data-cell="r<행>-<자모>" viewBox="0 0 100 100" aria-hidden="true">`가 붙는다
+- `data-fy-glow="filter"` — 기기 글꼴 바탕 요소에 빛 칠(`--fy-font-glow`/페이지 `--fy-glow`, `none`이 아닌 drop-shadow 목록)이 걸렸을 때([ADR-021](../../../docs/ADR/ADR-021-glow-paint.md)). 코어가 자모 글자를 `::before`로 그리고 slot clip을 거기에 옮기며, 자모 노드는 글자를 숨기고 `filter`로 빛만 그린다. `::before`는 `--fy-ink-visibility`(기본 visible)를 따르므로, 이때 자모 하나를 숨기려면 `opacity`를 쓴다
 - `data-fy-stroke-depth="stroke|jamo"` — 획 깊이를 요청했을 때만(§3.4). 벡터 자소면 `stroke`, 획으로 쪼갤 수 없는 재료(기기 글꼴·자소판)면 `jamo`로 되돌린 것을 알린다
 - `data-source`
 - `aria-label`

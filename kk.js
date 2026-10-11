@@ -2,7 +2,8 @@
  *
  * - [data-copy="<선택자>"]     그 요소의 textContent를 복사한다
  * - [data-copy-text="<글>"]    속성 값을 그대로 복사한다
- * - [data-copy-skill]          AI 설명서(skills/font-kku-use/SKILL.md) 내용을 복사한다.
+ * - [data-copy-skill]          AI 설명서 전체(skills/font-kku-use/의 SKILL.md 목차와 그 표가 가리키는 주제
+ *                              파일)를 한 글로 이어 복사한다 — 링크를 열 수 없는 AI에 통째로 붙여 넣는다.
  *                              읽지 못하면 CDN의 설명서를 새 탭으로 연다
  * - [data-template="<경로>"]   그 템플릿 HTML을 CDN 주소로 바꿔 복사한다
  *   [data-template-download]  함께 붙이면 복사 대신 파일로 내려받는다
@@ -79,6 +80,25 @@
       "$1" + CDN + "$2$3");
   }
 
+  /* SKILL.md(목차) 뒤에 목차 표가 가리키는 같은 폴더의 주제 파일을 차례대로 잇는다. */
+  function skillBundle() {
+    var dir = SITE_ROOT + SKILL_PATH.replace(/[^/]+$/, "");
+    return fetchText(SITE_ROOT + SKILL_PATH).then(function (index) {
+      var names = [];
+      index.replace(/\[([a-z0-9-]+\.md)\]\(/g, function (match, name) {
+        if (name !== "SKILL.md" && names.indexOf(name) < 0) {
+          names.push(name);
+        }
+        return match;
+      });
+      return Promise.all(names.map(function (name) { return fetchText(dir + name); })).then(function (parts) {
+        return [index].concat(parts.map(function (text, i) {
+          return "\n\n---\n\n<!-- 파일: " + names[i] + " -->\n\n" + text;
+        })).join("");
+      });
+    });
+  }
+
   function fetchText(path) {
     return fetch(new URL(path, location.href).href).then(function (response) {
       if (!response.ok) {
@@ -108,7 +128,7 @@
     }
     button = target.closest("[data-copy-skill]");
     if (button) {
-      fetchText(SITE_ROOT + SKILL_PATH).then(function (text) {
+      skillBundle().then(function (text) {
         copyText(text, button);
       }, function () {
         window.open(SKILL_URL, "_blank", "noopener");
@@ -136,6 +156,7 @@
     SKILL_URL: SKILL_URL,
     copyText: copyText,
     toCdn: toCdn,
-    download: download
+    download: download,
+    skillBundle: skillBundle
   };
 })();

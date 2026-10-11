@@ -256,9 +256,11 @@
   75% { color: var(--kku-cycle-4, #1f4fd1); }
 }
 
+/* 빛 칠(ADR-021) 글꼴은 자모 노드의 filter가 빛번짐이다 — 번쩍임을 그 앞에 이어 붙여 빛을 지우지
+ * 않고, 함수 목록을 양 끝에서 같게 두어 부드럽게 보간한다. */
 @keyframes kku-shine-glint {
-  0%, 30%, 62%, 100% { filter: none; }
-  46% { filter: brightness(1.55) saturate(1.2); }
+  0%, 30%, 62%, 100% { filter: brightness(1) saturate(1) var(--fy-glow, var(--fy-font-glow, )); }
+  46% { filter: brightness(1.55) saturate(1.2) var(--fy-glow, var(--fy-font-glow, )); }
 }
 
 @keyframes kku-shine {

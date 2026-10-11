@@ -39,6 +39,7 @@
  * the attribute when the CSS arrives, fails, or after 3 seconds. */
 :where(font-kku, .font-kku)[data-fy-font-pending] [part="root"] {
   visibility: hidden;
+  --fy-ink-visibility: hidden;
 }
 
 :where(font-kku, .font-kku)[data-fy-upgraded="true"] {
@@ -239,9 +240,35 @@
   font-size: var(--fy-font-size, var(--fy-slot-font-size, var(--fy-role-font-size, 1em)));
   -webkit-text-stroke-width: var(--fy-stroke, var(--fy-slot-stroke, var(--fy-role-stroke, var(--fy-font-stroke, 0px))));
   clip-path: var(--fy-clip, var(--fy-slot-clip, var(--fy-role-clip, none)));
+  filter: var(--fy-glow, var(--fy-font-glow, none));
   line-height: 1;
   white-space: nowrap;
   transform-origin: top left;
+}
+
+/* 빛 칠(ADR-021) — 글꼴이 빛번짐을 --fy-font-glow(페이지는 --fy-glow, drop-shadow 목록)로 주면
+ * 런타임이 바탕 요소에 data-fy-glow를 찍는다. CSS는 한 요소에서 그림자·filter를 clip보다 먼저 그려,
+ * 자모 노드에 빛과 slot clip이 함께 있으면 넓은 빛이 자른 선에서 곧게 끊긴다(네온 '노'의 ㅗ 위 상자).
+ * 그래서 기기 글꼴 자모는 글자를 ::before가 그리고 slot clip도 ::before가 받으며, 자모 노드는 자기
+ * 글자를 숨긴 채(visibility) clip 없이 filter로 빛만 그린다 — 빛이 자른 뒤의 모양을 둘러싼다.
+ * 칠(color·외곽선·text-shadow·움직임의 배경 띠)은 ::before가 물려받는다. 표시가 없으면(런타임 없는
+ * 정적 HTML) 위 규칙대로 같은 노드에서 빛을 그린다. ::before는 숨긴 노드 안에서 다시 보이므로 조상의
+ * visibility를 따르지 않는다 — 글자를 가리는 쪽(글꼴 받는 동안의 root, 측정 도구)은 --fy-ink-visibility:
+ * hidden도 함께 내린다. 자모 하나를 숨기려면 opacity를 쓴다. */
+:where(font-kku, .font-kku)[data-fy-glow]:not([data-fy-material]) [part~="jamo"] {
+  clip-path: none;
+  visibility: hidden;
+}
+:where(font-kku, .font-kku)[data-fy-glow]:not([data-fy-material]) [part~="jamo"]::before {
+  content: attr(data-jamo);
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  visibility: var(--fy-ink-visibility, visible);
+  clip-path: var(--fy-clip, var(--fy-slot-clip, var(--fy-role-clip, none)));
+  background-image: inherit;
+  -webkit-background-clip: inherit;
+  background-clip: inherit;
 }
 
 /* BEGIN GENERATED CSS CONTRACT: dispatch */
