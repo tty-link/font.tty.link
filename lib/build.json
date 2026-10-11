@@ -1,9 +1,9 @@
 {
   "name": "font-kku",
   "version": "0.4.0",
-  "commit": "b0ec6e6",
-  "dirty": true,
-  "built": "2026-10-11T07:24:35+00:00",
+  "commit": "0293e65",
+  "dirty": false,
+  "built": "2026-10-11T08:16:16+00:00",
   "base": "https://font.tty.link/lib/",
   "skill": "https://font.tty.link/lib/skill/SKILL.md"
 }

@@ -38,7 +38,7 @@ npm run verify
 ```
 
 - 브라우저·그리기 엔진 도구 없이 빠른 계약만(수 초): `npm run verify:fast` — JS/터미널 명령 문법,
-  Node 테스트 모음, 문서, CSS 계약, 사본 동기화. `.venv` 없이 `python3`로 돈다. 릴리스 PASS가 아니다
+  Node 테스트 모음, 문서, 배포 트리 링크, CSS 계약, 사본 동기화. `.venv` 없이 `python3`로 돈다. 릴리스 PASS가 아니다
 - 플랫폼 시각 기준선 비교만 생략: `npm run verify -- --skip-visual`
 - darwin 실측 겹침 감사만 생략: `npm run verify -- --skip-overlap`
 - Playwright가 필요한 HTML/브라우저/정적/시각/겹침 단계를 생략:
@@ -61,6 +61,7 @@ stages"로 끝난다. 릴리스 판정은 필요한 환경(macOS)에서 생략 �
 | JS/CLI syntax | `node --check font-kku.js && node --check bin/font-kku-text.js` | 두 진입점이 파싱됨 |
 | Node contracts | `npm test` | 런타임/명세/패키지/자산/CSS/글꼴 작업실 모델 계약 통과 |
 | Documentation | `npm run test:docs` | 현행+보관 문서의 로컬 링크와 현행 문서 계약 검사 통과 |
+| Pages build | `python3 scripts/build_pages.py --check` | font.tty.link 배포 트리(루트 `site/`, `lib/` 패키지 파일, `lib/skill/` AI 설명서)의 상대 링크와 공개 주소 링크가 모두 실제 파일을 가리킴 |
 | CSS contract | `node scripts/check_css_contract.js --check` | 레지스트리/기본 CSS/런타임/글꼴/작업실/문서 정합 (별도 단계 — `npm test`도 부른다) |
 | Asset copies | `.venv/bin/python scripts/sync_assets.py --check` | 정본→사본 바이트 어긋남 없음 |
 | Sidecar mirror codegen | `node scripts/generate_sidecar_tables.js --check` | 4개 언어의 생성 미러(배치·깊이 덮어쓰기·글꼴 메타·별칭·그림 자소·Unicode 표)가 명세와 일치 |
@@ -81,8 +82,8 @@ stages"로 끝난다. 릴리스 판정은 필요한 환경(macOS)에서 생략 �
 | Sprite fixture | `.venv/bin/python scripts/verify.py --sprite-smoke` | PNG/report/CSS/hash 값 정합 |
 | Whitespace | `git diff --check` | 공백 오류 없음 |
 
-`npm run verify:fast`는 위 표의 앞 다섯 줄(JS/CLI syntax, Node contracts, Documentation, CSS
-contract, Asset copies)만 돈다.
+`npm run verify:fast`는 위 표의 앞 일곱 줄(JS/CLI syntax, Node contracts, Documentation, Pages
+build, CSS contract, Asset copies, Sidecar mirror codegen)만 돈다.
 
 JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실행 전후 hash를 비교해
 어긋남을 실패로 처리한다. 개별 명령을 직접 실행했다면 생성물 diff를 따로
