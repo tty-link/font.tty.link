@@ -1,0 +1,313 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 블로그 글. 글꼴: sebul gothic sticker. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>경주에서 보낸 느린 하루 — 느린 여행자의 기록</title>
+  <script src="../lib/font-kku.js" data-fonts="sebul gothic sticker"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --ink: #23212b;
+      --body: #3b3946;
+      --muted: #8a8696;
+      --line: #ece9f1;
+      --accent: #d9534f;
+      --leaf: #3f7d4e;
+    }
+
+    body {
+      margin: 0;
+      background: #fff;
+      color: var(--body);
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    a { color: inherit; }
+
+    /* 블로그 머리 */
+    .site-bar {
+      border-bottom: 1px solid var(--line);
+      background: rgb(255 255 255 / 92%);
+    }
+    .site-bar .inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .logo i {
+      width: 26px;
+      height: 26px;
+      border-radius: 50% 50% 50% 4px;
+      background: linear-gradient(135deg, #f6a04d, var(--accent));
+    }
+    .site-nav { display: flex; gap: 18px; font-size: 14px; color: var(--muted); }
+    .site-nav a { text-decoration: none; }
+    .site-nav a[aria-current] { color: var(--ink); font-weight: 700; }
+
+    /* 본문 읽기 폭 */
+    .post {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 20px 72px;
+    }
+
+    .crumb {
+      display: inline-flex;
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: #fdf0ec;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* 제목: 폰꾸 세벌. 받침만 노을색으로 */
+    .post-title { margin: 0; color: var(--ink); }
+    .post-title [part~="jongseong"] { color: var(--accent); }
+
+    .byline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 22px 0 32px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .avatar {
+      flex: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #ffd8a8, #f4978e);
+      color: #fff;
+      font-weight: 800;
+    }
+    .byline strong { display: block; color: var(--ink); font-size: 15px; }
+
+    /* 표지 그림 — 노을 진 하늘과 봉긋한 고분 능선 (CSS 그림) */
+    .hero { margin: 0 0 36px; }
+    .hero .art {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: 18px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 70% 58%, #fff4d6 0 5%, rgb(255 228 170 / 70%) 6%, transparent 18%),
+        linear-gradient(180deg, #7d5ba6 0%, #c97b9b 38%, #f4a582 62%, #ffd6a5 80%);
+    }
+    .hero .art::before,
+    .hero .art::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 55%;
+    }
+    .hero .art::before {
+      background:
+        radial-gradient(ellipse 34% 62% at 22% 100%, #4c6b3a 98%, transparent 100%),
+        radial-gradient(ellipse 28% 46% at 58% 100%, #557a40 98%, transparent 100%),
+        radial-gradient(ellipse 30% 70% at 94% 100%, #4a6738 98%, transparent 100%);
+    }
+    .hero .art::after {
+      height: 32%;
+      background:
+        radial-gradient(ellipse 26% 70% at 40% 100%, #2f4a2a 98%, transparent 100%),
+        radial-gradient(ellipse 22% 55% at 76% 100%, #365431 98%, transparent 100%),
+        radial-gradient(ellipse 18% 40% at 6% 100%, #33502d 98%, transparent 100%);
+    }
+    .hero figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); text-align: center; }
+
+    .post p { margin: 0 0 1.3em; font-size: 17px; line-height: 1.85; }
+
+    /* 소제목: 폰꾸 고딕 */
+    .section-title {
+      margin: 48px 0 18px;
+      color: var(--leaf);
+    }
+
+    .post blockquote {
+      margin: 28px 0;
+      padding: 4px 0 4px 20px;
+      border-left: 3px solid #f4a582;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+    .post blockquote cite { display: block; margin-top: 6px; font-size: 13px; font-style: normal; color: var(--muted); }
+
+    .route {
+      margin: 0 0 1.5em;
+      padding: 0;
+      list-style: none;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .route li {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 12px;
+      padding: 12px 18px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .route li + li { border-top: 1px solid var(--line); }
+    .route time { font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+    /* 꿀팁 상자: 스티커는 색 바탕 위에 */
+    .tip {
+      position: relative;
+      margin: 36px 0;
+      padding: 26px 26px 22px;
+      border-radius: 20px;
+      background: #ffe27a;
+      color: #4a3b00;
+      box-shadow: 0 2px 0 #f0c93c;
+    }
+    .tip .tip-head { margin-bottom: 12px; }
+    .tip p { margin: 0; font-size: 16px; line-height: 1.75; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 40px 0 0; padding: 0; list-style: none; }
+    .tags a {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #f4f2f7;
+      color: #5c5868;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .more {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 40px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+    .more a {
+      display: block;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .more a small { display: block; margin-bottom: 4px; font-size: 12px; font-weight: 500; color: var(--muted); }
+    .more a:last-child { text-align: right; }
+
+    .site-foot { padding: 28px 20px 40px; text-align: center; font-size: 13px; color: var(--muted); background: #faf9fc; }
+
+    @media (max-width: 560px) {
+      .site-nav a:not([aria-current]) { display: none; }
+      .post { padding-top: 32px; }
+      /* 좁은 화면에서는 제목을 "경주에서 보낸 / 느린 하루" 두 줄로 끊는다(글을 바꾸면 폭도 조정) */
+      .post-title { max-width: 5.7em; }
+      .post p { font-size: 16px; }
+      .tip { padding: 22px 20px 18px; }
+      .more { grid-template-columns: 1fr; }
+      .more a:last-child { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-bar">
+    <div class="inner">
+      <a class="logo" href="#"><i aria-hidden="true"></i>느린 여행자의 기록</a>
+      <nav class="site-nav" aria-label="블로그 메뉴">
+        <a href="#" aria-current="page">여행</a>
+        <a href="#">음식</a>
+        <a href="#">책</a>
+        <a href="#">소개</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <article class="post">
+      <div class="crumb">국내 여행 · 경상북도</div>
+      <h1 class="font-kku post-title" data-font="sebul" data-size="clamp(38px, 11vw, 56px)">경주에서 보낸 느린 하루</h1>
+
+      <div class="byline">
+        <span class="avatar" aria-hidden="true">소</span>
+        <div><strong>소담</strong>2026년 10월 9일 · 6분 읽기</div>
+      </div>
+
+      <figure class="hero">
+        <div class="art" role="img" aria-label="노을 진 하늘 아래 봉긋한 고분 능선"></div>
+        <figcaption>해 질 무렵의 대릉원. 봉긋한 능선이 하늘과 맞닿는다.</figcaption>
+      </figure>
+
+      <p>한글날 연휴 첫날, 알람 없이 눈을 떴다. 계획표도 맛집 목록도 없이 KTX 표 한 장만 끊어 경주로 향했다. 이번 여행의 규칙은 하나였다. 서두르지 않기. 한 곳에서 오래 머물고, 걷다가 마음에 드는 골목이 보이면 그냥 들어가 보기로 했다.</p>
+
+      <h2 class="font-kku section-title" data-font="gothic" data-size="30">아침, 대릉원 돌담길</h2>
+      <p>숙소에서 나와 대릉원 돌담길을 따라 걸었다. 아직 관광객이 많지 않은 시간이라 발소리와 새소리만 들렸다. 담장 너머로 둥근 능이 하나둘 모습을 드러낼 때마다 걸음이 저절로 느려졌다. 천 년도 더 된 무덤 곁에서 아침 산책을 한다는 게 새삼 신기했다.</p>
+      <p>돌담 끝 작은 빵집에서 찰보리빵과 따뜻한 보리차를 샀다. 벤치에 앉아 빵을 반으로 갈라 먹으며, 오늘 하루는 정말 아무것도 하지 않아도 괜찮다고 스스로에게 말해 주었다.</p>
+
+      <h2 class="font-kku section-title" data-font="gothic" data-size="30">점심은 황리단길 국숫집</h2>
+      <p>황리단길은 생각보다 붐볐지만, 골목 하나만 안쪽으로 들어가면 조용한 가게들이 숨어 있다. 간판도 작은 국숫집에서 잔치국수를 시켰다. 멸치 육수에 애호박과 달걀지단이 소복이 올라간, 엄마가 해 주던 맛이었다.</p>
+      <blockquote>
+        "여기는 다들 천천히 드시다 가요. 바쁜 사람은 안 와요."
+        <cite>— 국숫집 사장님</cite>
+      </blockquote>
+
+      <h2 class="font-kku section-title" data-font="gothic" data-size="30">해 질 녘 월정교</h2>
+      <p>오후에는 교촌마을을 지나 월정교까지 걸었다. 해가 기울자 강물이 금빛으로 물들고, 다리 지붕 아래 등이 하나씩 켜지기 시작했다. 사진을 찍으려고 휴대폰을 들었다가, 그냥 내려놓고 한참을 바라보았다.</p>
+
+      <aside class="tip" aria-label="여행 꿀팁">
+        <font-kku class="tip-head" font="sticker" size="clamp(28px, 7vw, 36px)">해 질 녘에 가세요</font-kku>
+        <p>월정교는 해가 지고 20분쯤 뒤, 조명이 모두 켜질 때가 가장 예뻐요. 다리 남쪽 징검다리에서 보면 물에 비친 모습까지 한 장에 담을 수 있어요.</p>
+      </aside>
+
+      <h2 class="font-kku section-title" data-font="gothic" data-size="30">이렇게 걸었어요</h2>
+      <ol class="route">
+        <li><time>09:00</time><span>대릉원 돌담길 산책, 찰보리빵 아침</span></li>
+        <li><time>12:30</time><span>황리단길 골목 국숫집에서 잔치국수</span></li>
+        <li><time>15:00</time><span>교촌마을 한옥 골목, 카페에서 한 시간</span></li>
+        <li><time>18:10</time><span>월정교 노을과 야경</span></li>
+      </ol>
+      <p>다음에는 봄에 다시 오고 싶다. 벚꽃이 핀 보문호수 길을 자전거로 달려 보고, 이번에 못 간 불국사도 새벽에 가 볼 생각이다. 느린 여행이 이렇게 개운할 줄 알았다면, 진작 이렇게 다닐 걸 그랬다.</p>
+
+      <ul class="tags" aria-label="태그">
+        <li><a href="#">#경주</a></li>
+        <li><a href="#">#대릉원</a></li>
+        <li><a href="#">#월정교</a></li>
+        <li><a href="#">#혼자여행</a></li>
+        <li><a href="#">#느린여행</a></li>
+      </ul>
+
+      <nav class="more" aria-label="다른 글">
+        <a href="#"><small>이전 글</small>통영 시장에서 굴 한 접시</a>
+        <a href="#"><small>다음 글</small>전주 한옥마을의 비 오는 오후</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-foot">© 2026 느린 여행자의 기록 · 글과 그림을 옮길 때는 출처를 남겨 주세요.</footer>
+</body>
+</html>

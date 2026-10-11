@@ -1,0 +1,392 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2688" height="10752" viewBox="0 0 2100 8400">
+<!-- 폰꾸 그림 자소판 · dojang · 칸 100×100, 21열 × 6행
+     행 0 초성(세로 모음 옆) · 행 1 중성 · 행 2 받침 · 행 3 겹받침 · 행 4 초성(가로 모음 위) · 행 5 합자 모음(키 큰 초성 옆)
+     열: 자음 ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ · 모음 ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ · 겹받침 ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ
+     scripts/build_jamo_svg.js가 spec/sprite-layout.json의 자리 상자에 획을 그려 만든다.
+     칸 <g id="r<행>-<자모>">의 좌표는 칸 기준 0–100이다. MIT License.
+     행 6부터는 획 굵기 보정 칸 묶음(6행씩): 자리 배율이 누르는 축만큼 획을 미리 굵게 그린 칸이다.
+     묶음 1 ×1/×1.2 · 묶음 2 ×1/×1.44 · 묶음 3 ×1/×1.73 · 묶음 4 ×1/×2.07 · 묶음 5 ×1.2/×1 · 묶음 6 ×1.2/×1.2 · 묶음 7 ×1.2/×1.44 · 묶음 8 ×1.44/×1 · 묶음 9 ×1.44/×1.2 · 묶음 10 ×1.44/×1.44 · 묶음 11 ×1.44/×1.73 · 묶음 12 ×1.73/×1 · 묶음 13 ×2.07/×1 (세로획/가로획 굵기 배율). 글꼴 CSS가 자리마다 행 번호(fy-sprite-row = 기반 행 + 6 × 묶음)로 고른다. -->
+<style>path,ellipse{fill:none;stroke:#c41e28;stroke-width:7.6;stroke-linecap:butt;stroke-linejoin:miter}</style>
+<defs><filter id="inju" filterUnits="userSpaceOnUse" x="0" y="0" width="2100" height="8400" color-interpolation-filters="sRGB">
+<feGaussianBlur in="SourceAlpha" stdDeviation="0.6" result="soft"/>
+<feComponentTransfer in="soft" result="ink"><feFuncA type="linear" slope="1.5" intercept="-0.15"/></feComponentTransfer>
+<feTurbulence type="fractalNoise" baseFrequency="0.21" numOctaves="2" seed="11" result="grain"/>
+<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4.2 0 0 0 -2.35" result="starve"/>
+<feComponentTransfer in="starve" result="starveA"><feFuncA type="linear" slope="-0.75" intercept="1"/></feComponentTransfer>
+<feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="4" result="press"/>
+<feColorMatrix in="press" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0" result="pressR"/>
+<feComponentTransfer in="pressR" result="pressA"><feFuncA type="table" tableValues="0.7 0.74 0.86 1 1"/></feComponentTransfer>
+<feComposite in="ink" in2="starveA" operator="arithmetic" k1="1" result="m1"/>
+<feComposite in="m1" in2="pressA" operator="arithmetic" k1="1" result="mask"/>
+<feFlood flood-color="#c41e28"/>
+<feComposite in2="mask" operator="in"/>
+</filter><clipPath id="kku-cell"><rect x="1" y="1" width="98" height="98"/></clipPath></defs>
+<g filter="url(#inju)">
+<!-- 행 0: 초성(세로 모음 옆) -->
+<g id="r0-ㄱ" transform="translate(0 0)"><path d="M4.7 12.4L44.6 12.4L44.6 28.18Q44.6 53.43 11.39 65"/></g>
+<g id="r0-ㄲ" transform="translate(100 0)"><path d="M2 12.4L25.1 12.4L25.1 27.46Q25.1 51.56 7.34 62.6"/><path d="M25.8 12.4L48.5 12.4L48.5 29.11Q48.5 55.85 31.11 68.1"/></g>
+<g id="r0-ㄴ" transform="translate(200 0)"><path d="M10.8 7.8L10.8 60.3L57 60.3"/></g>
+<g id="r0-ㄷ" transform="translate(300 0)"><path d="M49.16 12.4L10.8 12.4L10.8 61L57.8 61"/></g>
+<g id="r0-ㄸ" transform="translate(400 0)"><path d="M27.16 12.4L10 12.4L10 59.5L30.5 59.5"/><path d="M56.8 12.4L36.6 12.4L36.6 59.5L60.9 59.5"/></g>
+<g id="r0-ㄹ" transform="translate(500 0)"><path d="M7 10.8L41.58 10.8L41.58 36.3L10.8 36.3L10.8 61.8L56.2 61.8"/></g>
+<g id="r0-ㅁ" transform="translate(600 0)"><path d="M10 12.4L43.9 12.4L43.9 61L10 61Z"/></g>
+<g id="r0-ㅂ" transform="translate(700 0)"><path d="M10.8 7L10.8 61L43.9 61L43.9 7"/><path d="M10.8 33.89L43.9 33.89"/></g>
+<g id="r0-ㅃ" transform="translate(800 0)"><path d="M10.8 7.8L10.8 61L25.1 61L25.1 7.8"/><path d="M10.8 34.32L25.1 34.32"/><path d="M39 7.8L39 61L54 61L54 7.8"/><path d="M39 34.32L54 34.32"/></g>
+<g id="r0-ㅅ" transform="translate(900 0)"><path d="M29.25 8.7L5.8 63.4"/><path d="M20.68 28.68L50.9 63.4"/></g>
+<g id="r0-ㅆ" transform="translate(1000 0)"><path d="M17.51 9.38L5.8 60.3"/><path d="M13.19 28.16L28.2 60.3"/><path d="M43.55 8.6L28 65.7"/><path d="M37.87 29.47L57.9 65.7"/></g>
+<g id="r0-ㅇ" transform="translate(1100 0)"><ellipse cx="27.35" cy="36.7" rx="18.05" ry="26.7"/></g>
+<g id="r0-ㅈ" transform="translate(1200 0)"><path d="M2.3 12.4L55.5 12.4"/><path d="M29.82 10.31L6.1 64.2"/><path d="M21.15 30.01L51.7 64.2"/></g>
+<g id="r0-ㅉ" transform="translate(1300 0)"><path d="M2 12.4L32 12.4"/><path d="M17.52 10.18L5.8 60.3"/><path d="M13.19 28.69L28.2 60.3"/><path d="M23.4 12.4L61.7 12.4"/><path d="M43.18 10.21L27.2 65.7"/><path d="M37.33 30.52L57.9 65.7"/></g>
+<g id="r0-ㅊ" transform="translate(1400 0)"><path d="M15.07 8.5L42.73 8.5"/><path d="M2.3 24.16L55.5 24.16"/><path d="M28.9 24.16L6.1 66.5"/><path d="M21.15 38.54L51.7 66.5"/></g>
+<g id="r0-ㅋ" transform="translate(1500 0)"><path d="M4.7 12.4L45.4 12.4L45.4 28.39Q45.4 53.97 11.45 65.7"/><path d="M4.7 34.79L45.4 34.79"/></g>
+<g id="r0-ㅌ" transform="translate(1600 0)"><path d="M48.71 10.8L10.8 10.8L10.8 61.8L56.2 61.8"/><path d="M10.8 35.28L47.05 35.28"/></g>
+<g id="r0-ㅍ" transform="translate(1700 0)"><path d="M5.02 12.4L52.85 12.4"/><path d="M3.1 61L58.6 61"/><path d="M19.83 12.4L19.83 61"/><path d="M39.47 12.4L39.47 61"/></g>
+<g id="r0-ㅎ" transform="translate(1800 0)"><path d="M16.3 9.3L41.5 9.3"/><path d="M3.1 24.12L54.7 24.12"/><ellipse cx="28.9" cy="48.28" rx="17.6" ry="15.92"/></g>
+<!-- 행 1: 중성 -->
+<g id="r1-ㅏ" transform="translate(0 100)"><path d="M67.1 2L67.1 86.7"/><path d="M67.1 38.95L85.2 38.95"/></g>
+<g id="r1-ㅐ" transform="translate(100 100)"><path d="M56.1 2L56.1 86.7"/><path d="M73.5 2L73.5 86.7"/><path d="M56.1 41.27L73.5 41.27"/></g>
+<g id="r1-ㅑ" transform="translate(200 100)"><path d="M66.3 2L66.3 86.7"/><path d="M66.3 28.16L85.2 28.16"/><path d="M66.3 51.29L85.2 51.29"/></g>
+<g id="r1-ㅒ" transform="translate(300 100)"><path d="M55.4 2L55.4 86.7"/><path d="M73.5 2L73.5 86.7"/><path d="M55.4 28.93L73.5 28.93"/><path d="M55.4 50.52L73.5 50.52"/></g>
+<g id="r1-ㅓ" transform="translate(400 100)"><path d="M49.2 38.18L71.2 38.18"/><path d="M71.2 2L71.2 86.7"/></g>
+<g id="r1-ㅔ" transform="translate(500 100)"><path d="M43.8 36.21L56.4 36.21"/><path d="M56.4 2L56.4 82"/><path d="M73.8 2L73.8 86.7"/></g>
+<g id="r1-ㅕ" transform="translate(600 100)"><path d="M50 26.62L72 26.62"/><path d="M50 50.52L72 50.52"/><path d="M72 2L72 86.7"/></g>
+<g id="r1-ㅖ" transform="translate(700 100)"><path d="M45.94 25.35L56.4 25.35"/><path d="M45.94 47.79L56.4 47.79"/><path d="M56.4 2L56.4 82"/><path d="M73.8 2L73.8 86.7"/></g>
+<g id="r1-ㅗ" transform="translate(800 100)"><path d="M39.07 35.9L39.07 70.4"/><path d="M3.9 70.4L82.8 70.4"/></g>
+<g id="r1-ㅘ" transform="translate(900 100)"><path d="M28.02 33.6L28.02 63.4"/><path d="M2.3 63.4L58.6 63.4"/><path d="M67.9 2L67.9 86.7"/><path d="M67.9 38.95L85.9 38.95"/></g>
+<g id="r1-ㅙ" transform="translate(1000 100)"><path d="M23.42 35.2L23.42 62.6"/><path d="M2.3 62.6L48.4 62.6"/><path d="M56.1 2L56.1 86.7"/><path d="M74.3 2L74.3 86.7"/><path d="M56.1 41.27L74.3 41.27"/></g>
+<g id="r1-ㅚ" transform="translate(1100 100)"><path d="M30.29 35.2L30.29 64.2"/><path d="M3.9 64.2L61.7 64.2"/><path d="M71.9 2L71.9 86.7"/></g>
+<g id="r1-ㅛ" transform="translate(1200 100)"><path d="M29.09 37.5L29.09 69.6"/><path d="M49.05 37.5L49.05 69.6"/><path d="M3.9 69.6L82.8 69.6"/></g>
+<g id="r1-ㅜ" transform="translate(1300 100)"><path d="M3.9 48.3L82.8 48.3"/><path d="M43.35 48.3L43.35 86.7"/></g>
+<g id="r1-ㅝ" transform="translate(1400 100)"><path d="M2.3 44.4L60.9 44.4"/><path d="M30.58 44.4L30.58 82"/><path d="M48.4 50.52L72 50.52"/><path d="M72 2L72 86.7"/></g>
+<g id="r1-ㅞ" transform="translate(1500 100)"><path d="M2.3 43.6L49.2 43.6"/><path d="M24.96 43.6L24.96 79.7"/><path d="M38.3 47.79L57.1 47.79"/><path d="M57.1 2L57.1 82"/><path d="M74.2 2L74.2 86.7"/></g>
+<g id="r1-ㅟ" transform="translate(1600 100)"><path d="M3.1 46.8L62.5 46.8"/><path d="M31.76 46.8L31.76 83.6"/><path d="M71.9 2L71.9 86.7"/></g>
+<g id="r1-ㅠ" transform="translate(1700 100)"><path d="M3.9 47.6L82.8 47.6"/><path d="M29.09 47.6L29.09 86.7"/><path d="M56.9 47.6L56.9 86.7"/></g>
+<g id="r1-ㅡ" transform="translate(1800 100)"><path d="M3.9 70.3L82.8 70.3"/></g>
+<g id="r1-ㅢ" transform="translate(1900 100)"><path d="M3.9 60.9L61.7 60.9"/><path d="M71.9 2L71.9 86.7"/></g>
+<g id="r1-ㅣ" transform="translate(2000 100)"><path d="M71.9 2L71.9 86.7"/></g>
+<!-- 행 2: 받침 -->
+<g id="r2-ㄱ" transform="translate(0 200)"><path d="M13.3 61.6L68.9 61.6L68.9 86.7"/></g>
+<g id="r2-ㄲ" transform="translate(100 200)"><path d="M12.5 60L36.8 60L36.8 86.7"/><path d="M45.3 60L69.6 60L69.6 86.7"/></g>
+<g id="r2-ㄴ" transform="translate(200 200)"><path d="M17.9 58.6L17.9 79.8L73.4 79.8"/></g>
+<g id="r2-ㄷ" transform="translate(300 200)"><path d="M72.7 59.3L19.4 59.3L19.4 81.4L72.7 81.4"/></g>
+<g id="r2-ㄹ" transform="translate(500 200)"><path d="M13.3 55.4L72 55.4L72 68.75L17.1 68.75L17.1 82.1L75.8 82.1"/></g>
+<g id="r2-ㅁ" transform="translate(600 200)"><path d="M17.1 60.8L68.9 60.8L68.9 81.4L17.1 81.4Z"/></g>
+<g id="r2-ㅂ" transform="translate(700 200)"><path d="M17.9 52.3L17.9 81.4L68.9 81.4L68.9 52.3"/><path d="M17.9 67.74L68.9 67.74"/></g>
+<g id="r2-ㅅ" transform="translate(900 200)"><path d="M45.54 57.08L14 82.1"/><path d="M33.64 66.52L73.5 82.1"/></g>
+<g id="r2-ㅆ" transform="translate(1000 200)"><path d="M27.4 58.9L11.6 82.9"/><path d="M21.2 68.31L40.7 82.9"/><path d="M61.82 58.14L43.6 83.7"/><path d="M54.75 68.06L77.4 83.7"/></g>
+<g id="r2-ㅇ" transform="translate(1100 200)"><ellipse cx="43.35" cy="69.9" rx="27.05" ry="12.2"/></g>
+<g id="r2-ㅈ" transform="translate(1200 200)"><path d="M9.4 58.5L76.6 58.5"/><path d="M44.76 57.06L13.2 82.9"/><path d="M32.87 66.8L72.8 82.9"/></g>
+<g id="r2-ㅊ" transform="translate(1400 200)"><path d="M26.44 53L59.56 53"/><path d="M10.2 61.29L75.8 61.29"/><path d="M43 61.29L14 83.7"/><path d="M33.14 68.9L72 83.7"/></g>
+<g id="r2-ㅋ" transform="translate(1500 200)"><path d="M11.7 60L68.9 60L68.9 86.7"/><path d="M11.7 70.99L68.9 70.99"/></g>
+<g id="r2-ㅌ" transform="translate(1600 200)"><path d="M72.7 57.7L17.9 57.7L17.9 82.1L72.7 82.1"/><path d="M17.9 69.9L69.64 69.9"/></g>
+<g id="r2-ㅍ" transform="translate(1700 200)"><path d="M11.7 58.5L74.2 58.5"/><path d="M11.7 81.4L74.2 81.4"/><path d="M30.32 58.5L30.32 81.4"/><path d="M55.58 58.5L55.58 81.4"/></g>
+<g id="r2-ㅎ" transform="translate(1800 200)"><path d="M28.41 50.7L58.29 50.7"/><path d="M11.7 59.39L75 59.39"/><ellipse cx="43.35" cy="73.56" rx="22.28" ry="9.34"/></g>
+<!-- 행 3: 겹받침 -->
+<g id="r3-ㄳ" transform="translate(0 300)"><path d="M13.3 60.8L36.8 60.8L36.8 86.7"/><path d="M64.2 58.93L47.6 82.9"/><path d="M57.7 68.31L78.2 82.9"/></g>
+<g id="r3-ㄵ" transform="translate(100 300)"><path d="M15.5 55.5L15.5 82.1L39.1 82.1"/><path d="M37.5 58.5L77.3 58.5"/><path d="M58.6 56.56L41.3 84.5"/><path d="M51.93 67.34L73.5 84.5"/></g>
+<g id="r3-ㄶ" transform="translate(200 300)"><path d="M17.9 56.2L17.9 82.1L39.8 82.1"/><path d="M49 56.1L69.8 56.1"/><path d="M39.1 63.34L79.7 63.34"/><ellipse cx="59.4" cy="75.13" rx="13.2" ry="7.77"/></g>
+<g id="r3-ㄺ" transform="translate(300 300)"><path d="M11.7 55.4L44.6 55.4L44.6 68.75L15.5 68.75L15.5 82.1L48.4 82.1"/><path d="M46.1 55.4L69.6 55.4L69.6 86.7"/></g>
+<g id="r3-ㄻ" transform="translate(400 300)"><path d="M11.7 55.4L38.4 55.4L38.4 68.75L15.5 68.75L15.5 82.1L42.2 82.1"/><path d="M49.9 55.4L69.6 55.4L69.6 82.1L49.9 82.1Z"/></g>
+<g id="r3-ㄼ" transform="translate(500 300)"><path d="M11.7 55.4L37.6 55.4L37.6 68.75L15.5 68.75L15.5 82.1L41.4 82.1"/><path d="M49.1 50.8L49.1 82.1L69.6 82.1L69.6 50.8"/><path d="M49.1 67.25L69.6 67.25"/></g>
+<g id="r3-ㄽ" transform="translate(600 300)"><path d="M11.7 55.4L38.4 55.4L38.4 68.75L15.5 68.75L15.5 82.1L42.2 82.1"/><path d="M62.42 53.38L46.8 82.9"/><path d="M56.4 64.75L75.9 82.9"/></g>
+<g id="r3-ㄾ" transform="translate(700 300)"><path d="M11.7 55.4L38.4 55.4L38.4 68.75L15.5 68.75L15.5 82.1L42.2 82.1"/><path d="M74.2 55.4L49.9 55.4L49.9 82.1L74.2 82.1"/><path d="M49.9 68.75L72.97 68.75"/></g>
+<g id="r3-ㄿ" transform="translate(800 300)"><path d="M11.7 56.1L36.8 56.1L36.8 69.1L15.5 69.1L15.5 82.1L40.6 82.1"/><path d="M43 56.1L76.6 56.1"/><path d="M43 82.1L76.6 82.1"/><path d="M53.82 56.1L53.82 82.1"/><path d="M65.78 56.1L65.78 82.1"/></g>
+<g id="r3-ㅀ" transform="translate(900 300)"><path d="M11.7 56.9L39.2 56.9L39.2 69.5L15.5 69.5L15.5 82.1L43 82.1"/><path d="M51.25 53L69.85 53"/><path d="M43 61.29L78.1 61.29"/><ellipse cx="60.55" cy="74.8" rx="11" ry="8.9"/></g>
+<g id="r3-ㅄ" transform="translate(1000 300)"><path d="M17.1 51.6L17.1 82.1L38.4 82.1L38.4 51.6"/><path d="M17.1 67.68L38.4 67.68"/><path d="M63.59 52.6L47.6 82.1"/><path d="M57.43 63.95L77.4 82.1"/></g>
+<!-- 행 4: 초성(가로 모음 위) -->
+<g id="r4-ㄱ" transform="translate(0 400)"><path d="M11.7 13.2L67.3 13.2L67.3 60.2"/></g>
+<g id="r4-ㄲ" transform="translate(100 400)"><path d="M10.2 13.2L34.5 13.2L34.5 57.8"/><path d="M45.3 13.2L69.6 13.2L69.6 57.8"/></g>
+<g id="r4-ㄴ" transform="translate(200 400)"><path d="M17.9 7L17.9 39.2L73.4 39.2"/></g>
+<g id="r4-ㄷ" transform="translate(300 400)"><path d="M73.4 11.6L17.9 11.6L17.9 45.4L73.4 45.4"/></g>
+<g id="r4-ㄸ" transform="translate(400 400)"><path d="M41.4 13.2L14.7 13.2L14.7 45.4L41.4 45.4"/><path d="M77.3 13.2L49.1 13.2L49.1 44.6L77.3 44.6"/></g>
+<g id="r4-ㄹ" transform="translate(500 400)"><path d="M13.3 10L71.2 10L71.2 29.65L17.1 29.65L17.1 49.3L75 49.3"/></g>
+<g id="r4-ㅁ" transform="translate(600 400)"><path d="M17.9 11.6L68.9 11.6L68.9 44.6L17.9 44.6Z"/></g>
+<g id="r4-ㅂ" transform="translate(700 400)"><path d="M17.1 7L17.1 47L68.9 47L68.9 7"/><path d="M17.1 27.45L68.9 27.45"/></g>
+<g id="r4-ㅃ" transform="translate(800 400)"><path d="M14.7 7L14.7 46.2L36 46.2L36 7"/><path d="M14.7 27.08L36 27.08"/><path d="M50.7 7L50.7 46.2L72 46.2L72 7"/><path d="M50.7 27.08L72 27.08"/></g>
+<g id="r4-ㅅ" transform="translate(900 400)"><path d="M44.87 8.3L10.8 46.2"/><path d="M32.28 22.31L75.9 46.2"/></g>
+<g id="r4-ㅆ" transform="translate(1000 400)"><path d="M24.7 9.48L9.3 47.8"/><path d="M18.9 23.91L38.4 47.8"/><path d="M61.83 8.72L44.4 47.8"/><path d="M55.29 23.38L77.4 47.8"/></g>
+<g id="r4-ㅇ" transform="translate(1100 400)"><ellipse cx="43.35" cy="28.9" rx="27.85" ry="18.1"/></g>
+<g id="r4-ㅈ" transform="translate(1200 400)"><path d="M7 13.2L79.7 13.2"/><path d="M44.88 11.51L10.8 49.3"/><path d="M32.28 25.47L75.9 49.3"/></g>
+<g id="r4-ㅉ" transform="translate(1300 400)"><path d="M3.9 12.4L43 12.4"/><path d="M24.38 10.32L7.7 47.8"/><path d="M18.1 24.44L39.2 47.8"/><path d="M41.4 12.4L82.8 12.4"/><path d="M63.08 10.34L45.2 47.8"/><path d="M56.35 24.44L79 47.8"/></g>
+<g id="r4-ㅊ" transform="translate(1400 400)"><path d="M25.58 6.9L61.12 6.9"/><path d="M7.8 19L78.9 19"/><path d="M43.35 19L11.6 51.7"/><path d="M32.56 30.11L75.1 51.7"/></g>
+<g id="r4-ㅋ" transform="translate(1500 400)"><path d="M10.9 12.4L68.9 12.4L68.9 62.5"/><path d="M10.9 34.62L68.9 34.62"/></g>
+<g id="r4-ㅌ" transform="translate(1600 400)"><path d="M73.4 11.6L17.1 11.6L17.1 49.3L73.4 49.3"/><path d="M17.1 30.45L70.25 30.45"/></g>
+<g id="r4-ㅍ" transform="translate(1700 400)"><path d="M10.9 12.4L75 12.4"/><path d="M10.9 47.8L75 47.8"/><path d="M29.96 12.4L29.96 47.8"/><path d="M55.94 12.4L55.94 47.8"/></g>
+<g id="r4-ㅎ" transform="translate(1800 400)"><path d="M26.93 7.7L58.97 7.7"/><path d="M8.6 20.42L77.3 20.42"/><ellipse cx="42.95" cy="41.14" rx="24.44" ry="13.66"/></g>
+<!-- 행 5: 합자 모음(키 큰 초성 옆) -->
+<g id="r5-ㅘ" transform="translate(900 500)"><path d="M28.02 46.9L28.02 64.2"/><path d="M2.3 64.2L58.6 64.2"/><path d="M67.1 2L67.1 86.7"/><path d="M67.1 38.95L85.2 38.95"/></g>
+<g id="r5-ㅙ" transform="translate(1000 500)"><path d="M23.79 44.5L23.79 61.8"/><path d="M2.3 61.8L49.2 61.8"/><path d="M56.1 2L56.1 86.7"/><path d="M74.3 2L74.3 86.7"/><path d="M56.1 41.27L74.3 41.27"/></g>
+<g id="r5-ㅚ" transform="translate(1100 500)"><path d="M30.65 46.9L30.65 64.2"/><path d="M3.9 64.2L62.5 64.2"/><path d="M71.9 2L71.9 86.7"/></g>
+<g id="r5-ㅝ" transform="translate(1400 500)"><path d="M3.1 48.3L62.5 48.3"/><path d="M31.76 48.3L31.76 83.6"/><path d="M48.4 50.52L72 50.52"/><path d="M72 2L72 86.7"/></g>
+<g id="r5-ㅞ" transform="translate(1500 500)"><path d="M2.3 48.3L49.2 48.3"/><path d="M24.96 48.3L24.96 79.7"/><path d="M38.3 47.79L57.1 47.79"/><path d="M57.1 2L57.1 82"/><path d="M74.2 2L74.2 86.7"/></g>
+<g id="r5-ㅟ" transform="translate(1600 500)"><path d="M3.1 49.9L63.3 49.9"/><path d="M32.15 49.9L32.15 83.6"/><path d="M72.3 2L72.3 86.7"/></g>
+<g id="r5-ㅢ" transform="translate(1900 500)"><path d="M3.9 62.9L62.5 62.9"/><path d="M71.9 2L71.9 86.7"/></g>
+<!-- 묶음 1: 가로획 ×1.2 · 세로획 ×1 -->
+<g id="r6-ㄷ" transform="translate(300 600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M49.16 10.33L10.8 10.33L10.8 50.83L57.8 50.83"/></g></g>
+<g id="r6-ㅇ" transform="translate(1100 600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><ellipse cx="27.35" cy="30.58" rx="18.05" ry="22.25"/></g></g>
+<g id="r6-ㅎ" transform="translate(1800 600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M16.3 7.75L41.5 7.75"/><path d="M3.1 20.1L54.7 20.1"/><ellipse cx="28.9" cy="40.23" rx="17.6" ry="13.27"/></g></g>
+<g id="r7-ㅏ" transform="translate(0 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M67.1 1.67L67.1 72.25"/><path d="M67.1 32.46L85.2 32.46"/></g></g>
+<g id="r7-ㅐ" transform="translate(100 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M56.1 1.67L56.1 72.25"/><path d="M73.5 1.67L73.5 72.25"/><path d="M56.1 34.39L73.5 34.39"/></g></g>
+<g id="r7-ㅑ" transform="translate(200 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M66.3 1.67L66.3 72.25"/><path d="M66.3 23.47L85.2 23.47"/><path d="M66.3 42.74L85.2 42.74"/></g></g>
+<g id="r7-ㅒ" transform="translate(300 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M55.4 1.67L55.4 72.25"/><path d="M73.5 1.67L73.5 72.25"/><path d="M55.4 24.11L73.5 24.11"/><path d="M55.4 42.1L73.5 42.1"/></g></g>
+<g id="r7-ㅓ" transform="translate(400 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M49.2 31.82L71.2 31.82"/><path d="M71.2 1.67L71.2 72.25"/></g></g>
+<g id="r7-ㅔ" transform="translate(500 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M43.8 30.17L56.4 30.17"/><path d="M56.4 1.67L56.4 68.33"/><path d="M73.8 1.67L73.8 72.25"/></g></g>
+<g id="r7-ㅕ" transform="translate(600 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M50 22.18L72 22.18"/><path d="M50 42.1L72 42.1"/><path d="M72 1.67L72 72.25"/></g></g>
+<g id="r7-ㅖ" transform="translate(700 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M45.94 21.12L56.4 21.12"/><path d="M45.94 39.83L56.4 39.83"/><path d="M56.4 1.67L56.4 68.33"/><path d="M73.8 1.67L73.8 72.25"/></g></g>
+<g id="r7-ㅗ" transform="translate(800 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M39.07 29.92L39.07 58.67"/><path d="M3.9 58.67L82.8 58.67"/></g></g>
+<g id="r7-ㅘ" transform="translate(900 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M28.02 28L28.02 52.83"/><path d="M2.3 52.83L58.6 52.83"/><path d="M67.9 1.67L67.9 72.25"/><path d="M67.9 32.46L85.9 32.46"/></g></g>
+<g id="r7-ㅙ" transform="translate(1000 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M23.42 29.33L23.42 52.17"/><path d="M2.3 52.17L48.4 52.17"/><path d="M56.1 1.67L56.1 72.25"/><path d="M74.3 1.67L74.3 72.25"/><path d="M56.1 34.39L74.3 34.39"/></g></g>
+<g id="r7-ㅚ" transform="translate(1100 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M30.29 29.33L30.29 53.5"/><path d="M3.9 53.5L61.7 53.5"/><path d="M71.9 1.67L71.9 72.25"/></g></g>
+<g id="r7-ㅛ" transform="translate(1200 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M29.09 31.25L29.09 58"/><path d="M49.05 31.25L49.05 58"/><path d="M3.9 58L82.8 58"/></g></g>
+<g id="r7-ㅜ" transform="translate(1300 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M3.9 40.25L82.8 40.25"/><path d="M43.35 40.25L43.35 72.25"/></g></g>
+<g id="r7-ㅝ" transform="translate(1400 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M2.3 37L60.9 37"/><path d="M30.58 37L30.58 68.33"/><path d="M48.4 42.1L72 42.1"/><path d="M72 1.67L72 72.25"/></g></g>
+<g id="r7-ㅞ" transform="translate(1500 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M2.3 36.33L49.2 36.33"/><path d="M24.96 36.33L24.96 66.42"/><path d="M38.3 39.83L57.1 39.83"/><path d="M57.1 1.67L57.1 68.33"/><path d="M74.2 1.67L74.2 72.25"/></g></g>
+<g id="r7-ㅟ" transform="translate(1600 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M3.1 39L62.5 39"/><path d="M31.76 39L31.76 69.67"/><path d="M71.9 1.67L71.9 72.25"/></g></g>
+<g id="r7-ㅠ" transform="translate(1700 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M3.9 39.67L82.8 39.67"/><path d="M29.09 39.67L29.09 72.25"/><path d="M56.9 39.67L56.9 72.25"/></g></g>
+<g id="r7-ㅡ" transform="translate(1800 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M3.9 58.58L82.8 58.58"/></g></g>
+<g id="r7-ㅢ" transform="translate(1900 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M3.9 50.75L61.7 50.75"/><path d="M71.9 1.67L71.9 72.25"/></g></g>
+<g id="r7-ㅣ" transform="translate(2000 700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M71.9 1.67L71.9 72.25"/></g></g>
+<g id="r10-ㄷ" transform="translate(300 1000)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M73.4 9.67L17.9 9.67L17.9 37.83L73.4 37.83"/></g></g>
+<g id="r10-ㅇ" transform="translate(1100 1000)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><ellipse cx="43.35" cy="24.08" rx="27.85" ry="15.08"/></g></g>
+<g id="r10-ㅎ" transform="translate(1800 1000)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M26.93 6.42L58.97 6.42"/><path d="M8.6 17.01L77.3 17.01"/><ellipse cx="42.95" cy="34.28" rx="24.44" ry="11.38"/></g></g>
+<g id="r11-ㅘ" transform="translate(900 1100)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M28.02 39.08L28.02 53.5"/><path d="M2.3 53.5L58.6 53.5"/><path d="M67.1 1.67L67.1 72.25"/><path d="M67.1 32.46L85.2 32.46"/></g></g>
+<g id="r11-ㅙ" transform="translate(1000 1100)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M23.79 37.08L23.79 51.5"/><path d="M2.3 51.5L49.2 51.5"/><path d="M56.1 1.67L56.1 72.25"/><path d="M74.3 1.67L74.3 72.25"/><path d="M56.1 34.39L74.3 34.39"/></g></g>
+<g id="r11-ㅚ" transform="translate(1100 1100)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M30.65 39.08L30.65 53.5"/><path d="M3.9 53.5L62.5 53.5"/><path d="M71.9 1.67L71.9 72.25"/></g></g>
+<g id="r11-ㅝ" transform="translate(1400 1100)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M3.1 40.25L62.5 40.25"/><path d="M31.76 40.25L31.76 69.67"/><path d="M48.4 42.1L72 42.1"/><path d="M72 1.67L72 72.25"/></g></g>
+<g id="r11-ㅞ" transform="translate(1500 1100)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M2.3 40.25L49.2 40.25"/><path d="M24.96 40.25L24.96 66.42"/><path d="M38.3 39.83L57.1 39.83"/><path d="M57.1 1.67L57.1 68.33"/><path d="M74.2 1.67L74.2 72.25"/></g></g>
+<g id="r11-ㅟ" transform="translate(1600 1100)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M3.1 41.58L63.3 41.58"/><path d="M32.15 41.58L32.15 69.67"/><path d="M72.3 1.67L72.3 72.25"/></g></g>
+<g id="r11-ㅢ" transform="translate(1900 1100)" clip-path="url(#kku-cell)"><g transform="scale(1 1.2)"><path d="M3.9 52.42L62.5 52.42"/><path d="M71.9 1.67L71.9 72.25"/></g></g>
+<!-- 묶음 2: 가로획 ×1.44 · 세로획 ×1 -->
+<g id="r12-ㄱ" transform="translate(0 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M4.7 8.61L44.6 8.61L44.6 19.57Q44.6 37.1 11.39 45.14"/></g></g>
+<g id="r12-ㄲ" transform="translate(100 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M2 8.61L25.1 8.61L25.1 19.07Q25.1 35.8 7.34 43.47"/><path d="M25.8 8.61L48.5 8.61L48.5 20.22Q48.5 38.78 31.11 47.29"/></g></g>
+<g id="r12-ㄴ" transform="translate(200 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M10.8 5.42L10.8 41.88L57 41.88"/></g></g>
+<g id="r12-ㄷ" transform="translate(300 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M49.16 8.61L10.8 8.61L10.8 42.36L57.8 42.36"/></g></g>
+<g id="r12-ㄸ" transform="translate(400 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M27.16 8.61L10 8.61L10 41.32L30.5 41.32"/><path d="M56.8 8.61L36.6 8.61L36.6 41.32L60.9 41.32"/></g></g>
+<g id="r12-ㄹ" transform="translate(500 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M7 7.5L41.58 7.5L41.58 25.21L10.8 25.21L10.8 42.92L56.2 42.92"/></g></g>
+<g id="r12-ㅁ" transform="translate(600 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M10 8.61L43.9 8.61L43.9 42.36L10 42.36Z"/></g></g>
+<g id="r12-ㅂ" transform="translate(700 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M10.8 4.86L10.8 42.36L43.9 42.36L43.9 4.86"/><path d="M10.8 23.54L43.9 23.54"/></g></g>
+<g id="r12-ㅃ" transform="translate(800 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M10.8 5.42L10.8 42.36L25.1 42.36L25.1 5.42"/><path d="M10.8 23.84L25.1 23.84"/><path d="M39 5.42L39 42.36L54 42.36L54 5.42"/><path d="M39 23.84L54 23.84"/></g></g>
+<g id="r12-ㅅ" transform="translate(900 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M29.25 6.04L5.8 44.03"/><path d="M20.68 19.92L50.9 44.03"/></g></g>
+<g id="r12-ㅆ" transform="translate(1000 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M17.51 6.51L5.8 41.88"/><path d="M13.19 19.55L28.2 41.88"/><path d="M43.55 5.97L28 45.63"/><path d="M37.87 20.46L57.9 45.63"/></g></g>
+<g id="r12-ㅇ" transform="translate(1100 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><ellipse cx="27.35" cy="25.49" rx="18.05" ry="18.54"/></g></g>
+<g id="r12-ㅈ" transform="translate(1200 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M2.3 8.61L55.5 8.61"/><path d="M29.82 7.16L6.1 44.58"/><path d="M21.15 20.84L51.7 44.58"/></g></g>
+<g id="r12-ㅉ" transform="translate(1300 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M2 8.61L32 8.61"/><path d="M17.52 7.07L5.8 41.88"/><path d="M13.19 19.92L28.2 41.88"/><path d="M23.4 8.61L61.7 8.61"/><path d="M43.18 7.09L27.2 45.63"/><path d="M37.33 21.2L57.9 45.63"/></g></g>
+<g id="r12-ㅊ" transform="translate(1400 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M15.07 5.9L42.73 5.9"/><path d="M2.3 16.78L55.5 16.78"/><path d="M28.9 16.78L6.1 46.18"/><path d="M21.15 26.77L51.7 46.18"/></g></g>
+<g id="r12-ㅋ" transform="translate(1500 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M4.7 8.61L45.4 8.61L45.4 19.72Q45.4 37.48 11.45 45.63"/><path d="M4.7 24.16L45.4 24.16"/></g></g>
+<g id="r12-ㅌ" transform="translate(1600 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M48.71 7.5L10.8 7.5L10.8 42.92L56.2 42.92"/><path d="M10.8 24.5L47.05 24.5"/></g></g>
+<g id="r12-ㅍ" transform="translate(1700 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M5.02 8.61L52.85 8.61"/><path d="M3.1 42.36L58.6 42.36"/><path d="M19.83 8.61L19.83 42.36"/><path d="M39.47 8.61L39.47 42.36"/></g></g>
+<g id="r12-ㅎ" transform="translate(1800 1200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M16.3 6.46L41.5 6.46"/><path d="M3.1 16.75L54.7 16.75"/><ellipse cx="28.9" cy="33.53" rx="17.6" ry="11.06"/></g></g>
+<g id="r13-ㅏ" transform="translate(0 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M67.1 1.39L67.1 60.21"/><path d="M67.1 27.05L85.2 27.05"/></g></g>
+<g id="r13-ㅐ" transform="translate(100 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M56.1 1.39L56.1 60.21"/><path d="M73.5 1.39L73.5 60.21"/><path d="M56.1 28.66L73.5 28.66"/></g></g>
+<g id="r13-ㅑ" transform="translate(200 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M66.3 1.39L66.3 60.21"/><path d="M66.3 19.55L85.2 19.55"/><path d="M66.3 35.62L85.2 35.62"/></g></g>
+<g id="r13-ㅒ" transform="translate(300 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M55.4 1.39L55.4 60.21"/><path d="M73.5 1.39L73.5 60.21"/><path d="M55.4 20.09L73.5 20.09"/><path d="M55.4 35.08L73.5 35.08"/></g></g>
+<g id="r13-ㅓ" transform="translate(400 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M49.2 26.52L71.2 26.52"/><path d="M71.2 1.39L71.2 60.21"/></g></g>
+<g id="r13-ㅔ" transform="translate(500 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M43.8 25.14L56.4 25.14"/><path d="M56.4 1.39L56.4 56.94"/><path d="M73.8 1.39L73.8 60.21"/></g></g>
+<g id="r13-ㅕ" transform="translate(600 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M50 18.48L72 18.48"/><path d="M50 35.08L72 35.08"/><path d="M72 1.39L72 60.21"/></g></g>
+<g id="r13-ㅖ" transform="translate(700 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M45.94 17.6L56.4 17.6"/><path d="M45.94 33.19L56.4 33.19"/><path d="M56.4 1.39L56.4 56.94"/><path d="M73.8 1.39L73.8 60.21"/></g></g>
+<g id="r13-ㅗ" transform="translate(800 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M39.07 24.93L39.07 48.89"/><path d="M3.9 48.89L82.8 48.89"/></g></g>
+<g id="r13-ㅘ" transform="translate(900 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M28.02 23.33L28.02 44.03"/><path d="M2.3 44.03L58.6 44.03"/><path d="M67.9 1.39L67.9 60.21"/><path d="M67.9 27.05L85.9 27.05"/></g></g>
+<g id="r13-ㅙ" transform="translate(1000 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M23.42 24.44L23.42 43.47"/><path d="M2.3 43.47L48.4 43.47"/><path d="M56.1 1.39L56.1 60.21"/><path d="M74.3 1.39L74.3 60.21"/><path d="M56.1 28.66L74.3 28.66"/></g></g>
+<g id="r13-ㅚ" transform="translate(1100 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M30.29 24.44L30.29 44.58"/><path d="M3.9 44.58L61.7 44.58"/><path d="M71.9 1.39L71.9 60.21"/></g></g>
+<g id="r13-ㅛ" transform="translate(1200 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M29.09 26.04L29.09 48.33"/><path d="M49.05 26.04L49.05 48.33"/><path d="M3.9 48.33L82.8 48.33"/></g></g>
+<g id="r13-ㅜ" transform="translate(1300 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M3.9 33.54L82.8 33.54"/><path d="M43.35 33.54L43.35 60.21"/></g></g>
+<g id="r13-ㅝ" transform="translate(1400 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M2.3 30.83L60.9 30.83"/><path d="M30.58 30.83L30.58 56.94"/><path d="M48.4 35.08L72 35.08"/><path d="M72 1.39L72 60.21"/></g></g>
+<g id="r13-ㅞ" transform="translate(1500 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M2.3 30.28L49.2 30.28"/><path d="M24.96 30.28L24.96 55.35"/><path d="M38.3 33.19L57.1 33.19"/><path d="M57.1 1.39L57.1 56.94"/><path d="M74.2 1.39L74.2 60.21"/></g></g>
+<g id="r13-ㅟ" transform="translate(1600 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M3.1 32.5L62.5 32.5"/><path d="M31.76 32.5L31.76 58.06"/><path d="M71.9 1.39L71.9 60.21"/></g></g>
+<g id="r13-ㅠ" transform="translate(1700 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M3.9 33.06L82.8 33.06"/><path d="M29.09 33.06L29.09 60.21"/><path d="M56.9 33.06L56.9 60.21"/></g></g>
+<g id="r13-ㅡ" transform="translate(1800 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M3.9 48.82L82.8 48.82"/></g></g>
+<g id="r13-ㅢ" transform="translate(1900 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M3.9 42.29L61.7 42.29"/><path d="M71.9 1.39L71.9 60.21"/></g></g>
+<g id="r13-ㅣ" transform="translate(2000 1300)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M71.9 1.39L71.9 60.21"/></g></g>
+<g id="r16-ㄱ" transform="translate(0 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M11.7 9.17L67.3 9.17L67.3 41.81"/></g></g>
+<g id="r16-ㄲ" transform="translate(100 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M10.2 9.17L34.5 9.17L34.5 40.14"/><path d="M45.3 9.17L69.6 9.17L69.6 40.14"/></g></g>
+<g id="r16-ㄴ" transform="translate(200 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M17.9 4.86L17.9 27.22L73.4 27.22"/></g></g>
+<g id="r16-ㄷ" transform="translate(300 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M73.4 8.06L17.9 8.06L17.9 31.53L73.4 31.53"/></g></g>
+<g id="r16-ㄸ" transform="translate(400 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M41.4 9.17L14.7 9.17L14.7 31.53L41.4 31.53"/><path d="M77.3 9.17L49.1 9.17L49.1 30.97L77.3 30.97"/></g></g>
+<g id="r16-ㄹ" transform="translate(500 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M13.3 6.94L71.2 6.94L71.2 20.59L17.1 20.59L17.1 34.24L75 34.24"/></g></g>
+<g id="r16-ㅁ" transform="translate(600 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M17.9 8.06L68.9 8.06L68.9 30.97L17.9 30.97Z"/></g></g>
+<g id="r16-ㅂ" transform="translate(700 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M17.1 4.86L17.1 32.64L68.9 32.64L68.9 4.86"/><path d="M17.1 19.06L68.9 19.06"/></g></g>
+<g id="r16-ㅃ" transform="translate(800 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M14.7 4.86L14.7 32.08L36 32.08L36 4.86"/><path d="M14.7 18.81L36 18.81"/><path d="M50.7 4.86L50.7 32.08L72 32.08L72 4.86"/><path d="M50.7 18.81L72 18.81"/></g></g>
+<g id="r16-ㅅ" transform="translate(900 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M44.87 5.77L10.8 32.08"/><path d="M32.28 15.49L75.9 32.08"/></g></g>
+<g id="r16-ㅆ" transform="translate(1000 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M24.7 6.59L9.3 33.19"/><path d="M18.9 16.6L38.4 33.19"/><path d="M61.83 6.05L44.4 33.19"/><path d="M55.29 16.24L77.4 33.19"/></g></g>
+<g id="r16-ㅇ" transform="translate(1100 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><ellipse cx="43.35" cy="20.07" rx="27.85" ry="12.57"/></g></g>
+<g id="r16-ㅈ" transform="translate(1200 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M7 9.17L79.7 9.17"/><path d="M44.88 7.99L10.8 34.24"/><path d="M32.28 17.69L75.9 34.24"/></g></g>
+<g id="r16-ㅉ" transform="translate(1300 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M3.9 8.61L43 8.61"/><path d="M24.38 7.16L7.7 33.19"/><path d="M18.1 16.97L39.2 33.19"/><path d="M41.4 8.61L82.8 8.61"/><path d="M63.08 7.18L45.2 33.19"/><path d="M56.35 16.97L79 33.19"/></g></g>
+<g id="r16-ㅊ" transform="translate(1400 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M25.58 4.79L61.12 4.79"/><path d="M7.8 13.19L78.9 13.19"/><path d="M43.35 13.19L11.6 35.9"/><path d="M32.56 20.91L75.1 35.9"/></g></g>
+<g id="r16-ㅋ" transform="translate(1500 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M10.9 8.61L68.9 8.61L68.9 43.4"/><path d="M10.9 24.04L68.9 24.04"/></g></g>
+<g id="r16-ㅌ" transform="translate(1600 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M73.4 8.06L17.1 8.06L17.1 34.24L73.4 34.24"/><path d="M17.1 21.15L70.25 21.15"/></g></g>
+<g id="r16-ㅍ" transform="translate(1700 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M10.9 8.61L75 8.61"/><path d="M10.9 33.19L75 33.19"/><path d="M29.96 8.61L29.96 33.19"/><path d="M55.94 8.61L55.94 33.19"/></g></g>
+<g id="r16-ㅎ" transform="translate(1800 1600)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M26.93 5.35L58.97 5.35"/><path d="M8.6 14.18L77.3 14.18"/><ellipse cx="42.95" cy="28.57" rx="24.44" ry="9.49"/></g></g>
+<g id="r17-ㅘ" transform="translate(900 1700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M28.02 32.57L28.02 44.58"/><path d="M2.3 44.58L58.6 44.58"/><path d="M67.1 1.39L67.1 60.21"/><path d="M67.1 27.05L85.2 27.05"/></g></g>
+<g id="r17-ㅙ" transform="translate(1000 1700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M23.79 30.9L23.79 42.92"/><path d="M2.3 42.92L49.2 42.92"/><path d="M56.1 1.39L56.1 60.21"/><path d="M74.3 1.39L74.3 60.21"/><path d="M56.1 28.66L74.3 28.66"/></g></g>
+<g id="r17-ㅚ" transform="translate(1100 1700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M30.65 32.57L30.65 44.58"/><path d="M3.9 44.58L62.5 44.58"/><path d="M71.9 1.39L71.9 60.21"/></g></g>
+<g id="r17-ㅝ" transform="translate(1400 1700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M3.1 33.54L62.5 33.54"/><path d="M31.76 33.54L31.76 58.06"/><path d="M48.4 35.08L72 35.08"/><path d="M72 1.39L72 60.21"/></g></g>
+<g id="r17-ㅞ" transform="translate(1500 1700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M2.3 33.54L49.2 33.54"/><path d="M24.96 33.54L24.96 55.35"/><path d="M38.3 33.19L57.1 33.19"/><path d="M57.1 1.39L57.1 56.94"/><path d="M74.2 1.39L74.2 60.21"/></g></g>
+<g id="r17-ㅟ" transform="translate(1600 1700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M3.1 34.65L63.3 34.65"/><path d="M32.15 34.65L32.15 58.06"/><path d="M72.3 1.39L72.3 60.21"/></g></g>
+<g id="r17-ㅢ" transform="translate(1900 1700)" clip-path="url(#kku-cell)"><g transform="scale(1 1.44)"><path d="M3.9 43.68L62.5 43.68"/><path d="M71.9 1.39L71.9 60.21"/></g></g>
+<!-- 묶음 3: 가로획 ×1.73 · 세로획 ×1 -->
+<g id="r18-ㅇ" transform="translate(1100 1800)" clip-path="url(#kku-cell)"><g transform="scale(1 1.73)"><ellipse cx="27.35" cy="21.24" rx="18.05" ry="15.45"/></g></g>
+<g id="r22-ㅇ" transform="translate(1100 2200)" clip-path="url(#kku-cell)"><g transform="scale(1 1.73)"><ellipse cx="43.35" cy="16.72" rx="27.85" ry="10.47"/></g></g>
+<!-- 묶음 4: 가로획 ×2.07 · 세로획 ×1 -->
+<g id="r24-ㅇ" transform="translate(1100 2400)" clip-path="url(#kku-cell)"><g transform="scale(1 2.07)"><ellipse cx="27.35" cy="17.7" rx="18.05" ry="12.88"/></g></g>
+<g id="r28-ㅇ" transform="translate(1100 2800)" clip-path="url(#kku-cell)"><g transform="scale(1 2.07)"><ellipse cx="43.35" cy="13.94" rx="27.85" ry="8.73"/></g></g>
+<!-- 묶음 5: 가로획 ×1 · 세로획 ×1.2 -->
+<g id="r30-ㄱ" transform="translate(0 3000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M3.92 12.4L37.17 12.4L37.17 28.18Q37.17 53.43 9.49 65"/></g></g>
+<g id="r30-ㄲ" transform="translate(100 3000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M1.67 12.4L20.92 12.4L20.92 27.46Q20.92 51.56 6.12 62.6"/><path d="M21.5 12.4L40.42 12.4L40.42 29.11Q40.42 55.85 25.93 68.1"/></g></g>
+<g id="r30-ㅃ" transform="translate(800 3000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M9 7.8L9 61L20.92 61L20.92 7.8"/><path d="M9 34.32L20.92 34.32"/><path d="M32.5 7.8L32.5 61L45 61L45 7.8"/><path d="M32.5 34.32L45 34.32"/></g></g>
+<g id="r30-ㅇ" transform="translate(1100 3000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><ellipse cx="22.79" cy="36.7" rx="15.04" ry="26.7"/></g></g>
+<g id="r30-ㅉ" transform="translate(1300 3000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M1.67 12.4L26.67 12.4"/><path d="M14.6 10.18L4.83 60.3"/><path d="M10.99 28.69L23.5 60.3"/><path d="M19.5 12.4L51.42 12.4"/><path d="M35.98 10.21L22.67 65.7"/><path d="M31.11 30.52L48.25 65.7"/></g></g>
+<g id="r30-ㅋ" transform="translate(1500 3000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M3.92 12.4L37.83 12.4L37.83 28.39Q37.83 53.97 9.54 65.7"/><path d="M3.92 34.79L37.83 34.79"/></g></g>
+<g id="r30-ㅎ" transform="translate(1800 3000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M13.58 9.3L34.58 9.3"/><path d="M2.58 24.12L45.58 24.12"/><ellipse cx="24.08" cy="48.28" rx="14.67" ry="15.92"/></g></g>
+<g id="r34-ㄱ" transform="translate(0 3400)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M9.75 13.2L56.08 13.2L56.08 60.2"/></g></g>
+<g id="r34-ㄲ" transform="translate(100 3400)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M8.5 13.2L28.75 13.2L28.75 57.8"/><path d="M37.75 13.2L58 13.2L58 57.8"/></g></g>
+<g id="r34-ㅃ" transform="translate(800 3400)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M12.25 7L12.25 46.2L30 46.2L30 7"/><path d="M12.25 27.08L30 27.08"/><path d="M42.25 7L42.25 46.2L60 46.2L60 7"/><path d="M42.25 27.08L60 27.08"/></g></g>
+<g id="r34-ㅇ" transform="translate(1100 3400)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><ellipse cx="36.13" cy="28.9" rx="23.21" ry="18.1"/></g></g>
+<g id="r34-ㅉ" transform="translate(1300 3400)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M3.25 12.4L35.83 12.4"/><path d="M20.31 10.32L6.42 47.8"/><path d="M15.08 24.44L32.67 47.8"/><path d="M34.5 12.4L69 12.4"/><path d="M52.57 10.34L37.67 47.8"/><path d="M46.96 24.44L65.83 47.8"/></g></g>
+<g id="r34-ㅋ" transform="translate(1500 3400)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M9.08 12.4L57.42 12.4L57.42 62.5"/><path d="M9.08 34.62L57.42 34.62"/></g></g>
+<g id="r34-ㅎ" transform="translate(1800 3400)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1)"><path d="M22.44 7.7L49.14 7.7"/><path d="M7.17 20.42L64.42 20.42"/><ellipse cx="35.79" cy="41.14" rx="20.37" ry="13.66"/></g></g>
+<!-- 묶음 6: 가로획 ×1.2 · 세로획 ×1.2 -->
+<g id="r36-ㄱ" transform="translate(0 3600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><path d="M3.92 10.33L37.17 10.33L37.17 23.48Q37.17 44.52 9.49 54.17"/></g></g>
+<g id="r36-ㄲ" transform="translate(100 3600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><path d="M1.67 10.33L20.92 10.33L20.92 22.88Q20.92 42.96 6.12 52.17"/><path d="M21.5 10.33L40.42 10.33L40.42 24.26Q40.42 46.54 25.93 56.75"/></g></g>
+<g id="r36-ㅇ" transform="translate(1100 3600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><ellipse cx="22.79" cy="30.58" rx="15.04" ry="22.25"/></g></g>
+<g id="r36-ㅋ" transform="translate(1500 3600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><path d="M3.92 10.33L37.83 10.33L37.83 23.66Q37.83 44.98 9.54 54.75"/><path d="M3.92 28.99L37.83 28.99"/></g></g>
+<g id="r36-ㅎ" transform="translate(1800 3600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><path d="M13.58 7.75L34.58 7.75"/><path d="M2.58 20.1L45.58 20.1"/><ellipse cx="24.08" cy="40.23" rx="14.67" ry="13.27"/></g></g>
+<g id="r40-ㄱ" transform="translate(0 4000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><path d="M9.75 11L56.08 11L56.08 50.17"/></g></g>
+<g id="r40-ㄲ" transform="translate(100 4000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><path d="M8.5 11L28.75 11L28.75 48.17"/><path d="M37.75 11L58 11L58 48.17"/></g></g>
+<g id="r40-ㅇ" transform="translate(1100 4000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><ellipse cx="36.13" cy="24.08" rx="23.21" ry="15.08"/></g></g>
+<g id="r40-ㅋ" transform="translate(1500 4000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><path d="M9.08 10.33L57.42 10.33L57.42 52.08"/><path d="M9.08 28.85L57.42 28.85"/></g></g>
+<g id="r40-ㅎ" transform="translate(1800 4000)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.2)"><path d="M22.44 6.42L49.14 6.42"/><path d="M7.17 17.01L64.42 17.01"/><ellipse cx="35.79" cy="34.28" rx="20.37" ry="11.38"/></g></g>
+<!-- 묶음 7: 가로획 ×1.44 · 세로획 ×1.2 -->
+<g id="r42-ㄱ" transform="translate(0 4200)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M3.92 8.61L37.17 8.61L37.17 19.57Q37.17 37.1 9.49 45.14"/></g></g>
+<g id="r42-ㄲ" transform="translate(100 4200)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M1.67 8.61L20.92 8.61L20.92 19.07Q20.92 35.8 6.12 43.47"/><path d="M21.5 8.61L40.42 8.61L40.42 20.22Q40.42 38.78 25.93 47.29"/></g></g>
+<g id="r42-ㅃ" transform="translate(800 4200)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M9 5.42L9 42.36L20.92 42.36L20.92 5.42"/><path d="M9 23.84L20.92 23.84"/><path d="M32.5 5.42L32.5 42.36L45 42.36L45 5.42"/><path d="M32.5 23.84L45 23.84"/></g></g>
+<g id="r42-ㅇ" transform="translate(1100 4200)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><ellipse cx="22.79" cy="25.49" rx="15.04" ry="18.54"/></g></g>
+<g id="r42-ㅉ" transform="translate(1300 4200)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M1.67 8.61L26.67 8.61"/><path d="M14.6 7.07L4.83 41.88"/><path d="M10.99 19.92L23.5 41.88"/><path d="M19.5 8.61L51.42 8.61"/><path d="M35.98 7.09L22.67 45.63"/><path d="M31.11 21.2L48.25 45.63"/></g></g>
+<g id="r42-ㅋ" transform="translate(1500 4200)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M3.92 8.61L37.83 8.61L37.83 19.72Q37.83 37.48 9.54 45.63"/><path d="M3.92 24.16L37.83 24.16"/></g></g>
+<g id="r42-ㅎ" transform="translate(1800 4200)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M13.58 6.46L34.58 6.46"/><path d="M2.58 16.75L45.58 16.75"/><ellipse cx="24.08" cy="33.53" rx="14.67" ry="11.06"/></g></g>
+<g id="r46-ㄱ" transform="translate(0 4600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M9.75 9.17L56.08 9.17L56.08 41.81"/></g></g>
+<g id="r46-ㄲ" transform="translate(100 4600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M8.5 9.17L28.75 9.17L28.75 40.14"/><path d="M37.75 9.17L58 9.17L58 40.14"/></g></g>
+<g id="r46-ㅃ" transform="translate(800 4600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M12.25 4.86L12.25 32.08L30 32.08L30 4.86"/><path d="M12.25 18.81L30 18.81"/><path d="M42.25 4.86L42.25 32.08L60 32.08L60 4.86"/><path d="M42.25 18.81L60 18.81"/></g></g>
+<g id="r46-ㅇ" transform="translate(1100 4600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><ellipse cx="36.13" cy="20.07" rx="23.21" ry="12.57"/></g></g>
+<g id="r46-ㅉ" transform="translate(1300 4600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M3.25 8.61L35.83 8.61"/><path d="M20.31 7.16L6.42 33.19"/><path d="M15.08 16.97L32.67 33.19"/><path d="M34.5 8.61L69 8.61"/><path d="M52.57 7.18L37.67 33.19"/><path d="M46.96 16.97L65.83 33.19"/></g></g>
+<g id="r46-ㅋ" transform="translate(1500 4600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M9.08 8.61L57.42 8.61L57.42 43.4"/><path d="M9.08 24.04L57.42 24.04"/></g></g>
+<g id="r46-ㅎ" transform="translate(1800 4600)" clip-path="url(#kku-cell)"><g transform="scale(1.2 1.44)"><path d="M22.44 5.35L49.14 5.35"/><path d="M7.17 14.18L64.42 14.18"/><ellipse cx="35.79" cy="28.57" rx="20.37" ry="9.49"/></g></g>
+<!-- 묶음 8: 가로획 ×1 · 세로획 ×1.44 -->
+<g id="r49-ㅏ" transform="translate(0 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M46.6 2L46.6 86.7"/><path d="M46.6 38.95L59.17 38.95"/></g></g>
+<g id="r49-ㅐ" transform="translate(100 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M38.96 2L38.96 86.7"/><path d="M51.04 2L51.04 86.7"/><path d="M38.96 41.27L51.04 41.27"/></g></g>
+<g id="r49-ㅑ" transform="translate(200 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M46.04 2L46.04 86.7"/><path d="M46.04 28.16L59.17 28.16"/><path d="M46.04 51.29L59.17 51.29"/></g></g>
+<g id="r49-ㅒ" transform="translate(300 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M38.47 2L38.47 86.7"/><path d="M51.04 2L51.04 86.7"/><path d="M38.47 28.93L51.04 28.93"/><path d="M38.47 50.52L51.04 50.52"/></g></g>
+<g id="r49-ㅓ" transform="translate(400 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M34.17 38.18L49.44 38.18"/><path d="M49.44 2L49.44 86.7"/></g></g>
+<g id="r49-ㅔ" transform="translate(500 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M30.42 36.21L39.17 36.21"/><path d="M39.17 2L39.17 82"/><path d="M51.25 2L51.25 86.7"/></g></g>
+<g id="r49-ㅕ" transform="translate(600 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M34.72 26.62L50 26.62"/><path d="M34.72 50.52L50 50.52"/><path d="M50 2L50 86.7"/></g></g>
+<g id="r49-ㅖ" transform="translate(700 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M31.91 25.35L39.17 25.35"/><path d="M31.91 47.79L39.17 47.79"/><path d="M39.17 2L39.17 82"/><path d="M51.25 2L51.25 86.7"/></g></g>
+<g id="r49-ㅗ" transform="translate(800 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M27.13 35.9L27.13 70.4"/><path d="M2.71 70.4L57.5 70.4"/></g></g>
+<g id="r49-ㅘ" transform="translate(900 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M19.45 33.6L19.45 63.4"/><path d="M1.6 63.4L40.69 63.4"/><path d="M47.15 2L47.15 86.7"/><path d="M47.15 38.95L59.65 38.95"/></g></g>
+<g id="r49-ㅙ" transform="translate(1000 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M16.27 35.2L16.27 62.6"/><path d="M1.6 62.6L33.61 62.6"/><path d="M38.96 2L38.96 86.7"/><path d="M51.6 2L51.6 86.7"/><path d="M38.96 41.27L51.6 41.27"/></g></g>
+<g id="r49-ㅚ" transform="translate(1100 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M21.03 35.2L21.03 64.2"/><path d="M2.71 64.2L42.85 64.2"/><path d="M49.93 2L49.93 86.7"/></g></g>
+<g id="r49-ㅛ" transform="translate(1200 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M20.2 37.5L20.2 69.6"/><path d="M34.07 37.5L34.07 69.6"/><path d="M2.71 69.6L57.5 69.6"/></g></g>
+<g id="r49-ㅜ" transform="translate(1300 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M2.71 48.3L57.5 48.3"/><path d="M30.1 48.3L30.1 86.7"/></g></g>
+<g id="r49-ㅝ" transform="translate(1400 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M1.6 44.4L42.29 44.4"/><path d="M21.24 44.4L21.24 82"/><path d="M33.61 50.52L50 50.52"/><path d="M50 2L50 86.7"/></g></g>
+<g id="r49-ㅞ" transform="translate(1500 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M1.6 43.6L34.17 43.6"/><path d="M17.34 43.6L17.34 79.7"/><path d="M26.6 47.79L39.65 47.79"/><path d="M39.65 2L39.65 82"/><path d="M51.53 2L51.53 86.7"/></g></g>
+<g id="r49-ㅟ" transform="translate(1600 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M2.15 46.8L43.4 46.8"/><path d="M22.06 46.8L22.06 83.6"/><path d="M49.93 2L49.93 86.7"/></g></g>
+<g id="r49-ㅠ" transform="translate(1700 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M2.71 47.6L57.5 47.6"/><path d="M20.2 47.6L20.2 86.7"/><path d="M39.51 47.6L39.51 86.7"/></g></g>
+<g id="r49-ㅡ" transform="translate(1800 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M2.71 70.3L57.5 70.3"/></g></g>
+<g id="r49-ㅢ" transform="translate(1900 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M2.71 60.9L42.85 60.9"/><path d="M49.93 2L49.93 86.7"/></g></g>
+<g id="r49-ㅣ" transform="translate(2000 4900)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M49.93 2L49.93 86.7"/></g></g>
+<g id="r53-ㅘ" transform="translate(900 5300)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M19.45 46.9L19.45 64.2"/><path d="M1.6 64.2L40.69 64.2"/><path d="M46.6 2L46.6 86.7"/><path d="M46.6 38.95L59.17 38.95"/></g></g>
+<g id="r53-ㅙ" transform="translate(1000 5300)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M16.52 44.5L16.52 61.8"/><path d="M1.6 61.8L34.17 61.8"/><path d="M38.96 2L38.96 86.7"/><path d="M51.6 2L51.6 86.7"/><path d="M38.96 41.27L51.6 41.27"/></g></g>
+<g id="r53-ㅚ" transform="translate(1100 5300)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M21.28 46.9L21.28 64.2"/><path d="M2.71 64.2L43.4 64.2"/><path d="M49.93 2L49.93 86.7"/></g></g>
+<g id="r53-ㅝ" transform="translate(1400 5300)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M2.15 48.3L43.4 48.3"/><path d="M22.06 48.3L22.06 83.6"/><path d="M33.61 50.52L50 50.52"/><path d="M50 2L50 86.7"/></g></g>
+<g id="r53-ㅞ" transform="translate(1500 5300)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M1.6 48.3L34.17 48.3"/><path d="M17.34 48.3L17.34 79.7"/><path d="M26.6 47.79L39.65 47.79"/><path d="M39.65 2L39.65 82"/><path d="M51.53 2L51.53 86.7"/></g></g>
+<g id="r53-ㅟ" transform="translate(1600 5300)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M2.15 49.9L43.96 49.9"/><path d="M22.33 49.9L22.33 83.6"/><path d="M50.21 2L50.21 86.7"/></g></g>
+<g id="r53-ㅢ" transform="translate(1900 5300)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1)"><path d="M2.71 62.9L43.4 62.9"/><path d="M49.93 2L49.93 86.7"/></g></g>
+<!-- 묶음 9: 가로획 ×1.2 · 세로획 ×1.44 -->
+<g id="r54-ㄱ" transform="translate(0 5400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><path d="M3.26 10.33L30.97 10.33L30.97 23.48Q30.97 44.52 7.91 54.17"/></g></g>
+<g id="r54-ㄲ" transform="translate(100 5400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><path d="M1.39 10.33L17.43 10.33L17.43 22.88Q17.43 42.96 5.1 52.17"/><path d="M17.92 10.33L33.68 10.33L33.68 24.26Q33.68 46.54 21.61 56.75"/></g></g>
+<g id="r54-ㅇ" transform="translate(1100 5400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><ellipse cx="18.99" cy="30.58" rx="12.53" ry="22.25"/></g></g>
+<g id="r54-ㅋ" transform="translate(1500 5400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><path d="M3.26 10.33L31.53 10.33L31.53 23.66Q31.53 44.98 7.95 54.75"/><path d="M3.26 28.99L31.53 28.99"/></g></g>
+<g id="r54-ㅎ" transform="translate(1800 5400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><path d="M11.32 7.75L28.82 7.75"/><path d="M2.15 20.1L37.99 20.1"/><ellipse cx="20.07" cy="40.23" rx="12.22" ry="13.27"/></g></g>
+<g id="r58-ㄱ" transform="translate(0 5800)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><path d="M8.13 11L46.74 11L46.74 50.17"/></g></g>
+<g id="r58-ㄲ" transform="translate(100 5800)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><path d="M7.08 11L23.96 11L23.96 48.17"/><path d="M31.46 11L48.33 11L48.33 48.17"/></g></g>
+<g id="r58-ㅇ" transform="translate(1100 5800)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><ellipse cx="30.1" cy="24.08" rx="19.34" ry="15.08"/></g></g>
+<g id="r58-ㅋ" transform="translate(1500 5800)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><path d="M7.57 10.33L47.85 10.33L47.85 52.08"/><path d="M7.57 28.85L47.85 28.85"/></g></g>
+<g id="r58-ㅎ" transform="translate(1800 5800)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.2)"><path d="M18.7 6.42L40.95 6.42"/><path d="M5.97 17.01L53.68 17.01"/><ellipse cx="29.83" cy="34.28" rx="16.97" ry="11.38"/></g></g>
+<!-- 묶음 10: 가로획 ×1.44 · 세로획 ×1.44 -->
+<g id="r60-ㄱ" transform="translate(0 6000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><path d="M3.26 8.61L30.97 8.61L30.97 19.57Q30.97 37.1 7.91 45.14"/></g></g>
+<g id="r60-ㄲ" transform="translate(100 6000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><path d="M1.39 8.61L17.43 8.61L17.43 19.07Q17.43 35.8 5.1 43.47"/><path d="M17.92 8.61L33.68 8.61L33.68 20.22Q33.68 38.78 21.61 47.29"/></g></g>
+<g id="r60-ㅇ" transform="translate(1100 6000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><ellipse cx="18.99" cy="25.49" rx="12.53" ry="18.54"/></g></g>
+<g id="r60-ㅋ" transform="translate(1500 6000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><path d="M3.26 8.61L31.53 8.61L31.53 19.72Q31.53 37.48 7.95 45.63"/><path d="M3.26 24.16L31.53 24.16"/></g></g>
+<g id="r60-ㅎ" transform="translate(1800 6000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><path d="M11.32 6.46L28.82 6.46"/><path d="M2.15 16.75L37.99 16.75"/><ellipse cx="20.07" cy="33.53" rx="12.22" ry="11.06"/></g></g>
+<g id="r64-ㄱ" transform="translate(0 6400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><path d="M8.13 9.17L46.74 9.17L46.74 41.81"/></g></g>
+<g id="r64-ㄲ" transform="translate(100 6400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><path d="M7.08 9.17L23.96 9.17L23.96 40.14"/><path d="M31.46 9.17L48.33 9.17L48.33 40.14"/></g></g>
+<g id="r64-ㅇ" transform="translate(1100 6400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><ellipse cx="30.1" cy="20.07" rx="19.34" ry="12.57"/></g></g>
+<g id="r64-ㅋ" transform="translate(1500 6400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><path d="M7.57 8.61L47.85 8.61L47.85 43.4"/><path d="M7.57 24.04L47.85 24.04"/></g></g>
+<g id="r64-ㅎ" transform="translate(1800 6400)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.44)"><path d="M18.7 5.35L40.95 5.35"/><path d="M5.97 14.18L53.68 14.18"/><ellipse cx="29.83" cy="28.57" rx="16.97" ry="9.49"/></g></g>
+<!-- 묶음 11: 가로획 ×1.73 · 세로획 ×1.44 -->
+<g id="r66-ㄱ" transform="translate(0 6600)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><path d="M3.26 7.18L30.97 7.18L30.97 16.31Q30.97 30.92 7.91 37.62"/></g></g>
+<g id="r66-ㄲ" transform="translate(100 6600)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><path d="M1.39 7.18L17.43 7.18L17.43 15.89Q17.43 29.84 5.1 36.23"/><path d="M17.92 7.18L33.68 7.18L33.68 16.85Q33.68 32.32 21.61 39.41"/></g></g>
+<g id="r66-ㅇ" transform="translate(1100 6600)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><ellipse cx="18.99" cy="21.24" rx="12.53" ry="15.45"/></g></g>
+<g id="r66-ㅋ" transform="translate(1500 6600)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><path d="M3.26 7.18L31.53 7.18L31.53 16.43Q31.53 31.23 7.95 38.02"/><path d="M3.26 20.13L31.53 20.13"/></g></g>
+<g id="r66-ㅎ" transform="translate(1800 6600)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><path d="M11.32 5.38L28.82 5.38"/><path d="M2.15 13.96L37.99 13.96"/><ellipse cx="20.07" cy="27.94" rx="12.22" ry="9.21"/></g></g>
+<g id="r70-ㄱ" transform="translate(0 7000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><path d="M8.13 7.64L46.74 7.64L46.74 34.84"/></g></g>
+<g id="r70-ㄲ" transform="translate(100 7000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><path d="M7.08 7.64L23.96 7.64L23.96 33.45"/><path d="M31.46 7.64L48.33 7.64L48.33 33.45"/></g></g>
+<g id="r70-ㅇ" transform="translate(1100 7000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><ellipse cx="30.1" cy="16.72" rx="19.34" ry="10.47"/></g></g>
+<g id="r70-ㅋ" transform="translate(1500 7000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><path d="M7.57 7.18L47.85 7.18L47.85 36.17"/><path d="M7.57 20.04L47.85 20.04"/></g></g>
+<g id="r70-ㅎ" transform="translate(1800 7000)" clip-path="url(#kku-cell)"><g transform="scale(1.44 1.73)"><path d="M18.7 4.46L40.95 4.46"/><path d="M5.97 11.82L53.68 11.82"/><ellipse cx="29.83" cy="23.81" rx="16.97" ry="7.9"/></g></g>
+<!-- 묶음 12: 가로획 ×1 · 세로획 ×1.73 -->
+<g id="r74-ㄱ" transform="translate(0 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M7.7 61.6L39.87 61.6L39.87 86.7"/></g></g>
+<g id="r74-ㄲ" transform="translate(100 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M7.23 60L21.3 60L21.3 86.7"/><path d="M26.22 60L40.28 60L40.28 86.7"/></g></g>
+<g id="r74-ㄴ" transform="translate(200 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M10.36 58.6L10.36 79.8L42.48 79.8"/></g></g>
+<g id="r74-ㄷ" transform="translate(300 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M42.07 59.3L11.23 59.3L11.23 81.4L42.07 81.4"/></g></g>
+<g id="r74-ㄹ" transform="translate(500 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M7.7 55.4L41.67 55.4L41.67 68.75L9.9 68.75L9.9 82.1L43.87 82.1"/></g></g>
+<g id="r74-ㅁ" transform="translate(600 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M9.9 60.8L39.87 60.8L39.87 81.4L9.9 81.4Z"/></g></g>
+<g id="r74-ㅂ" transform="translate(700 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M10.36 52.3L10.36 81.4L39.87 81.4L39.87 52.3"/><path d="M10.36 67.74L39.87 67.74"/></g></g>
+<g id="r74-ㅅ" transform="translate(900 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M26.35 57.08L8.1 82.1"/><path d="M19.46 66.52L42.53 82.1"/></g></g>
+<g id="r74-ㅆ" transform="translate(1000 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M15.86 58.9L6.71 82.9"/><path d="M12.27 68.31L23.55 82.9"/><path d="M35.78 58.14L25.23 83.7"/><path d="M31.69 68.06L44.79 83.7"/></g></g>
+<g id="r74-ㅇ" transform="translate(1100 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><ellipse cx="25.09" cy="69.9" rx="15.65" ry="12.2"/></g></g>
+<g id="r74-ㅈ" transform="translate(1200 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M5.44 58.5L44.33 58.5"/><path d="M25.91 57.06L7.64 82.9"/><path d="M19.02 66.8L42.13 82.9"/></g></g>
+<g id="r74-ㅊ" transform="translate(1400 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M15.3 53L34.47 53"/><path d="M5.9 61.29L43.87 61.29"/><path d="M24.88 61.29L8.1 83.7"/><path d="M19.18 68.9L41.67 83.7"/></g></g>
+<g id="r74-ㅋ" transform="translate(1500 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M6.77 60L39.87 60L39.87 86.7"/><path d="M6.77 70.99L39.87 70.99"/></g></g>
+<g id="r74-ㅌ" transform="translate(1600 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M42.07 57.7L10.36 57.7L10.36 82.1L42.07 82.1"/><path d="M10.36 69.9L40.3 69.9"/></g></g>
+<g id="r74-ㅍ" transform="translate(1700 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M6.77 58.5L42.94 58.5"/><path d="M6.77 81.4L42.94 81.4"/><path d="M17.55 58.5L17.55 81.4"/><path d="M32.16 58.5L32.16 81.4"/></g></g>
+<g id="r74-ㅎ" transform="translate(1800 7400)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M16.44 50.7L33.73 50.7"/><path d="M6.77 59.39L43.4 59.39"/><ellipse cx="25.09" cy="73.56" rx="12.89" ry="9.34"/></g></g>
+<g id="r75-ㄳ" transform="translate(0 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M7.7 60.8L21.3 60.8L21.3 86.7"/><path d="M37.15 58.93L27.55 82.9"/><path d="M33.39 68.31L45.25 82.9"/></g></g>
+<g id="r75-ㄵ" transform="translate(100 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M8.97 55.5L8.97 82.1L22.63 82.1"/><path d="M21.7 58.5L44.73 58.5"/><path d="M33.91 56.56L23.9 84.5"/><path d="M30.05 67.34L42.53 84.5"/></g></g>
+<g id="r75-ㄶ" transform="translate(200 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M10.36 56.2L10.36 82.1L23.03 82.1"/><path d="M28.36 56.1L40.39 56.1"/><path d="M22.63 63.34L46.12 63.34"/><ellipse cx="34.38" cy="75.13" rx="7.64" ry="7.77"/></g></g>
+<g id="r75-ㄺ" transform="translate(300 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M6.77 55.4L25.81 55.4L25.81 68.75L8.97 68.75L8.97 82.1L28.01 82.1"/><path d="M26.68 55.4L40.28 55.4L40.28 86.7"/></g></g>
+<g id="r75-ㄻ" transform="translate(400 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M6.77 55.4L22.22 55.4L22.22 68.75L8.97 68.75L8.97 82.1L24.42 82.1"/><path d="M28.88 55.4L40.28 55.4L40.28 82.1L28.88 82.1Z"/></g></g>
+<g id="r75-ㄼ" transform="translate(500 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M6.77 55.4L21.76 55.4L21.76 68.75L8.97 68.75L8.97 82.1L23.96 82.1"/><path d="M28.41 50.8L28.41 82.1L40.28 82.1L40.28 50.8"/><path d="M28.41 67.25L40.28 67.25"/></g></g>
+<g id="r75-ㄽ" transform="translate(600 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M6.77 55.4L22.22 55.4L22.22 68.75L8.97 68.75L8.97 82.1L24.42 82.1"/><path d="M36.12 53.38L27.08 82.9"/><path d="M32.64 64.75L43.92 82.9"/></g></g>
+<g id="r75-ㄾ" transform="translate(700 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M6.77 55.4L22.22 55.4L22.22 68.75L8.97 68.75L8.97 82.1L24.42 82.1"/><path d="M42.94 55.4L28.88 55.4L28.88 82.1L42.94 82.1"/><path d="M28.88 68.75L42.23 68.75"/></g></g>
+<g id="r75-ㄿ" transform="translate(800 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M6.77 56.1L21.3 56.1L21.3 69.1L8.97 69.1L8.97 82.1L23.5 82.1"/><path d="M24.88 56.1L44.33 56.1"/><path d="M24.88 82.1L44.33 82.1"/><path d="M31.15 56.1L31.15 82.1"/><path d="M38.07 56.1L38.07 82.1"/></g></g>
+<g id="r75-ㅀ" transform="translate(900 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M6.77 56.9L22.69 56.9L22.69 69.5L8.97 69.5L8.97 82.1L24.88 82.1"/><path d="M29.66 53L40.42 53"/><path d="M24.88 61.29L45.2 61.29"/><ellipse cx="35.04" cy="74.8" rx="6.37" ry="8.9"/></g></g>
+<g id="r75-ㅄ" transform="translate(1000 7500)" clip-path="url(#kku-cell)"><g transform="scale(1.73 1)"><path d="M9.9 51.6L9.9 82.1L22.22 82.1L22.22 51.6"/><path d="M9.9 67.68L22.22 67.68"/><path d="M36.8 52.6L27.55 82.1"/><path d="M33.24 63.95L44.79 82.1"/></g></g>
+<!-- 묶음 13: 가로획 ×1 · 세로획 ×2.07 -->
+<g id="r80-ㄱ" transform="translate(0 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M6.41 61.6L33.23 61.6L33.23 86.7"/></g></g>
+<g id="r80-ㄲ" transform="translate(100 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M6.03 60L17.75 60L17.75 86.7"/><path d="M21.85 60L33.56 60L33.56 86.7"/></g></g>
+<g id="r80-ㄴ" transform="translate(200 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M8.63 58.6L8.63 79.8L35.4 79.8"/></g></g>
+<g id="r80-ㄷ" transform="translate(300 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M35.06 59.3L9.36 59.3L9.36 81.4L35.06 81.4"/></g></g>
+<g id="r80-ㄹ" transform="translate(500 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M6.41 55.4L34.72 55.4L34.72 68.75L8.25 68.75L8.25 82.1L36.55 82.1"/></g></g>
+<g id="r80-ㅁ" transform="translate(600 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M8.25 60.8L33.23 60.8L33.23 81.4L8.25 81.4Z"/></g></g>
+<g id="r80-ㅂ" transform="translate(700 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M8.63 52.3L8.63 81.4L33.23 81.4L33.23 52.3"/><path d="M8.63 67.74L33.23 67.74"/></g></g>
+<g id="r80-ㅅ" transform="translate(900 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M21.96 57.08L6.75 82.1"/><path d="M16.22 66.52L35.45 82.1"/></g></g>
+<g id="r80-ㅆ" transform="translate(1000 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M13.22 58.9L5.59 82.9"/><path d="M10.23 68.31L19.63 82.9"/><path d="M29.81 58.14L21.03 83.7"/><path d="M26.41 68.06L37.33 83.7"/></g></g>
+<g id="r80-ㅇ" transform="translate(1100 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><ellipse cx="20.91" cy="69.9" rx="13.04" ry="12.2"/></g></g>
+<g id="r80-ㅈ" transform="translate(1200 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M4.53 58.5L36.94 58.5"/><path d="M21.59 57.06L6.37 82.9"/><path d="M15.85 66.8L35.11 82.9"/></g></g>
+<g id="r80-ㅊ" transform="translate(1400 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M12.75 53L28.72 53"/><path d="M4.92 61.29L36.55 61.29"/><path d="M20.74 61.29L6.75 83.7"/><path d="M15.98 68.9L34.72 83.7"/></g></g>
+<g id="r80-ㅋ" transform="translate(1500 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M5.64 60L33.23 60L33.23 86.7"/><path d="M5.64 70.99L33.23 70.99"/></g></g>
+<g id="r80-ㅌ" transform="translate(1600 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M35.06 57.7L8.63 57.7L8.63 82.1L35.06 82.1"/><path d="M8.63 69.9L33.58 69.9"/></g></g>
+<g id="r80-ㅍ" transform="translate(1700 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M5.64 58.5L35.78 58.5"/><path d="M5.64 81.4L35.78 81.4"/><path d="M14.62 58.5L14.62 81.4"/><path d="M26.8 58.5L26.8 81.4"/></g></g>
+<g id="r80-ㅎ" transform="translate(1800 8000)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M13.7 50.7L28.11 50.7"/><path d="M5.64 59.39L36.17 59.39"/><ellipse cx="20.91" cy="73.56" rx="10.74" ry="9.34"/></g></g>
+<g id="r81-ㄳ" transform="translate(0 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M6.41 60.8L17.75 60.8L17.75 86.7"/><path d="M30.96 58.93L22.96 82.9"/><path d="M27.83 68.31L37.71 82.9"/></g></g>
+<g id="r81-ㄵ" transform="translate(100 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M7.47 55.5L7.47 82.1L18.86 82.1"/><path d="M18.08 58.5L37.28 58.5"/><path d="M28.26 56.56L19.92 84.5"/><path d="M25.04 67.34L35.45 84.5"/></g></g>
+<g id="r81-ㄶ" transform="translate(200 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M8.63 56.2L8.63 82.1L19.19 82.1"/><path d="M23.63 56.1L33.66 56.1"/><path d="M18.86 63.34L38.44 63.34"/><ellipse cx="28.65" cy="75.13" rx="6.37" ry="7.77"/></g></g>
+<g id="r81-ㄺ" transform="translate(300 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M5.64 55.4L21.51 55.4L21.51 68.75L7.47 68.75L7.47 82.1L23.34 82.1"/><path d="M22.23 55.4L33.56 55.4L33.56 86.7"/></g></g>
+<g id="r81-ㄻ" transform="translate(400 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M5.64 55.4L18.52 55.4L18.52 68.75L7.47 68.75L7.47 82.1L20.35 82.1"/><path d="M24.06 55.4L33.56 55.4L33.56 82.1L24.06 82.1Z"/></g></g>
+<g id="r81-ㄼ" transform="translate(500 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M5.64 55.4L18.13 55.4L18.13 68.75L7.47 68.75L7.47 82.1L19.97 82.1"/><path d="M23.68 50.8L23.68 82.1L33.56 82.1L33.56 50.8"/><path d="M23.68 67.25L33.56 67.25"/></g></g>
+<g id="r81-ㄽ" transform="translate(600 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M5.64 55.4L18.52 55.4L18.52 68.75L7.47 68.75L7.47 82.1L20.35 82.1"/><path d="M30.1 53.38L22.57 82.9"/><path d="M27.2 64.75L36.6 82.9"/></g></g>
+<g id="r81-ㄾ" transform="translate(700 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M5.64 55.4L18.52 55.4L18.52 68.75L7.47 68.75L7.47 82.1L20.35 82.1"/><path d="M35.78 55.4L24.06 55.4L24.06 82.1L35.78 82.1"/><path d="M24.06 68.75L35.19 68.75"/></g></g>
+<g id="r81-ㄿ" transform="translate(800 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M5.64 56.1L17.75 56.1L17.75 69.1L7.47 69.1L7.47 82.1L19.58 82.1"/><path d="M20.74 56.1L36.94 56.1"/><path d="M20.74 82.1L36.94 82.1"/><path d="M25.95 56.1L25.95 82.1"/><path d="M31.72 56.1L31.72 82.1"/></g></g>
+<g id="r81-ㅀ" transform="translate(900 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M5.64 56.9L18.9 56.9L18.9 69.5L7.47 69.5L7.47 82.1L20.74 82.1"/><path d="M24.72 53L33.69 53"/><path d="M20.74 61.29L37.66 61.29"/><ellipse cx="29.2" cy="74.8" rx="5.3" ry="8.9"/></g></g>
+<g id="r81-ㅄ" transform="translate(1000 8100)" clip-path="url(#kku-cell)"><g transform="scale(2.07 1)"><path d="M8.25 51.6L8.25 82.1L18.52 82.1L18.52 51.6"/><path d="M8.25 67.68L18.52 67.68"/><path d="M30.66 52.6L22.96 82.1"/><path d="M27.7 63.95L37.33 82.1"/></g></g>
+</g>
+</svg>

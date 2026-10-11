@@ -1,0 +1,257 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 카페 메뉴판. 글꼴: chalk dojang malang. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>카페 소복 — 오늘의 메뉴</title>
+  <script src="../lib/font-kku.js" data-fonts="chalk dojang malang"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --kraft: #ecdfc8;
+      --wood: #7a4b26;
+      --board: #1f3a2e;
+      --chalk: #f1ede1;
+      --chalk-dim: #c9cdbf;
+      --stamp: #c41e28;
+      --paper: #fbf3df;
+    }
+
+    body {
+      margin: 0;
+      color: #3a2a1c;
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      word-break: keep-all;
+      background:
+        repeating-linear-gradient(90deg, rgb(120 80 40 / 3%) 0 2px, transparent 2px 9px),
+        var(--kraft);
+    }
+
+    /* 가게 이름 + 말랑 한 줄 (밝은 바탕) */
+    .shop {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 40px 20px 28px;
+      text-align: center;
+    }
+    .shop .name {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 14px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.3em;
+      color: var(--wood);
+    }
+    .shop .name::before,
+    .shop .name::after { content: ""; width: 28px; height: 1.5px; background: currentColor; opacity: 0.5; }
+    .tagline { color: #6b3f22; }
+
+    /* 칠판 + 나무 액자 */
+    .board {
+      position: relative;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 48px 52px;
+      border: 18px solid var(--wood);
+      border-radius: 10px;
+      color: var(--chalk);
+      background:
+        radial-gradient(ellipse 40% 30% at 20% 25%, rgb(255 255 255 / 6%), transparent 70%),
+        radial-gradient(ellipse 35% 25% at 80% 70%, rgb(255 255 255 / 5%), transparent 70%),
+        radial-gradient(ellipse 50% 20% at 50% 100%, rgb(255 255 255 / 4%), transparent 70%),
+        var(--board);
+      box-shadow:
+        inset 0 0 0 2px rgb(0 0 0 / 25%),
+        inset 0 0 60px rgb(0 0 0 / 35%),
+        0 0 0 1px #5a3518,
+        0 20px 40px rgb(60 30 10 / 35%);
+    }
+    /* 분필 받침 */
+    .board::after {
+      content: "";
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      bottom: -30px;
+      height: 10px;
+      border-radius: 3px;
+      background:
+        linear-gradient(90deg, transparent 8%, #f6f3e8 8% 14%, transparent 14% 70%, #f7c8d4 70% 74%, transparent 74% 80%, #fff1a8 80% 85%, transparent 85%),
+        #5a3518;
+    }
+
+    /* 칠판 윗줄: 제목(왼쪽) + 추천 쪽지(오른쪽) */
+    .board-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+    .board-head { padding-top: 6px; }
+    .board-title { margin: 0; }
+    .board-head p { margin: 10px 0 0; font-size: 14px; color: var(--chalk-dim); letter-spacing: 0.04em; }
+
+    .menu {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 34px 56px;
+    }
+    .menu section { min-width: 0; }
+    .menu-title {
+      margin: 0 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px dashed rgb(241 237 225 / 35%);
+    }
+
+    .items { margin: 0; padding: 0; list-style: none; }
+    .items li { padding: 9px 0; }
+    .row { display: flex; align-items: baseline; gap: 10px; font-size: 17px; font-weight: 600; }
+    .row .dots { flex: 1; border-bottom: 2px dotted rgb(241 237 225 / 30%); transform: translateY(-4px); }
+    .row .price { font-variant-numeric: tabular-nums; }
+    .items small { display: block; margin-top: 3px; font-size: 13px; color: var(--chalk-dim); }
+    .items .new {
+      margin-left: 6px;
+      padding: 1px 6px;
+      border: 1.5px solid #f7c8d4;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #f7c8d4;
+      vertical-align: 2px;
+    }
+
+    /* 칠판에 붙인 종이 쪽지 — 도장은 종이 바탕 위에 */
+    .pick {
+      position: relative;
+      flex: none;
+      width: 210px;
+      margin: -14px 6px 0 0;
+      padding: 22px 18px 18px;
+      color: #3a2a1c;
+      background: var(--paper);
+      border-radius: 3px;
+      box-shadow: 0 8px 18px rgb(0 0 0 / 35%);
+      transform: rotate(4deg);
+      text-align: center;
+    }
+    .pick::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      width: 84px;
+      height: 24px;
+      margin-left: -42px;
+      background: rgb(255 255 255 / 55%);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 12%);
+      transform: rotate(-3deg);
+    }
+    .seal {
+      display: inline-block;
+      padding: 6px 8px 4px;
+      border: 3px solid var(--stamp);
+      border-radius: 8px;
+      transform: rotate(-8deg);
+      opacity: 0.92;
+    }
+    .pick strong { display: block; margin-top: 12px; font-size: 17px; }
+    .pick p { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: #6b5a48; }
+    .pick .price { display: block; margin-top: 8px; font-weight: 800; color: var(--stamp); }
+
+    .info {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 52px 20px 44px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 28px;
+      font-size: 14px;
+      color: #6b5a48;
+    }
+    .info b { color: #3a2a1c; margin-right: 6px; }
+
+    @media (max-width: 720px) {
+      .board { padding: 30px 22px 36px; border-width: 12px; }
+      .board-top { flex-direction: column; align-items: center; gap: 30px; text-align: center; }
+      .menu { grid-template-columns: 1fr; gap: 26px; }
+      .pick { width: 100%; max-width: 260px; margin: 0 0 6px; transform: rotate(-2deg); }
+      .row { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shop">
+    <p class="name">카페 소복</p>
+    <font-kku class="tagline" font="malang" size="clamp(26px, 6.4vw, 40px)">오늘도 달콤하게 쉬어 가요</font-kku>
+  </header>
+
+  <main class="board">
+    <div class="board-top">
+      <div class="board-head">
+        <h1 class="font-kku board-title" data-font="chalk" data-size="clamp(42px, 10vw, 72px)">오늘의 메뉴</h1>
+        <p>모든 음료는 따뜻하게 · 차갑게 고를 수 있어요</p>
+      </div>
+      <aside class="pick" aria-label="오늘의 추천">
+        <span class="seal"><font-kku font="dojang" size="40">추천</font-kku></span>
+        <strong>밤 크림 라떼</strong>
+        <p>직접 졸인 공주 밤 크림을 듬뿍 올린 가을 한정 라떼</p>
+        <span class="price">6,500</span>
+      </aside>
+    </div>
+
+    <div class="menu">
+      <section aria-labelledby="m-coffee">
+        <h2 class="font-kku menu-title" id="m-coffee" data-font="chalk" data-size="34">커피</h2>
+        <ul class="items">
+          <li><div class="row">아메리카노<i class="dots"></i><span class="price">4,500</span></div><small>고소한 견과 향의 하우스 블렌드</small></li>
+          <li><div class="row">카페 라떼<i class="dots"></i><span class="price">5,000</span></div><small>우유 대신 귀리 우유로 바꿀 수 있어요 (+500)</small></li>
+          <li><div class="row">흑당 크림 라떼<i class="dots"></i><span class="price">5,800</span></div></li>
+          <li><div class="row">핸드 드립<i class="dots"></i><span class="price">6,000</span></div><small>오늘의 원두: 에티오피아 구지</small></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="m-tea">
+        <h2 class="font-kku menu-title" id="m-tea" data-font="chalk" data-size="34">차와 음료</h2>
+        <ul class="items">
+          <li><div class="row">유자차<i class="dots"></i><span class="price">5,500</span></div><small>고흥 유자를 껍질째 청으로</small></li>
+          <li><div class="row">쌍화 밀크티<i class="dots"></i><span class="price">6,000</span></div></li>
+          <li><div class="row">오미자 에이드<i class="dots"></i><span class="price">5,800</span></div></li>
+          <li><div class="row">따뜻한 대추차<span class="new">새 메뉴</span><i class="dots"></i><span class="price">6,000</span></div></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="m-dessert">
+        <h2 class="font-kku menu-title" id="m-dessert" data-font="chalk" data-size="34">디저트</h2>
+        <ul class="items">
+          <li><div class="row">인절미 버터떡<i class="dots"></i><span class="price">3,800</span></div><small>겉은 바삭, 속은 쫀득</small></li>
+          <li><div class="row">고구마 브륄레<i class="dots"></i><span class="price">6,500</span></div></li>
+          <li><div class="row">흑임자 롤케이크<i class="dots"></i><span class="price">5,500</span></div></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="m-season">
+        <h2 class="font-kku menu-title" id="m-season" data-font="chalk" data-size="34">가을 한정</h2>
+        <ul class="items">
+          <li><div class="row">밤 크림 라떼<i class="dots"></i><span class="price">6,500</span></div></li>
+          <li><div class="row">단호박 수프<i class="dots"></i><span class="price">7,000</span></div><small>통밀빵 한 조각과 함께</small></li>
+          <li><div class="row">홍시 요거트볼<i class="dots"></i><span class="price">6,800</span></div></li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="info">
+    <span><b>영업</b>매일 10:00 – 21:00 (월요일 쉼)</span>
+    <span><b>주문</b>카운터에서 도와드려요</span>
+    <span><b>가격</b>원, 부가세 포함</span>
+    <span><b>찾아오는 길</b>소복동 12-3, 1층</span>
+  </footer>
+</body>
+</html>

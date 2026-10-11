@@ -1,0 +1,280 @@
+/* font-kku-motion — 자모 단위 움직임 확장 (ADR-017, 움직임 축).
+ *
+ * 한 줄 설치 `<script src=".../font-kku.js" data-fonts="sebul" data-addons="motion">`로
+ * 붙이거나 이 파일을 link한다. 고르는 법은 코어 움직임(rise·fade·stagger·bounce·
+ * wiggle·drift — font-kku.css, 글자 단위)과 같은 animate 속성이다:
+ *   <font-kku font="sebul" animate="wave">물결</font-kku>
+ *   <h1 class="font-kku" data-font="gothic" data-animate="assemble">조립</h1>
+ * 이 파일의 움직임은 글자가 아니라 자모 노드([part~="jamo"])를 움직인다.
+ *
+ *   assemble         자모 조립 — 초성·중성·받침이 다른 쪽에서 날아와 맞물린다(한 번)
+ *   drop             받침 톡 — 받침만 위에서 떨어져 두 번 튀고 자리 잡는다(한 번)
+ *   wave             물결 — 글자마다, 같은 글자 안에서도 역할마다 다른 박자로 출렁인다
+ *   flicker          깜빡임 — 단어 둘째 글자(뒤로 세 글자마다)의 받침 관 하나가 끊어질 듯
+ *                    깜빡인다. 받침이 없으면 중성
+ *   cycle            색 순환 — 오방색이 초성 → 중성 → 받침으로 시차를 두고 돈다
+ *   shine            반짝 — 자모마다 빛줄기가 지나간다(글자 색 위에 밝은 띠)
+ *   scroll-assemble  스크롤 조립 — 화면을 내릴수록 흩어진 자모가 모인다(스크롤이 진행도)
+ *   draw             획순 그리기 — 벡터 자소(jamo-set)를 획 깊이로 쪼개 획순대로 긋는다(한 번,
+ *                    ADR-018). 획으로 쪼갤 수 없는 재료는 자모가 같은 차례로 나타난다
+ *
+ * 규칙
+ * - 자모 자리는 코어가 transform으로 잡는다. 움직임은 따로 합성되는 개별 속성
+ *   translate·rotate·scale과 opacity·color만 쓴다.
+ * - 시차는 글자 순번 --fy-glyph-index와 역할 단계 --kku-step(초성·완성형 head 0,
+ *   중성 1, 받침 2)으로 준다. --fy-jamo-index는 자모 표 번호라 순서가 아니다.
+ * - 한 번 도는 움직임(assemble·drop·draw)은 다시 그리면 다시 돈다 — FontKku.refresh(host)
+ *   또는 font-kku-fx.js의 FontKkuFx.replay(host). 글을 바꿔 그릴 때마다 다시 날아오므로
+ *   타자처럼 자주 다시 그리는 바탕 요소에는 끈다(FontKkuFx.type이 알아서 끈다).
+ * - 그림 자소(sprite) 재료: 칸은 자소판 그림으로 칠해져 color가 닿지 않는다. 색을 바꾸는
+ *   cycle·shine은 이 바탕 요소에 마스크 칠(--fy-sprite-paint: mask, ADR-014)을 켜서
+ *   자소판 모양에 글자 색을 칠한다 — 자소판 고유의 색(인주·실 빛)은 그동안 글자 색이 된다.
+ *   이동·투명도 움직임은 재료와 무관하다.
+ * - 조절 손잡이(페이지 CSS에서 바탕 요소에): --kku-motion-duration(한 바퀴 길이),
+ *   --kku-motion-stagger(글자 사이 시차), --kku-cycle-1~4(cycle 색),
+ *   --kku-shine-color(shine 빛 색), --kku-draw-stroke(draw 획 하나 긋는 시간),
+ *   --kku-draw-gap(draw 획 사이 시차).
+ * - 조상(또는 바탕 요소)에 data-kku-paused를 두면 움직임이 그 자리에 선다 — 스크롤 조립은
+ *   스크롤이 진행도라 서지 않는다. 사용자가 움직임 줄이기를 켜면 모두 끈다.
+ * - 모든 규칙은 cascade layer font-kku.motion 안에 있어 레이어 밖 페이지 CSS가 언제나 이긴다.
+ *   레이어 순서 문은 글꼴 CSS·꾸밈 확장과 같은 순서를 되풀이해 불러온 순서와 무관하게 한다. */
+@layer font-kku.font, font-kku.jamo, font-kku.context, font-kku.look, font-kku.motion;
+
+/* shine의 빛줄기 자리. 등록해야 키프레임 사이를 보간한다. */
+@property --kku-shine {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -40%;
+}
+
+@layer font-kku.motion {
+  /* ── 역할 단계 ─────────────────────────────────────── */
+  :where(font-kku, .font-kku)[data-fy-animate] :where([part~="jamo"]) { --kku-step: 0; }
+  :where(font-kku, .font-kku)[data-fy-animate] :where([part~="jungseong"]) { --kku-step: 1; }
+  :where(font-kku, .font-kku)[data-fy-animate] :where([part~="jongseong"]) { --kku-step: 2; }
+
+  /* ── assemble: 자모 조립 ────────────────────────────── */
+  :where(font-kku, .font-kku)[data-fy-animate="assemble"] :where([part~="jamo"]) {
+    --kku-from: 0em -0.45em;
+    --kku-turn: 0deg;
+    animation: kku-assemble var(--kku-motion-duration, 820ms) cubic-bezier(0.16, 0.84, 0.32, 1) backwards;
+    animation-delay: calc(var(--fy-glyph-index, 0) * var(--kku-motion-stagger, 60ms) + var(--kku-step, 0) * 90ms + 120ms);
+  }
+  :where(font-kku, .font-kku)[data-fy-animate="assemble"] :where([part~="choseong"], [part~="head"]) {
+    --kku-from: -0.4em -0.35em;
+    --kku-turn: -12deg;
+  }
+  :where(font-kku, .font-kku)[data-fy-animate="assemble"] :where([part~="jungseong"]) {
+    --kku-from: 0.45em -0.05em;
+    --kku-turn: 9deg;
+  }
+  :where(font-kku, .font-kku)[data-fy-animate="assemble"] :where([part~="jongseong"]) {
+    --kku-from: 0.05em 0.45em;
+    --kku-turn: -7deg;
+  }
+
+  /* ── drop: 받침 톡 ──────────────────────────────────── */
+  :where(font-kku, .font-kku)[data-fy-animate="drop"] :where([part~="jongseong"]) {
+    animation: kku-drop var(--kku-motion-duration, 1100ms) backwards;
+    animation-delay: calc(var(--fy-glyph-index, 0) * var(--kku-motion-stagger, 180ms) + 150ms);
+  }
+
+  /* ── wave: 물결 ─────────────────────────────────────── */
+  :where(font-kku, .font-kku)[data-fy-animate="wave"] :where([part~="jamo"]) {
+    animation: kku-wave var(--kku-motion-duration, 1.6s) ease-in-out infinite;
+    animation-delay: calc(var(--fy-glyph-index, 0) * -0.22s + var(--kku-step, 0) * -0.12s);
+  }
+
+  /* ── flicker: 깜빡임 ────────────────────────────────── */
+  :where(font-kku, .font-kku)[data-fy-animate="flicker"] :where([part="glyph"]:nth-child(3n+2)) :where([part~="jongseong"]),
+  :where(font-kku, .font-kku)[data-fy-animate="flicker"] :where([part="glyph"]:nth-child(3n+2):not(:has([part~="jongseong"]))) :where([part~="jungseong"]) {
+    animation: kku-flicker var(--kku-motion-duration, 4.2s) linear infinite;
+    animation-delay: calc(var(--fy-glyph-index, 0) * -0.9s);
+  }
+
+  /* ── cycle: 색 순환 ─────────────────────────────────── */
+  :where(font-kku, .font-kku)[data-fy-animate="cycle"] :where([part~="jamo"]) {
+    animation: kku-cycle var(--kku-motion-duration, 4.8s) linear infinite;
+    animation-delay: calc(var(--fy-glyph-index, 0) * -0.3s + var(--kku-step, 0) * -1.2s);
+  }
+
+  /* ── shine: 반짝 ────────────────────────────────────── */
+  :where(font-kku, .font-kku)[data-fy-animate="shine"] :where([part~="jamo"]) {
+    --kku-shine-paint: linear-gradient(115deg,
+      currentColor calc(var(--kku-shine) - 26%),
+      var(--kku-shine-color, #fff8de) var(--kku-shine),
+      currentColor calc(var(--kku-shine) + 26%));
+    --fy-sprite-fill: var(--kku-shine-paint);
+    animation: kku-shine var(--kku-motion-duration, 3s) ease-in-out infinite;
+    animation-delay: calc(var(--fy-glyph-index, 0) * var(--kku-motion-stagger, 140ms));
+  }
+  /* 기기 글꼴: 글자 모양으로 오린 바탕에 띠를 칠한다. 꾸밈(kku-look-*)이 걸린 글자는 칠을 투명하게
+   * 만들면 꾸밈의 그림자·외곽선이 글자 몸통으로 비쳐 색이 망가지므로, 칠은 그대로 두고 자모마다
+   * 밝기가 번쩍 지나가게 한다. */
+  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material]):not([class*="kku-look-"]) :where([part~="jamo"]) {
+    background-image: var(--kku-shine-paint);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material])[class*="kku-look-"] :where([part~="jamo"]) {
+    animation-name: kku-shine-glint;
+  }
+
+  /* 그림 자소에서 색을 바꾸는 움직임은 마스크 칠로 — 런타임은 처음 그릴 때 바탕 요소의
+   * --fy-sprite-paint를 읽으므로, 그때 이미 있는 작성 속성(animate·data-animate)으로도 고른다 */
+  :where(font-kku[animate="cycle"], font-kku[animate="shine"],
+    .font-kku[data-animate="cycle"], .font-kku[data-animate="shine"],
+    font-kku[data-fy-animate="cycle"], font-kku[data-fy-animate="shine"],
+    .font-kku[data-fy-animate="cycle"], .font-kku[data-fy-animate="shine"]) {
+    --fy-sprite-paint: mask;
+  }
+
+  /* ── draw: 획순 그리기 ──────────────────────────────── */
+  /* 획 깊이(ADR-018)를 켠다 — 런타임은 그릴 때 바탕 요소의 --fy-stroke-depth를 읽으므로
+   * 작성 속성(animate·data-animate)으로 고른다. 런타임이 찍는 data-fy-animate로 고르면 안 된다 —
+   * animate를 지운 뒤 다시 그릴 때 지난번 도장이 남은 채로 읽혀 획 노드가 그대로 남았다.
+   * JS 옵션(render(host, { animate: "draw" }))만 쓰면 strokeDepth: "stroke"를 함께 준다.
+   * 벡터 자소면 획마다 길이가 1(pathLength)이라
+   * 대시 하나가 획 하나다: 글자 순서대로, 한 글자 안에서는 초성 → 중성 → 받침, 자모 안에서는
+   * spec/strokes.json 획순(--fy-hoek-order)으로 긋는다. 대시는 키프레임 안에만 있어 다 그은 뒤에는
+   * 원래 획 그대로다. 획으로 쪼갤 수 없는 재료(기기 글꼴·자소판)는 자모가 같은 차례로 나타난다. */
+  :where(font-kku[animate="draw"], .font-kku[data-animate="draw"]) {
+    --fy-stroke-depth: stroke;
+  }
+  :where(font-kku, .font-kku)[data-fy-animate="draw"][data-fy-stroke-depth="stroke"] :where([part="hoek"]) {
+    animation: kku-draw var(--kku-draw-stroke, 300ms) ease-in-out backwards;
+    animation-delay: calc(var(--fy-hoek-order, 0) * var(--kku-draw-gap, 110ms) + 120ms);
+  }
+  :where(font-kku, .font-kku)[data-fy-animate="draw"]:not([data-fy-stroke-depth="stroke"]) :where([part~="jamo"]) {
+    animation: kku-draw-jamo var(--kku-draw-stroke, 300ms) ease-out backwards;
+    animation-delay: calc((var(--fy-glyph-index, 0) * 3 + var(--kku-step, 0)) * var(--kku-draw-gap, 110ms) + 120ms);
+  }
+
+  /* ── scroll-assemble: 스크롤 조립 ────────────────────── */
+  /* 자모마다 씨앗값(jamo-seeds)으로 정한 방향에서 모여든다. 씨앗이 없으면 역할·글자 순번으로
+   * 방향을 나눈다. 조상에 overflow: hidden이 있으면 그 상자가 기준 화면이 되므로 페이지는
+   * overflow: clip을 쓴다. 스크롤 연동 움직임이 없는 브라우저에서는 조립된 채로 보인다. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      :where(font-kku, .font-kku)[data-fy-animate="scroll-assemble"] {
+        view-timeline: --kku-scroll block;
+      }
+      :where(font-kku, .font-kku)[data-fy-animate="scroll-assemble"] :where([part~="jamo"]) {
+        --kku-angle: calc(var(--fy-jamo-seed, calc(0.12 + var(--kku-step, 0) * 0.31)) * 360deg + var(--fy-glyph-index, 0) * 47deg);
+        --kku-spin: calc((var(--fy-jamo-seed, calc(0.2 + var(--kku-step, 0) * 0.3)) - 0.5) * 160deg);
+        animation: kku-scroll-assemble linear both;
+        animation-timeline: --kku-scroll;
+        animation-range: entry 10% cover 50%;
+      }
+    }
+  }
+
+  /* ── 멈추기 ─────────────────────────────────────────── */
+  /* 코어 글자 움직임(rise·bounce·wiggle …)은 레이어 밖 animation 단축 속성이라 play-state를 running으로
+   * 되돌린다. 레이어 안의 !important는 레이어 밖 보통 선언을 이기므로 여기서 !important로 세운다
+   * (페이지가 끝내 되살리려면 레이어 밖 !important가 필요하다). */
+  :where([data-kku-paused]) :where(font-kku, .font-kku)[data-fy-animate]:not([data-fy-animate="scroll-assemble"]) :where([part="glyph"], [part~="jamo"], [part="hoek"]),
+  :where(font-kku, .font-kku)[data-kku-paused][data-fy-animate]:not([data-fy-animate="scroll-assemble"]) :where([part="glyph"], [part~="jamo"], [part="hoek"]) {
+    animation-play-state: paused !important;
+  }
+
+  /* ── 움직임 줄이기 ──────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    :where(font-kku, .font-kku)[data-fy-animate] :where([part="glyph"], [part~="jamo"], [part="hoek"]) {
+      animation: none;
+    }
+  }
+}
+
+/* 대시는 키프레임 안에만 — 시작 전(backwards)에는 숨고, 다 그은 뒤에는 대시 없는 원래 획이다.
+ * 시작 전 획은 투명하게 둬 대시 경계에서 획 끝이 점으로 남지 않게 한다. */
+@keyframes kku-draw {
+  from {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  to {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes kku-draw-jamo {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes kku-assemble {
+  from {
+    opacity: 0;
+    translate: var(--kku-from);
+    rotate: var(--kku-turn);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0deg;
+  }
+}
+
+@keyframes kku-drop {
+  0% { opacity: 0; translate: 0 -1.6em; animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  12% { opacity: 1; }
+  45% { translate: 0 0; animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1); }
+  62% { translate: 0 -0.28em; animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  78% { translate: 0 0; animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1); }
+  88% { translate: 0 -0.07em; animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes kku-wave {
+  0%, 100% { translate: 0 0.06em; }
+  50% { translate: 0 -0.12em; }
+}
+
+@keyframes kku-flicker {
+  0%, 7%, 9.5%, 12%, 46%, 62%, 64%, 100% { opacity: 1; }
+  8%, 10.5%, 47%, 63% { opacity: 0.1; }
+  48%, 61% { opacity: 0.05; }
+  50%, 58% { opacity: 0.35; }
+}
+
+@keyframes kku-cycle {
+  0%, 100% { color: var(--kku-cycle-1, #d62839); }
+  25% { color: var(--kku-cycle-2, #f2a007); }
+  50% { color: var(--kku-cycle-3, #12965f); }
+  75% { color: var(--kku-cycle-4, #1f4fd1); }
+}
+
+@keyframes kku-shine-glint {
+  0%, 30%, 62%, 100% { filter: none; }
+  46% { filter: brightness(1.55) saturate(1.2); }
+}
+
+@keyframes kku-shine {
+  0%, 25% { --kku-shine: -40%; }
+  75%, 100% { --kku-shine: 140%; }
+}
+
+@keyframes kku-scroll-assemble {
+  from {
+    opacity: 0;
+    translate: calc(cos(var(--kku-angle)) * 1.4em) calc(sin(var(--kku-angle)) * 1.4em);
+    rotate: var(--kku-spin);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0deg;
+  }
+}

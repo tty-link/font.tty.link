@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>font-kku 데모 — 기본 글</title>
+    <link rel="stylesheet" href="lib/font-kku.css" />
+    <link rel="stylesheet" href="lib/profiles/sebul.css" />
+    <link rel="stylesheet" href="lib/profiles/gothic.css" />
+    <link rel="stylesheet" href="./demo.css" />
+  </head>
+  <body>
+    <div class="demo-shell">
+      <header class="demo-topbar">
+        <a class="demo-brand" href="./index.html">
+          <span class="demo-badge">꾸</span>
+          <span class="demo-brand-text">
+            <strong>폰꾸</strong>
+            <span>font-kku</span>
+          </span>
+        </a>
+        <nav class="demo-nav" data-demo-nav aria-label="데모 페이지"></nav>
+      </header>
+
+      <section class="demo-hero">
+        <span class="demo-kicker">기본 글</span>
+        <h1 class="demo-title">탈네모꼴과 네모꼴, <em>같은 문장</em>을 양쪽에서 본다</h1>
+        <p class="demo-copy">
+          엔진은 같은 짜임 메타데이터를 쓰고, 표현 방향은 각 글꼴 CSS가 정한다.
+          <code>sebul</code>은 기기 글꼴의 한글 자모를 탈네모꼴 세벌식으로 배치하고, <code>gothic</code>은 같은 계열 자모를 네모꼴에 가깝게 묶는다.
+        </p>
+        <div class="demo-pill-row">
+          <span class="demo-pill">탈네모 배치: 기기 한글 글꼴</span>
+          <span class="demo-pill"><code>sebul</code> 탈네모꼴 세벌식</span>
+          <span class="demo-pill"><code>gothic</code> 본고딕식 네모꼴</span>
+          <span class="demo-pill">네모 기준: Noto Sans KR</span>
+        </div>
+      </section>
+
+      <section class="demo-stack">
+        <article class="demo-panel">
+          <h2>한 줄 빠른 비교</h2>
+          <p class="demo-meta">
+            같은 기기 글꼴 문장과 sebul·gothic 조합을 나란히 올려 배치 방향 차이를 한눈에 본다.
+          </p>
+          <div class="demo-compare-grid">
+            <div class="demo-sample demo-sample-tone-default">
+              <span class="demo-label">탈네모 기준</span>
+              <span class="demo-reference-text demo-reference-text--desquare">오늘의 서울은 따뜻하다</span>
+            </div>
+            <div class="demo-sample demo-sample-tone-default">
+              <span class="demo-label">sebul</span>
+              <font-kku font="sebul" size="42">오늘의 서울은 따뜻하다</font-kku>
+            </div>
+            <div class="demo-sample demo-sample-tone-gothic">
+              <span class="demo-label">gothic</span>
+              <font-kku font="gothic" size="42">오늘의 서울은 따뜻하다</font-kku>
+            </div>
+            <div class="demo-sample demo-sample-tone-gothic">
+              <span class="demo-label">네모 기준</span>
+              <span class="demo-reference-text demo-reference-text--square">오늘의 서울은 따뜻하다</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2>두 글꼴의 성격</h2>
+          <p class="demo-meta">
+            같은 문장과 크기에 두 글꼴을 올려 제목과 본문 리듬의 인상을 비교한다. 세부 짜임 비교는 <a href="./shape-comparison.html">짜임 비교 페이지</a>에서 이어서 본다.
+          </p>
+          <div class="demo-compare-grid demo-compare-grid-soft">
+            <div class="demo-sample demo-sample-tone-default">
+              <span class="demo-label">sebul</span>
+              <font-kku font="sebul" size="44">광장으로 가는 길</font-kku>
+              <font-kku font="sebul" size="24">바람이 부는 저녁의 거리</font-kku>
+              <p class="demo-caption">탈네모꼴 세벌식. 둥근 자소로 포스터·본문·장식 문구에 모두 어울린다.</p>
+            </div>
+            <div class="demo-sample demo-sample-tone-gothic">
+              <span class="demo-label">gothic</span>
+              <font-kku font="gothic" size="44">광장으로 가는 길</font-kku>
+              <font-kku font="gothic" size="24">바람이 부는 저녁의 거리</font-kku>
+              <p class="demo-caption">본고딕식 네모꼴. 바탕 요소 한 블록의 자리 값으로 음절 높이를 묶는다.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2>열림형과 닫힘형</h2>
+          <p class="demo-meta">
+            받침 유무에 따른 리듬 차이. 문장 단위로 보면 구조적 성격이 더 또렷해진다.
+          </p>
+          <div class="demo-compare-grid">
+            <div class="demo-sample demo-sample-tone-default">
+              <span class="demo-label">sebul</span>
+              <font-kku font="sebul" size="40">가나다라마</font-kku>
+              <font-kku font="sebul" size="40">한글 문장 작성</font-kku>
+            </div>
+            <div class="demo-sample demo-sample-tone-gothic">
+              <span class="demo-label">gothic</span>
+              <font-kku font="gothic" size="40">가나다라마</font-kku>
+              <font-kku font="gothic" size="40">한글 문장 작성</font-kku>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2>구조 스트레스 테스트</h2>
+          <p class="demo-meta">
+            복합모음, 받침, 겹받침이 섞일수록 탈네모꼴 기준과 네모꼴 조합의 차이가 더 잘 보인다.
+          </p>
+          <div class="demo-compare-grid">
+            <div class="demo-sample demo-sample-tone-default">
+              <span class="demo-label">sebul</span>
+              <font-kku font="sebul" size="40">왕 과 획 밟 왜 웅</font-kku>
+              <font-kku font="sebul" size="40">외국어를 읽을 수 없다</font-kku>
+            </div>
+            <div class="demo-sample demo-sample-tone-gothic">
+              <span class="demo-label">gothic</span>
+              <font-kku font="gothic" size="40">왕 과 획 밟 왜 웅</font-kku>
+              <font-kku font="gothic" size="40">외국어를 읽을 수 없다</font-kku>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2>크기와 용도별 샘플</h2>
+          <p class="demo-meta">
+            제목, 카드 헤드라인, 태그라인처럼 실제 쓰임새가 달라질 때 글꼴 인상이 어떻게 바뀌는지 묶어서 본다.
+          </p>
+          <div class="demo-compare-grid">
+            <div class="demo-sample demo-sample-tone-default">
+              <span class="demo-label">sebul</span>
+              <font-kku font="sebul" size="48">심야 상영회</font-kku>
+              <font-kku font="sebul" size="28">Doors open at 20:00</font-kku>
+              <font-kku font="sebul" size="22">서울역 뒤편 작은 극장</font-kku>
+            </div>
+            <div class="demo-sample demo-sample-tone-gothic">
+              <span class="demo-label">gothic</span>
+              <font-kku font="gothic" size="48">심야 상영회</font-kku>
+              <font-kku font="gothic" size="28">Doors open at 20:00</font-kku>
+              <font-kku font="gothic" size="22">서울역 뒤편 작은 극장</font-kku>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2>혼합 콘텐츠</h2>
+          <p class="demo-meta">
+            한글과 영문·숫자·기호가 섞인 실제 문장에서 font-kku가 한글 자소와 비한글 글자를 어떻게 나누는지 확인한다.
+          </p>
+          <div class="demo-inline-list">
+            <span class="font-kku" data-font="sebul" data-size="26">서울 2026 EDITION</span>
+            <span class="font-kku" data-font="sebul" data-size="26">WAVE 03 : 봄</span>
+            <span class="font-kku" data-font="sebul" data-size="26">No.7 작은책방</span>
+          </div>
+          <div class="demo-sample demo-sample-tone-default" style="margin-top: 1rem;">
+            <span class="demo-label">문장 블록</span>
+            <!-- 런타임은 공백 run을 그대로 보존하므로(텍스트 모드와 동일 계약)
+                 마크업 들여쓰기가 렌더 앞 여백이 되지 않도록 한 줄로 쓴다. -->
+            <font-kku font="sebul" size="26">FONTKKU 2026 프로젝트는 서울의 오래된 간판, note No.12, 그리고 골목의 리듬을 함께 기록한다.</font-kku>
+          </div>
+          <p class="demo-note">
+            구조 비교와 문제 글자 살펴보기는 <a href="./shape-comparison.html">짜임 비교 페이지</a>에서 이어서 볼 수 있다.
+          </p>
+        </article>
+
+        <!-- test data for playwright_smoke.py (hidden) -->
+        <div hidden>
+          <font-kku data-case="legacy-core" font="sebul" size="34">왕 과 획 밟 왜 웅</font-kku>
+        </div>
+      </section>
+    </div>
+
+    <script src="lib/font-kku.js"></script>
+    <script src="./demo.js"></script>
+    <script>
+      window.FontKkuDemo.renderNav("basic-text");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+{
+  "version": "1.0",
+  "description": "Compile TextModel topology and depth into an immutable display plan before DOM/HTML emission. Slot order is emission order; native emitters only resolve text and serialize nodes.",
+  "key": "vowelDepth:codaDepth",
+  "slotComposition": {
+    "head": {
+      "axis": "vowel",
+      "fallback": []
+    },
+    "choseong": {
+      "axis": "vowel",
+      "fallback": "base"
+    },
+    "jungseong": {
+      "axis": "vowel",
+      "fallback": "base"
+    },
+    "jongseong": {
+      "axis": "coda",
+      "fallback": "base"
+    }
+  },
+  "emission": {
+    "head": {
+      "condition": "head.length > 0",
+      "source": "compose(choseong, jungBase)",
+      "role": "head",
+      "cluster": false
+    },
+    "choseong": {
+      "condition": "head.length == 0",
+      "source": "choseong",
+      "role": "choseong",
+      "cluster": false
+    },
+    "jungseong": {
+      "condition": "jungseong.length > 1",
+      "sources": [
+        "jungBase",
+        "jungTail"
+      ],
+      "roles": [
+        "jung-base",
+        "jung-tail"
+      ],
+      "clusterRole": "jung-cluster",
+      "otherwise": "head.length > 0 ? jungTail : jungseong",
+      "singleRole": "jung-main",
+      "tailRole": "jung-tail"
+    },
+    "jongseong": {
+      "condition": "jongseong.length > 1",
+      "sources": [
+        "jongLeft",
+        "jongRight"
+      ],
+      "roles": [
+        "jong-left",
+        "jong-right"
+      ],
+      "clusterRole": "jong-cluster",
+      "otherwise": "jongseong.length == 0 ? empty : jongseong",
+      "singleRole": "jong-main"
+    }
+  },
+  "textMode": "atomic-only; uses the shared TextModel but has a separate terminal grid emitter"
+}

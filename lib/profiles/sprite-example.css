@@ -1,0 +1,77 @@
+/* ------------------------------------------------------------------
+ * profiles/sprite-example.css
+ *
+ * 이미지 스프라이트 경로의 최소 템플릿 font.
+ * 시트는 코어(font-kku.css)의 sprite 재료 규칙이 칠한다. 폰트는 변수만 선언한다:
+ *   --fy-sprite-url    자소판 SVG·PNG `url(...)`. 코어가 <url>로 등록해 두었으므로 상대 경로는
+ *                      이 폰트 파일 기준으로 풀린다. multi-scale 시트는
+ *                      --fy-sprite-url-2x와 --fy-sprite-image: image-set(...)을 함께 쓴다
+ *   --fy-sprite-cols   시트 열 수 (가장 긴 행 = 모음 21)
+ *   --fy-sprite-rows   시트 행 수
+ *   --fy-sprite-kinds  시트에 칸이 있는 자모 종류. 목록에 없는 종류(여기서는
+ *                      겹받침)는 칠하지 않고 원본 글자로 폴백한다
+ *   --fy-sprite-row    노드별 행 번호 (종류·slot·문맥 규칙이 고른다)
+ *   --fy-sprite-dilate 폰트 레벨 획 보정 filter. slot별 보정(--fy-<slot>-dilate)이
+ *                      있으면 그 값이 대체한다. --fy-sprite-filter는 페이지 전용이다
+ * 실제 사용 시 --fy-sprite-url을 자기 자소판으로 바꾸고 행 규칙을 시트에 맞춘다.
+ * 자소판은 SVG로 직접 그리면(칸 <g> 안에 0–100 좌표, scripts/build_jamo_svg.js 참고)
+ * 어느 크기에서나 선명하다. PNG는 Font Studio(site/font-studio.html) 재료 탭에서
+ * 그리고 내보낼 수 있다.
+ *
+ * 스프라이트 시트 가정 레이아웃 (셀 크기 1em 격자):
+ *   row 0: 자음 19개 (ㄱ ㄲ ㄴ ... ㅎ)            — index 0 ~ 18
+ *   row 1: 모음 21개 (ㅏ ㅐ ㅑ ... ㅣ)            — index 0 ~ 20
+ *
+ * 예: "광"은 ㄱ(row 0, col 0) + ㅗ(row 1, col 8)
+ *     + ㅏ(row 1, col 0) + ㅇ(row 0, col 11)을 가져온다.
+ *
+ * 런타임이 각 자소 노드에 다음을 주입한다.
+ *   - data-jamo="<conjoining char>"             (예: "ᄀ", "ᅡ", "ᆨ")
+ *   - data-jamo-role="choseong|jungseong|jongseong"
+ *   - data-sprite-jamo="ㄱ|ㅏ|ㄼ|..."           (이미지 시트의 호환 자모)
+ *   - data-sprite-jamo-kind="consonant|vowel|coda-cluster"
+ *   - data-sprite-jamo-index="<N>"              (kind별 row 안의 정수 인덱스)
+ *   - style="--fy-sprite-jamo-index: <N>"       (동일 값을 CSS var로도 노출)
+ * host에는 --fy-material/--fy-sprite-kinds를 읽어 data-fy-material,
+ * data-fy-sprite-kinds를 찍는다(코어 재료 규칙의 게이트).
+ *
+ * 자세한 계약: docs/ARCHITECTURE/image-sprite-fonts.md
+ * ------------------------------------------------------------------ */
+
+@layer font-kku.font, font-kku.jamo, font-kku.context;
+
+@layer font-kku.font {
+  :where([data-fy-font="sprite-example"]) {
+    --fy-font-id: sprite-example; /* 폰트 계약 메타데이터: CSS 도착 판정 */
+    --fy-contract: 2;
+    --fy-material: sprite;
+    --fy-expression-mode: general;
+    --fy-glyph-width: 1em;
+    --fy-glyph-height: 1.2em;
+    --fy-space-width: 0.3em; /* 공백 폭 — 진행폭 1em의 0.30(기기 글꼴 sebul·gothic과 같은 비율). 코어 기본 0.5em은 두 배로 벌어진다 */
+
+    /* 스프라이트 파일과 격자 */
+    --fy-sprite-url: url("./sprite-example.svg");
+    --fy-sprite-cols: 21;
+    --fy-sprite-rows: 2;
+    --fy-sprite-kinds: consonant vowel; /* 2행 시트에는 겹받침 칸이 없다 */
+
+    /*
+     * 이 견본 자소판은 낱자를 칸 가운데 두어 칸 안쪽에 여백이 남는다(spec/sprite-layout.json
+     * starter 배치). 작은 본문 크기에서 그 여백까지 축소되면 획이 지나치게 약해져,
+     * 셀 내부를 약간 crop하고 antialias edge를 한 번 더 얹는다. 칸을 꽉 채워 그린
+     * 자소판은 이 값들을 지우거나 1 / 0em / none으로 되돌리면 된다. edge 보강은 폰트
+     * 레벨 획 보정(--fy-sprite-dilate)이다 — 페이지 전용 --fy-sprite-filter에 두면
+     * slot별 보정과 페이지 override를 모두 가린다.
+     */
+    --fy-sprite-zoom: 1.35;
+    --fy-sprite-crop-x: -0.175em;
+    --fy-sprite-crop-y: -0.175em;
+    --fy-sprite-dilate: drop-shadow(0 0 0 #17130d);
+  }
+
+  /* 행 선택: 초성/종성은 같은 자음 행(0, 기본값)을, 모음은 모음 행을 쓴다. */
+  :where([data-fy-font="sprite-example"]) [data-sprite-jamo-kind="vowel"] {
+    --fy-sprite-row: 1;
+  }
+}

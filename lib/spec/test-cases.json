@@ -1,0 +1,426 @@
+{
+  "version": "1.4",
+  "decompose": [
+    {
+      "input": "가",
+      "cho": "ㄱ",
+      "jung": "ㅏ",
+      "jong": "",
+      "jungLayout": "right",
+      "jongLayout": "none"
+    },
+    {
+      "input": "안",
+      "cho": "ㅇ",
+      "jung": "ㅏ",
+      "jong": "ㄴ",
+      "jungLayout": "right",
+      "jongLayout": "single"
+    },
+    {
+      "input": "읽",
+      "cho": "ㅇ",
+      "jung": "ㅣ",
+      "jong": "ㄺ",
+      "jungLayout": "right",
+      "jongLayout": "double",
+      "jongLeft": "ㄹ",
+      "jongRight": "ㄱ"
+    },
+    {
+      "input": "요",
+      "cho": "ㅇ",
+      "jung": "ㅛ",
+      "jong": "",
+      "jungLayout": "bottom",
+      "jongLayout": "none"
+    },
+    {
+      "input": "습",
+      "cho": "ㅅ",
+      "jung": "ㅡ",
+      "jong": "ㅂ",
+      "jungLayout": "bottom",
+      "jongLayout": "single"
+    },
+    {
+      "input": "봔",
+      "cho": "ㅂ",
+      "jung": "ㅘ",
+      "jong": "ㄴ",
+      "jungLayout": "split-right",
+      "jongLayout": "single",
+      "jungBase": "ㅗ",
+      "jungTail": "ㅏ"
+    },
+    {
+      "input": "의",
+      "cho": "ㅇ",
+      "jung": "ㅢ",
+      "jong": "",
+      "jungLayout": "split-right",
+      "jongLayout": "none",
+      "jungBase": "ㅡ",
+      "jungTail": "ㅣ"
+    },
+    {
+      "input": "환",
+      "cho": "ㅎ",
+      "jung": "ㅘ",
+      "jong": "ㄴ",
+      "jungLayout": "split-right",
+      "jongLayout": "single",
+      "jungBase": "ㅗ",
+      "jungTail": "ㅏ"
+    },
+    {
+      "input": "A",
+      "kind": "latin"
+    },
+    {
+      "input": "1",
+      "kind": "digit"
+    },
+    {
+      "input": "!",
+      "kind": "punctuation"
+    },
+    {
+      "input": "까",
+      "cho": "ㄲ",
+      "jung": "ㅏ",
+      "jong": "",
+      "jungLayout": "right",
+      "jongLayout": "none"
+    },
+    {
+      "input": "있",
+      "cho": "ㅇ",
+      "jung": "ㅣ",
+      "jong": "ㅆ",
+      "jungLayout": "right",
+      "jongLayout": "single"
+    },
+    {
+      "input": "원",
+      "cho": "ㅇ",
+      "jung": "ㅝ",
+      "jong": "ㄴ",
+      "jungLayout": "split-right",
+      "jongLayout": "single",
+      "jungBase": "ㅜ",
+      "jungTail": "ㅓ"
+    },
+    {
+      "input": "귀",
+      "cho": "ㄱ",
+      "jung": "ㅟ",
+      "jong": "",
+      "jungLayout": "split-right",
+      "jongLayout": "none",
+      "jungBase": "ㅜ",
+      "jungTail": "ㅣ"
+    },
+    {
+      "input": "흙",
+      "cho": "ㅎ",
+      "jung": "ㅡ",
+      "jong": "ㄺ",
+      "jungLayout": "bottom",
+      "jongLayout": "double",
+      "jongLeft": "ㄹ",
+      "jongRight": "ㄱ"
+    },
+    {
+      "input": "괆",
+      "cho": "ㄱ",
+      "jung": "ㅘ",
+      "jong": "ㄻ",
+      "jungLayout": "split-right",
+      "jongLayout": "double",
+      "jungBase": "ㅗ",
+      "jungTail": "ㅏ",
+      "jongLeft": "ㄹ",
+      "jongRight": "ㅁ"
+    },
+    {
+      "input": "𑷠",
+      "kind": "digit"
+    },
+    {
+      "input": "𑬀",
+      "kind": "punctuation"
+    },
+    {
+      "input": "𑷟",
+      "kind": "symbol"
+    }
+  ],
+  "renderText": [
+    {
+      "input": "안녕하세요 반갑습니다",
+      "output": [
+        "ㅇㅏ　ㄴㅕ　ㅎㅏ　ㅅㅔ　ㅇ　ㅂㅏ　ㄱㅏ　스　ㄴㅣ　ㄷㅏ",
+        "　ㄴ　　ㅇ　　　　　　　ㅛ　　ㄴ　　ㅂ　ㅂ　　　　　　"
+      ]
+    },
+    {
+      "input": "환영합니다",
+      "output": [
+        "호ㅏ　ㅇㅕ　ㅎㅏ　ㄴㅣ　ㄷㅏ",
+        "　ㄴ　　ㅇ　　ㅂ　　　　　　"
+      ]
+    },
+    {
+      "input": "읽다 밟다",
+      "output": [
+        "ㅇㅣ　ㄷㅏ　ㅂㅏ　ㄷㅏ",
+        "ㄹㄱ　　　　ㄹㅂ　　　"
+      ]
+    },
+    {
+      "input": "봔",
+      "output": [
+        "보ㅏ",
+        "　ㄴ"
+      ]
+    },
+    {
+      "input": "요리사",
+      "output": [
+        "ㅇ　ㄹㅣ　ㅅㅏ",
+        "ㅛ　　　　　　"
+      ]
+    },
+    {
+      "input": "가나다",
+      "output": [
+        "ㄱㅏ　ㄴㅏ　ㄷㅏ",
+        "　　　　　　　　"
+      ]
+    },
+    {
+      "input": "있다 흙 괆",
+      "output": [
+        "ㅇㅣ　ㄷㅏ　흐　　고ㅏ",
+        "　ㅆ　　　　ㄹㄱ　ㄹㅁ"
+      ]
+    },
+    {
+      "input": "한A1! ok",
+      "output": [
+        "ㅎㅏ　Ａ　１　！　ｏ　ｋ",
+        "　ㄴ　　　　　　　　　　"
+      ]
+    },
+    {
+      "input": "가  나",
+      "output": [
+        "ㄱㅏ　　ㄴㅏ",
+        "　　　　　　"
+      ]
+    },
+    {
+      "input": "귀와 원과 외",
+      "output": [
+        "구ㅣ　오ㅏ　우ㅓ　고ㅏ　오ㅣ",
+        "　　　　　　　ㄴ　　　　　　"
+      ]
+    },
+    {
+      "input": "가\r나\r\n다",
+      "output": [
+        "ㄱㅏ",
+        "　　",
+        "ㄴㅏ",
+        "　　",
+        "ㄷㅏ",
+        "　　"
+      ]
+    },
+    {
+      "input": "Việt 한",
+      "output": [
+        "Ｖ　ｉ　ệ 　ｔ　ㅎㅏ",
+        "　　　　　　　　　ㄴ"
+      ]
+    },
+    {
+      "input": "שלום 한",
+      "output": [
+        "ש 　ל 　ו 　ם 　ㅎㅏ",
+        "　　　　　　　　　ㄴ"
+      ]
+    },
+    {
+      "input": "ｶﾀｶﾅ 한",
+      "output": [
+        "ｶ 　ﾀ 　ｶ 　ﾅ 　ㅎㅏ",
+        "　　　　　　　　　ㄴ"
+      ]
+    },
+    {
+      "input": "±α°",
+      "output": [
+        "± 　α 　° ",
+        "　　　　　"
+      ]
+    },
+    {
+      "input": "a​b",
+      "output": [
+        "ａ　​  　ｂ",
+        "　　　　　"
+      ]
+    }
+  ],
+  "renderTextGrapheme": [
+    {
+      "input": "q́",
+      "output": [
+        "ｑ́",
+        "　"
+      ]
+    },
+    {
+      "input": "1️⃣",
+      "output": [
+        "１️⃣",
+        "　"
+      ]
+    },
+    {
+      "input": "한글",
+      "output": [
+        "ㅎㅏ　그",
+        "　ㄴ　ㄹ"
+      ]
+    },
+    {
+      "input": "ᄀᆞ",
+      "output": [
+        "ᄀᆞ",
+        "　"
+      ]
+    },
+    {
+      "input": "👨‍👩‍👧",
+      "output": [
+        "👨‍👩‍👧",
+        "　"
+      ]
+    },
+    {
+      "input": "👍🏽",
+      "output": [
+        "👍🏽",
+        "　"
+      ]
+    },
+    {
+      "input": "🇰🇷🇯🇵",
+      "output": [
+        "🇰🇷　🇯🇵",
+        "　　　"
+      ]
+    },
+    {
+      "input": "❤️",
+      "output": [
+        "❤️",
+        "　"
+      ]
+    },
+    {
+      "input": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "output": [
+        "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        "　"
+      ]
+    },
+    {
+      "input": "é",
+      "output": [
+        "é ",
+        "　"
+      ]
+    },
+    {
+      "input": " ́",
+      "output": [
+        " ́ ",
+        "　"
+      ]
+    },
+    {
+      "input": "क्ष",
+      "output": [
+        "क्ष",
+        "　"
+      ]
+    },
+    {
+      "input": "க்ஷ",
+      "output": [
+        "க் 　ஷ ",
+        "　　　"
+      ]
+    },
+    {
+      "input": "ಕ್ಕ",
+      "output": [
+        "ಕ್ 　ಕ ",
+        "　　　"
+      ]
+    },
+    {
+      "input": "กำ",
+      "output": [
+        "กำ",
+        "　"
+      ]
+    },
+    {
+      "input": "ｶﾞ",
+      "output": [
+        "ｶﾞ",
+        "　"
+      ]
+    },
+    {
+      "input": "가́",
+      "output": [
+        "가́",
+        "　"
+      ]
+    },
+    {
+      "input": "한〮",
+      "output": [
+        "한〮",
+        "　　"
+      ]
+    },
+    {
+      "input": "각ᆨ",
+      "output": [
+        "각ᆨ",
+        "　"
+      ]
+    },
+    {
+      "input": "❤︎",
+      "output": [
+        "❤︎ ",
+        "　"
+      ]
+    },
+    {
+      "input": "☝🏽",
+      "output": [
+        "☝🏽",
+        "　"
+      ]
+    }
+  ]
+}

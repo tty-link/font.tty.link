@@ -1,0 +1,714 @@
+/* 글꼴 페이지의 여섯 축 그림, 테마 갤러리, 조합기(font-themes.js).
+ * site.css의 토큰(--k-*)과 부품(.k-stage, .k-chips, .k-btn, .k-code)을 쓴다. 축마다 색이 하나씩
+ * 있어 축 그림·카드 꼬리표·조합기 묶음이 같은 색으로 이어진다.
+ * 견본(<font-kku>)을 품은 자리의 span 규칙은 자식 결합자(>)로만 쓴다 — 자손 선택자는 런타임 안쪽
+ * span(자모 노드)까지 잡아 조립을 깬다. */
+
+:root {
+  --ft-font: var(--k-ink);
+  --ft-look: var(--k-red);
+  --ft-vary: #9a6700;   /* 흰 글자 4.9:1 */
+  --ft-motion: var(--k-blue);
+  --ft-interaction: #0e7d4f;   /* 흰 글자 5.2:1 (--k-green은 3.8:1) */
+  --ft-tone: #6e6456;   /* 흰 글자 5.8:1 */
+  --ft-header: 64px;
+}
+
+[data-axis="font"] { --ft-axis: var(--ft-font); }
+[data-axis="look"] { --ft-axis: var(--ft-look); }
+[data-axis="vary"] { --ft-axis: var(--ft-vary); }
+[data-axis="motion"] { --ft-axis: var(--ft-motion); }
+[data-axis="interaction"] { --ft-axis: var(--ft-interaction); }
+[data-axis="tone"] { --ft-axis: var(--ft-tone); }
+
+.ft-section {
+  scroll-margin-top: var(--ft-header);
+}
+
+/* ── 머리: 여섯 축 ───────────────────────────────────── */
+.ft-axes {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0.5rem 0 0;
+  padding: 0;
+  border: 1.5px solid var(--k-ink);
+  border-radius: var(--k-radius-sm);
+  background: var(--k-paper);
+  list-style: none;
+}
+
+.ft-axes li {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 3.2rem auto 1fr auto;
+  gap: 0.35rem;
+  min-inline-size: 0;
+  padding: 1rem 0.95rem 1rem;
+  border-inline-start: 1px solid var(--k-line);
+}
+
+.ft-axes li:first-child {
+  border-inline-start: 0;
+}
+
+.ft-axes li::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  block-size: 4px;
+  background: var(--ft-axis);
+}
+
+.ft-axes li:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  inset-block-start: 2.6rem;
+  inset-inline-end: -0.62em;
+  z-index: 1;
+  padding-block: 0.1rem;
+  background: var(--k-paper);
+  color: var(--k-muted);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ft-axis-no {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.45rem;
+  block-size: 1.45rem;
+  border-radius: 50%;
+  background: var(--ft-axis);
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ft-axis-sample {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.ft-axes strong {
+  font-size: 1.05rem;
+}
+
+.ft-axes p {
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.ft-axes code {
+  justify-self: start;
+  max-inline-size: 100%;
+  font-size: 0.7rem;
+  overflow-wrap: anywhere;
+}
+
+.ft-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-inline-size: 7.5rem;
+}
+
+.ft-swatches i {
+  inline-size: 18px;
+  block-size: 18px;
+  border: 1px solid rgb(0 0 0 / 14%);
+  border-radius: 5px;
+}
+
+.ft-formula {
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 1rem;
+}
+
+.ft-formula > span {
+  font-weight: 700;
+  color: var(--k-ink);
+}
+
+.ft-formula > span[data-axis] {
+  border-bottom: 3px solid var(--ft-axis);
+}
+
+/* ── 꼬리표(축: 고른 것) ─────────────────────────────── */
+.ft-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.ft-badges > div {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.12rem 0.6rem 0.12rem 0.5rem;
+  border: 1px solid var(--k-line);
+  border-radius: 999px;
+  background: var(--k-paper);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.ft-badges dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--k-muted);
+  font-weight: 600;
+}
+
+.ft-badges dt::before {
+  content: "";
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: var(--ft-axis);
+}
+
+.ft-badges dd {
+  margin: 0;
+  color: var(--k-ink);
+  font-weight: 700;
+}
+
+/* ── 테마 갤러리 ─────────────────────────────────────── */
+.ft-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-block-end: 1.25rem;
+}
+
+.ft-text-field {
+  display: inline-flex;
+  flex: 1 1 14rem;
+  align-items: center;
+  gap: 0.5rem;
+  max-inline-size: 24rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.ft-text-field .k-input {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.ft-count {
+  color: var(--k-muted);
+  font-size: 0.86rem;
+}
+
+.ft-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.ft-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-inline-size: 0;
+  overflow: hidden;
+  border: 1px solid var(--k-line);
+  border-radius: var(--k-radius);
+  background: var(--k-paper);
+  scroll-margin-top: calc(var(--ft-header) + 16px);
+  transition: border-color 160ms var(--k-ease), box-shadow 160ms var(--k-ease);
+}
+
+.ft-card:hover,
+.ft-card:focus-within {
+  border-color: var(--k-ink);
+  box-shadow: 4px 4px 0 var(--k-ink);
+}
+
+.ft-anchor {
+  position: absolute;
+  inset-block-start: 0;
+  scroll-margin-top: calc(var(--ft-header) + 16px);
+}
+
+.ft-card:target,
+.ft-card:has(> .ft-anchor:target) {
+  outline: 3px solid var(--k-red);
+  outline-offset: 3px;
+}
+
+.ft-card-stage {
+  min-block-size: 8.5rem;
+  border: 0;
+  border-bottom: 1px solid var(--k-line);
+  border-radius: 0;
+}
+
+.ft-card-body {
+  display: grid;
+  grid-template-rows: auto auto auto auto auto 1fr;
+  gap: 0.55rem;
+  padding: 0.9rem 1rem 1rem;
+}
+
+.ft-card-body h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.5rem;
+  margin: 0;
+  font-size: 1.12rem;
+}
+
+.ft-card-body h3 code {
+  font-size: 0.72rem;
+}
+
+.ft-card-summary,
+.ft-card-use,
+.ft-card-short {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.ft-card-summary {
+  color: var(--k-ink-2);
+  font-size: 0.9rem;
+}
+
+.ft-card-use,
+.ft-card-short {
+  color: var(--k-muted);
+  font-size: 0.8rem;
+}
+
+.ft-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-self: end;
+  gap: 0.4rem;
+  margin-block-start: 0.2rem;
+}
+
+.ft-link-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--k-blue);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.ft-link-btn:focus-visible {
+  outline: 3px solid var(--k-yellow);
+  outline-offset: 2px;
+}
+
+/* ── 조합기 ──────────────────────────────────────────── */
+.ft-compose {
+  background: var(--k-paper-2);
+}
+
+.ft-compose-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.ft-side {
+  position: sticky;
+  inset-block-start: calc(var(--ft-header) + 16px);
+  order: 2;
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+}
+
+.ft-controls {
+  order: 1;
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+}
+
+.ft-compose-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ft-theme-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.ft-theme-pick select {
+  min-block-size: 2.2rem;
+  max-inline-size: 13rem;
+  padding: 0 0.8rem;
+  border: 1.2px solid var(--k-ink);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.ft-controls form {
+  display: grid;
+  gap: 1rem;
+}
+
+.ft-controls fieldset {
+  display: grid;
+  gap: 0.65rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0.75rem 0.95rem 1rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: var(--k-radius-sm);
+  background: var(--k-paper);
+}
+
+.ft-controls legend {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0 0.4rem;
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.ft-controls legend small {
+  color: var(--k-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.ft-group {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.ft-group-name {
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.ft-group-name small {
+  color: var(--k-muted);
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.ft-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ft-opt {
+  position: relative;
+  display: inline-flex;
+}
+
+.ft-opt input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ft-opt > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-block-size: 2.2rem;
+  padding: 0.2rem 0.85rem;
+  border: 1px solid var(--k-line);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink-2);
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.ft-opt > span:has(> .ft-opt-sample),
+.ft-opt > span:has(> .ft-tone-dot) {
+  padding-inline-start: 0.3rem;
+}
+
+.ft-opt:hover > span {
+  border-color: var(--k-ink);
+}
+
+.ft-opt input:checked + span {
+  border-color: var(--k-ink);
+  background: var(--k-ink);
+  color: #fff;
+}
+
+.ft-opt input:focus-visible + span {
+  outline: 3px solid var(--k-yellow);
+  outline-offset: 2px;
+}
+
+.ft-opt input:disabled + span {
+  opacity: 0.45;
+}
+
+.ft-opt-sample {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.8rem;
+  block-size: 1.8rem;
+  overflow: hidden;
+  border: 1px solid var(--k-line);
+  border-radius: 7px;
+  background: var(--k-tone, var(--k-paper));
+  color: var(--k-ink);
+  font-style: normal;
+}
+
+/* 자모 잉크는 글자 칸 위쪽으로 올라 있어(세벌·그림 자소) 칸 가운데로 조금 내린다 */
+.ft-opt-sample > font-kku {
+  translate: 0 0.16em;
+}
+
+.ft-opt-sample[data-tone="dark"],
+.ft-opt-sample[data-tone="board"],
+.ft-opt-sample[data-tone="blueprint"] {
+  color: #f4f1ea;
+}
+
+.ft-tone-dot {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: 1px solid rgb(0 0 0 / 18%);
+  border-radius: 50%;
+}
+
+.ft-seed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+}
+
+.ft-seed-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.ft-seed-input {
+  inline-size: 7.5rem;
+  min-block-size: 2.2rem;
+  padding: 0 0.75rem;
+  border: 1.2px solid var(--k-ink);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font-family: var(--k-mono);
+  font-size: 0.85rem;
+}
+
+.ft-seed-input:disabled {
+  opacity: 0.4;
+}
+
+.ft-seed-input:focus-visible {
+  outline: 3px solid var(--k-yellow);
+  outline-offset: 2px;
+}
+
+.ft-note {
+  margin: 0;
+  color: var(--k-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.ft-preview {
+  display: grid;
+  gap: 0.6rem;
+  min-inline-size: 0;
+  padding: 0.9rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: var(--k-radius-sm);
+  background: var(--k-paper);
+}
+
+.ft-preview-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ft-preview-top .ft-text-field {
+  max-inline-size: none;
+}
+
+.ft-preview-stage {
+  min-block-size: 11rem;
+}
+
+.ft-preview-meta {
+  min-block-size: 1.5em;
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.ft-preview-meta strong {
+  color: var(--k-red);
+}
+
+.ft-code pre {
+  max-block-size: 17rem;
+}
+
+.ft-code-actions {
+  display: inline-flex;
+  gap: 0.4rem;
+}
+
+/* ── 글꼴 견본 ───────────────────────────────────────── */
+.ft-fonts {
+  padding-block: clamp(4rem, 9vw, 7rem) 1rem;
+  border-top: 1px solid var(--k-line);
+}
+
+.ft-fonts .k-section-head {
+  margin-bottom: 1.5rem;
+}
+
+.ft-fonts .k-font-group:first-child {
+  margin-top: 2rem;
+}
+
+/* ── 좁은 화면 ───────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .ft-axes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ft-axes li:nth-child(4) {
+    border-inline-start: 0;
+  }
+
+  .ft-axes li:nth-child(n + 4) {
+    border-top: 1px solid var(--k-line);
+  }
+
+  .ft-axes li::after {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .ft-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* 조합기: 견본을 위에 붙여 두고 조작을 아래로 */
+  .ft-compose-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .ft-side {
+    display: contents;
+  }
+
+  .ft-preview {
+    position: sticky;
+    inset-block-start: var(--ft-header);
+    z-index: 5;
+    order: 0;
+    padding: 0.6rem;
+    box-shadow: 0 6px 18px rgb(20 20 20 / 12%);
+  }
+
+  .ft-preview .ft-badges {
+    display: none;
+  }
+
+  .ft-preview-stage {
+    min-block-size: 6.5rem;
+    padding: 0.75rem;
+  }
+
+  .ft-controls {
+    order: 1;
+  }
+
+  .ft-code {
+    order: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .ft-axes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ft-axes li:nth-child(4) {
+    border-inline-start: 1px solid var(--k-line);
+  }
+
+  .ft-axes li:nth-child(odd) {
+    border-inline-start: 0;
+  }
+
+  .ft-axes li:nth-child(n + 3) {
+    border-top: 1px solid var(--k-line);
+  }
+
+  .ft-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ft-card-stage {
+    min-block-size: 7rem;
+  }
+
+  .ft-preview-top .ft-text-field {
+    flex-basis: 100%;
+  }
+
+  .ft-preview-meta {
+    font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft-card {
+    transition: none;
+  }
+}

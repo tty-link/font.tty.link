@@ -1,0 +1,114 @@
+{
+  "version": "1.0",
+  "unicode": {
+    "glyphClassification": {
+      "source": "spec/tables.json#/unicode",
+      "version": "17.0",
+      "hangul": "single code point U+AC00..U+D7A3",
+      "latin": "single ASCII A-Z or a-z",
+      "digit": "single code point in number ranges (General_Category N*)",
+      "punctuation": "single code point in punctuation ranges (General_Category P*)",
+      "otherwise": "symbol",
+      "unknownFutureCodepoints": "symbol until the pinned spec is explicitly refreshed"
+    },
+    "displayWidth": {
+      "source": "spec/tables.json#/unicode/displayWidth",
+      "ambiguousWidth": 1
+    },
+    "parityScope": "Classification and display plans are pinned. General normalization and engine-backed segmentation have the implementation-specific limits below; exact cross-language output is guaranteed only within that intersection."
+  },
+  "renderPlan": {
+    "source": "spec/render-plan.json",
+    "input": [
+      "TextModel glyph topology",
+      "vowel depth",
+      "coda depth"
+    ],
+    "output": "Ordered per-role display slots; slot cardinality determines head folding and cluster splitting",
+    "compiledBy": "scripts/generate_sidecar_tables.js"
+  },
+  "implementations": {
+    "browser": {
+      "normalization": "engine NFC",
+      "segmentation": "engine Intl.Segmenter when available; code point fallback otherwise",
+      "html": true,
+      "text": true,
+      "customFonts": "CSS profile with runtime metadata",
+      "interactionEffects": true
+    },
+    "python": {
+      "normalization": "unicodedata NFC (Python Unicode version)",
+      "segmentation": "pinned spec UAX29 tables",
+      "html": true,
+      "text": true,
+      "bundledFonts": [
+        "sebul",
+        "gothic"
+      ],
+      "customFonts": "per-call FontDefinition with trusted CSS and explicit metadata",
+      "interactionEffects": false
+    },
+    "go": {
+      "normalization": "Hangul NFC only; other canonical sequences are preserved",
+      "segmentation": "pinned spec UAX29 tables",
+      "html": true,
+      "text": true,
+      "bundledFonts": [
+        "sebul",
+        "gothic"
+      ],
+      "customFonts": "per-call FontDefinition with trusted CSS and explicit metadata",
+      "interactionEffects": false
+    },
+    "rust": {
+      "normalization": "Hangul NFC only; other canonical sequences are preserved",
+      "segmentation": "pinned spec UAX29 tables",
+      "html": true,
+      "text": true,
+      "bundledFonts": [
+        "sebul",
+        "gothic"
+      ],
+      "customFonts": "per-call FontDefinition with trusted CSS and explicit metadata",
+      "interactionEffects": false
+    },
+    "ruby": {
+      "normalization": "engine NFC",
+      "segmentation": "engine each_grapheme_cluster; pre-15.1 Unicode lacks Indic GB9c",
+      "html": true,
+      "text": true,
+      "bundledFonts": [
+        "sebul",
+        "gothic"
+      ],
+      "customFonts": "per-call FontDefinition with trusted CSS and explicit metadata",
+      "interactionEffects": false
+    }
+  },
+  "customFontDefinition": {
+    "scope": "one render call; no process-global registry mutation",
+    "fields": [
+      "name",
+      "css",
+      "expression_mode",
+      "vowel_depth",
+      "coda_depth",
+      "material"
+    ],
+    "expressionModes": [
+      "sebeol",
+      "general"
+    ],
+    "vowelDepths": [
+      "split",
+      "whole",
+      "syllable"
+    ],
+    "codaDepths": [
+      "split",
+      "whole"
+    ],
+    "material": "system; browser-only vector registration and automatic URL loading are unavailable in static HTML",
+    "precedence": "font_definition selects the font over font; per-call longhand depth overrides shorthand, then definition defaults"
+  }
+}

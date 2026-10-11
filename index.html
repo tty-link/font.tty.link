@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>font-kku — 자음 19, 모음 21로 한글 11,172자를 그리는 자소 조립 런타임</title>
+    <meta name="description" content="폰꾸(font-kku)는 한글을 초성·중성·종성으로 나눠 다시 조립해 그립니다. 글꼴 파일 없이 스크립트 한 줄로 웹 제목을 꾸미고, AI에게 설명서 링크를 주어 문서를 꾸미거나 나만의 글꼴을 만들고, 봇·터미널에서 한글을 크게 강조합니다." />
+    <meta property="og:title" content="폰꾸 — 글꼴 파일 없이, 한 줄로 꾸미는 한글" />
+    <meta property="og:description" content="웹 제목 꾸미기, AI로 문서 꾸미기와 나만의 한글 글꼴, 봇·터미널의 한글 강조까지. 자음 19·모음 21로 한글 11,172자를 그립니다." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="lib/docs/images/font-library.png" />
+    <meta name="theme-color" content="#ffffff" />
+    <!-- 이 페이지도 한 줄 설치로 런타임과 글꼴 CSS, 움직임 확장을 불러온다. 히어로 타자가 곧바로
+         FontKkuFx를 부르므로 상호작용 확장은 차례를 지키는 script로 따로 붙인다 -->
+    <!-- 처음 화면에 쓰는 세벌만 미리 받는다. 다른 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때
+         런타임이 CSS 한 장씩 받는다(필요할 때 받기, ADR-019). -->
+    <script src="lib/font-kku.js" data-fonts="sebul" data-addons="looks motion"></script>
+    <script src="lib/font-kku-fx.js"></script>
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+
+  <body>
+    <header class="k-header">
+      <div class="k-wrap k-header-inner">
+        <a class="k-brand" href="./index.html">
+          <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20">꾸</font-kku></span>
+          <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
+        </a>
+        <nav class="k-nav" aria-label="사이트" data-demo-nav></nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- 히어로 -->
+      <section class="k-hero k-wrap" aria-labelledby="hero-title">
+        <div class="k-hero-copy">
+          <p class="k-eyebrow"><span>자음 19</span><span>모음 21</span><span class="k-eyebrow-to">한글 11,172자</span></p>
+          <h1 class="k-hero-title" id="hero-title" data-hero-title>
+            <span class="k-hero-type" data-hero-type>
+              <span class="font-kku k-h1" data-font="sebul" data-size="clamp(40px, 8.2vw, 108px)" data-animate="assemble">글꼴 파일 없이,</span>
+              <span class="font-kku k-h1 k-mark" data-font="sebul" data-size="clamp(40px, 8.2vw, 108px)" data-animate="assemble">한 줄로 꾸미는 한글</span>
+            </span>
+          </h1>
+          <p class="k-lead">
+            폰꾸는 한글을 초성·중성·종성으로 나눠 다시 조립해 그립니다. 기기에 있는 한글 글꼴이 재료라
+            내려받을 글꼴 파일이 없고, 네온·스티커·색동처럼 글꼴로는 어려운 제목도 스크립트 한 줄로 씁니다.
+          </p>
+          <div class="k-hero-actions">
+            <a class="k-btn k-btn--primary" href="#web">바로 써 보기</a>
+            <a class="k-btn" href="#problems">이럴 때 폰꾸</a>
+            <a class="k-btn" href="./showcase.html">사례 보기</a>
+            <a class="k-btn" href="./docs.html">문서</a>
+          </div>
+        </div>
+
+        <div class="k-specimen">
+          <div class="k-specimen-stage k-manuscript" data-hero-stage>
+            <font-kku id="hero-render" font="sebul" size="120">한글</font-kku>
+          </div>
+          <form class="k-specimen-try" data-hero-try>
+            <input class="k-input" name="text" type="text" maxlength="16" value="한글" autocomplete="off"
+              aria-label="미리볼 문장 입력" placeholder="아무 문장이나 입력해 보세요" />
+            <div class="k-chips" role="group" aria-label="미리보기 글꼴·꾸밈 선택">
+              <button type="button" data-hero-font="sebul" aria-pressed="true">세벌</button>
+              <button type="button" data-hero-font="gothic" aria-pressed="false">고딕</button>
+              <button type="button" data-hero-font="sebul" data-hero-look="neon" data-hero-tone="dark" aria-pressed="false">네온</button>
+              <button type="button" data-hero-font="sebul" data-hero-look="sticker" data-hero-tone="pink" aria-pressed="false">스티커</button>
+              <button type="button" data-hero-font="gothic" data-hero-look="retro" aria-pressed="false">레트로</button>
+              <button type="button" data-hero-font="gothic" data-hero-look="saekdong" aria-pressed="false">색동</button>
+              <button type="button" data-hero-font="malang" aria-pressed="false">말랑</button>
+              <button type="button" data-hero-font="pilgi" aria-pressed="false">필기</button>
+              <button type="button" data-hero-font="dunggeun" aria-pressed="false">둥근</button>
+              <button type="button" data-hero-font="butgeul" data-hero-tone="paper" aria-pressed="false">붓</button>
+              <button type="button" data-hero-font="pixel" aria-pressed="false">도트</button>
+              <button type="button" data-hero-font="dojang" data-hero-tone="paper" aria-pressed="false">도장</button>
+              <button type="button" data-hero-font="chalk" data-hero-tone="board" aria-pressed="false">분필</button>
+              <button type="button" data-hero-font="sebul" data-hero-look="geumbak" data-hero-tone="dark" aria-pressed="false">금박</button>
+              <button type="button" data-hero-font="sebul" data-hero-look="glitch" data-hero-tone="dark" aria-pressed="false">글리치</button>
+              <button type="button" data-hero-font="gothic" data-hero-look="riso" data-hero-tone="paper" aria-pressed="false">리소</button>
+              <button type="button" data-hero-font="gothic" data-hero-look="blueprint" data-hero-tone="blueprint" aria-pressed="false">도면</button>
+              <button type="button" data-hero-font="crayon" aria-pressed="false">크레용</button>
+              <button type="button" data-hero-font="jasu" data-hero-tone="linen" aria-pressed="false">자수</button>
+            </div>
+          </form>
+          <div class="k-split-jamo" aria-label="입력한 글자를 초성·중성·종성으로 나눈 결과" data-hero-jamo></div>
+        </div>
+
+        <span class="k-hero-vertical" aria-hidden="true">초성 · 중성 · 종성을 다시 조립하다</span>
+      </section>
+
+      <!-- 하나: 이럴 때 폰꾸 — 해결하는 문제와 그 자리에서 확인하는 증명 -->
+      <section class="k-section k-section--tint" id="problems" aria-labelledby="problems-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">하나</span>
+            <span class="k-kicker">이럴 때 폰꾸</span>
+            <h2 id="problems-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">글꼴 파일로는 안 되던 일</h2>
+            <p class="k-lead">
+              글꼴 파일은 글자 11,172자의 그림을 담습니다. 폰꾸는 그림 대신 한글을 자모로 나눠 다시 그리는 규칙을 보냅니다.
+              그래서 글꼴 파일이 갈 수 없는 곳에서도 그려지고, 규칙에 주사위를 섞어 매번 다른 글꼴도 됩니다.
+              내 상황을 골라 아래에서 직접 확인해 보세요.
+            </p>
+          </header>
+
+          <div class="k-pillars">
+            <article class="k-pillar">
+              <p class="k-pillar-figure"><strong data-meter-fontfiles>0</strong><small>개</small></p>
+              <h3>받은 글꼴 파일</h3>
+              <p>이 페이지는 폰꾸 글꼴 <span data-meter-fontcount>16</span>종을 쓰지만 글꼴 파일(woff·ttf)은 받지 않습니다. 글꼴마다 받는 것은 자모 배치를 담은 CSS 한 장이고, 그 글꼴이 화면에 처음 나올 때 받습니다. 글자 모양은 기기 글꼴이나 작은 SVG 자소판에서 옵니다. <span data-meter-summary></span></p>
+              <a class="k-prob-proof" href="#proof" data-proof="meter">계기판에서 실측값 보기</a>
+            </article>
+            <article class="k-pillar k-pillar--seed" data-pillar-mix>
+              <div class="k-pillar-mix" data-pillar-tiles>
+                <font-kku font="malang" size="clamp(34px, 5vw, 48px)" seed="auto" jamo-seeds>하하하하하</font-kku>
+              </div>
+              <h3>같은 글자도 매번 다르게</h3>
+              <p>글꼴 파일은 같은 글자를 늘 같은 그림으로 그립니다. 폰꾸는 글자를 그리는 규칙이라 주사위를 섞을 수 있습니다. 위의 '하' 다섯 개는 이 페이지가 한 번 받은 스크립트와 CSS 안에서 <strong>글꼴·꾸밈·변주·움직임</strong>을 저마다 새로 고른 것이고, 자모마다 씨앗값으로 <strong>기울기·자리·굵기·너비·색</strong>까지 달라집니다. 같은 씨앗이면 언제나 똑같습니다.</p>
+              <p class="k-pillar-note" data-pillar-note></p>
+              <div class="k-pillar-actions">
+                <button type="button" class="k-btn k-btn--small" data-pillar-reseed>다시 섞기</button>
+                <div class="k-chips k-chips--small" role="group" aria-label="섞는 범위">
+                  <button type="button" data-pillar-mode="all" aria-pressed="true">모두 섞기</button>
+                  <button type="button" data-pillar-mode="seed" aria-pressed="false">씨앗만</button>
+                </div>
+                <a class="k-prob-proof" href="#proof" data-proof="seed">변주 직접 해 보기</a>
+              </div>
+            </article>
+          </div>
+
+          <div class="k-roles">
+            <span class="k-roles-label" id="roles-label">내 상황</span>
+            <div class="k-chips" role="group" aria-labelledby="roles-label" data-roles>
+              <button type="button" data-role="all" aria-pressed="true">전체</button>
+              <button type="button" data-role="web" aria-pressed="false">웹 개발자</button>
+              <button type="button" data-role="shop" aria-pressed="false">가게·디자이너</button>
+              <button type="button" data-role="ai" aria-pressed="false">AI로 문서 만들기</button>
+              <button type="button" data-role="term" aria-pressed="false">터미널·봇</button>
+              <button type="button" data-role="edu" aria-pressed="false">교육</button>
+            </div>
+          </div>
+
+          <div class="k-probs" data-probs>
+            <article class="k-prob" data-roles="web shop" data-featured>
+              <span class="k-prob-tag" data-group="seed">매번 다른 글꼴</span>
+              <h3>"손글씨 느낌인데 '하하하하'가 도장 찍은 듯 똑같아요"</h3>
+              <p class="k-prob-why">글꼴 파일은 같은 글자를 늘 같은 그림으로 그립니다. 한글은 11,172자마다 변형을 따로 담을 수도 없습니다.</p>
+              <p class="k-prob-fix">자모마다 씨앗값이 달라 같은 글자를 되풀이해도 획마다 기울기가 다릅니다. 받을 파일은 늘지 않습니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="seed">직접 해 보기</a>
+            </article>
+            <article class="k-prob" data-roles="web shop">
+              <span class="k-prob-tag" data-group="seed">매번 다른 글꼴</span>
+              <h3>"들어올 때마다 새 표정의 제목을 보여 주고 싶어요"</h3>
+              <p class="k-prob-why">정해진 글꼴로는 매번 다른 모양을 낼 수 없어 이미지 여러 장을 번갈아 쓰게 됩니다.</p>
+              <p class="k-prob-fix"><code>seed="auto"</code>면 그릴 때마다 자모가 새로 흔들립니다. 글꼴과 색의 범위 안에서만 흔들려 분위기는 그대로입니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="seed">직접 해 보기</a>
+            </article>
+            <article class="k-prob" data-roles="web shop">
+              <span class="k-prob-tag" data-group="seed">매번 다른 글꼴</span>
+              <h3>"사람마다 다르지만, 다시 열어도 같은 모양이었으면"</h3>
+              <p class="k-prob-why">이름표·프로필·응원 카드·각인 미리보기마다 글꼴을 따로 만들 수는 없습니다.</p>
+              <p class="k-prob-fix">씨앗에 닉네임이나 주문번호를 넣으면 사람마다 다른 모양이 나오고, 언제 다시 그려도 똑같습니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="seed">이름으로 해 보기</a>
+            </article>
+            <article class="k-prob" data-roles="shop web">
+              <span class="k-prob-tag" data-group="seed">매번 다른 글꼴</span>
+              <h3>"무작위로 뽑다가 마음에 드는 모양을 고정하고 싶어요"</h3>
+              <p class="k-prob-why">인쇄물·공유 링크·스크린샷은 화면에서 본 그 모양이어야 합니다.</p>
+              <p class="k-prob-fix">마음에 든 변주의 씨앗값을 코드에 적으면 그 모양으로 고정됩니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="seed">뽑고 고정해 보기</a>
+            </article>
+            <article class="k-prob" data-roles="shop">
+              <span class="k-prob-tag" data-group="seed">매번 다른 글꼴</span>
+              <h3>"간판 글자가 살아 있는 것처럼 계속 표정을 바꿨으면"</h3>
+              <p class="k-prob-why">글꼴 파일의 글자는 움직여도 모양 자체는 바뀌지 않습니다.</p>
+              <p class="k-prob-fix">씨앗을 시간에 따라 바꾸면 자모가 계속 새 표정을 짓습니다.</p>
+              <a class="k-prob-proof" href="./effects.html#fx-shuffle">씨앗 섞기 보기</a>
+            </article>
+
+            <article class="k-prob" data-roles="web" data-featured>
+              <span class="k-prob-tag" data-group="place">글꼴이 못 가는 곳</span>
+              <h3>"웹폰트를 막는 곳에서 제목이 무너져요"</h3>
+              <p class="k-prob-why">iOS 잠금 모드는 웹 글꼴을 표시하지 않을 수 있고, 폐쇄망·망분리 사내 시스템이나 외부 글꼴 주소를 막는 보안 정책에서는 글꼴 파일을 받지 못합니다.</p>
+              <p class="k-prob-fix">기기에 이미 있는 한글 글꼴을 재료로 조립하므로 받아야 할 글꼴 파일이 없습니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="block">막아 보기</a>
+            </article>
+            <article class="k-prob" data-roles="web shop edu">
+              <span class="k-prob-tag" data-group="place">글꼴이 못 가는 곳</span>
+              <h3>"한글 글꼴이 없는 기기라 □□□로 나와요"</h3>
+              <p class="k-prob-why">해외 PC, 키오스크, 사이니지, 최소 설치 리눅스처럼 한글 글꼴이 없으면 브라우저는 한글을 그리지 못합니다.</p>
+              <p class="k-prob-fix">그림 자소 글꼴은 SVG 자소판 그림으로 그려 기기 글꼴이 필요 없습니다. 입력기 모듈로 한글 쓰기까지 됩니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="block">글꼴 없는 기기 흉내</a>
+            </article>
+            <article class="k-prob" data-roles="web" data-featured>
+              <span class="k-prob-tag" data-group="place">글꼴이 못 가는 곳</span>
+              <h3>"닉네임의 '뷁', 이름의 '믜'만 글꼴이 달라져요"</h3>
+              <p class="k-prob-why">용량을 줄이려고 완성형 2,350자만 담은 서브셋 웹폰트를 쓰면 그 밖의 글자는 다른 글꼴로 대신 그려집니다.</p>
+              <p class="k-prob-fix">조합해서 그리므로 11,172자가 모두 같은 모양입니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="missing">빈 글자 검사</a>
+            </article>
+
+            <article class="k-prob" data-roles="web shop" data-featured>
+              <span class="k-prob-tag" data-group="weight">무게와 조합</span>
+              <h3>"글꼴과 효과를 여럿 섞고 싶은데 웹폰트 수십 개는 무거워요"</h3>
+              <p class="k-prob-why">한글 웹폰트는 굵기 하나만 해도 보통 수백 KB에서 수 MB입니다.</p>
+              <p class="k-prob-fix">글꼴마다 받는 것은 자모 배치를 담은 CSS 한 장이고, 글자 모양은 기기 글꼴이나 작은 SVG 자소판에서 옵니다. 꾸밈·움직임은 글꼴과 따로 고르는 축이라 고딕에 네온 꾸밈, 붓 글꼴에 금박 꾸밈처럼 섞어도 확장 CSS 한 장이 더해질 뿐입니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="meter">실측 계기판</a>
+            </article>
+            <article class="k-prob" data-roles="shop web">
+              <span class="k-prob-tag" data-group="weight">무게와 조합</span>
+              <h3>"예쁜 제목은 결국 이미지로 잘라 붙여요"</h3>
+              <p class="k-prob-why">상세페이지·배너·카드뉴스의 이미지 글자는 검색·번역·화면 읽기가 안 되고, 문구 하나 고치려면 다시 그려야 합니다.</p>
+              <p class="k-prob-fix">꾸민 제목도 텍스트라 문구를 바로 고치고, 화면 읽기와 검색에는 원문이 그대로 남습니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="text">고쳐 보기</a>
+            </article>
+            <article class="k-prob" data-roles="shop web">
+              <span class="k-prob-tag" data-group="weight">무게와 조합</span>
+              <h3>"글꼴로는 이런 표현이 안 돼요"</h3>
+              <p class="k-prob-why">글꼴은 글자 단위로만 칠하고 움직입니다.</p>
+              <p class="k-prob-fix">초성·중성·받침을 따로 칠하고 움직입니다 — 받침만 떨어지거나, 네온관 하나만 깜빡입니다.</p>
+              <a class="k-prob-proof" href="./effects.html">움직임·상호작용 보기</a>
+            </article>
+
+            <article class="k-prob" data-roles="ai" data-featured>
+              <span class="k-prob-tag" data-group="ai">AI 에이전트</span>
+              <h3>"AI가 만든 문서의 한글이 밋밋하고 매번 달라요"</h3>
+              <p class="k-prob-why">실행할 때마다 고르는 글꼴과 색이 바뀌고, 웹폰트 주소를 매번 알려 주기도 번거롭습니다.</p>
+              <p class="k-prob-fix">설명서 링크 하나와 글꼴 이름만 주면 됩니다. 같은 이름과 씨앗은 언제나 같은 모양이라 다시 만들어도 통일됩니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="ai3">세 번 만들어 보기</a>
+            </article>
+            <article class="k-prob" data-roles="ai shop">
+              <span class="k-prob-tag" data-group="ai">AI 에이전트</span>
+              <h3>"우리 팀만의 글꼴도 AI에게 맡기고 싶어요"</h3>
+              <p class="k-prob-why">한글 글꼴을 새로 만드는 일은 보통 몇 달이 걸립니다.</p>
+              <p class="k-prob-fix">AI가 꾸밈 CSS를 쓰거나 SVG로 자모를 그려 새 글꼴을 만듭니다.</p>
+              <a class="k-prob-proof" href="#ai">AI 프롬프트</a>
+            </article>
+
+            <article class="k-prob" data-roles="term">
+              <span class="k-prob-tag" data-group="text">텍스트 환경</span>
+              <h3>"터미널·CI 로그·봇 알림에서 한글을 크게 보이고 싶어요"</h3>
+              <p class="k-prob-why">평문에는 글자 크기가 없습니다.</p>
+              <p class="k-prob-fix">한글을 2줄 평문으로 크게 풀어 씁니다. 전각 칸이라 고정폭에서 줄이 맞고, CLI·Node·Python·Go·Rust·Ruby가 같은 결과를 냅니다.</p>
+              <a class="k-prob-proof" href="#bot">봇·터미널</a>
+            </article>
+            <article class="k-prob" data-roles="term ai" data-featured>
+              <span class="k-prob-tag" data-group="text">텍스트 환경</span>
+              <h3>"마크다운·AI 응답을 순수 텍스트로 내면 제목이 묻혀요"</h3>
+              <p class="k-prob-why">텍스트 메일, 메신저 공지, README.txt, CLI 출력에서는 <code>#</code>과 <code>**</code>가 기호로만 남습니다.</p>
+              <p class="k-prob-fix">제목과 강조만 2줄 큰 글자로 바꾼 순수 텍스트를 만듭니다.</p>
+              <a class="k-prob-proof" href="#proof" data-proof="md">변환해 보기</a>
+            </article>
+
+            <article class="k-prob" data-roles="shop edu">
+              <span class="k-prob-tag" data-group="make">만들기·교육</span>
+              <h3>"내 손글씨·브랜드 한글 글꼴은 11,172자라 엄두가 안 나요"</h3>
+              <p class="k-prob-why">완성형 글꼴은 글자마다 따로 그려야 합니다.</p>
+              <p class="k-prob-fix">자음 19·모음 21칸만 그리면 11,172자가 되고, TTF로 내보내 보통 글꼴처럼 씁니다.</p>
+              <a class="k-prob-proof" href="./font-studio.html?font=sprite-example#studio-material">자소판 그리기</a>
+            </article>
+            <article class="k-prob" data-roles="edu">
+              <span class="k-prob-tag" data-group="make">만들기·교육</span>
+              <h3>"한글 짜임을 아이와 외국인에게 보여 주고 싶어요"</h3>
+              <p class="k-prob-why">완성된 글자에서는 초성·중성·받침이 나뉘어 보이지 않습니다.</p>
+              <p class="k-prob-fix">자모마다 색을 칠하고, 나누고, 조립되는 모습을 보여 줍니다.</p>
+              <a class="k-prob-proof" href="./examples/hangul-class.html">한글 학습지</a>
+            </article>
+            <article class="k-prob" data-roles="edu web">
+              <span class="k-prob-tag" data-group="make">만들기·교육</span>
+              <h3>"한글 입력기가 없는 기기에서 한글을 써야 해요"</h3>
+              <p class="k-prob-why">빌린 컴퓨터나 키오스크에는 한글 입력기가 없기도 합니다.</p>
+              <p class="k-prob-fix">영문 자판으로 두벌식·세벌식 한글을 조합해 씁니다.</p>
+              <a class="k-prob-proof" href="./memo.html">메모장</a>
+            </article>
+          </div>
+          <p class="k-after k-probs-more"><button type="button" class="k-btn" data-probs-more aria-expanded="false">문제 <span data-probs-count>18</span>가지 모두 보기</button></p>
+
+          <!-- 증명 -->
+          <div class="k-proof" id="proof">
+            <h3 class="k-proof-title">직접 확인하기</h3>
+            <div class="k-chips k-tabs" role="tablist" aria-label="증명 데모">
+              <button type="button" role="tab" id="proof-tab-block" aria-controls="proof-block" aria-selected="true" data-proof-tab="block">글꼴이 막힐 때</button>
+              <button type="button" role="tab" id="proof-tab-seed" aria-controls="proof-seed" aria-selected="false" tabindex="-1" data-proof-tab="seed">매번 다른 글꼴</button>
+              <button type="button" role="tab" id="proof-tab-missing" aria-controls="proof-missing" aria-selected="false" tabindex="-1" data-proof-tab="missing">빈 글자 검사</button>
+              <button type="button" role="tab" id="proof-tab-meter" aria-controls="proof-meter" aria-selected="false" tabindex="-1" data-proof-tab="meter">글꼴 파일 계기판</button>
+              <button type="button" role="tab" id="proof-tab-md" aria-controls="proof-md" aria-selected="false" tabindex="-1" data-proof-tab="md">마크다운 → 텍스트</button>
+              <button type="button" role="tab" id="proof-tab-ai3" aria-controls="proof-ai3" aria-selected="false" tabindex="-1" data-proof-tab="ai3">AI로 세 번</button>
+              <button type="button" role="tab" id="proof-tab-text" aria-controls="proof-text" aria-selected="false" tabindex="-1" data-proof-tab="text">이미지 대신 텍스트</button>
+            </div>
+
+            <!-- ① 글꼴이 막힐 때 -->
+            <div class="k-proof-panel" id="proof-block" role="tabpanel" aria-labelledby="proof-tab-block" data-proof-panel="block">
+              <div class="k-switches">
+                <label class="k-switch"><input type="checkbox" role="switch" data-block="webfont" /> <span>웹폰트 막기</span></label>
+                <label class="k-switch"><input type="checkbox" role="switch" data-block="hangul" /> <span>기기에 한글 글꼴 없음</span></label>
+              </div>
+              <div class="k-vs">
+                <figure class="k-vs-side">
+                  <figcaption>웹폰트를 쓰는 보통 페이지</figcaption>
+                  <div class="k-stage" data-tone="pink"><p class="k-wf-title" data-wf-title>가을 음악회</p></div>
+                  <p class="k-note" data-wf-status>웹폰트를 받았을 때의 모습</p>
+                </figure>
+                <figure class="k-vs-side">
+                  <figcaption>폰꾸</figcaption>
+                  <div class="k-stage" data-tone="pink"><font-kku font="sticker" size="clamp(34px, 5vw, 52px)" data-block-host>가을 음악회</font-kku></div>
+                  <p class="k-note" data-kku-status>기기 한글 글꼴을 재료로 조립해 그립니다</p>
+                </figure>
+              </div>
+              <p class="k-note k-proof-note">
+                이 데모는 웹폰트 파일을 받지 않습니다. 왼쪽 '받았을 때'는 기기 글꼴의 굵은체로 흉내 낸 모습이고, '막혔을 때'는 받지 못한 <code>@font-face</code>가 실제로 기본 글꼴로 떨어진 모습입니다.
+                '한글 글꼴 없음'의 빈 네모는 한글을 그릴 글꼴이 없는 기기의 모습을 흉내 낸 것이고, 오른쪽은 실제로 그림 자소 글꼴(<code>crayon</code>, SVG 자소판)로 바꿔 그립니다.
+                이 기기에는 한글 글꼴이 <strong data-device-hangul>있습니다</strong>. 글꼴 없는 기기에서는 <a href="./sign.html">전광판</a>·<a href="./memo.html">메모장</a>이 저절로 그림 자소 글꼴로 바꿔 그립니다.
+              </p>
+            </div>
+
+            <!-- ② 매번 다른 글꼴 -->
+            <div class="k-proof-panel" id="proof-seed" role="tabpanel" aria-labelledby="proof-tab-seed" data-proof-panel="seed" hidden>
+              <div class="k-chips" role="group" aria-label="씨앗에 반응하는 글꼴" data-seed-fonts>
+                <button type="button" data-seed-font="malang" aria-pressed="true">말랑</button>
+                <button type="button" data-seed-font="crayon" aria-pressed="false">크레용</button>
+                <button type="button" data-seed-font="sticker" data-seed-tone="pink" aria-pressed="false">스티커</button>
+                <button type="button" data-seed-font="glitch" data-seed-tone="dark" aria-pressed="false">글리치</button>
+                <button type="button" data-seed-font="chalk" data-seed-tone="board" aria-pressed="false">분필</button>
+                <button type="button" data-seed-font="jasu" data-seed-tone="linen" aria-pressed="false">자수</button>
+              </div>
+              <div class="k-vs">
+                <figure class="k-vs-side">
+                  <figcaption>보통 글꼴 — 같은 글자는 늘 같은 그림</figcaption>
+                  <div class="k-stage"><p class="k-plain-repeat">하하하하 깔깔깔깔</p></div>
+                </figure>
+                <figure class="k-vs-side">
+                  <figcaption>폰꾸 — 자모마다 씨앗값이 다름</figcaption>
+                  <div class="k-stage" data-seed-stage><font-kku font="malang" size="clamp(32px, 4.6vw, 46px)" seed="auto" jamo-seeds data-seed-host>하하하하 깔깔깔깔</font-kku></div>
+                </figure>
+              </div>
+              <div class="k-proof-row">
+                <button type="button" class="k-btn k-btn--small" data-seed-reroll>다시 섞기</button>
+                <button type="button" class="k-btn k-btn--small k-btn--primary" data-seed-fix>이 모양 고정</button>
+                <span class="k-note">지금 씨앗값 <code data-seed-value>—</code></span>
+              </div>
+              <div class="k-code" data-seed-code-box hidden>
+                <div class="k-code-bar"><span>이 모양 그대로 쓰는 코드</span><button type="button" data-copy="#seed-code">복사</button></div>
+                <pre id="seed-code"><code></code></pre>
+              </div>
+
+              <h4 class="k-proof-sub">이름을 씨앗으로 — 사람마다 다르고, 다시 그려도 같게</h4>
+              <form class="k-proof-row" data-name-form>
+                <input class="k-input" name="name" type="text" maxlength="10" value="김폰꾸" autocomplete="off" aria-label="씨앗으로 쓸 이름" />
+              </form>
+              <div class="k-vs">
+                <figure class="k-vs-side">
+                  <figcaption>첫 번째로 그린 것</figcaption>
+                  <div class="k-stage" data-name-stage><font-kku font="malang" size="clamp(32px, 4.6vw, 44px)" seed="김폰꾸" jamo-seeds data-name-host>김폰꾸</font-kku></div>
+                </figure>
+                <figure class="k-vs-side">
+                  <figcaption>따로 한 번 더 그린 것</figcaption>
+                  <div class="k-stage" data-name-stage><font-kku font="malang" size="clamp(32px, 4.6vw, 44px)" seed="김폰꾸" jamo-seeds data-name-host>김폰꾸</font-kku></div>
+                </figure>
+              </div>
+              <p class="k-note" data-name-check aria-live="polite"></p>
+              <p class="k-note k-proof-note">씨앗에 반응하는 글꼴은 말랑·크레용·스티커·글리치·분필·자수입니다. 바탕 요소에 <code>seed</code>와 <code>jamo-seeds</code>만 붙이면 됩니다. 씨앗이 없으면 늘 같은 기본 모양입니다.</p>
+            </div>
+
+            <!-- ③ 빈 글자 검사 -->
+            <div class="k-proof-panel" id="proof-missing" role="tabpanel" aria-labelledby="proof-tab-missing" data-proof-panel="missing" hidden>
+              <form class="k-proof-row" data-missing-form>
+                <input class="k-input k-input--grow" name="text" type="text" maxlength="24" value="뷁 똠방각하 햏자 믜리" autocomplete="off" aria-label="검사할 이름·닉네임·문장" />
+              </form>
+              <div class="k-chips" role="group" aria-label="2,350자 밖 글자 예시" data-missing-examples>
+                <button type="button">뷁</button><button type="button">똠</button><button type="button">햏</button><button type="button">믜</button><button type="button">쌰</button><button type="button">쳌</button><button type="button">핰</button><button type="button">잌</button><button type="button">샾</button>
+              </div>
+              <p class="k-missing-summary" data-missing-summary aria-live="polite"></p>
+              <div class="k-vs">
+                <figure class="k-vs-side">
+                  <figcaption>완성형 2,350자 서브셋 웹폰트였다면 (흉내)</figcaption>
+                  <div class="k-stage"><p class="k-subset" data-missing-subset></p></div>
+                </figure>
+                <figure class="k-vs-side">
+                  <figcaption>폰꾸 — 11,172자 모두 같은 모양</figcaption>
+                  <div class="k-stage"><font-kku font="gothic" size="clamp(28px, 4vw, 40px)" data-missing-host>뷁 똠방각하 햏자 믜리</font-kku></div>
+                </figure>
+              </div>
+              <p class="k-note k-proof-note">2,350자 집합은 이 브라우저가 KS X 1001 완성형 한글(EUC-KR 0xB0A1–0xC8FE)을 직접 풀어 만듭니다. 왼쪽은 그 밖의 글자만 다른 글꼴(명조)로 바꿔 서브셋 웹폰트의 대체 글꼴을 흉내 냅니다.</p>
+            </div>
+
+            <!-- ④ 글꼴 파일 계기판 -->
+            <div class="k-proof-panel" id="proof-meter" role="tabpanel" aria-labelledby="proof-tab-meter" data-proof-panel="meter" hidden>
+              <div class="k-meter" data-meter>
+                <div class="k-meter-cell k-meter-cell--big"><span>받은 글꼴 파일 (woff·ttf·otf)</span><strong data-meter-fontfiles>0</strong></div>
+                <div class="k-meter-cell"><span>이 페이지가 쓰는 폰꾸 글꼴</span><strong><span data-meter-fontcount>—</span>종</strong></div>
+                <div class="k-meter-cell"><span>런타임 <code>font-kku.js</code></span><strong data-meter-runtime>—</strong><em data-meter-gz="runtime"></em></div>
+                <div class="k-meter-cell"><span>기본 CSS <code>font-kku.css</code></span><strong data-meter-base>—</strong><em data-meter-gz="base"></em></div>
+                <div class="k-meter-cell"><span>글꼴 CSS <span data-meter-css-count>0</span>장</span><strong data-meter-css>—</strong><em data-meter-gz="css"></em></div>
+                <div class="k-meter-cell"><span>SVG 자소판 <span data-meter-svg-count>0</span>장</span><strong data-meter-svg>—</strong><em data-meter-gz="svg"></em></div>
+                <div class="k-meter-cell"><span>확장 <span data-meter-addons-count>0</span>개 (꾸밈·움직임·상호작용)</span><strong data-meter-addons>—</strong><em data-meter-gz="addons"></em></div>
+                <div class="k-meter-cell k-meter-cell--sum"><span>폰꾸가 받은 합계</span><strong data-meter-total>—</strong><em data-meter-raw></em></div>
+                <div class="k-meter-cell k-meter-cell--sum"><span>gzip으로 보냈다면</span><strong data-meter-gzip>—</strong><em>이 브라우저가 같은 파일을 직접 압축해 잰 크기</em></div>
+              </div>
+              <div class="k-proof-row"><button type="button" class="k-btn k-btn--small" data-meter-again>다시 재기</button></div>
+              <p class="k-note k-proof-note">
+                브라우저의 Resource Timing으로 이 페이지가 실제로 받은 바이트(전송 크기)를 잽니다. 서버가 압축하지 않고 보내면 크게 잡히므로, 같은 파일을 브라우저가 gzip으로 직접 압축해 본 크기도 함께 적습니다(jsDelivr 같은 CDN은 압축해 보냅니다). 캐시에서 읽은 파일은 0바이트로 잡혀 '캐시됨'으로 적고, 크기를 알려 주지 않는 환경(파일로 연 페이지 등)에서는 '잴 수 없음'으로 적습니다.
+                비교하자면 한글 웹폰트는 굵기 하나만 해도 보통 수백 KB에서 수 MB입니다.
+              </p>
+            </div>
+
+            <!-- ⑤ 마크다운 → 텍스트 -->
+            <div class="k-proof-panel" id="proof-md" role="tabpanel" aria-labelledby="proof-tab-md" data-proof-panel="md" hidden>
+              <div class="k-split">
+                <div class="k-stack">
+                  <label class="k-field-label" for="md-input">마크다운 (AI 응답을 붙여 넣으세요)</label>
+                  <textarea class="k-textarea" id="md-input" rows="11" spellcheck="false" data-md-input></textarea>
+                  <div class="k-switches">
+                    <label class="k-switch"><input type="checkbox" checked data-md-opt="heading" /> <span><code>#</code> 제목을 크게</span></label>
+                    <label class="k-switch"><input type="checkbox" checked data-md-opt="boldline" /> <span>굵게만 있는 줄을 크게</span></label>
+                    <label class="k-switch"><input type="checkbox" checked data-md-opt="inline" /> <span>줄 안의 굵게는 「」로</span></label>
+                    <label class="k-switch"><input type="checkbox" data-md-opt="fence" /> <span>코드 블록으로 감싸기(슬랙·디스코드)</span></label>
+                  </div>
+                </div>
+                <div class="k-terminal">
+                  <div class="k-terminal-bar">
+                    <span>결과.txt</span>
+                    <button type="button" data-copy="#md-output">복사</button>
+                    <button type="button" data-md-download>.txt 받기</button>
+                  </div>
+                  <pre id="md-output" class="k-md-output" data-md-output></pre>
+                </div>
+              </div>
+              <p class="k-note k-proof-note">제목과 강조만 <code>FontKku.renderText</code>로 2줄 평문으로 바꾸고 나머지 줄은 그대로 둡니다. 같은 변환은 Node·Python·Go·Rust·Ruby의 <code>renderText</code>/<code>render_text</code>로 서버나 CLI에서도 됩니다.</p>
+            </div>
+
+            <!-- ⑥ AI로 세 번 -->
+            <div class="k-proof-panel" id="proof-ai3" role="tabpanel" aria-labelledby="proof-tab-ai3" data-proof-panel="ai3" hidden>
+              <h4 class="k-proof-sub">보통 — 실행할 때마다 고르는 글꼴과 색이 바뀝니다 (흉내)</h4>
+              <div class="k-runs" data-runs-plain>
+                <div class="k-run"><span>1번째 실행</span><p class="k-run-plain k-run-plain--1">가을 신메뉴</p></div>
+                <div class="k-run"><span>2번째 실행</span><p class="k-run-plain k-run-plain--2">가을 신메뉴</p></div>
+                <div class="k-run"><span>3번째 실행</span><p class="k-run-plain k-run-plain--3">가을 신메뉴</p></div>
+              </div>
+              <h4 class="k-proof-sub">폰꾸 — 설명서 + 글꼴 이름 + 씨앗</h4>
+              <div class="k-chips" role="radiogroup" aria-label="씨앗" data-ai3-seed>
+                <button type="button" role="radio" aria-checked="true" data-ai3="fixed">씨앗 고정 <code>seed="menu-1"</code></button>
+                <button type="button" role="radio" aria-checked="false" data-ai3="auto">매번 새로 <code>seed="auto"</code></button>
+              </div>
+              <div class="k-runs" data-runs-kku>
+                <div class="k-run"><span>1번째 실행</span><font-kku font="malang" size="clamp(26px, 3.4vw, 34px)" seed="menu-1" jamo-seeds data-ai3-host>가을 신메뉴</font-kku></div>
+                <div class="k-run"><span>2번째 실행</span><font-kku font="malang" size="clamp(26px, 3.4vw, 34px)" seed="menu-1" jamo-seeds data-ai3-host>가을 신메뉴</font-kku></div>
+                <div class="k-run"><span>3번째 실행</span><font-kku font="malang" size="clamp(26px, 3.4vw, 34px)" seed="menu-1" jamo-seeds data-ai3-host>가을 신메뉴</font-kku></div>
+              </div>
+              <p class="k-note" data-ai3-check aria-live="polite"></p>
+              <p class="k-note k-proof-note">왼쪽 줄은 AI가 실행마다 다른 글꼴과 색을 고르는 상황을 기기 글꼴로 흉내 낸 것입니다. 폰꾸는 설명서가 글꼴 이름과 씨앗을 정해 주므로 몇 번을 다시 만들어도 같은 모양이고, 일부러 다르게 하고 싶을 때만 <code>auto</code>를 씁니다. <a href="#ai">AI 프롬프트 가져가기</a></p>
+            </div>
+
+            <!-- ⑦ 이미지 대신 텍스트 -->
+            <div class="k-proof-panel" id="proof-text" role="tabpanel" aria-labelledby="proof-tab-text" data-proof-panel="text" hidden>
+              <form class="k-proof-row" data-text-form>
+                <input class="k-input k-input--grow" name="text" type="text" maxlength="16" value="가을 신메뉴 출시" autocomplete="off" aria-label="배너 문구 고치기" />
+              </form>
+              <div class="k-vs">
+                <figure class="k-vs-side">
+                  <figcaption>이미지로 만든 배너</figcaption>
+                  <div class="k-stage" data-tone="dark"><canvas class="k-text-canvas" width="560" height="140" data-text-canvas role="img" aria-label="배너 이미지"></canvas></div>
+                  <p class="k-note" data-text-image-note>이미지 속 글자는 고치려면 다시 그려야 합니다. 화면 읽기에는 대체 문구만 전해집니다.</p>
+                </figure>
+                <figure class="k-vs-side">
+                  <figcaption>폰꾸로 꾸민 제목</figcaption>
+                  <div class="k-stage" data-tone="dark"><font-kku font="geumbak" size="clamp(30px, 4.4vw, 44px)" data-text-host>가을 신메뉴 출시</font-kku></div>
+                  <p class="k-note">화면 읽기·검색이 보는 글: <strong data-text-read>가을 신메뉴 출시</strong></p>
+                </figure>
+              </div>
+              <p class="k-note k-proof-note">문구를 고치면 오른쪽은 바로 바뀌고, 꾸민 모양 아래에 원문이 텍스트로 남아 화면 읽기와 검색이 그 글을 씁니다.</p>
+            </div>
+          </div>
+
+          <aside class="k-limits" aria-labelledby="limits-title">
+            <h3 id="limits-title">폰꾸가 하지 않는 일</h3>
+            <ul>
+              <li><strong>브라우저에서는 자바스크립트가 필요합니다.</strong> 자바스크립트가 없는 곳은 서버에서 <code>render_html</code>로 만든 정적 HTML을 씁니다.</li>
+              <li><strong>기기 글꼴 재료 글꼴은 기기마다 획이 조금 다릅니다.</strong> 어디서나 똑같아야 하면 그림 자소 글꼴을 씁니다.</li>
+              <li><strong>제목·강조용입니다.</strong> 본문 문단은 보통 글꼴로 둡니다.</li>
+              <li><strong>이메일 본문과 옛한글은 대상이 아닙니다.</strong></li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 쓰는 법 바로 가기 -->
+      <nav class="k-wrap k-uses" aria-label="쓰는 법 바로 가기">
+        <a class="k-use" href="#web">
+          <span class="k-use-num">둘</span>
+          <strong>홈페이지·블로그</strong>
+          <span>스크립트 한 줄을 넣고 제목에 글꼴 이름만 붙입니다.</span>
+        </a>
+        <a class="k-use" href="#ai">
+          <span class="k-use-num">셋</span>
+          <strong>AI로 문서 꾸미기 · 나만의 글꼴</strong>
+          <span>ChatGPT·Claude에 설명서 링크를 주고 "폰꾸로 꾸며 줘".</span>
+        </a>
+        <a class="k-use" href="#bot">
+          <span class="k-use-num">넷</span>
+          <strong>봇·터미널의 한글 강조</strong>
+          <span>메신저·로그에서 한글을 2줄로 크게 풀어 씁니다.</span>
+        </a>
+      </nav>
+
+      <!-- 둘: 웹 -->
+      <section class="k-section" id="web" aria-labelledby="web-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">둘</span>
+            <span class="k-kicker">홈페이지·블로그</span>
+            <h2 id="web-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">스크립트 한 줄이면 됩니다</h2>
+            <p class="k-lead">
+              <code>data-fonts</code>에 쓸 글꼴을 적으면 런타임이 기본 CSS와 글꼴 CSS를 함께 불러옵니다.
+              기존 제목 태그에는 꾸밈 클래스를, 장식 문구에는 전용 태그를 씁니다.
+            </p>
+          </header>
+          <div class="k-split">
+            <div class="k-code">
+              <div class="k-code-bar"><span>index.html</span><button type="button" data-copy="#web-code">복사</button></div>
+              <pre id="web-code"><code>&lt;script src="https://font.tty.link/lib/font-kku.js"
+        data-fonts="sebul neon"&gt;&lt;/script&gt;
+
+&lt;h1 class="font-kku" data-font="sebul" data-size="48"&gt;오늘의 기록&lt;/h1&gt;
+&lt;font-kku font="neon" size="48"&gt;을지로 네온&lt;/font-kku&gt;</code></pre>
+            </div>
+            <div class="k-stack" aria-label="위 코드의 결과">
+              <div class="k-stage"><span class="font-kku" data-font="sebul" data-size="48">오늘의 기록</span></div>
+              <div class="k-stage" data-tone="dark"><font-kku font="neon" size="48">을지로 네온</font-kku></div>
+            </div>
+          </div>
+          <p class="k-note k-after">
+            스크립트를 넣을 수 있는 블로그 스킨·테마, React·Vue 같은 프레임워크에서도 같은 태그를 씁니다.
+            설치·속성·꾸미기는 <a href="./docs.html#start">문서</a>에 있습니다. npm 공개 전에는 저장소의
+            <code>font-kku.js</code>·<code>font-kku.css</code>·<code>profiles/</code>를 같은 폴더 구조로 복사해 씁니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- 셋: AI -->
+      <section class="k-section k-section--tint" id="ai" aria-labelledby="ai-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">셋</span>
+            <span class="k-kicker">AI 에이전트 · 문서 꾸미기·나만의 글꼴</span>
+            <h2 id="ai-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">설명서를 주고 폰꾸로 꾸며 줘</h2>
+            <p class="k-lead">
+              ChatGPT·Claude 같은 AI 대화창에 사용 설명서(<code>SKILL.md</code>) 링크와 함께 부탁하면,
+              AI가 만드는 HTML의 제목과 강조 문구를 폰꾸로 꾸미거나 브랜드에 맞는 나만의 꾸밈 글꼴을 만들어 줍니다.
+            </p>
+          </header>
+
+          <div class="k-chips k-tabs" role="tablist" aria-label="AI로 할 일">
+            <button type="button" role="tab" id="ai-tab-doc" aria-controls="ai-panel" aria-selected="true" data-ai-mode="doc">문서·페이지 꾸미기</button>
+            <button type="button" role="tab" id="ai-tab-font" aria-controls="ai-panel" aria-selected="false" data-ai-mode="font">나만의 글꼴 만들기</button>
+            <button type="button" role="tab" id="ai-tab-sprite" aria-controls="ai-panel" aria-selected="false" data-ai-mode="sprite">그림 자소 글꼴 그리기</button>
+          </div>
+
+          <div class="k-split" id="ai-panel" role="tabpanel" aria-labelledby="ai-tab-doc">
+            <div class="k-stack">
+              <ol class="k-steps">
+                <li><strong>복사해서 붙여 넣기</strong>아래 문장을 ChatGPT·Claude 대화창에 붙여 넣고 만들 내용만 바꿉니다.</li>
+                <li><strong>미리보기로 확인</strong>Claude 아티팩트·ChatGPT 캔버스로 보거나 <code>.html</code> 파일로 저장해 브라우저로 엽니다.</li>
+                <li><strong>말로 고치기</strong>"제목은 네온 말고 분필로, 바탕은 칠판색으로"처럼 이어서 부탁합니다.</li>
+              </ol>
+              <div class="k-chips" role="group" aria-label="예시 고르기" data-ai-presets></div>
+              <div class="k-code k-code--wrap">
+                <div class="k-code-bar"><span>프롬프트</span><button type="button" data-copy="#ai-prompt">복사</button></div>
+                <pre id="ai-prompt"></pre>
+              </div>
+              <p class="k-note">
+                AI가 링크를 열지 못하면(웹 검색이 꺼져 있거나 npm 공개 전)
+                <button type="button" class="k-inline-btn" data-copy-skill>설명서 내용 복사</button>로 내용을 통째로 붙여 넣으세요.
+                Claude Code는 <code>skills/font-kku-use</code> 폴더를 <code>~/.claude/skills/</code>에 넣어 두면 링크 없이 씁니다.
+              </p>
+            </div>
+
+            <figure class="k-figure">
+              <div class="k-browser">
+                <div class="k-browser-bar" aria-hidden="true"><span></span><span></span><span></span><em data-ai-file>가을-신메뉴.html</em></div>
+                <div class="k-mock" data-ai-result="doc">
+                  <div class="k-mock-banner"><font-kku font="neon" size="52">가을 신메뉴</font-kku></div>
+                  <div class="k-mock-body">
+                    <span class="k-mock-deal"><font-kku font="sticker" size="30">오늘만 1+1</font-kku></span>
+                    <p>밤 라떼, 고구마 크림 브륄레, 단호박 수프를 새로 선보입니다.</p>
+                  </div>
+                </div>
+                <div class="k-mock k-mock-font" data-ai-result="font" hidden>
+                  <div class="k-mock-compare">
+                    <span>기반 <code>sebul</code></span>
+                    <font-kku font="sebul" size="44">딸기 공방</font-kku>
+                    <span>나만의 글꼴 <code>kku-berry</code></span>
+                    <font-kku font="sebul" size="44" class="kku-berry">딸기 공방</font-kku>
+                  </div>
+                  <pre class="k-mock-css">.kku-berry { --fy-weight: 800; }
+.kku-berry :is([part~="choseong"], [part~="head"]) { color: #c2185b; }
+.kku-berry [part~="jungseong"] { color: #7b1fa2; }
+.kku-berry [part~="jongseong"] { color: #f06292; }
+.kku-berry [part~="jamo"] { text-shadow: 0.04em 0.04em 0 #ffd1e3; }</pre>
+                </div>
+                <div class="k-mock k-mock-font" data-ai-result="sprite" hidden>
+                  <div class="k-mock-compare">
+                    <span>자소판 <code>pixel.svg</code></span>
+                    <font-kku font="pixel" size="44">한글 도장</font-kku>
+                    <span>자소판 <code>dojang.svg</code></span>
+                    <font-kku font="dojang" size="44">한글 도장</font-kku>
+                  </div>
+                  <pre class="k-mock-css">&lt;!-- 칸 100×100, 음절 안 제자리에 획을 그린다 --&gt;
+&lt;g id="r0-ㄱ" transform="translate(0 0)"&gt;
+  &lt;path d="M5 12 H45 V28 Q45 54 11 65"/&gt;
+&lt;/g&gt;
+&lt;g id="r1-ㅏ" transform="translate(0 100)"&gt;
+  &lt;path d="M67 2 V86"/&gt;&lt;path d="M67 39 H85"/&gt;
+&lt;/g&gt;</pre>
+                </div>
+              </div>
+              <figcaption class="k-note" data-ai-caption>설명서의 완성 예시를 그대로 그린 화면</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- 넷: 봇·터미널 -->
+      <section class="k-section" id="bot" aria-labelledby="bot-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">넷</span>
+            <span class="k-kicker">봇·터미널 · 메신저·로그</span>
+            <h2 id="bot-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">한글을 두 줄로 크게</h2>
+            <p class="k-lead">
+              같은 분해 엔진이 브라우저 없이 한글을 2줄 평문으로 풀어 씁니다. 배포 알림, 봇 메시지,
+              터미널 배너에서 강조하세요. 슬랙·디스코드는 코드 블록으로 감싸면 줄이 맞습니다.
+            </p>
+          </header>
+          <div class="k-split">
+            <div class="k-terminal">
+              <form class="k-terminal-bar" data-bot-form>
+                <input name="text" type="text" maxlength="24" value="배포 완료" autocomplete="off" aria-label="크게 풀어 쓸 한글" />
+                <label><input type="checkbox" data-bot-fence /> 코드 블록으로 감싸기</label>
+                <button type="button" data-copy="#bot-output">복사</button>
+              </form>
+              <pre id="bot-output" role="img" aria-label="입력한 한글을 2줄로 풀어 쓴 결과"></pre>
+            </div>
+            <div class="k-stack">
+              <div class="k-code">
+                <div class="k-code-bar"><span>터미널</span><button type="button" data-copy="#bot-cli">복사</button></div>
+                <pre id="bot-cli"><code>npx font-kku-text "배포 완료"</code></pre>
+              </div>
+              <div class="k-code">
+                <div class="k-code-bar"><span>Node 봇</span><button type="button" data-copy="#bot-node">복사</button></div>
+                <pre id="bot-node"><code>const { renderText } = require("font-kku");
+const big = renderText("배포 완료").join("\n");
+await say("```\n" + big + "\n```");</code></pre>
+              </div>
+              <div class="k-code">
+                <div class="k-code-bar"><span>Python 봇</span><button type="button" data-copy="#bot-python">복사</button></div>
+                <pre id="bot-python"><code>from font_kku import render_text
+big = "\n".join(render_text("배포 완료"))</code></pre>
+              </div>
+            </div>
+          </div>
+          <p class="k-note k-after">Go·Rust·Ruby 구현도 같은 결과를 냅니다(<a href="./docs.html#text">문서 · 평문 모드와 봇</a>).</p>
+        </div>
+      </section>
+
+      <!-- 다섯: 사례 -->
+      <section class="k-section k-section--tint" id="cases" aria-labelledby="cases-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">다섯</span>
+            <span class="k-kicker">사례</span>
+            <h2 id="cases-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">가져다 쓰는 완성 템플릿</h2>
+            <p class="k-lead">청첩장, 네온 간판, 예능 자막, RPG 대화창, 그림일기, 포스터, 메뉴판 — 바로 열어 보고, HTML을 복사하거나 내려받아 내 내용으로 바꿉니다.</p>
+          </header>
+          <div class="k-cases" data-cases></div>
+          <p class="k-after"><a class="k-btn" href="./showcase.html">사례 모두 보기</a></p>
+          <p class="k-note k-after" data-web-apps>
+            한글 입력기도 한글 글꼴도 없는 기기라면 웹 앱을 열어 보세요. 영문 자판으로 두벌식·세벌식 한글을 쳐서
+            <a href="./sign.html">전광판</a>에 띄우거나 <a href="./memo.html">메모장</a>에 씁니다 — 글자는 그림 자소 글꼴이 그립니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- 여섯: 글꼴 -->
+      <section class="k-section" id="fonts" aria-labelledby="fonts-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">여섯</span>
+            <span class="k-kicker">글꼴과 테마</span>
+            <h2 id="fonts-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">고르고 섞는 얼굴</h2>
+            <p class="k-lead">글꼴 파일 하나를 고르는 대신 축을 고릅니다. <strong>글꼴</strong>(자모 짜임과 획) · <strong>꾸밈</strong>(색·외곽선·그림자) · <strong>변주</strong>(씨앗) · <strong>움직임</strong> · <strong>상호작용</strong> · <strong>바탕</strong>. 고딕에 네온 꾸밈, 붓 글꼴에 금박 꾸밈처럼 축끼리 섞이고, 이름을 붙여 둔 조합이 <strong>테마</strong>입니다.</p>
+          </header>
+          <div class="k-mix" data-mix>
+            <div class="k-stage k-mix-stage" data-mix-stage>
+              <font-kku data-mix-host font="gothic" size="clamp(40px, 7vw, 76px)">고르고 섞기</font-kku>
+            </div>
+            <div class="k-mix-controls">
+              <div class="k-mix-row" data-mix-axis="font"><span class="k-mix-label" id="mix-font">글꼴</span><div class="k-chips" role="group" aria-labelledby="mix-font"></div></div>
+              <div class="k-mix-row" data-mix-axis="look"><span class="k-mix-label" id="mix-look">꾸밈</span><div class="k-chips" role="group" aria-labelledby="mix-look"></div></div>
+              <div class="k-mix-row" data-mix-axis="motion"><span class="k-mix-label" id="mix-motion">움직임</span><div class="k-chips" role="group" aria-labelledby="mix-motion"></div></div>
+              <pre class="k-mix-code" data-mix-code aria-live="polite"></pre>
+            </div>
+          </div>
+          <div class="k-fontstrip k-themestrip">
+            <a href="./fonts.html#theme-neon-sign" data-tone="dark" data-theme-tile="neon-sign"><font-kku font="sebul" class="kku-look-neon" animate="flicker" size="34">고장 난 네온</font-kku><code>neon-sign</code></a>
+            <a href="./fonts.html#theme-sticker-pack" data-tone="pink" data-theme-tile="sticker-pack"><font-kku font="sebul" class="kku-look-sticker kku-vary-tilt kku-vary-weight" seed="auto" jamo-seeds size="34">스티커 한 장</font-kku><code>sticker-pack</code></a>
+            <a href="./fonts.html#theme-gold-invite" data-tone="dark" data-theme-tile="gold-invite"><font-kku font="butgeul" class="kku-look-geumbak" animate="fade" size="34">금박 초대장</font-kku><code>gold-invite</code></a>
+            <a href="./fonts.html#theme-glitch-shuffle" data-tone="dark" data-theme-tile="glitch-shuffle"><font-kku font="sebul" class="kku-look-glitch" seed="auto" jamo-seeds size="34">글리치 섞기</font-kku><code>glitch-shuffle</code></a>
+            <a href="./fonts.html#theme-saekdong-wave" data-theme-tile="saekdong-wave"><font-kku font="gothic" class="kku-look-saekdong" animate="wave" size="34">색동 물결</font-kku><code>saekdong-wave</code></a>
+            <a href="./fonts.html#theme-blueprint-assemble" data-tone="blueprint" data-theme-tile="blueprint-assemble"><font-kku font="gothic" class="kku-look-blueprint" animate="assemble" size="34">도면 조립</font-kku><code>blueprint-assemble</code></a>
+            <a href="./fonts.html#theme-riso-zine" data-tone="paper" data-theme-tile="riso-zine"><font-kku font="gothic" class="kku-look-riso kku-vary-tilt kku-vary-weight kku-vary-ink" seed="auto" jamo-seeds size="34">리소 진</font-kku><code>riso-zine</code></a>
+            <a href="./fonts.html#theme-pixel-retro" data-theme-tile="pixel-retro"><font-kku font="pixel" class="kku-look-retro" animate="bounce" size="34">도트 오락실</font-kku><code>pixel-retro</code></a>
+            <a href="./fonts.html#theme-chalk-hand" data-tone="board" data-theme-tile="chalk-hand"><font-kku font="chalk" class="kku-vary-tilt kku-vary-bob kku-vary-width" seed="auto" jamo-seeds size="34">칠판 손글씨</font-kku><code>chalk-hand</code></a>
+            <a href="./fonts.html#theme-crayon-diary" data-theme-tile="crayon-diary"><font-kku font="crayon" class="kku-vary-tilt kku-vary-bob kku-vary-hue" seed="auto" jamo-seeds size="34">크레용 일기</font-kku><code>crayon-diary</code></a>
+            <a href="./fonts.html#theme-stamp-ink" data-tone="paper" data-theme-tile="stamp-ink"><font-kku font="dojang" class="kku-vary-ink kku-vary-tilt" seed="auto" jamo-seeds size="34">도장 농담</font-kku><code>stamp-ink</code></a>
+            <a href="./fonts.html#theme-stitch-saekdong" data-tone="linen" data-theme-tile="stitch-saekdong"><font-kku font="jasu" class="kku-look-saekdong" size="34">색동 자수</font-kku><code>stitch-saekdong</code></a>
+            <a href="./fonts.html#theme-brush-stamp" data-tone="paper" data-theme-tile="brush-stamp"><font-kku font="butgeul" class="kku-look-inju kku-vary-ink" seed="auto" jamo-seeds size="34">붓 인주</font-kku><code>brush-stamp</code></a>
+            <a href="./fonts.html#theme-pilgi-note" data-theme-tile="pilgi-note"><font-kku font="pilgi" class="kku-look-pastel kku-vary-bob kku-vary-width" seed="auto" jamo-seeds size="34">필기 메모</font-kku><code>pilgi-note</code></a>
+            <a href="./fonts.html#theme-round-sticker" data-tone="pink" data-theme-tile="round-sticker"><font-kku font="dunggeun" class="kku-look-sticker" animate="wave" size="34">둥근 스티커</font-kku><code>round-sticker</code></a>
+            <a href="./fonts.html#theme-malang" data-theme-tile="malang"><font-kku font="malang" size="34">말랑</font-kku><code>malang</code></a>
+          </div>
+          <p class="k-after"><a class="k-btn k-btn--primary" href="./fonts.html#compose">조합기 열기</a> <a class="k-btn" href="./fonts.html#themes">테마 모두 보기</a></p>
+        </div>
+      </section>
+
+      <!-- 일곱: 움직임 -->
+      <section class="k-section k-section--tint" id="effects" aria-labelledby="effects-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">일곱</span>
+            <span class="k-kicker">움직임</span>
+            <h2 id="effects-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">자모가 움직이는 제목</h2>
+            <p class="k-lead">글자가 아니라 초성·중성·받침이 따로 움직입니다. 자모를 하나씩 치고, 날아와 맞물리고, 받침만 떨어지고, 네온관 하나만 깜빡입니다. 움직임은 <code>animate="assemble"</code> 한 단어, 입력에 반응하는 상호작용은 <code>data-kku-fx="magnet"</code> 한 단어로 붙습니다.</p>
+          </header>
+          <div class="k-fxgrid">
+            <a class="k-fxtile" href="./effects.html#fx-type">
+              <span class="k-fxtile-stage"><font-kku font="sebul" size="38">ㅎ→하→한</font-kku></span>
+              <strong>두벌식 타자</strong>
+              <span>자모 단위로 쓰고 지웁니다. 이 페이지 맨 위 제목이 그 효과입니다.</span>
+            </a>
+            <a class="k-fxtile" href="./effects.html#fx-assemble">
+              <span class="k-fxtile-stage"><font-kku font="sebul" size="38" animate="assemble">자모 조립</font-kku></span>
+              <strong>자모 조립</strong>
+              <span>초성·중성·받침이 저마다 다른 쪽에서 날아와 맞물립니다.</span>
+            </a>
+            <a class="k-fxtile" href="./effects.html#fx-draw">
+              <span class="k-fxtile-stage" data-tone="paper"><font-kku font="sprite-system" jamo-set="sprite-system" animate="draw" size="38">획순 그리기</font-kku></span>
+              <strong>획순 그리기</strong>
+              <span>자모를 한 단계 더 쪼갠 획을 획순대로 한 획씩 긋습니다.</span>
+            </a>
+            <a class="k-fxtile" href="./effects.html#fx-scatter">
+              <span class="k-fxtile-stage"><font-kku font="saekdong" size="38">흩어지기</font-kku></span>
+              <strong>흩어졌다 모이기</strong>
+              <span>마우스를 올리면 자모가 제 역할 쪽으로 흩어졌다 돌아옵니다.</span>
+            </a>
+            <a class="k-fxtile" href="./effects.html#fx-flicker">
+              <span class="k-fxtile-stage" data-tone="dark"><font-kku font="neon" size="38" animate="flicker">영업 중</font-kku></span>
+              <strong>고장 난 네온</strong>
+              <span>글자 전체가 아니라 받침 하나만 끊어질 듯 깜빡입니다.</span>
+            </a>
+            <a class="k-fxtile" href="./effects.html#fx-drop">
+              <span class="k-fxtile-stage"><font-kku font="sticker" size="38" animate="drop">받침 톡</font-kku></span>
+              <strong>받침 톡</strong>
+              <span>받침만 위에서 떨어져 두 번 튀고 자리를 잡습니다.</span>
+            </a>
+          </div>
+          <p class="k-after"><a class="k-btn" href="./effects.html">움직임·상호작용 모두 보기</a></p>
+        </div>
+      </section>
+
+      <!-- 여덟: 원리 -->
+      <section class="k-section" id="why" aria-labelledby="why-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">여덟</span>
+            <span class="k-kicker">원리</span>
+            <h2 id="why-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">자소로 조립하니까</h2>
+            <p class="k-lead">위의 일이 되는 까닭은 하나입니다. 완성된 글자 그림을 보내지 않고, 자모를 놓는 규칙을 보냅니다.</p>
+          </header>
+          <div class="k-why">
+            <article>
+              <strong class="k-why-figure">규칙</strong>
+              <h3>그림 대신 놓는 자리</h3>
+              <p>글꼴 CSS에는 자모를 어디에 얼마나 크게 놓을지만 들어 있습니다. 글자 모양은 기기에 있는 한글 글꼴이나 SVG 자소판에서 가져옵니다.</p>
+            </article>
+            <article>
+              <strong class="k-why-figure">40<small>칸</small></strong>
+              <h3>40칸이 11,172자로</h3>
+              <p>자음 19·모음 21칸만 그리면 모든 음절이 조립됩니다. <a href="./font-studio.html?font=sprite-example#studio-material">자소판 그리기</a>에서 그리거나, <a href="./docs.html#make-svg">SVG로 직접 — AI 에이전트에게 맡겨도 — 그립니다</a>.</p>
+            </article>
+            <article>
+              <span class="k-why-figure"><font-kku font="saekdong" size="44">자소</font-kku></span>
+              <h3>자모가 각자 노드</h3>
+              <p>초성·중성·받침이 저마다 따로 그려져 색·기울기·<a href="./effects.html">움직임</a>을 따로 받고, 씨앗값을 섞으면 자모마다 표정이 달라집니다. 글꼴마다 <a href="./fonts.html">꾸미기</a>로 나만의 글꼴도 만듭니다.</p>
+            </article>
+            <article>
+              <strong class="k-why-figure">5<small>개 언어</small></strong>
+              <h3>같은 규칙, 어디서나</h3>
+              <p>JavaScript와 Python·Go·Rust·Ruby 구현이 한글 11,172자에서 같은 분해 결과를 냅니다.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 아홉: 만들기 -->
+      <section class="k-section k-section--tint" id="make" aria-labelledby="make-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">아홉</span>
+            <span class="k-kicker">작업실</span>
+            <h2 id="make-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">직접 다듬고 그리기</h2>
+          </header>
+          <div class="k-make">
+            <a class="k-make-card" href="./font-studio.html">
+              <font-kku font="sebul" size="34">글꼴 작업실</font-kku>
+              <span>기기 글꼴을 재료로 자소를 골라 자리·자모·문맥 값을 고치고 글꼴 CSS로 내보냅니다.</span>
+            </a>
+            <a class="k-make-card k-make-card--grid" href="./font-studio.html?font=sprite-example#studio-material">
+              <font-kku font="sebul" size="34">자소판 그리기</font-kku>
+              <span>자모 40칸을 직접 그려 그림 자소 글꼴을 만들고 PNG와 연결 CSS를 내보냅니다.</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="k-footer">
+      <div class="k-wrap k-footer-inner">
+        <span>폰꾸 font-kku · 코드는 MIT <span data-footer-version hidden></span></span>
+        <nav aria-label="바닥 링크">
+          <a href="lib/README.md">README</a>
+          <a href="lib/skill/SKILL.md">AI 설명서</a>
+          <a href="lib/docs/GLOSSARY.md">용어집</a>
+          <a href="./docs.html#dev-tools">개발 도구</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="./demo.js"></script>
+    <script src="./kk.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        window.FontKkuDemo.renderNav("index");
+        if (!window.FontKku) return;
+        var SKILL_URL = window.FontKkuSite.SKILL_URL;
+
+        var versionMount = document.querySelector("[data-footer-version]");
+        if (versionMount && window.FontKku.version) {
+          versionMount.textContent = "· 런타임 v" + window.FontKku.version;
+          versionMount.hidden = false;
+        }
+
+        // ── 히어로 견본 ────────────────────────────────────
+        var CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+        var JUNG = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ";
+        var JONG = ["", "ㄱ", "ㄲ", "ㄳ", "ㄴ", "ㄵ", "ㄶ", "ㄷ", "ㄹ", "ㄺ", "ㄻ", "ㄼ", "ㄽ", "ㄾ", "ㄿ", "ㅀ", "ㅁ", "ㅂ", "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
+        function compat(ch, table, base) {
+          if (!ch) return "";
+          var i = ch.charCodeAt(0) - base;
+          return Array.isArray(table) ? table[i] || "" : table.charAt(i);
+        }
+        var heroHost = document.getElementById("hero-render");
+        var heroTry = document.querySelector("[data-hero-try]");
+        var heroStage = document.querySelector("[data-hero-stage]");
+        var heroInput = heroTry.querySelector("input[name='text']");
+        var jamoMount = document.querySelector("[data-hero-jamo]");
+        function heroSizeFor(text) {
+          var glyphs = text.replace(/\s+/g, "").length;
+          if (glyphs <= 2) return "clamp(84px, 16vw, 128px)";
+          if (glyphs <= 4) return "clamp(56px, 11vw, 92px)";
+          if (glyphs <= 7) return "clamp(40px, 7vw, 64px)";
+          return "clamp(30px, 5vw, 46px)";
+        }
+        // 입력한 음절을 초성·중성·종성 칸으로 — decomposeGlyph가 돌려주는 분해 그대로
+        function renderJamo(text) {
+          var cells = Array.from(text).filter(function (ch) { return window.FontKku.isHangulSyllable(ch); }).slice(0, 6);
+          jamoMount.innerHTML = cells.map(function (ch) {
+            var g = window.FontKku.decomposeGlyph(ch).sourceJamo;
+            var parts = [
+              ["cho", compat(g.choseong, CHO, 0x1100)],
+              ["jung", compat(g.jungseong, JUNG, 0x1161)],
+              ["jong", compat(g.jongseong, JONG, 0x11a7)]
+            ].filter(function (p) { return p[1]; });
+            return '<span class="k-jamo-group"><b>' + ch + "</b>" +
+              parts.map(function (p) { return '<i class="k-jamo-' + p[0] + '">' + p[1] + "</i>"; }).join("") + "</span>";
+          }).join("");
+        }
+        function applyHeroText() {
+          var text = (heroInput.value || "").trim() || "한글";
+          heroHost.setAttribute("size", heroSizeFor(text));
+          window.FontKku.refresh(heroHost, { text: text });
+          renderJamo(text);
+        }
+        heroTry.addEventListener("submit", function (event) {
+          event.preventDefault();
+          applyHeroText();
+        });
+        heroInput.addEventListener("input", applyHeroText);
+        var fontButtons = heroTry.querySelectorAll("[data-hero-font]");
+        Array.prototype.forEach.call(fontButtons, function (button) {
+          button.addEventListener("click", function () {
+            heroHost.setAttribute("font", button.getAttribute("data-hero-font"));
+            /* 칠만 다른 글꼴(네온·금박 …)은 이미 받은 세벌·고딕에 꾸밈 클래스로 — CSS를 더 받지 않는다 */
+            var look = button.getAttribute("data-hero-look");
+            heroHost.className = look ? "kku-look-" + look : "";
+            if (!look) heroHost.removeAttribute("class");
+            var tone = button.getAttribute("data-hero-tone");
+            if (tone) {
+              heroStage.setAttribute("data-tone", tone);
+            } else {
+              heroStage.removeAttribute("data-tone");
+            }
+            Array.prototype.forEach.call(fontButtons, function (other) {
+              other.setAttribute("aria-pressed", String(other === button));
+            });
+          });
+        });
+        heroHost.setAttribute("size", heroSizeFor("한글"));
+        renderJamo("한글");
+
+        // ── 히어로 제목 ────────────────────────────────────
+        // 접속할 때마다 문장 하나를 골라 보이고, 잠시 뒤 자모 단위로 지웠다가 다음 문장을
+        // 두벌식으로 치듯 다시 쓴다(ㅎ → 하 → 한) — 상호작용 확장의 FontKkuFx.type. 첫 문장이
+        // 지금 문구, 나머지는 예전 문구다. 첫 문장은 움직임 확장의 자모 조립(animate="assemble")으로
+        // 등장하고, 타자가 시작되면 type이 그 움직임을 끈다(매 글자 다시 날아오지 않게).
+        var HERO_SENTENCES = [
+          ["글꼴 파일 없이,", "한 줄로 꾸미는 한글"],
+          ["한글 스타일을", "프로그래밍하다"],
+          ["한글 자소 분해", "렌더링 시스템"]
+        ];
+        (function () {
+          var title = document.querySelector("[data-hero-title]");
+          var live = title.querySelector("[data-hero-type]");
+          var lines = Array.prototype.slice.call(live.children);
+          var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+          if (!reduceMotion && HERO_SENTENCES.length > 1) {
+            // 쓰는 도중의 글자는 읽지 않게 하고, 제목 이름은 aria-label이 맡는다
+            live.setAttribute("aria-hidden", "true");
+            // 모든 문장을 보이지 않게 같은 칸에 겹쳐 두어 가장 큰 문장의 높이를 미리 잡는다 —
+            // 문장이 바뀌며 줄 수가 달라져도 아래 내용이 들썩이지 않는다
+            HERO_SENTENCES.forEach(function (sentence) {
+              var ghost = document.createElement("span");
+              ghost.className = "k-hero-ghost";
+              ghost.setAttribute("aria-hidden", "true");
+              sentence.forEach(function (text, i) {
+                var host = document.createElement("span");
+                host.className = "font-kku k-h1 k-caret";
+                host.setAttribute("data-font", lines[i].getAttribute("data-font"));
+                host.setAttribute("data-size", lines[i].getAttribute("data-size"));
+                host.textContent = text;
+                ghost.appendChild(host);
+              });
+              title.appendChild(ghost);
+            });
+            // 꾸밈 클래스는 나중에 넣으면 저절로 그려지지 않는다
+            window.FontKku.upgradeAll(title);
+          }
+
+          // 줄마다 바탕 요소 하나 — 문장의 "\n"이 줄을 나눈다. 남은 문장을 섞어 한 바퀴씩 돌고(같은
+          // 문장이 잇따라 나오지 않는다), 탭이 가려졌거나 제목이 화면 밖이면 다음 걸음을 미룬다.
+          window.FontKkuFx.type(lines, HERO_SENTENCES.map(function (sentence) { return sentence.join("\n"); }), {
+            start: "random",
+            order: "shuffle",
+            firstHold: 4500,
+            caretLead: 900,
+            hold: 4800,
+            gap: 420,
+            eraseDelay: 24,
+            caret: "k-caret",
+            observe: title,
+            onPhrase: function (index) {
+              title.setAttribute("aria-label", HERO_SENTENCES[index].join(" "));
+            }
+          });
+        })();
+
+        // ── 움직임 맛보기 ──────────────────────────────────
+        // 한 번 도는 움직임은 불러올 때 이미 돌았다 — 칸에 커서를 올리면(포커스하면) 다시 돈다.
+        Array.prototype.forEach.call(document.querySelectorAll(".k-fxtile"), function (tile) {
+          var host = tile.querySelector("font-kku[animate]");
+          if (!host) return;
+          function again() { window.FontKkuFx.replay(host); }
+          tile.addEventListener("pointerenter", again);
+          tile.addEventListener("focus", again);
+        });
+
+        // ── AI 프롬프트 ────────────────────────────────────
+        var PRESETS = {
+          doc: [
+            { label: "카페 메뉴", file: "가을-신메뉴.html", text: "카페 가을 신메뉴를 알리는 HTML 페이지를 한 장으로 만들어 줘.\n주요 제목과 강조하고 싶은 문구는 폰꾸로 꾸며 줘." },
+            { label: "발표 표지", file: "강연-표지.html", text: "'한글날 기념 강연' 발표 표지와 목차 화면을 HTML로 만들어 줘.\n제목과 핵심 문구는 폰꾸로 꾸며 줘." },
+            { label: "블로그 글", file: "블로그-글.html", text: "아래 글을 블로그에 올릴 HTML로 정리해 줘.\n글 제목, 소제목, 강조하고 싶은 한 줄은 폰꾸로 꾸며 줘.\n\n(여기에 글을 붙여 넣기)" }
+          ],
+          font: [
+            { label: "딸기 가게", file: "kku-berry.css", text: "우리 딸기 디저트 가게(분홍·보라, 귀엽고 말랑한 느낌)에 맞는\n나만의 폰꾸 꾸밈 글꼴을 CSS 파일 하나로 만들어 줘.\n가게 이름 '딸기 공방'으로 기반 글꼴과 나란히 비교하는 미리보기 HTML도 함께." },
+            { label: "게임 공지", file: "kku-quest.css", text: "레트로 RPG 게임 공지용 나만의 폰꾸 꾸밈 글꼴을 CSS 파일 하나로 만들어 줘.\n금색 외곽선과 입체 그림자 느낌으로, 미리보기 HTML도 함께." },
+            { label: "회사 브랜드", file: "kku-brand.css", text: "브랜드 색 #0b5fff와 #00c2a8을 쓰는 단정한 나만의 폰꾸 꾸밈 글꼴을\nCSS 파일 하나로 만들어 줘. 제목·배너용이고, 미리보기 HTML도 함께." }
+          ],
+          sprite: [
+            { label: "붓글씨", file: "kku-brush.svg", text: "먹으로 쓴 붓글씨 느낌의 폰꾸 그림 자소 글꼴을 그려 줘.\n설명서 §5b대로 자모를 SVG 자소판 한 장에 그리고,\nsprite-system 위에 자소판만 바꿔 끼운 미리보기 HTML 한 장으로 보여 줘." },
+            { label: "크레용", file: "kku-crayon.svg", text: "아이가 크레용으로 쓴 듯한 둥글고 삐뚤빼뚤한 폰꾸 그림 자소 글꼴을 그려 줘.\n설명서 §5b대로 SVG 자소판 한 장에 그리고, 색은 자모마다 다른 크레용 색으로.\n미리보기 HTML 한 장으로 보여 줘." },
+            { label: "도트 간판", file: "kku-dot.svg", text: "가게 간판용 굵은 도트(픽셀) 폰꾸 그림 자소 글꼴을 그려 줘.\n설명서 §5b대로 칸마다 사각형 도트로 SVG 자소판 한 장에 그리고,\n어두운 바탕 미리보기 HTML 한 장으로 보여 줘." }
+          ]
+        };
+        var aiMode = "doc";
+        var aiPreset = 0;
+        var promptEl = document.getElementById("ai-prompt");
+        var presetMount = document.querySelector("[data-ai-presets]");
+        var fileLabel = document.querySelector("[data-ai-file]");
+        var caption = document.querySelector("[data-ai-caption]");
+        var panel = document.getElementById("ai-panel");
+        function renderAi() {
+          var list = PRESETS[aiMode];
+          var preset = list[aiPreset];
+          promptEl.textContent = "이 설명서를 읽고 따라 해 줘: " + SKILL_URL + "\n\n" + preset.text;
+          presetMount.innerHTML = list.map(function (item, index) {
+            return '<button type="button" data-ai-preset="' + index + '" aria-pressed="' + (index === aiPreset) + '">' + item.label + "</button>";
+          }).join("");
+          fileLabel.textContent = aiMode === "font" ? "kku-berry.css" : preset.file;
+          caption.textContent = {
+            doc: "설명서의 완성 예시를 그대로 그린 화면",
+            font: "설명서의 꾸밈 글꼴 예시를 그대로 그린 화면",
+            sprite: "같은 형식으로 그린 기본 제공 자소판 둘 — 자소판만 바꿔 끼우면 배치는 그대로"
+          }[aiMode];
+          Array.prototype.forEach.call(document.querySelectorAll("[data-ai-result]"), function (node) {
+            node.hidden = node.getAttribute("data-ai-result") !== aiMode;
+          });
+          Array.prototype.forEach.call(document.querySelectorAll("[data-ai-mode]"), function (tab) {
+            var selected = tab.getAttribute("data-ai-mode") === aiMode;
+            tab.setAttribute("aria-selected", String(selected));
+            if (selected) panel.setAttribute("aria-labelledby", tab.id);
+          });
+        }
+        document.querySelector("#ai .k-tabs").addEventListener("click", function (event) {
+          var tab = event.target.closest("[data-ai-mode]");
+          if (!tab) return;
+          aiMode = tab.getAttribute("data-ai-mode");
+          aiPreset = 0;
+          renderAi();
+        });
+        presetMount.addEventListener("click", function (event) {
+          var button = event.target.closest("[data-ai-preset]");
+          if (!button) return;
+          aiPreset = Number(button.getAttribute("data-ai-preset"));
+          renderAi();
+        });
+        renderAi();
+
+        // ── 봇·터미널 ──────────────────────────────────────
+        var botForm = document.querySelector("[data-bot-form]");
+        var botInput = botForm.querySelector("input[name='text']");
+        var botFence = botForm.querySelector("[data-bot-fence]");
+        var botOutput = document.getElementById("bot-output");
+        function renderBot() {
+          var text = (botInput.value || "").trim() || "배포 완료";
+          var lines = window.FontKku.renderText(text).join("\n");
+          botOutput.textContent = botFence.checked ? "```\n" + lines + "\n```" : lines;
+        }
+        botForm.addEventListener("submit", function (event) { event.preventDefault(); });
+        botInput.addEventListener("input", renderBot);
+        botFence.addEventListener("change", renderBot);
+        renderBot();
+
+        // ── 사례 미리보기 (site/examples/index.json의 앞 셋) ──
+        var casesMount = document.querySelector("[data-cases]");
+        fetch("./examples/index.json").then(function (response) {
+          if (!response.ok) throw new Error(String(response.status));
+          return response.json();
+        }).then(function (data) {
+          casesMount.innerHTML = (data.examples || []).slice(0, 3).map(function (item) {
+            var href = "./examples/" + item.file;
+            return '<a class="k-case" href="' + href + '">' +
+              '<span class="k-case-frame"><iframe src="' + href + '" title="' + item.title + ' 미리보기" loading="lazy" tabindex="-1" aria-hidden="true"></iframe></span>' +
+              "<strong>" + item.title + "</strong>" +
+              "<span>" + item.summary + "</span>" +
+              "</a>";
+          }).join("");
+        }).catch(function () {
+          casesMount.innerHTML = '<p class="k-note">사례 목록을 불러오지 못했습니다. <a href="./showcase.html">사례 페이지</a>에서 보세요.</p>';
+        });
+      })();
+    </script>
+    <script src="./themes-data.js"></script>
+    <script src="./landing-proof.js"></script>
+    <script src="./landing-mix.js"></script>
+  </body>
+</html>

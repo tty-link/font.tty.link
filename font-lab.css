@@ -1,0 +1,179 @@
+/* 글꼴 페이지의 랜덤 글꼴과 만드는 기능(font-lab.js) — 시험대 변주 도구, 씨앗 반응 표시,
+ * "폰꾸로 만드는 글꼴" 카드. site.css의 토큰(--k-*)과 부품(.k-stage, .k-chips, .k-btn)을 쓴다. */
+
+/* ── 시험대 변주 ── */
+/* 변주 묶음과 글꼴 뽑기가 더해진 시험대 줄 — 넓은 화면에서 한 줄에 들도록 조금 좁힌다 */
+.k-tester-inner {
+  gap: 0.75rem 0.9rem;
+}
+
+.k-tester-size input {
+  inline-size: 6.5rem;
+}
+
+.fl-vary {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+}
+
+.fl-vary-label {
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.fl-seed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.fl-seed input {
+  inline-size: 7.5rem;
+  min-block-size: 2.2rem;
+  padding: 0 0.75rem;
+  border: 1.2px solid var(--k-ink);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font-family: var(--k-mono);
+  font-size: 0.85rem;
+}
+
+.fl-seed input:focus-visible {
+  outline: 2px solid var(--k-red);
+  outline-offset: 2px;
+}
+
+/* 씨앗 반응 글꼴 표시 — 변주를 켜면 더 또렷하게 */
+.k-fontrow-tags .fl-seed-tag {
+  border-color: var(--k-red);
+  color: var(--k-red);
+  font-weight: 700;
+}
+
+html:not([data-fl-vary="off"]) .k-fontrow-tags .fl-seed-tag {
+  background: var(--k-red);
+  color: #fff;
+}
+
+/* ── 폰꾸로 만드는 글꼴 ── */
+.fl-make {
+  margin-block: 4rem 5rem;
+  padding-block: 3rem 3.5rem;
+  border-block: 1.5px solid var(--k-ink);
+  background-color: var(--k-paper-2);
+  background-image:
+    linear-gradient(var(--k-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+  scroll-margin-top: 80px;
+}
+
+.fl-make-head {
+  display: grid;
+  gap: 0.75rem;
+  max-inline-size: 46rem;
+  margin-block-end: 2rem;
+}
+
+.fl-make-head .k-lead {
+  margin: 0;
+}
+
+.fl-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.fl-card {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.55rem;
+  min-inline-size: 0;
+  padding: 0.9rem 0.9rem 1.1rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: var(--k-radius-sm);
+  background: var(--k-paper);
+}
+
+.fl-card h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.5rem;
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+}
+
+.fl-card h3 small {
+  color: var(--k-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.fl-card p {
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.fl-sample {
+  min-block-size: 6.5rem;
+  padding: 0.9rem;
+}
+
+.fl-sample--seed {
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.fl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-self: end;
+}
+
+/* 카드 견본의 꾸밈 — 페이지 CSS가 글꼴보다 이긴다 */
+.fl-demo-paint :is([part~="choseong"], [part~="head"]) { color: #d62839; }
+.fl-demo-paint [part~="jungseong"] { color: #1f4fd1; }
+.fl-demo-paint [part~="jongseong"] { color: #12965f; }
+.fl-demo-paint [part~="jamo"] { text-shadow: 0.03em 0.04em 0 #ffd166; }
+
+.fl-demo-studio [part~="jamo"] {
+  outline: 1px dashed rgb(214 40 57 / 45%);
+  outline-offset: -1px;
+}
+
+.fl-demo-vector :is([part~="choseong"], [part~="head"]) { color: #d62839; }
+.fl-demo-vector [part~="jungseong"] { color: #1f4fd1; }
+.fl-demo-vector [part~="jongseong"] { color: #12965f; }
+
+@media (max-width: 1100px) {
+  .fl-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .fl-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fl-make {
+    padding-block: 2.25rem 2.5rem;
+  }
+}
+
+/* 머리(64px)와 고정 시험대(약 72px) 아래로 구간 제목·행이 오게 — 주소의 #글꼴·#make-fonts로 와도 가리지 않는다 */
+.k-font-group,
+.k-fontrow,
+#make-fonts {
+  scroll-margin-top: 150px;
+}

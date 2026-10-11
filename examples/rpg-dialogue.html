@@ -1,0 +1,496 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — RPG 대화창. 글꼴: pixel. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>별빛마을 — 촌장 할머니와의 대화</title>
+  <script src="../lib/font-kku.js" data-fonts="pixel"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --ink: #14142b;
+      --night: #0d0d1f;
+      --win: #1b1f4b;
+      --win-2: #12153a;
+      --line: #f4f1ff;
+      --gold: #ffd23f;
+      --muted: #a9a7c9;
+    }
+
+    html { background: var(--night); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 32px 16px 48px;
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--line);
+      word-break: keep-all;
+      background:
+        radial-gradient(circle at 1px 1px, rgb(255 255 255 / 6%) 1px, transparent 1.5px) 0 0 / 8px 8px,
+        var(--night);
+    }
+
+    .console { width: min(880px, 100%); margin: 0 auto; }
+
+    /* 게임 화면 16:9 — 장면은 160×90 캔버스를 도트 그대로 키운다 */
+    .screen {
+      position: relative;
+      container-type: inline-size;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #7ec8ff;
+      box-shadow:
+        0 -6px 0 0 var(--ink), 0 6px 0 0 var(--ink), -6px 0 0 0 var(--ink), 6px 0 0 0 var(--ink),
+        0 0 0 6px #3a3f7a, 14px 14px 0 6px rgb(0 0 0 / 35%);
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .screen:focus-visible { outline: 3px dashed var(--gold); outline-offset: 12px; }
+    .screen canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+
+    /* 도트 자소판은 검정 잉크다. 마스크 칠로 자소판의 모양만 쓰고 색은 CSS에서 준다 */
+    .screen font-kku { --fy-sprite-paint: mask; color: var(--line); }
+    .screen .coin font-kku { color: var(--gold); }
+
+    /* 화면 위 표지 — 장소와 금화 */
+    .hud {
+      position: absolute;
+      top: 2.4cqi;
+      left: 2.4cqi;
+      right: 2.4cqi;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+    .hud .tag {
+      padding: 0.5cqi 1.2cqi 0.7cqi;
+      background: rgb(13 13 31 / 72%);
+      box-shadow: 0 -0.4cqi 0 0 var(--ink), 0 0.4cqi 0 0 var(--ink), -0.4cqi 0 0 0 var(--ink), 0.4cqi 0 0 0 var(--ink);
+    }
+    .hud .coin { color: var(--gold); }
+
+    /* 대화창 — 네 방향 그림자로 모서리가 깎인 도트 테두리(흰 줄 + 남색 줄) */
+    .dialog {
+      position: absolute;
+      left: 3cqi;
+      right: 3cqi;
+      bottom: 3cqi;
+      min-height: 15.5cqi;
+      padding: 2.8cqi 3cqi 2.6cqi;
+      background: linear-gradient(180deg, var(--win) 0%, var(--win-2) 100%);
+      box-shadow:
+        0 -0.6cqi 0 0 var(--line), 0 0.6cqi 0 0 var(--line), -0.6cqi 0 0 0 var(--line), 0.6cqi 0 0 0 var(--line),
+        0 -1.2cqi 0 0 var(--ink), 0 1.2cqi 0 0 var(--ink), -1.2cqi 0 0 0 var(--ink), 1.2cqi 0 0 0 var(--ink);
+    }
+    .speaker {
+      position: absolute;
+      left: 2.4cqi;
+      top: -6.6cqi;
+      padding: 0.6cqi 1.6cqi 0.8cqi;
+      background: #e94f64;
+      box-shadow:
+        0 -0.6cqi 0 0 var(--line), 0.6cqi 0 0 0 var(--line), -0.6cqi 0 0 0 var(--line),
+        0 -1.2cqi 0 0 var(--ink), 1.2cqi 0 0 0 var(--ink), -1.2cqi 0 0 0 var(--ink);
+    }
+    .line { display: block; min-height: 7.4cqi; }
+
+    /* 줄을 다 쓰면 ▼가 깜빡인다 */
+    .more {
+      position: absolute;
+      right: 2.6cqi;
+      bottom: 1.6cqi;
+      width: 0;
+      height: 0;
+      border-left: 1.1cqi solid transparent;
+      border-right: 1.1cqi solid transparent;
+      border-top: 1.3cqi solid var(--gold);
+      opacity: 0;
+    }
+    .dialog.is-done .more { opacity: 1; animation: k-more 900ms steps(2, jump-none) infinite; }
+    @keyframes k-more { 50% { translate: 0 0.5cqi; } }
+
+    /* 선택지 */
+    .choices {
+      position: absolute;
+      right: 3cqi;
+      bottom: 24cqi;
+      display: grid;
+      gap: 1.4cqi;
+      margin: 0;
+      padding: 2cqi 2.4cqi;
+      list-style: none;
+      background: var(--win-2);
+      box-shadow:
+        0 -0.6cqi 0 0 var(--line), 0 0.6cqi 0 0 var(--line), -0.6cqi 0 0 0 var(--line), 0.6cqi 0 0 0 var(--line),
+        0 -1.2cqi 0 0 var(--ink), 0 1.2cqi 0 0 var(--ink), -1.2cqi 0 0 0 var(--ink), 1.2cqi 0 0 0 var(--ink);
+    }
+    .choices[hidden] { display: none; }
+    .choices button {
+      display: flex;
+      align-items: center;
+      gap: 1cqi;
+      padding: 0.4cqi 0.8cqi;
+      border: 0;
+      color: var(--line);
+      background: transparent;
+      cursor: pointer;
+    }
+    .choices button::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 0.9cqi solid transparent;
+      border-bottom: 0.9cqi solid transparent;
+      border-left: 1.1cqi solid var(--gold);
+      opacity: 0;
+    }
+    .choices button:is(:hover, :focus-visible)::before { opacity: 1; }
+    .choices button:focus-visible { outline: 0.3cqi dashed var(--gold); outline-offset: 0.4cqi; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    /* 화면 아래 설명 */
+    .pad {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 28px 0 0;
+    }
+    .keys { margin: 0; font-size: 14px; color: var(--muted); }
+    .keys kbd {
+      display: inline-block;
+      min-width: 26px;
+      margin: 0 2px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font: 700 12px/1.4 ui-monospace, monospace;
+      text-align: center;
+      color: var(--ink);
+      background: var(--line);
+      box-shadow: 0 2px 0 #8c89b3;
+    }
+    .pad button {
+      padding: 10px 16px;
+      border: 0;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink);
+      background: var(--gold);
+      box-shadow: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink);
+      cursor: pointer;
+    }
+    .pad button:focus-visible { outline: 3px dashed var(--gold); outline-offset: 5px; }
+
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .notes li {
+      padding: 16px 18px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+      background: #17173a;
+      box-shadow: 0 -3px 0 0 #2c2c5c, 0 3px 0 0 #2c2c5c, -3px 0 0 0 #2c2c5c, 3px 0 0 0 #2c2c5c;
+    }
+    .notes b { display: block; margin-bottom: 4px; color: var(--line); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .dialog.is-done .more { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="console">
+    <div class="screen" data-screen tabindex="0" aria-label="게임 화면 — 누르거나 스페이스로 대화를 넘깁니다">
+      <canvas width="160" height="90" data-scene aria-hidden="true"></canvas>
+
+      <div class="hud" aria-hidden="true">
+        <span class="tag"><font-kku font="pixel" size="max(13px, 2.6cqi)">별빛마을</font-kku></span>
+        <span class="tag coin"><font-kku font="pixel" size="max(13px, 2.6cqi)">금화 120</font-kku></span>
+      </div>
+
+      <ul class="choices" data-choices hidden aria-label="대답 고르기">
+        <li><button type="button" data-choice="yes"><font-kku font="pixel" size="max(15px, 3.4cqi)">맡겨 주세요!</font-kku></button></li>
+        <li><button type="button" data-choice="no"><font-kku font="pixel" size="max(15px, 3.4cqi)">조금 무서운데요…</font-kku></button></li>
+      </ul>
+
+      <div class="dialog" data-dialog>
+        <span class="speaker"><font-kku font="pixel" size="max(16px, 3.6cqi)" data-speaker>촌장 할머니</font-kku></span>
+        <font-kku class="line" font="pixel" size="max(16px, 3.6cqi)" data-line aria-hidden="true"> </font-kku>
+        <span class="more" aria-hidden="true"></span>
+      </div>
+      <p class="sr-only" aria-live="polite" data-live></p>
+    </div>
+
+    <div class="pad">
+      <p class="keys">화면 누르기 · <kbd>Space</kbd> <kbd>Enter</kbd> 다음 대사 (쓰는 중이면 한 번에 다 보기)</p>
+      <button type="button" data-restart>처음부터</button>
+    </div>
+
+    <ul class="notes">
+      <li><b>자모 단위로 치는 대사</b>대사가 두벌식 자판으로 치듯 한 자모씩 써집니다(ㅎ → 하 → 한). 폰꾸는 자모를 따로 조립해 그리므로 조합 중인 글자도 그대로 보여 줄 수 있어요.</li>
+      <li><b>한글 글꼴이 없어도 같은 글자</b>이 대화창의 한글은 기기 글꼴이 아니라 도트 SVG 자소판(<code>pixel</code>)으로 그립니다. 한글 글꼴이 없는 게임기·키오스크 화면에서도 똑같이 보입니다.</li>
+      <li><b>글꼴 파일 0개</b>자음·모음 칸만 그린 자소판 한 장으로 한글 11,172자를 모두 씁니다. 대사를 바꿔도 글꼴을 다시 만들 필요가 없어요.</li>
+    </ul>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // ── 대본 ────────────────────────────────────────
+      // next: 다음 장면 이름, choices: 대답을 고르면 그 이름의 장면으로
+      var SCRIPT = {
+        start: { who: "촌장 할머니", text: "어서 오게, 젊은 모험가여.\n여기는 별빛마을이라네.", next: "well" },
+        well: { who: "촌장 할머니", text: "요즘 밤마다 마을 우물에서\n이상한 소리가 들린다네…", next: "ask" },
+        ask: { who: "촌장 할머니", text: "자네가 한번 살펴봐 주겠나?", choices: { yes: "yes", no: "no" } },
+        yes: { who: "촌장 할머니", text: "고맙네! 우물 열쇠를 주지.\n조심해서 다녀오게나.", next: "key" },
+        key: { who: "알림", text: "[우물 열쇠]를 얻었다!", next: "start" },
+        no: { who: "촌장 할머니", text: "허허, 겁낼 것 없다네.\n마음이 서면 다시 오게.", next: "start" }
+      };
+
+      // ── 두벌식 타자 ─────────────────────────────────
+      // 한 글자를 칠 때 화면에 차례로 보이는 모양 — 겹모음·겹받침은 앞 자모부터(고 → 과)
+      var CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+      var VOWEL_FIRST = { 9: 8, 10: 8, 11: 8, 14: 13, 15: 13, 16: 13, 19: 18 };
+      var CODA_FIRST = { 3: 1, 5: 4, 6: 4, 9: 8, 10: 8, 11: 8, 12: 8, 13: 8, 14: 8, 15: 8, 18: 17 };
+      function syllable(l, v, t) {
+        return String.fromCharCode(0xac00 + (l * 21 + v) * 28 + t);
+      }
+      function keySteps(ch) {
+        var code = ch.charCodeAt(0) - 0xac00;
+        if (code < 0 || code > 11171) return [ch];
+        var l = Math.floor(code / 588);
+        var v = Math.floor(code / 28) % 21;
+        var t = code % 28;
+        var steps = [CHO.charAt(l)];
+        if (VOWEL_FIRST[v] !== undefined) steps.push(syllable(l, VOWEL_FIRST[v], 0));
+        steps.push(syllable(l, v, 0));
+        if (CODA_FIRST[t] !== undefined) steps.push(syllable(l, v, CODA_FIRST[t]));
+        if (t) steps.push(ch);
+        return steps;
+      }
+      // text를 처음부터 쳐 나가는 동안의 화면들
+      function typing(text) {
+        var frames = [];
+        for (var i = 0; i < text.length; i += 1) {
+          var head = text.slice(0, i);
+          keySteps(text.charAt(i)).forEach(function (step) { frames.push(head + step); });
+        }
+        return frames;
+      }
+
+      var screen = document.querySelector("[data-screen]");
+      var dialog = document.querySelector("[data-dialog]");
+      var lineHost = document.querySelector("[data-line]");
+      var speakerHost = document.querySelector("[data-speaker]");
+      var live = document.querySelector("[data-live]");
+      var choices = document.querySelector("[data-choices]");
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      var scene = null;
+      var frames = [];
+      var frameIndex = 0;
+      var timer = 0;
+      var shownSpeaker = "";
+
+      function paint(text) {
+        if (window.FontKku) window.FontKku.refresh(lineHost, { text: text || " " });
+      }
+      function delayAfter(frame) {
+        var last = frame.charAt(frame.length - 1);
+        if (last === "\n") return 260;
+        if (last === "," || last === "." || last === "!" || last === "?" || last === "…") return 220;
+        if (last === " ") return 50;
+        return 38;
+      }
+      function finish() {
+        clearTimeout(timer);
+        frameIndex = frames.length;
+        paint(scene.text);
+        dialog.classList.add("is-done");
+        if (scene.choices) {
+          choices.hidden = false;
+          choices.querySelector("button").focus({ preventScroll: true });
+        }
+      }
+      function step() {
+        if (frameIndex >= frames.length) { finish(); return; }
+        var frame = frames[frameIndex];
+        frameIndex += 1;
+        paint(frame);
+        timer = setTimeout(step, delayAfter(frame));
+      }
+      function play(name) {
+        clearTimeout(timer);
+        scene = SCRIPT[name];
+        choices.hidden = true;
+        dialog.classList.remove("is-done");
+        if (scene.who !== shownSpeaker && window.FontKku) {
+          shownSpeaker = scene.who;
+          window.FontKku.refresh(speakerHost, { text: scene.who });
+        }
+        live.textContent = scene.who + ": " + scene.text.replace(/\n/g, " ");
+        frames = typing(scene.text);
+        frameIndex = 0;
+        if (reduce) finish(); else step();
+      }
+      function advance() {
+        if (!scene) return;
+        if (frameIndex < frames.length) { finish(); return; }
+        if (scene.choices) return; // 대답을 골라야 넘어간다
+        play(scene.next);
+      }
+
+      screen.addEventListener("click", function (event) {
+        if (event.target.closest("[data-choices]")) return;
+        advance();
+      });
+      document.addEventListener("keydown", function (event) {
+        if (event.target.closest && event.target.closest("[data-choices], button, a, input, textarea")) {
+          if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+            var buttons = Array.prototype.slice.call(choices.querySelectorAll("button"));
+            var at = buttons.indexOf(document.activeElement);
+            if (at >= 0) {
+              event.preventDefault();
+              buttons[(at + (event.key === "ArrowDown" ? 1 : buttons.length - 1)) % buttons.length].focus();
+            }
+          }
+          return;
+        }
+        if (event.key === " " || event.key === "Enter") {
+          event.preventDefault();
+          advance();
+        }
+      });
+      choices.addEventListener("click", function (event) {
+        var button = event.target.closest("[data-choice]");
+        if (!button || !scene || !scene.choices) return;
+        screen.focus({ preventScroll: true });
+        play(scene.choices[button.getAttribute("data-choice")]);
+      });
+      document.querySelector("[data-restart]").addEventListener("click", function () { play("start"); });
+
+      // ── 도트 장면(160×90) ───────────────────────────
+      var canvas = document.querySelector("[data-scene]");
+      var ctx = canvas.getContext("2d");
+      function rect(x, y, w, h, color) { ctx.fillStyle = color; ctx.fillRect(x, y, w, h); }
+      // 글자 하나가 색 한 칸인 도트 그림
+      function sprite(rows, palette, x, y) {
+        rows.forEach(function (row, r) {
+          for (var c = 0; c < row.length; c += 1) {
+            var color = palette[row.charAt(c)];
+            if (color) rect(x + c, y + r, 1, 1, color);
+          }
+        });
+      }
+      var GRANDMA = [
+        "....GGGG....",
+        "...GGGGGG...",
+        "...GSSSSG...",
+        "...SKSSKS...",
+        "...SSSSSS..C",
+        "....SSSS...C",
+        "..PPPPPPPP.C",
+        ".SPPPPPPPPSC",
+        ".SPPPPPPPP.C",
+        "..PPPPPPPP.C",
+        "..RRRRRRRR.C",
+        "..RRRRRRRR.C",
+        ".RRRRRRRRRRC",
+        "...BB..BB..."
+      ];
+      var HERO = [
+        "...HHHHH....",
+        "..HHHHHHH...",
+        "..HSSSSSH...",
+        "..SKSSSKS...",
+        "..SSSSSSS...",
+        "...SSSSS....",
+        "..TTTTTTT...",
+        ".STTYYTTTS..",
+        ".STTTTTTTS..",
+        "..TTTTTTT...",
+        "..NN...NN...",
+        "..NN...NN...",
+        ".BBB...BBB.."
+      ];
+      var PALETTE = {
+        G: "#d9d9e6", S: "#f6c9a0", K: "#222244", P: "#7b4fb8", R: "#c0392b", B: "#5b3a22", C: "#8b5a2b",
+        H: "#2b2b44", T: "#2f80ed", Y: "#ffd23f", N: "#3b3f6b"
+      };
+      function drawScene(bob) {
+        // 하늘(띠)과 구름
+        ["#6fb8f5", "#7ec2f7", "#8fcbf8", "#a2d5fa", "#b6defb", "#c9e7fc"].forEach(function (color, i) { rect(0, i * 8, 160, 8, color); });
+        rect(16, 8, 18, 4, "#fff"); rect(12, 12, 28, 4, "#fff");
+        rect(104, 14, 22, 4, "#fff"); rect(98, 18, 34, 4, "#fff");
+        // 먼 언덕
+        for (var x = 0; x < 160; x += 1) {
+          var h = Math.round(8 + 5 * Math.sin(x / 13) + 3 * Math.sin(x / 5.3));
+          rect(x, 52 - h, 1, h, "#5aa469");
+        }
+        // 땅과 흙길
+        rect(0, 50, 160, 40, "#6cc46f");
+        rect(0, 50, 160, 2, "#4f9d58");
+        for (var y = 52; y < 90; y += 1) rect(70 - (y - 52) * 0.6, y, 34 + (y - 52) * 0.9, 1, "#d8b07a");
+        // 집
+        rect(14, 34, 38, 18, "#f2e1c1");
+        for (var r = 0; r < 12; r += 1) rect(10 + r, 34 - r, 46 - r * 2, 1, r % 3 === 0 ? "#a93226" : "#c0392b");
+        rect(28, 41, 9, 11, "#7a4b2a"); rect(35, 46, 1, 1, "#ffd23f");
+        rect(18, 38, 7, 6, "#8fd3ff"); rect(21, 38, 1, 6, "#f2e1c1"); rect(18, 41, 7, 1, "#f2e1c1");
+        rect(41, 38, 7, 6, "#8fd3ff"); rect(44, 38, 1, 6, "#f2e1c1"); rect(41, 41, 7, 1, "#f2e1c1");
+        // 우물
+        rect(118, 46, 18, 8, "#9aa3ad"); rect(118, 46, 18, 1, "#c4ccd4"); rect(120, 48, 14, 2, "#2c3e50");
+        rect(119, 34, 2, 12, "#7a4b2a"); rect(133, 34, 2, 12, "#7a4b2a");
+        for (var k = 0; k < 4; k += 1) rect(116 + k, 33 - k, 22 - k * 2, 1, "#c0392b");
+        // 나무
+        rect(146, 36, 4, 16, "#7a4b2a");
+        rect(140, 24, 16, 14, "#3f8f4a"); rect(138, 28, 20, 6, "#3f8f4a"); rect(143, 22, 10, 2, "#3f8f4a");
+        // 인물 — 할머니는 숨 쉬듯 한 칸 들썩인다
+        sprite(GRANDMA, PALETTE, 66, 40 + (bob ? 1 : 0));
+        sprite(HERO, PALETTE, 90, 42);
+      }
+      drawScene(false);
+      if (!reduce) {
+        var bob = false;
+        setInterval(function () { bob = !bob; drawScene(bob); }, 650);
+      }
+
+      // 글꼴 CSS가 도착한 뒤(한 줄 설치의 가림막이 걷힌 뒤) 첫 대사를 시작한다
+      var started = Date.now();
+      (function waitForFonts() {
+        if (!document.querySelector("style[data-font-kku-loader]") || Date.now() - started > 3500) {
+          play("start");
+        } else {
+          requestAnimationFrame(waitForFonts);
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>

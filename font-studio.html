@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>font-kku — 글꼴 작업실</title>
+    <link rel="stylesheet" href="lib/font-kku.css" />
+    <link rel="stylesheet" href="./demo.css" />
+    <link rel="stylesheet" href="./font-studio.css" />
+  </head>
+  <body>
+    <div class="demo-shell">
+      <header class="demo-topbar">
+        <a class="demo-brand" href="./index.html">
+          <span class="demo-badge">꾸</span>
+          <span class="demo-brand-text">
+            <strong>폰꾸</strong>
+            <span>font-kku</span>
+          </span>
+        </a>
+        <nav class="demo-nav" aria-label="데모 페이지" data-demo-nav></nav>
+      </header>
+
+      <main class="studio" data-studio>
+        <section class="studio-head">
+          <div>
+            <span class="demo-kicker">글꼴 작업실</span>
+            <h1 class="demo-title">자소를 고르고, <em>어느 레벨에</em> 고칠지 정하세요</h1>
+            <p class="demo-meta">
+              글꼴 CSS는 자리 → 자모 → 문맥 레벨로 값을 좁혀 갑니다. 자소를 클릭하면 각 값이 어느 규칙에서
+              왔는지 보이고, 편집은 고른 범위의 규칙 한 줄만 바꿉니다. 주석과 손으로 쓴 규칙은 그대로 남습니다.
+            </p>
+          </div>
+          <div class="studio-status" aria-live="polite">
+            <span>글꼴 <output data-studio-font-id>-</output></span>
+            <span>계약 <output data-studio-contract>-</output></span>
+            <span>재료 <output data-studio-material>-</output></span>
+            <span><output data-studio-changes>0</output>줄 바뀜</span>
+            <span class="studio-draft-status" data-studio-draft-status></span>
+          </div>
+        </section>
+
+        <section class="studio-toolbar" aria-label="글꼴 불러오기와 저장">
+          <label>
+            <span>기본 제공 글꼴</span>
+            <select data-studio-shipped>
+              <option value="sebul">sebul</option>
+              <option value="gothic">gothic</option>
+              <option value="sprite-example">sprite-example</option>
+              <option value="sprite-system">sprite-system</option>
+            </select>
+          </label>
+          <button type="button" data-studio-load>불러오기</button>
+          <label class="studio-file">
+            <span>CSS 파일 열기</span>
+            <input type="file" accept=".css,text/css" data-studio-open-css />
+          </label>
+          <label class="studio-file">
+            <span>프로젝트 열기</span>
+            <input type="file" accept=".json,application/json" data-studio-open-project />
+          </label>
+          <span class="studio-sep" aria-hidden="true"></span>
+          <label>
+            <span>새 이름</span>
+            <input type="text" size="12" placeholder="my-font" data-studio-new-name />
+          </label>
+          <button type="button" data-studio-rename>이 글꼴로 새 글꼴</button>
+          <button type="button" data-studio-new-sprite>새 그림 자소 글꼴</button>
+          <label class="studio-file">
+            <span>v1 그림 자소 프로젝트 가져오기</span>
+            <input type="file" accept=".json,application/json" data-studio-import-v1 />
+          </label>
+          <span class="studio-sep" aria-hidden="true"></span>
+          <button type="button" data-studio-undo disabled>되돌리기</button>
+          <button type="button" data-studio-redo disabled>다시</button>
+          <button type="button" data-studio-open-handle hidden>파일 연결해 열기</button>
+          <button type="button" data-studio-save hidden>파일에 저장</button>
+          <button type="button" data-studio-export-css>CSS 내보내기</button>
+          <button type="button" data-studio-copy-css>CSS 복사</button>
+          <button type="button" data-studio-export-project>프로젝트 저장</button>
+          <p class="studio-message" data-studio-message role="status"></p>
+          <div class="studio-draft" data-studio-draft hidden>
+            <span>저장되지 않은 초안이 있습니다.</span>
+            <span data-studio-draft-list></span>
+            <button type="button" data-studio-discard-draft>초안 버리기</button>
+          </div>
+          <ul class="studio-diagnostics" data-studio-diagnostics hidden aria-label="구문·글꼴 계약 검사 경고"></ul>
+        </section>
+
+        <section class="studio-workspace">
+          <div class="studio-stage">
+            <label class="studio-text">
+              <span>미리보기 문장</span>
+              <input type="text" value="가 각 고 글 의 왕 읽 흙 괆 한글 조형" data-studio-text />
+            </label>
+            <div class="studio-preview" data-studio-preview tabindex="0" aria-label="미리보기. 자소를 클릭해 고르고 방향키로 옮긴다">
+              <font-kku data-studio-host size="84px" wrap-unit="glyph"></font-kku>
+            </div>
+            <p class="studio-hint">
+              자소 클릭으로 선택 · 드래그로 이동(한 번이 되돌리기 한 단계) · 방향키 0.1% (Shift 1%) · 값 칸을 비우면 그 규칙에서 선언을 지웁니다.
+              다른 규칙이 값을 덮어 편집이 보이지 않으면 경고합니다.
+            </p>
+            <section class="studio-checks" aria-label="검증">
+              <h2>검증 <small data-studio-check-summary></small></h2>
+              <ul data-studio-checks></ul>
+            </section>
+          </div>
+
+          <aside class="studio-inspector" aria-label="선택한 자소">
+            <div class="studio-selection" data-studio-selection>자소를 클릭하세요.</div>
+            <fieldset class="studio-scope" data-studio-scope disabled>
+              <legend>편집 범위</legend>
+              <label><input type="radio" name="scope" value="family" /> <span data-scope-label="family">자리 가족</span></label>
+              <label><input type="radio" name="scope" value="slot" checked /> <span data-scope-label="slot">자리 전체</span></label>
+              <label><input type="radio" name="scope" value="slotJamo" /> <span data-scope-label="slotJamo">이 자리의 이 자모</span></label>
+              <label><input type="radio" name="scope" value="jamo" /> <span data-scope-label="jamo">이 자모 (모든 자리, 보정)</span></label>
+              <label><input type="radio" name="scope" value="context" /> <span data-scope-label="context">문맥 (보정)</span></label>
+              <select data-studio-context aria-label="문맥 조건"></select>
+            </fieldset>
+            <div class="studio-target" data-studio-target hidden aria-live="polite"></div>
+            <table class="studio-props" data-studio-props>
+              <thead><tr><th>속성</th><th>값</th><th>출처</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <details class="studio-rules" open>
+              <summary>이 자소에 걸린 규칙</summary>
+              <ol data-studio-rules></ol>
+            </details>
+          </aside>
+        </section>
+
+        <details class="studio-globals" data-studio-globals>
+          <summary>전역·묶음 변수 <small>바탕 요소 규칙의 값을 그 자리에서 고친다</small></summary>
+          <div class="studio-globals-body" data-studio-globals-body></div>
+        </details>
+
+        <div class="studio-material-area" id="studio-material">
+        <section class="studio-material-intro" data-studio-material-intro hidden aria-label="자소판 그리기 시작">
+          <h2>재료 — 자소판</h2>
+          <p>
+            <strong data-material-intro-font>-</strong> 글꼴은 <code>--fy-material: <span data-material-intro-kind>system</span></code> 재료라
+            그릴 자소판이 없습니다. 자소를 직접 그려 글꼴을 만들려면 그림 자소 글꼴을 여세요 —
+            자음 19 + 모음 21칸을 그리면 한글 11,172자가 됩니다.
+          </p>
+          <div class="studio-material-buttons">
+            <button type="button" data-material-open-example>sprite-example 열어 그리기</button>
+            <button type="button" data-material-start-new>새 그림 자소 글꼴로 그리기 시작</button>
+          </div>
+        </section>
+
+        <section class="studio-material" data-studio-material-panel hidden aria-label="재료 — 자소판">
+          <h2>재료 — 자소판 <small data-material-summary></small></h2>
+          <div class="studio-material-body">
+            <div class="studio-material-sheet">
+              <ol class="studio-material-rows" data-material-rows></ol>
+              <canvas data-material-sheet aria-label="자소판 전체. 칸을 클릭해 선택"></canvas>
+            </div>
+            <div class="studio-material-editor">
+              <p data-material-cell-label></p>
+              <div class="studio-cell-stack">
+                <canvas data-material-guide aria-hidden="true"></canvas>
+                <canvas data-material-cell aria-label="선택한 칸 편집"></canvas>
+              </div>
+              <p class="studio-material-coverage" data-material-coverage></p>
+              <fieldset class="studio-material-tools">
+                <legend>도구</legend>
+                <label><input type="radio" name="material-tool" value="pen" checked /> 펜</label>
+                <label><input type="radio" name="material-tool" value="eraser" /> 지우개</label>
+                <label><input type="radio" name="material-tool" value="fill" /> 채우기</label>
+                <label><input type="radio" name="material-tool" value="line" /> 직선</label>
+                <label><input type="radio" name="material-tool" value="rect" /> 사각형</label>
+                <label>굵기 <input type="range" min="1" max="20" value="4" data-material-size /> <output data-material-size-output>4</output></label>
+                <label>색 <input type="color" value="#000000" data-material-color /></label>
+              </fieldset>
+              <fieldset class="studio-material-tools">
+                <legend>안내선</legend>
+                <label><input type="checkbox" checked data-material-guide-grid /> 격자</label>
+                <label><input type="checkbox" checked data-material-guide-reference /> 참고 글자</label>
+              </fieldset>
+              <div class="studio-material-buttons">
+                <button type="button" data-material-undo disabled>그리기 되돌리기</button>
+                <button type="button" data-material-redo disabled>그리기 다시</button>
+                <button type="button" data-material-clear>칸 비우기</button>
+                <button type="button" data-material-seed>글꼴로 칸 채우기</button>
+                <button type="button" data-material-copy>칸 복사</button>
+                <button type="button" data-material-paste disabled>칸 붙여넣기</button>
+              </div>
+              <label class="studio-material-family">
+                <span>참고·채우기 글꼴</span>
+                <input type="text" value='"Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif' data-material-family />
+              </label>
+            </div>
+          </div>
+          <div class="studio-material-groups">
+            <fieldset class="studio-material-group">
+              <legend>자소판</legend>
+              <label class="studio-file">
+                <span>PNG 열기</span>
+                <input type="file" accept="image/png" data-material-open-png />
+              </label>
+              <button type="button" data-material-seed-missing>빈 칸 모두 글꼴로 채우기</button>
+              <button type="button" data-material-seed-all>전체 다시 채우기</button>
+              <button type="button" data-material-clear-sheet>자소판 전체 비우기</button>
+              <p data-material-missing></p>
+            </fieldset>
+            <fieldset class="studio-material-group">
+              <legend>래스터·미리보기</legend>
+              <label>
+                <span>래스터 품질 <small>--fy-sprite-rendering</small></span>
+                <select data-material-quality>
+                  <option value="smooth">부드럽게 (auto)</option>
+                  <option value="crisp">선명한 가장자리 (crisp-edges)</option>
+                  <option value="pixel">픽셀 (pixelated)</option>
+                </select>
+              </label>
+              <label>
+                <span>미리보기 PNG 칸</span>
+                <select data-material-preview-cell>
+                  <option value="native">원본</option>
+                  <option value="auto">자동 · 미리보기 크기</option>
+                  <option value="64">64px (1x)</option>
+                  <option value="128">128px (2x)</option>
+                  <option value="192">192px (3x)</option>
+                  <option value="256">256px (4x)</option>
+                </select>
+              </label>
+            </fieldset>
+            <fieldset class="studio-material-group">
+              <legend>내보내기</legend>
+              <label>
+                <span>PNG 칸</span>
+                <select data-material-export-cell>
+                  <option value="native">원본</option>
+                  <option value="64">64px</option>
+                  <option value="128">128px</option>
+                  <option value="192">192px</option>
+                  <option value="256">256px</option>
+                </select>
+              </label>
+              <button type="button" data-material-export-png>PNG 내보내기</button>
+              <button type="button" data-material-export-set>배율 세트 1x·2x·3x 내보내기</button>
+              <button type="button" data-material-export-font>글꼴 파일(TTF)로 내보내기</button>
+              <p data-material-export-status></p>
+            </fieldset>
+            <fieldset class="studio-material-group">
+              <legend>작은 글씨 보정</legend>
+              <button type="button" data-material-preset-small>작은 글씨 그림 자소 프리셋</button>
+              <button type="button" data-material-preset-reset>프리셋 해제</button>
+              <label class="studio-material-check"><input type="checkbox" data-material-optical-preview /> 광학 보정 미리보기 (페이지 전용)</label>
+              <button type="button" data-material-copy-optical>페이지용 광학 CSS 복사</button>
+            </fieldset>
+          </div>
+          <div class="studio-material-pending" data-material-pending hidden>
+            <p data-material-pending-text></p>
+            <button type="button" data-material-pending-accept>CSS를 자소판에 맞추고 불러오기</button>
+            <button type="button" data-material-pending-cancel>취소</button>
+          </div>
+        </section>
+        </div>
+
+        <details class="studio-source">
+          <summary>글꼴 CSS 원문</summary>
+          <textarea readonly spellcheck="false" data-studio-source></textarea>
+        </details>
+      </main>
+    </div>
+
+    <script src="lib/font-kku.js"></script>
+    <script src="./demo.js"></script>
+    <script>
+      window.FontKkuDemo.renderNav(location.hash === "#studio-material" ? "sprite-draw" : "font-studio");
+    </script>
+    <script src="./font-studio-model.js"></script>
+    <script src="./font-kku-lint.js"></script>
+    <script src="./font-studio.js"></script>
+    <script src="./font-studio-sheet.js"></script>
+    <script src="lib/font-kku-export.js"></script>
+    <script src="./font-studio-material.js"></script>
+  </body>
+</html>

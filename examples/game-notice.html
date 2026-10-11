@@ -1,0 +1,321 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 게임 공지. 글꼴: pixel retro. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>[이벤트] 가을 축제 출석 이벤트 — 별빛마을</title>
+  <script src="../lib/font-kku.js" data-fonts="pixel retro"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --ink: #1b1b2f;
+      --cream: #fffaf0;
+      --sky: #bfe3ff;
+      --purple: #3d2f7a;
+      --red: #ff5d5d;
+      --gold: #ffd23f;
+      --muted: #5d5a6e;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding-bottom: 72px;
+      color: var(--ink);
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      word-break: keep-all;
+      background:
+        /* 바닥: 풀 + 흙 (8px 격자) */
+        linear-gradient(180deg, #5cc96b 0 16px, #3e9e4f 16px 24px, #a8703f 24px) bottom / 100% 64px no-repeat,
+        linear-gradient(180deg, #8fd0ff 0%, var(--sky) 45%, #fff3d6 100%);
+    }
+
+    /* 도트 구름: 16px 칸을 box-shadow로 찍는다 */
+    .cloud {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      opacity: 0.9;
+      box-shadow:
+        32px 0 #fff, 48px 0 #fff, 64px 0 #fff,
+        16px 16px #fff, 32px 16px #fff, 48px 16px #fff, 64px 16px #fff, 80px 16px #fff,
+        0 32px #fff, 16px 32px #fff, 32px 32px #fff, 48px 32px #fff, 64px 32px #fff, 80px 32px #fff, 96px 32px #fff;
+      pointer-events: none;
+    }
+
+    .topbar {
+      position: relative;
+      background: var(--ink);
+      color: #fff;
+    }
+    .topbar .inner {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 900; letter-spacing: 0.06em; }
+    .logo i {
+      width: 18px;
+      height: 18px;
+      background: var(--gold);
+      box-shadow: 0 0 0 3px #fff3a0 inset;
+      clip-path: polygon(50% 0, 62% 38%, 100% 38%, 69% 60%, 81% 100%, 50% 76%, 19% 100%, 31% 60%, 0 38%, 38% 38%);
+    }
+    .topbar nav { display: flex; gap: 16px; font-size: 14px; color: #b9b6d3; }
+    .topbar nav b { color: #fff; }
+
+    .wrap { position: relative; max-width: 820px; margin: 0 auto; padding: 34px 20px 0; }
+
+    /* 도트 창 테두리: 네 방향 그림자로 모서리가 깎인 픽셀 테두리를 만든다 */
+    .pixel-box {
+      background: var(--cream);
+      box-shadow:
+        0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink),
+        8px 8px 0 0 rgb(27 27 47 / 22%);
+      margin: 4px;
+    }
+
+    .win-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: var(--purple);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .win-bar .dots { display: flex; gap: 6px; }
+    .win-bar .dots i { width: 10px; height: 10px; background: #fff; opacity: 0.85; }
+    .win-bar .dots i:first-child { background: var(--red); opacity: 1; }
+    .win-bar .dots i:nth-child(2) { background: var(--gold); opacity: 1; }
+
+    .win-body { padding: 28px 30px 34px; }
+
+    .tags { display: flex; gap: 8px; margin: 0 0 14px; }
+    .tag {
+      padding: 3px 8px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .tag.hot { background: var(--red); }
+
+    .notice-title { margin: 0; }
+    .meta { margin: 14px 0 0; font-size: 13px; color: var(--muted); }
+
+    /* 강조 띠: 레트로는 밝은 바탕 위에 */
+    .hero {
+      margin: 26px 0 30px;
+      padding: 22px 20px 20px;
+      text-align: center;
+      background:
+        repeating-linear-gradient(90deg, rgb(255 255 255 / 45%) 0 8px, transparent 8px 16px) top / 100% 8px no-repeat,
+        #d7eeff;
+      box-shadow: 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink);
+    }
+    .hero-text { margin-bottom: -0.1em; }
+    .hero p { margin: 10px 0 0; font-size: 15px; font-weight: 600; }
+
+    .block { margin-top: 28px; }
+    .block h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 12px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+    .block h2::before { content: ""; width: 12px; height: 12px; background: var(--red); box-shadow: 4px 4px 0 var(--ink); }
+
+    .period {
+      margin: 0;
+      padding: 14px 16px;
+      background: #fff;
+      border: 3px solid var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+    .period small { display: block; font-size: 13px; font-weight: 500; color: var(--muted); }
+
+    .steps { margin: 0; padding-left: 1.4em; font-size: 15px; line-height: 1.9; }
+
+    /* 출석 보상 */
+    .rewards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .rewards li {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      padding: 12px 8px 14px;
+      background: #fff;
+      border: 3px solid var(--ink);
+      text-align: center;
+    }
+    .rewards .day {
+      justify-self: stretch;
+      margin: -12px -8px 4px;
+      padding: 3px 0;
+      background: var(--ink);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+    }
+    .rewards canvas { width: 48px; height: 48px; image-rendering: pixelated; }
+    .rewards b { font-size: 14px; }
+    .rewards small { font-size: 12px; color: var(--muted); }
+    .rewards .legend { grid-column: 1 / -1; background: #fff6cf; border-color: #c48a00; box-shadow: inset 0 0 0 3px var(--gold); }
+    .rewards .legend .day { background: #c48a00; }
+
+    .cta {
+      display: block;
+      width: fit-content;
+      margin: 30px auto 0;
+      padding: 14px 26px;
+      border: 0;
+      background: var(--red);
+      color: #fff;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      box-shadow:
+        0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink),
+        inset 0 -6px 0 0 #c73a3a;
+      cursor: pointer;
+    }
+    .cta:active { transform: translateY(3px); box-shadow: 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), inset 0 -2px 0 0 #c73a3a; }
+
+    .notes { margin: 0; padding: 14px 16px 14px 34px; background: #f3efe4; font-size: 14px; line-height: 1.8; color: #45425a; }
+
+    .foot { margin-top: 26px; text-align: center; font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .cloud { display: none; }
+    }
+    @media (max-width: 560px) {
+      .topbar nav span { display: none; }
+      .wrap { padding: 24px 12px 0; }
+      .win-body { padding: 22px 16px 26px; }
+      .rewards { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .hero { padding: 18px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cloud" style="top: 86px; left: 6%;" aria-hidden="true"></div>
+  <div class="cloud" style="top: 150px; right: 8%; transform: scale(0.75);" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="inner">
+      <div class="logo"><i aria-hidden="true"></i>별빛마을</div>
+      <nav aria-label="게임 메뉴"><b>공지사항</b><span>업데이트</span><span>고객센터</span></nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <article class="pixel-box">
+      <div class="win-bar"><span>공지사항 › 이벤트</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+      <div class="win-body">
+        <div class="tags"><span class="tag hot">이벤트</span><span class="tag">전 서버</span></div>
+        <h1 class="font-kku notice-title" data-font="pixel" data-size="clamp(34px, 8.6vw, 60px)">가을 축제 이벤트</h1>
+        <p class="meta">운영팀 · 2026.10.09 · 조회 12,480</p>
+
+        <section class="hero" aria-label="이벤트 요약">
+          <font-kku class="hero-text" font="retro" size="clamp(30px, 8vw, 50px)" animate="bounce">출석만 해도 선물</font-kku>
+          <p>7일 동안 접속하면 전설 펫 '도토리'까지 받을 수 있어요!</p>
+        </section>
+
+        <section class="block">
+          <h2>이벤트 기간</h2>
+          <p class="period">2026년 10월 9일(금) 정기 점검 후 ~ 10월 23일(금) 23:59
+            <small>기간 안에 7일을 채우면 돼요. 연속이 아니어도 괜찮아요.</small></p>
+        </section>
+
+        <section class="block">
+          <h2>참여 방법</h2>
+          <ol class="steps">
+            <li>게임에 접속해 마을 광장의 <b>단풍 우체통</b>을 찾아요.</li>
+            <li>하루에 한 번 우체통을 눌러 출석 도장을 찍어요.</li>
+            <li>보상은 <b>우편함</b>으로 바로 들어와요.</li>
+          </ol>
+        </section>
+
+        <section class="block">
+          <h2>출석 보상</h2>
+          <ul class="rewards">
+            <li><span class="day">1일차</span><canvas width="8" height="8" data-icon="coin"></canvas><b>골드 1,000</b></li>
+            <li><span class="day">2일차</span><canvas width="8" height="8" data-icon="potion"></canvas><b>체력 물약 ×5</b></li>
+            <li><span class="day">3일차</span><canvas width="8" height="8" data-icon="leaf"></canvas><b>단풍 머리띠</b><small>30일 착용</small></li>
+            <li><span class="day">4일차</span><canvas width="8" height="8" data-icon="coin"></canvas><b>골드 3,000</b></li>
+            <li><span class="day">5일차</span><canvas width="8" height="8" data-icon="gem"></canvas><b>푸른 보석 ×3</b></li>
+            <li><span class="day">6일차</span><canvas width="8" height="8" data-icon="chest"></canvas><b>황금 보물 상자</b></li>
+            <li class="legend"><span class="day">7일차 · 마지막 날</span><canvas width="8" height="8" data-icon="acorn"></canvas><b>전설 펫 '도토리'</b><small>이동 속도 +5%, 가을 열매를 주워 와요</small></li>
+          </ul>
+        </section>
+
+        <a class="cta" href="#">출석 도장 찍으러 가기 ▶</a>
+
+        <section class="block">
+          <h2>유의 사항</h2>
+          <ul class="notes">
+            <li>출석은 매일 오전 6시에 새로 집계돼요.</li>
+            <li>보상은 우편함에서 30일 동안 보관되고, 그 뒤에는 사라져요.</li>
+            <li>한 계정에서 캐릭터 하나만 참여할 수 있어요.</li>
+            <li>운영 정책을 어긴 계정은 보상이 회수될 수 있어요.</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+    <p class="foot">© 2026 별빛마을 운영팀 · 문의는 게임 안 고객센터로 보내 주세요.</p>
+  </div>
+
+  <script>
+    // 8×8 도트 아이콘 — 글자 한 칸이 픽셀 하나
+    var PALETTE = {
+      k: "#1b1b2f", y: "#ffd23f", Y: "#fff3a0", o: "#e09b00",
+      r: "#e63946", R: "#ffb3b8", w: "#b07a4a",
+      g: "#f77f00", G: "#d62828", s: "#7a4a21",
+      c: "#3a86ff", C: "#bde0fe",
+      b: "#8b5a2b", B: "#6b3e1f", a: "#d39a52", A: "#f0c27b"
+    };
+    var ICONS = {
+      coin:   ["..kkkk..", ".kyyyyk.", "kyYyyyok", "kyYyoyok", "kyYyoyok", "kyyyyook", ".kooook.", "..kkkk.."],
+      potion: ["...kk...", "..kwwk..", "...kk...", "..krrk..", ".krRrrk.", "krRrrrrk", "krrrrrrk", ".kkkkkk."],
+      leaf:   ["...g....", "..ggg...", "g.ggg.g.", "gggGggg.", ".ggGgg..", "gggGggg.", "...s....", "...s...."],
+      gem:    ["........", "..kkkk..", ".kCccck.", "kCccccck", ".kcccck.", "..kcck..", "...kk...", "........"],
+      chest:  ["........", ".kkkkkk.", "kbbbbbbk", "kbbbbbbk", "kkkyykkk", "kbbyybbk", "kbbbbbbk", "kkkkkkkk"],
+      acorn:  ["...kk...", "..kBBk..", ".kBbbBk.", "kBBBBBBk", ".kaaaak.", ".kAaaak.", "..kaak..", "...kk..."]
+    };
+    document.querySelectorAll("canvas[data-icon]").forEach(function (canvas) {
+      var map = ICONS[canvas.dataset.icon];
+      var ctx = canvas.getContext("2d");
+      map.forEach(function (row, y) {
+        Array.from(row).forEach(function (ch, x) {
+          if (PALETTE[ch]) {
+            ctx.fillStyle = PALETTE[ch];
+            ctx.fillRect(x, y, 1, 1);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

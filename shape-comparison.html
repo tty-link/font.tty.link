@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>font-kku 데모 — 짜임 비교</title>
+    <link rel="stylesheet" href="lib/font-kku.css" />
+    <link rel="stylesheet" href="lib/profiles/gothic.css" />
+    <link rel="stylesheet" href="lib/profiles/sebul.css" />
+    <link rel="stylesheet" href="./demo.css" />
+  </head>
+  <body>
+    <div class="demo-shell">
+      <header class="demo-topbar">
+        <a class="demo-brand" href="./index.html">
+          <span class="demo-badge">꾸</span>
+          <span class="demo-brand-text">
+            <strong>폰꾸</strong>
+            <span>font-kku</span>
+          </span>
+        </a>
+        <nav class="demo-nav" data-demo-nav aria-label="데모 페이지"></nav>
+      </header>
+
+      <section class="demo-hero">
+        <span class="demo-kicker">짜임 비교</span>
+        <h1 class="demo-title">네모꼴과 탈네모꼴, <em>짜임</em>별로 본다</h1>
+        <p class="demo-copy">
+          기준 글자와 두 조합 모두 외부 웹 글꼴 없이 기기 한글 글꼴을 쓴다.
+          엔진은 같은 짜임 메타데이터를 쓰고 <code>sebul</code>은 탈네모꼴 조합으로, <code>gothic</code>은 본고딕식 네모꼴로 정렬한다.
+          아래 단일 글자 샘플은 <code>size=120</code>, 마지막 문장 비교는 <code>size=60</code>으로, 기준 상자와 자리 정렬 차이를 직접 비교하기 위한 것이다.
+        </p>
+      </section>
+
+      <section class="demo-columns">
+        <div class="demo-sample demo-sample-tone-gothic">
+          <span class="demo-label">네모 기준</span>
+          <span class="demo-reference-text demo-reference-text--square">가 한 오 왕 읽 밟</span>
+        </div>
+        <div class="demo-sample demo-sample-tone-default">
+          <span class="demo-label">기기 글꼴 기준 · 탈네모 배치 비교</span>
+          <span class="demo-reference-text demo-reference-text--desquare">가 한 오 왕 읽 밟</span>
+        </div>
+      </section>
+
+      <section class="demo-specimen-section">
+        <h2>세로모음 짜임</h2>
+        <p class="demo-specimen-note">세로 중성(ㅏ·ㅓ 등) + 종성 0~2개.</p>
+
+        <div class="demo-specimen-topology">
+          <h3>민글자 <span class="demo-specimen-tag">right:none</span></h3>
+          <div class="demo-specimen-row">
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">가</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">가</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">가</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">저</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">저</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">저</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">비</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">비</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">비</font-kku></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-specimen-topology">
+          <h3>홑받침 <span class="demo-specimen-tag">right:single</span></h3>
+          <div class="demo-specimen-row">
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">한</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">한</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">한</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">길</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">길</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">길</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">장</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">장</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">장</font-kku></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-specimen-topology">
+          <h3>겹받침 <span class="demo-specimen-tag demo-specimen-tag--double">right:double</span></h3>
+          <div class="demo-specimen-row">
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">밟</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">밟</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">밟</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">읽</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">읽</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">읽</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">없</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">없</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">없</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">닭</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">닭</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">닭</font-kku></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-specimen-section">
+        <h2>가로모음 짜임</h2>
+        <p class="demo-specimen-note">가로 중성(ㅗ·ㅜ·ㅡ 등) + 종성 0~2개.</p>
+
+        <div class="demo-specimen-topology">
+          <h3>민글자 <span class="demo-specimen-tag">bottom:none</span></h3>
+          <div class="demo-specimen-row">
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">오</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">오</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">오</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">우</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">우</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">우</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">그</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">그</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">그</font-kku></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-specimen-topology">
+          <h3>홑받침 <span class="demo-specimen-tag">bottom:single</span></h3>
+          <div class="demo-specimen-row">
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">늘</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">늘</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">늘</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">은</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">은</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">은</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">웅</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">웅</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">웅</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">뜻</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">뜻</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">뜻</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">글</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">글</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">글</font-kku></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-specimen-topology">
+          <h3>겹받침 <span class="demo-specimen-tag demo-specimen-tag--double">bottom:double</span></h3>
+          <div class="demo-specimen-row">
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">긁</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">긁</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">긁</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">흙</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">흙</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">흙</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">훑</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">훑</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">훑</font-kku></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-specimen-section">
+        <h2>섞임모음 짜임</h2>
+        <p class="demo-specimen-note">복합모음(ㅘ·ㅝ·ㅢ 등) + 종성 0~2개.</p>
+
+        <div class="demo-specimen-topology">
+          <h3>민글자 <span class="demo-specimen-tag demo-specimen-tag--split">split-right:none</span></h3>
+          <div class="demo-specimen-row">
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">과</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">과</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">과</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">왜</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">왜</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">왜</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">의</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">의</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">의</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">워</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">워</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">워</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">위</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">위</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">위</font-kku></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-specimen-topology">
+          <h3>홑받침 <span class="demo-specimen-tag demo-specimen-tag--split">split-right:single</span></h3>
+          <div class="demo-specimen-row">
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">왕</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">왕</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">왕</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">획</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">획</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">획</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">원</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">원</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">원</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">월</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">월</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">월</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">권</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">권</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">권</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">횔</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">횔</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">횔</font-kku></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-specimen-topology">
+          <h3>겹받침 <span class="demo-specimen-tag demo-specimen-tag--both">split-right:double</span></h3>
+          <div class="demo-specimen-row">
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">괅</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">괅</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">괅</font-kku></div>
+            </div>
+            <div class="demo-specimen-pair">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">괆</span></div>
+              <div><div class="demo-specimen-label">sebul</div><font-kku font="sebul" size="120">괆</font-kku></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">괆</font-kku></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-specimen-section">
+        <h2>문제 글자 살펴보기</h2>
+        <p class="demo-specimen-note">
+          <code>외 / 읽 / 없 / 닭 / 밟 / 흙 / 긁</code>을 엔진이 배치 묶음(<code>layout bucket</code>), 짜임(<code>layout</code>), 의미 틀(<code>semantic frame</code>)로 어떻게 분류하는지 읽은 값과 함께 본다.
+        </p>
+        <div class="demo-specimen-problem">
+          <div class="demo-specimen-problem-card">
+            <div class="demo-specimen-pair" data-problem-case="외">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">외</span></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">외</font-kku></div>
+            </div>
+            <code class="demo-specimen-readout"></code>
+          </div>
+          <div class="demo-specimen-problem-card">
+            <div class="demo-specimen-pair" data-problem-case="읽">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">읽</span></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">읽</font-kku></div>
+            </div>
+            <code class="demo-specimen-readout"></code>
+          </div>
+          <div class="demo-specimen-problem-card">
+            <div class="demo-specimen-pair" data-problem-case="없">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">없</span></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">없</font-kku></div>
+            </div>
+            <code class="demo-specimen-readout"></code>
+          </div>
+          <div class="demo-specimen-problem-card">
+            <div class="demo-specimen-pair" data-problem-case="닭">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">닭</span></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">닭</font-kku></div>
+            </div>
+            <code class="demo-specimen-readout"></code>
+          </div>
+          <div class="demo-specimen-problem-card">
+            <div class="demo-specimen-pair" data-problem-case="밟">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">밟</span></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">밟</font-kku></div>
+            </div>
+            <code class="demo-specimen-readout"></code>
+          </div>
+          <div class="demo-specimen-problem-card">
+            <div class="demo-specimen-pair" data-problem-case="흙">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">흙</span></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">흙</font-kku></div>
+            </div>
+            <code class="demo-specimen-readout"></code>
+          </div>
+          <div class="demo-specimen-problem-card">
+            <div class="demo-specimen-pair" data-problem-case="긁">
+              <div><div class="demo-specimen-label">네모 기준</div><span style="font-size:120px;line-height:1.2;">긁</span></div>
+              <div><div class="demo-specimen-label">gothic</div><font-kku font="gothic" size="120">긁</font-kku></div>
+            </div>
+            <code class="demo-specimen-readout"></code>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-specimen-section">
+        <h2>짜임 목록</h2>
+        <p class="demo-specimen-note">
+          단일 글자 샘플을 <code>layout bucket + layout</code> 기준으로 묶어 본다.
+          현재 기본 제공 일반 글꼴은 선택자 표 대신 한 블록의 자리 변수를 쓰지만, 구조를 읽는 기준 자체는 이 분류를 그대로 따른다.
+        </p>
+        <div class="demo-specimen-catalog-wrap">
+          <table class="demo-specimen-catalog">
+            <thead>
+              <tr>
+                <th>짜임</th>
+                <th><code>bucket</code></th>
+                <th><code>layout</code></th>
+                <th>예시</th>
+                <th>주요 자리</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody id="catalog-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="demo-specimen-section">
+        <h2>문장 비교 (size=60)</h2>
+        <p class="demo-specimen-note">네모 기준 / 탈네모 기준 / sebul / gothic 4개 행을 같은 문장 위에 쌓아 비교한다.</p>
+        <div class="demo-specimen-sentence-group">
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">네모 기준</span>
+            <span style="font-size:60px;line-height:1.4;">오늘의 서울은 따뜻하다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">탈네모 기준</span>
+            <span class="demo-specimen-ref-glyph--desquare" style="font-size:60px;line-height:1.4;">오늘의 서울은 따뜻하다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">sebul</span>
+            <font-kku font="sebul" size="60">오늘의 서울은 따뜻하다</font-kku>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">gothic</span>
+            <font-kku font="gothic" size="60">오늘의 서울은 따뜻하다</font-kku>
+          </div>
+        </div>
+
+        <div class="demo-specimen-sentence-group">
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">네모 기준</span>
+            <span style="font-size:60px;line-height:1.4;">왕과 권위를 획득하다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">탈네모 기준</span>
+            <span class="demo-specimen-ref-glyph--desquare" style="font-size:60px;line-height:1.4;">왕과 권위를 획득하다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">sebul</span>
+            <font-kku font="sebul" size="60">왕과 권위를 획득하다</font-kku>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">gothic</span>
+            <font-kku font="gothic" size="60">왕과 권위를 획득하다</font-kku>
+          </div>
+        </div>
+
+        <div class="demo-specimen-sentence-group">
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">네모 기준</span>
+            <span style="font-size:60px;line-height:1.4;">닭을 밟고 흙을 긁다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">탈네모 기준</span>
+            <span class="demo-specimen-ref-glyph--desquare" style="font-size:60px;line-height:1.4;">닭을 밟고 흙을 긁다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">sebul</span>
+            <font-kku font="sebul" size="60">닭을 밟고 흙을 긁다</font-kku>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">gothic</span>
+            <font-kku font="gothic" size="60">닭을 밟고 흙을 긁다</font-kku>
+          </div>
+        </div>
+
+        <div class="demo-specimen-sentence-group">
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">네모 기준</span>
+            <span style="font-size:60px;line-height:1.4;">외국어를 읽을 수 없다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">탈네모 기준</span>
+            <span class="demo-specimen-ref-glyph--desquare" style="font-size:60px;line-height:1.4;">외국어를 읽을 수 없다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">sebul</span>
+            <font-kku font="sebul" size="60">외국어를 읽을 수 없다</font-kku>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">gothic</span>
+            <font-kku font="gothic" size="60">외국어를 읽을 수 없다</font-kku>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="lib/font-kku.js"></script>
+    <script src="./demo.js"></script>
+    <script>
+      window.FontKkuDemo.renderNav("shape-comparison");
+
+      (function () {
+        "use strict";
+
+        function injectReferenceColumns() {
+          document.querySelectorAll(".demo-specimen-pair").forEach(function (pair) {
+            if (pair.closest("[data-problem-case]") || pair.dataset.desquareReference === "true") return;
+            var columns = Array.from(pair.children);
+            var squareColumn = columns.find(function (child) {
+              var label = child.querySelector(".demo-specimen-label");
+              return label && label.textContent.trim() === "네모 기준";
+            });
+            if (!squareColumn) return;
+            var sourceSpan = squareColumn.querySelector("span:not(.demo-specimen-label)");
+            if (!sourceSpan || !sourceSpan.textContent) return;
+
+            var refColumn = document.createElement("div");
+            var label = document.createElement("div");
+            var refGlyph = document.createElement("span");
+            var sourceStyle = window.getComputedStyle(sourceSpan);
+
+            label.className = "demo-specimen-label";
+            label.textContent = "탈네모 기준";
+            refGlyph.className = "demo-specimen-ref-glyph--desquare";
+            refGlyph.textContent = sourceSpan.textContent;
+            refGlyph.style.fontSize = sourceStyle.fontSize;
+            refGlyph.style.lineHeight = sourceStyle.lineHeight;
+
+            refColumn.append(label, refGlyph);
+            squareColumn.after(refColumn);
+            pair.dataset.desquareReference = "true";
+          });
+        }
+
+        function normalizeComparisonFrames() {
+          document.querySelectorAll(".demo-specimen-pair > div").forEach(function (column) {
+            if (column.querySelector(":scope > .demo-specimen-frame")) return;
+            var glyph = Array.from(column.children).find(function (child) {
+              return child.matches("font-kku, span:not(.demo-specimen-label)");
+            });
+            if (!glyph) return;
+
+            var frame = document.createElement("span");
+            frame.className = "demo-specimen-frame";
+            var label = column.querySelector(":scope > .demo-specimen-label");
+            var labelText = label ? label.textContent.trim() : "";
+            if (glyph.matches("span")) {
+              if (labelText === "네모 기준") glyph.classList.add("demo-specimen-ref-glyph--square");
+              if (labelText === "탈네모 기준") glyph.classList.add("demo-specimen-ref-glyph--desquare");
+              if (labelText === "네모 기준" || labelText === "탈네모 기준") {
+                var pair = column.closest(".demo-specimen-pair");
+                var sourceGlyph = pair && pair.querySelector("font-kku [part='glyph']");
+                if (sourceGlyph) {
+                  glyph.dataset.layoutKey = sourceGlyph.getAttribute("data-layout-key") || "";
+                  glyph.dataset.fyLayoutBucket = sourceGlyph.getAttribute("data-fy-layout-bucket") || "";
+                }
+                glyph.style.lineHeight = "1";
+              }
+            }
+            glyph.before(frame);
+            frame.appendChild(glyph);
+          });
+        }
+
+        function syncReferenceLayoutData() {
+          document.querySelectorAll(".demo-specimen-pair").forEach(function (pair) {
+            var sourceGlyph = pair.querySelector("font-kku [part='glyph']");
+            if (!sourceGlyph) return;
+            pair.querySelectorAll(".demo-specimen-ref-glyph--square, .demo-specimen-ref-glyph--desquare").forEach(function (glyph) {
+              glyph.dataset.layoutKey = sourceGlyph.getAttribute("data-layout-key") || "";
+              glyph.dataset.fyLayoutBucket = sourceGlyph.getAttribute("data-fy-layout-bucket") || "";
+            });
+          });
+        }
+
+        function renderCatalog() {
+          var body = document.getElementById("catalog-body");
+          if (!body) return;
+
+          var groups = new Map();
+          var notesByKey = {
+            "right-open|right:none": "가/저/비처럼 세로 중성 + 종성 없음. 초성 자리는 tlo, 중성 자리는 tro.",
+            "right-closed|right:single": "한/길/장처럼 세로 중성 + 단일 종성. 종성 자리는 brs.",
+            "right-closed|right:double": "닭/밟/읽/없처럼 세로 중성 + 겹받침. 받침 두 조각과 종성 묶음(jong-cluster).",
+            "bottom-open|bottom:none": "오/우/그처럼 가로 중성 + 종성 없음.",
+            "bottom-closed|bottom:single": "늘/은/글처럼 가로 중성 + 단일 종성.",
+            "bottom-closed|bottom:double": "흙/긁처럼 가로 중성 + 겹받침.",
+            "split-open|split-right:none": "과/왜/외/의처럼 복합모음 + 종성 없음.",
+            "split-closed|split-right:single": "왕/권/획처럼 복합모음 + 단일 종성.",
+            "split-closed|split-right:double": "괅/괆처럼 복합모음 + 겹받침."
+          };
+          var slotsByKey = {
+            "right-open|right:none": "tlo + tro",
+            "right-closed|right:single": "tlc + trc + brs",
+            "right-closed|right:double": "tlc + trc + blr/brd + jong-cluster",
+            "bottom-open|bottom:none": "t + m",
+            "bottom-closed|bottom:single": "tt + mt + b",
+            "bottom-closed|bottom:double": "tt + mt + blb/brb + jong-cluster",
+            "split-open|split-right:none": "tls + ml + trs + jung-cluster",
+            "split-closed|split-right:single": "ttl + mtl + ttr + bbrs + jung-cluster",
+            "split-closed|split-right:double": "ttl + mtl + ttr + bbl/bbrd + jung-cluster + jong-cluster"
+          };
+          var labelsByKey = {
+            "right-open|right:none": "세로 열림형",
+            "right-closed|right:single": "세로 닫힘형",
+            "right-closed|right:double": "세로 겹받침형",
+            "bottom-open|bottom:none": "가로 열림형",
+            "bottom-closed|bottom:single": "가로 닫힘형",
+            "bottom-closed|bottom:double": "가로 겹받침형",
+            "split-open|split-right:none": "복합모음 열림형",
+            "split-closed|split-right:single": "복합모음 닫힘형",
+            "split-closed|split-right:double": "복합모음 겹받침형"
+          };
+          var order = [
+            "right-open|right:none",
+            "right-closed|right:single",
+            "right-closed|right:double",
+            "bottom-open|bottom:none",
+            "bottom-closed|bottom:single",
+            "bottom-closed|bottom:double",
+            "split-open|split-right:none",
+            "split-closed|split-right:single",
+            "split-closed|split-right:double"
+          ];
+
+          document.querySelectorAll("font-kku[font='gothic'][size='120'] [part='glyph'][data-hangul='true']").forEach(function (glyph) {
+            var source = glyph.getAttribute("data-source");
+            if (!source || source.length !== 1) return;
+            var bucket = glyph.getAttribute("data-fy-layout-bucket") || "";
+            var layout = glyph.getAttribute("data-layout-key") || "";
+            var key = bucket + "|" + layout;
+            if (!groups.has(key)) groups.set(key, { bucket: bucket, layout: layout, examples: [] });
+            var group = groups.get(key);
+            if (group.examples.indexOf(source) === -1) group.examples.push(source);
+          });
+
+          body.innerHTML = Array.from(groups.entries())
+            .sort(function (a, b) { return order.indexOf(a[0]) - order.indexOf(b[0]); })
+            .map(function (entry) {
+              var key = entry[0];
+              var row = entry[1];
+              return "<tr>" +
+                "<td>" + (labelsByKey[key] || key) + "</td>" +
+                "<td><code>" + row.bucket + "</code></td>" +
+                "<td><code>" + row.layout + "</code></td>" +
+                "<td>" + row.examples.join(" / ") + "</td>" +
+                "<td><code>" + (slotsByKey[key] || "-") + "</code></td>" +
+                "<td>" + (notesByKey[key] || "") + "</td>" +
+                "</tr>";
+            })
+            .join("");
+        }
+
+        function renderReadouts() {
+          document.querySelectorAll("[data-problem-case]").forEach(function (card) {
+            var glyph = card.querySelector("[part='glyph']");
+            var readout = card.parentElement.querySelector(".demo-specimen-readout");
+            if (!glyph || !readout) return;
+            readout.textContent =
+              "bucket=" + glyph.getAttribute("data-fy-layout-bucket") +
+              " | layout=" + glyph.getAttribute("data-layout-key") +
+              " | axis=" + glyph.getAttribute("data-fy-axis") +
+              " | open=" + glyph.getAttribute("data-fy-open") +
+              " | jong=" + glyph.getAttribute("data-fy-jong-count");
+          });
+        }
+
+        /* 런타임은 DOMContentLoaded에 바탕 요소를 그린다(이 스크립트보다 먼저 건 리스너). 그 전에 프레임이
+         * 돌면 글자가 없어 짜임 목록과 판독값이 빈 채로 남았다 — 그린 뒤에 읽는다. */
+        function start() {
+          requestAnimationFrame(function () {
+            injectReferenceColumns();
+            normalizeComparisonFrames();
+            requestAnimationFrame(function () {
+              syncReferenceLayoutData();
+              renderReadouts();
+              renderCatalog();
+            });
+          });
+        }
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", start, { once: true });
+        } else {
+          start();
+        }
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,322 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 네온 간판. 글꼴: neon. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>밤마실 식당 — 영업 중</title>
+  <script src="../lib/font-kku.js" data-fonts="neon"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --brick: #3a1d1a;
+      --mortar: #1d0f0e;
+      --ink: #f4ecf6;
+      --muted: #b9a9b6;
+      --green: #8dffb5;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--ink);
+      word-break: keep-all;
+      background: var(--mortar);
+    }
+
+    /* 벽돌 벽 — 줄눈 두 겹(가로 줄, 엇갈린 세로 줄)과 가로등 빛 */
+    .wall {
+      position: relative;
+      min-height: 100vh;
+      padding: 56px 16px 64px;
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      gap: 34px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 60% 45% at 50% 30%, rgb(255 79 216 / 16%) 0%, transparent 70%),
+        radial-gradient(ellipse 120% 70% at 50% 0%, transparent 40%, rgb(0 0 0 / 55%) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='68'%3E%3Cpath d='M0 33H76M0 67H76M1 0V33M39 34V67' stroke='%231d0f0e' stroke-width='3'/%3E%3Cpath d='M3 3h33v27H3zM42 37h31v27H42z' fill='%23ffffff' fill-opacity='.025'/%3E%3C/svg%3E") 0 0 / 76px 68px,
+        linear-gradient(180deg, #45231f 0%, var(--brick) 60%, #2c1513 100%);
+      transition: background-color 400ms ease;
+    }
+    .wall::after {
+      /* 꺼지면 벽에 비치던 분홍 빛이 사라진다 */
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgb(0 0 0 / 0);
+      pointer-events: none;
+      transition: background 500ms ease;
+    }
+    .wall.is-off::after { background: rgb(0 0 0 / 38%); }
+    .wall > * { position: relative; z-index: 1; }
+
+    /* 간판 판 — 검은 아크릴에 나사 넷 */
+    .sign {
+      position: relative;
+      width: min(760px, 100%);
+      padding: 34px 28px 30px;
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgb(20 10 24 / 82%), rgb(12 6 16 / 88%));
+      box-shadow: 0 24px 60px rgb(0 0 0 / 55%), inset 0 0 0 1px rgb(255 255 255 / 6%);
+      text-align: center;
+    }
+    .sign::before, .sign::after {
+      content: "";
+      position: absolute;
+      top: 12px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #d9d2dc, #6f6673);
+    }
+    .sign::before { left: 12px; }
+    .sign::after { right: 12px; }
+    .screws { position: absolute; inset: auto 12px 12px; display: flex; justify-content: space-between; pointer-events: none; }
+    .screws i { width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #d9d2dc, #6f6673); }
+
+    .since { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.4em; color: #ffb3ee; }
+    .shop-name { margin: 0; line-height: 1; }
+
+    /* "영업 중"은 초록 관 — 페이지 CSS가 글꼴의 관 색을 덮는다 */
+    .open-sign { margin: 0; color: var(--green); text-shadow: 0 0 0.12em #3dff8f; }
+    .open-sign [part~="jamo"] {
+      -webkit-text-stroke-color: var(--green);
+      text-shadow: 0 0 0.04em #fff, 0 0 0.12em #3dff8f, 0 0 0.3em #12d66b, 0 0 0.6em #00873f;
+    }
+    /* 받침 위 가로 모음(중의 ㅜ)은 글꼴이 아래를 잘라 그린다 — 넓은 빛번짐이 자른 상자에서
+     * 끊기지 않게 중성 빛은 가깝게만 낸다 */
+    .open-sign [part~="jungseong"] {
+      text-shadow: 0 0 0.04em #fff, 0 0 0.1em #3dff8f, 0 0 0.18em #12d66b;
+    }
+
+    /* 고장 난 관 — '업'의 받침 ㅂ 하나만 불규칙하게 깜빡인다. 글자 칸의 data-source로
+     * 음절을, part로 자모를 고른다. 글자 전체가 아니라 자모 하나라서 폰꾸만 된다. */
+    .open-sign [part="glyph"][data-source="업"] [part~="jongseong"] {
+      animation: k-broken 5.4s steps(1, end) infinite;
+    }
+    @keyframes k-broken {
+      0% { opacity: 1; }
+      6% { opacity: 0.12; }
+      7% { opacity: 1; }
+      8.2% { opacity: 0.3; }
+      9.4% { opacity: 1; }
+      38% { opacity: 0.1; }
+      45% { opacity: 0.7; }
+      45.8% { opacity: 0.1; }
+      47% { opacity: 1; }
+      71% { opacity: 0.25; }
+      71.8% { opacity: 1; }
+      84% { opacity: 0.1; }
+      84.6% { opacity: 1; }
+    }
+
+    /* 다시 켤 때 관마다 시차를 두고 파르르 들어온다 */
+    .wall.is-igniting .sign [part~="jamo"] {
+      animation: k-ignite 900ms steps(1, end) backwards;
+      animation-delay: calc(var(--fy-glyph-index, 0) * 90ms + var(--k-lag, 0ms));
+    }
+    .sign [part~="jungseong"] { --k-lag: 140ms; }
+    .sign [part~="jongseong"] { --k-lag: 260ms; }
+    @keyframes k-ignite {
+      0% { opacity: 0.08; }
+      30% { opacity: 0.8; }
+      40% { opacity: 0.15; }
+      55% { opacity: 1; }
+      65% { opacity: 0.4; }
+      75% { opacity: 1; }
+    }
+
+    /* 꺼진 관 — 유리관 색만 남는다 */
+    .wall.is-off .sign [part~="jamo"] {
+      -webkit-text-stroke-color: #5a4c5c;
+      text-shadow: none;
+      animation: none;
+    }
+    .wall.is-off .shop-name, .wall.is-off .open-sign { color: #5a4c5c; text-shadow: none; }
+    .wall.is-off .since { color: #6d6070; }
+
+    .note {
+      max-width: 34em;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+      text-align: center;
+    }
+    .note b { color: var(--green); font-weight: 700; }
+
+    .lower {
+      width: min(760px, 100%);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* 영업시간판 — 철판에 흰 글씨 */
+    .hours {
+      padding: 22px 24px;
+      border-radius: 10px;
+      background:
+        repeating-linear-gradient(90deg, rgb(255 255 255 / 2%) 0 2px, transparent 2px 5px),
+        linear-gradient(180deg, #2b2a30, #1d1c22);
+      box-shadow: 0 14px 30px rgb(0 0 0 / 45%), inset 0 0 0 1px rgb(255 255 255 / 8%);
+    }
+    .hours h2 { margin: 0 0 12px; font-size: 13px; letter-spacing: 0.3em; color: #ffd36b; }
+    .hours dl { margin: 0; display: grid; gap: 8px; }
+    .hours div { display: flex; justify-content: space-between; gap: 16px; font-size: 15px; border-bottom: 1px dashed rgb(255 255 255 / 10%); padding-bottom: 8px; }
+    .hours div:last-child { border-bottom: 0; padding-bottom: 0; }
+    .hours dt { color: var(--muted); }
+    .hours dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+    .hours .off dd { color: #ff9a9a; }
+
+    /* 사장님 쪽지 */
+    .memo {
+      width: 190px;
+      margin: 8px 0 0;
+      padding: 16px 16px 18px;
+      rotate: 3deg;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #3a2e12;
+      background: linear-gradient(180deg, #fff6b8, #ffe98a);
+      box-shadow: 0 10px 18px rgb(0 0 0 / 40%);
+    }
+    .memo::before {
+      content: "";
+      display: block;
+      width: 56px;
+      height: 16px;
+      margin: -26px auto 10px;
+      background: rgb(255 255 255 / 55%);
+      rotate: -4deg;
+    }
+    .memo p { margin: 0; }
+    .memo small { display: block; margin-top: 8px; text-align: right; color: #7a6526; }
+
+    /* 벽 스위치 */
+    .switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px 10px 12px;
+      border: 1px solid rgb(255 255 255 / 16%);
+      border-radius: 999px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      background: rgb(0 0 0 / 35%);
+      cursor: pointer;
+    }
+    .switch:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+    .switch .track {
+      position: relative;
+      width: 46px;
+      height: 26px;
+      border-radius: 999px;
+      background: #3a3340;
+      transition: background 200ms ease;
+    }
+    .switch .track::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      transition: translate 200ms ease;
+    }
+    .switch[aria-checked="true"] .track { background: #22b862; box-shadow: 0 0 12px rgb(61 255 143 / 55%); }
+    .switch[aria-checked="true"] .track::after { translate: 20px 0; }
+
+    @media (max-width: 640px) {
+      .wall { padding-top: 32px; gap: 26px; }
+      .sign { padding: 28px 16px 24px; }
+      .lower { grid-template-columns: 1fr; justify-items: center; }
+      .hours { width: 100%; }
+      .memo { margin-top: 4px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .open-sign [part="glyph"][data-source="업"] [part~="jongseong"],
+      .wall.is-igniting .sign [part~="jamo"] { animation: none; }
+      .switch .track, .switch .track::after, .wall::after { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wall" data-wall>
+    <section class="sign" aria-label="간판">
+      <p class="since">SINCE 1998 · 을지로 골목</p>
+      <h1 class="font-kku shop-name" data-font="neon" data-size="clamp(54px, 14vw, 118px)">밤마실 식당</h1>
+      <p class="font-kku open-sign" data-font="neon" data-size="clamp(40px, 10vw, 76px)" data-open-sign>영업 중</p>
+      <div class="screws" aria-hidden="true"><i></i><i></i></div>
+    </section>
+
+    <button type="button" class="switch" role="switch" aria-checked="true" data-switch>
+      <span class="track" aria-hidden="true"></span>
+      <span data-switch-label>간판 불 끄기</span>
+    </button>
+
+    <p class="note">
+      깜빡이는 건 글자 ‘업’이 아니라 <b>받침 ㅂ 관 하나</b>뿐입니다. 폰꾸는 한글을 자모로 나눠 따로 그려서,
+      글꼴 파일 없이도 자모 하나에만 색·빛·움직임을 줄 수 있어요.
+    </p>
+
+    <div class="lower">
+      <section class="hours" aria-labelledby="hours-title">
+        <h2 id="hours-title">영업시간</h2>
+        <dl>
+          <div><dt>화 – 금</dt><dd>17:00 – 02:00</dd></div>
+          <div><dt>토 · 일</dt><dd>15:00 – 02:00</dd></div>
+          <div class="off"><dt>월요일</dt><dd>쉽니다</dd></div>
+          <div><dt>마지막 주문</dt><dd>01:20</dd></div>
+          <div><dt>오늘의 국수</dt><dd>들기름 막국수</dd></div>
+        </dl>
+      </section>
+      <aside class="memo" aria-label="사장님 쪽지">
+        <p>‘업’ 받침 ㅂ 관이 나갔어요. 금요일에 수리 기사님 오십니다.</p>
+        <small>— 사장 드림</small>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+      var wall = document.querySelector("[data-wall]");
+      var sw = document.querySelector("[data-switch]");
+      var label = document.querySelector("[data-switch-label]");
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var igniteTimer = 0;
+
+      function setOn(on) {
+        sw.setAttribute("aria-checked", String(on));
+        label.textContent = on ? "간판 불 끄기" : "간판 불 켜기";
+        wall.classList.toggle("is-off", !on);
+        clearTimeout(igniteTimer);
+        wall.classList.remove("is-igniting");
+        if (on && !reduce) {
+          void wall.offsetWidth; // 같은 클래스를 다시 붙여도 움직임이 처음부터 돈다
+          wall.classList.add("is-igniting");
+          igniteTimer = setTimeout(function () { wall.classList.remove("is-igniting"); }, 2600);
+        }
+      }
+
+      sw.addEventListener("click", function () {
+        setOn(sw.getAttribute("aria-checked") !== "true");
+      });
+    })();
+  </script>
+</body>
+</html>

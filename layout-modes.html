@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>font-kku 데모 — 줄바꿈</title>
+    <link rel="stylesheet" href="lib/font-kku.css" />
+    <link rel="stylesheet" href="lib/profiles/sebul.css" />
+    <link rel="stylesheet" href="lib/profiles/gothic.css" />
+    <link rel="stylesheet" href="./demo.css" />
+  </head>
+  <body>
+    <div class="demo-shell">
+      <header class="demo-topbar">
+        <a class="demo-brand" href="./index.html">
+          <span class="demo-badge">꾸</span>
+          <span class="demo-brand-text">
+            <strong>폰꾸</strong>
+            <span>font-kku</span>
+          </span>
+        </a>
+        <nav class="demo-nav" data-demo-nav aria-label="데모 페이지"></nav>
+      </header>
+
+      <section class="demo-hero">
+        <span class="demo-kicker">줄바꿈</span>
+        <h1 class="demo-title">줄바꿈 단위와 <em>포스터</em> 스케일</h1>
+        <p class="demo-copy">
+          좁은 프레임에서는 <code>wrap-unit</code>이 줄바꿈을 결정하고, 큰 <code>size</code>에 <code>wrap-unit="line"</code>을 더하면 포스터·현수막 같은 대형 조판이 된다.
+          이 페이지에서 둘을 이어서 본다.
+        </p>
+        <div class="demo-pill-row">
+          <span class="demo-pill"><code>wrap-unit="glyph"</code></span>
+          <span class="demo-pill"><code>wrap-unit="word"</code></span>
+          <span class="demo-pill"><code>wrap-unit="line"</code></span>
+          <span class="demo-pill">+ 큰 <code>size</code> · <code>animate</code></span>
+        </div>
+      </section>
+
+      <section class="demo-columns">
+        <article class="demo-panel">
+          <h2><code>wrap-unit="glyph"</code></h2>
+          <p class="demo-meta">음절 단위 줄바꿈. 좁은 프레임에서는 낱글자 단위로 줄이 꺾인다.</p>
+          <div class="demo-frame">
+            <div class="demo-frame-inner">
+              <div class="demo-sample" data-tight="true">
+                <font-kku font="sebul" size="28" wrap-unit="glyph">광화문 광장 앞 작은 서점</font-kku>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2><code>wrap-unit="word"</code></h2>
+          <p class="demo-meta">공백 단위 줄바꿈. 본문 흐름에 자연스럽다.</p>
+          <div class="demo-frame">
+            <div class="demo-frame-inner">
+              <div class="demo-sample" data-tight="true">
+                <font-kku font="sebul" size="28" wrap-unit="word">광화문 광장 앞 작은 서점</font-kku>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2><code>wrap-unit="line"</code></h2>
+          <p class="demo-meta">명시적 개행만 줄바꿈. 포스터·배너·헤드라인의 기준.</p>
+          <div class="demo-frame">
+            <div class="demo-frame-inner">
+              <div class="demo-sample" data-tight="true">
+                <font-kku font="sebul" size="28" wrap-unit="line">광화문 광장
+앞 작은 서점</font-kku>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="demo-stack">
+        <h2 class="demo-visually-hidden">포스터 스터디</h2>
+        <article class="demo-frame demo-poster demo-poster-amber">
+          <div class="demo-frame-inner">
+            <font-kku font="sebul" size="78" wrap-unit="line" animate="rise">서울의 밤
+작은 광장</font-kku>
+            <small>포스터 습작 01 · sebul · rise</small>
+          </div>
+        </article>
+
+        <article class="demo-frame demo-poster demo-poster-teal">
+          <div class="demo-frame-inner">
+            <font-kku font="sebul" size="84" wrap-unit="line">한강의 바람
+여덟 시 이후</font-kku>
+            <small>포스터 습작 02 · sebul</small>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2>배너·헤드라인·캡션</h2>
+          <p class="demo-meta">
+            포스터 아래에 얹는 배너·헤드라인·캡션 크기 조합. <code>size</code> 단계에 따라 문장과 글꼴 인상이 어떻게 바뀌는지 확인한다.
+          </p>
+          <div class="demo-columns">
+            <div class="demo-sample demo-sample-tone-detail">
+              <span class="demo-label">배너</span>
+              <font-kku font="sebul" size="52">늦은 오후의 전시장</font-kku>
+            </div>
+            <div class="demo-sample demo-sample-tone-default">
+              <span class="demo-label">헤드라인</span>
+              <font-kku font="gothic" size="40">봄, 세 번째 주말</font-kku>
+            </div>
+            <div class="demo-sample">
+              <span class="demo-label">캡션</span>
+              <font-kku font="sebul" size="22">2026 SPRING EDITION</font-kku>
+            </div>
+          </div>
+          <p class="demo-note">
+            이 페이지는 전단·포스터·배너 등 <em>대형 배치 + 움직임</em>을 섞는 경계 사례를 위한 곳이다.
+            글자 단위와 자소 단위 움직임은 <a href="./animation-catalog.html">움직임 페이지</a>에서 자세히 비교한다.
+          </p>
+        </article>
+      </section>
+    </div>
+
+    <script src="lib/font-kku.js"></script>
+    <script src="./demo.js"></script>
+    <script>
+      window.FontKkuDemo.renderNav("layout-modes");
+    </script>
+  </body>
+</html>

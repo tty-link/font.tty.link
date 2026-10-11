@@ -1,0 +1,509 @@
+/* 글꼴 시험대의 꾸미기 대화상자(font-customizer.js). 데스크톱은 가운데 큰 판(왼쪽 조작 ·
+ * 오른쪽 미리보기와 결과, 단마다 따로 스크롤), 좁은 화면은 전체 화면 시트(미리보기가 위에
+ * 붙어 있고 조작·결과가 아래로 이어진다). site.css의 토큰(--k-*)을 쓴다. */
+
+html.kku-open {
+  overflow: hidden;
+}
+
+.kku {
+  inline-size: min(1240px, calc(100vw - 32px));
+  max-inline-size: none;
+  block-size: min(900px, calc(100dvh - 32px));
+  max-block-size: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1.5px solid var(--k-ink);
+  border-radius: 6px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  box-shadow: 10px 10px 0 var(--k-ink);
+}
+
+.kku::backdrop {
+  background: rgb(20 20 20 / 45%);
+}
+
+.kku-sheet {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  block-size: 100%;
+}
+
+.kku-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1.5px solid var(--k-ink);
+  background-color: var(--k-paper);
+  background-image:
+    linear-gradient(var(--k-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.kku-kicker {
+  margin: 0;
+  color: var(--k-red);
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.kku-head h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+
+.kku-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-block-size: 2.4rem;
+  padding: 0.3rem 0.95rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.kku-body {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  min-block-size: 0;
+}
+
+.kku-controls,
+.kku-main {
+  min-block-size: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.kku-controls {
+  display: grid;
+  align-content: start;
+  border-inline-end: 1px solid var(--k-line);
+  background: var(--k-paper-2);
+}
+
+.kku-main {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem 1.5rem;
+}
+
+/* ── 조작 ── */
+.kku-group {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 1rem 1.15rem;
+  border: 0;
+  border-bottom: 1px solid var(--k-line);
+  min-inline-size: 0;
+}
+
+.kku-group legend {
+  float: left;
+  inline-size: 100%;
+  margin-block-end: 0.15rem;
+  padding: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.kku-group legend + * {
+  clear: both;
+}
+
+.kku-group > .k-btn {
+  justify-self: start;
+}
+
+.kku-field {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.kku-field > span {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.kku-field output {
+  color: var(--k-muted);
+  font-family: var(--k-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.kku-field--color {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.kku-field select,
+.kku-text {
+  min-block-size: 2.3rem;
+  padding: 0 0.7rem;
+  border: 1.2px solid var(--k-ink);
+  border-radius: 8px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font: inherit;
+  font-weight: 500;
+}
+
+.kku-text {
+  font-family: var(--k-mono);
+  font-size: 0.86rem;
+}
+
+.kku-field input[type="range"] {
+  inline-size: 100%;
+  accent-color: var(--k-red);
+}
+
+.kku input[type="color"] {
+  inline-size: 2.6rem;
+  block-size: 2rem;
+  padding: 0.12rem;
+  border: 1.2px solid var(--k-ink);
+  border-radius: 6px;
+  background: var(--k-paper);
+  cursor: pointer;
+}
+
+.kku-hint {
+  margin: 0;
+  color: var(--k-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.kku-hint:empty {
+  display: none;
+}
+
+/* ── 변주(씨앗) ── */
+.kku-switch {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.86rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.kku-switch input {
+  flex: none;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  margin: 0.1rem 0 0;
+  accent-color: var(--k-red);
+}
+
+.kku-vary-body {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.kku-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.kku-modes label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border: 1.2px solid var(--k-line);
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.kku-modes label:has(input:checked) {
+  border-color: var(--k-ink);
+  background: var(--k-ink);
+  color: var(--k-paper);
+}
+
+.kku-modes input {
+  accent-color: var(--k-red);
+}
+
+.kku-seed-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 0.5rem;
+}
+
+.kku-seed-row > .k-btn {
+  min-block-size: 2.3rem;
+}
+
+.kku-seed-row:has(> [hidden]) {
+  grid-template-columns: auto;
+  justify-content: start;
+}
+
+.kku-field input[type="range"]:disabled {
+  opacity: 0.4;
+}
+
+.kku-draw-no code {
+  color: var(--k-ink);
+}
+
+.kku-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.kku-presets button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-block-size: 2rem;
+  padding: 0.2rem 0.65rem 0.2rem 0.4rem;
+  border: 1px solid var(--k-line);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink-2);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.kku-presets button:hover {
+  border-color: var(--k-ink);
+}
+
+.kku-swatches {
+  display: inline-flex;
+}
+
+.kku-swatches i {
+  inline-size: 0.8rem;
+  block-size: 0.8rem;
+  border: 1.5px solid var(--k-paper);
+  border-radius: 50%;
+}
+
+.kku-swatches i + i {
+  margin-inline-start: -0.3rem;
+}
+
+.kku-colors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.kku-color {
+  display: grid;
+  justify-items: start;
+  gap: 0.3rem;
+  font-size: 0.84rem;
+  font-weight: 650;
+}
+
+.kku-color label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.kku-color input[type="checkbox"] {
+  accent-color: var(--k-red);
+}
+
+/* ── 미리보기 ── */
+.kku-preview {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.kku-preview-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.kku-preview-tools .k-input {
+  flex: 1 1 12rem;
+  min-inline-size: 0;
+}
+
+.kku-stage {
+  position: relative;
+  margin: 0;
+  min-block-size: 12rem;
+  padding: 2rem 1.25rem 2.4rem;
+}
+
+.kku-stage--base {
+  min-block-size: 6rem;
+  padding-block: 1.6rem 2.2rem;
+}
+
+.kku-label {
+  position: absolute;
+  inset-inline-start: 0.75rem;
+  inset-block-end: 0.5rem;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 82%);
+  color: var(--k-ink-2);
+  font-size: 0.74rem;
+  font-weight: 650;
+}
+
+.kku-label code {
+  padding: 0;
+  background: none;
+  font-size: 0.95em;
+}
+
+/* ── 결과 ── */
+.kku-output {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.kku-code {
+  max-block-size: 20rem;
+  overflow: auto;
+}
+
+.kku-code code {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.kku-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.kku-output .k-note {
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+.kku :is(button, select, input, a):focus-visible {
+  outline: 3px solid var(--k-yellow);
+  outline-offset: 2px;
+}
+
+/* ── 좁은 화면: 전체 화면 시트 ── */
+@media (max-width: 760px) {
+  .kku {
+    inline-size: 100vw;
+    block-size: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .kku-head {
+    padding: 0.6rem 16px;
+  }
+
+  .kku-head h2 {
+    font-size: 1.1rem;
+  }
+
+  .kku-body {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  .kku-main {
+    display: contents;
+  }
+
+  /* 한 줄로 쌓은 단들은 줄어들지 않고 시트가 스크롤한다 */
+  .kku-controls,
+  .kku-preview,
+  .kku-output {
+    flex: none;
+  }
+
+  .kku-controls {
+    order: 1;
+    overflow: visible;
+    border-inline-end: 0;
+  }
+
+  .kku-group {
+    padding-inline: 16px;
+  }
+
+  /* 미리보기는 위에 붙어 조작하는 동안 계속 보인다 */
+  .kku-preview {
+    order: 0;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    gap: 0.5rem;
+    padding: 0.6rem 16px;
+    border-bottom: 1.5px solid var(--k-ink);
+    background: var(--k-paper);
+  }
+
+  .kku-preview-tools {
+    gap: 0.4rem;
+  }
+
+  .kku-preview-tools .k-input {
+    flex-basis: 100%;
+    min-block-size: 2.3rem;
+  }
+
+  .kku-preview-tools .k-chips button {
+    min-block-size: 2rem;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .kku-stage {
+    min-block-size: 6.5rem;
+    padding: 1rem 0.75rem 1.7rem;
+  }
+
+  .kku-stage--base {
+    min-block-size: 3.5rem;
+    padding-block: 0.6rem 1.5rem;
+  }
+
+  .kku-output {
+    order: 2;
+    padding: 1rem 16px 1.5rem;
+  }
+}

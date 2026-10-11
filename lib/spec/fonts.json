@@ -1,0 +1,155 @@
+{
+ "version": "1.0",
+ "purpose": "폰트 메타의 언어 공통 정본. 브라우저는 profiles/*.css의 CSS 변수를 읽지만, CSS 평가기가 없는 companion renderer는 이 파일에서 생성한 미러(scripts/generate_sidecar_tables.js)를 든다. 생성 미러의 staleness와 profiles/*.css 선언(폰트 레벨 --fy-font-*-depth)이 이 파일과 일치하는지 드리프트 검사가 대조한다. derivedFrom이 있는 폰트는 기반 폰트의 자모 배치를 scripts/build_derived_fonts.js가 복사한 파생 폰트다(표현 모드·depth는 기반과 같아야 하고 사이드카 대상이 아니다).",
+ "defaultFont": "sebul",
+ "aliases": {
+  "default": "sebul",
+  "classic": "sebul",
+  "gothic2": "gothic"
+ },
+ "fonts": {
+  "sebul": {
+   "expressionMode": "sebeol",
+   "vowelDepth": "syllable",
+   "codaDepth": "whole",
+   "sidecar": true
+  },
+  "gothic": {
+   "expressionMode": "general",
+   "vowelDepth": "split",
+   "codaDepth": "split",
+   "sidecar": true
+  },
+  "sprite-example": {
+   "expressionMode": "general",
+   "vowelDepth": "split",
+   "codaDepth": "split",
+   "sidecar": false
+  },
+  "sprite-system": {
+   "expressionMode": "general",
+   "vowelDepth": "whole",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "neon": {
+   "derivedFrom": "sebul",
+   "expressionMode": "sebeol",
+   "vowelDepth": "syllable",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "sticker": {
+   "derivedFrom": "sebul",
+   "expressionMode": "sebeol",
+   "vowelDepth": "syllable",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "malang": {
+   "derivedFrom": "sebul",
+   "expressionMode": "sebeol",
+   "vowelDepth": "syllable",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "retro": {
+   "derivedFrom": "gothic",
+   "expressionMode": "general",
+   "vowelDepth": "split",
+   "codaDepth": "split",
+   "sidecar": false
+  },
+  "saekdong": {
+   "derivedFrom": "gothic",
+   "expressionMode": "general",
+   "vowelDepth": "split",
+   "codaDepth": "split",
+   "sidecar": false
+  },
+  "pixel": {
+   "derivedFrom": "sprite-system",
+   "expressionMode": "general",
+   "vowelDepth": "whole",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "dojang": {
+   "derivedFrom": "sprite-system",
+   "expressionMode": "general",
+   "vowelDepth": "whole",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "chalk": {
+   "derivedFrom": "sprite-system",
+   "expressionMode": "general",
+   "vowelDepth": "whole",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "geumbak": {
+   "derivedFrom": "sebul",
+   "expressionMode": "sebeol",
+   "vowelDepth": "syllable",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "glitch": {
+   "derivedFrom": "sebul",
+   "expressionMode": "sebeol",
+   "vowelDepth": "syllable",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "riso": {
+   "derivedFrom": "gothic",
+   "expressionMode": "general",
+   "vowelDepth": "split",
+   "codaDepth": "split",
+   "sidecar": false
+  },
+  "blueprint": {
+   "derivedFrom": "gothic",
+   "expressionMode": "general",
+   "vowelDepth": "split",
+   "codaDepth": "split",
+   "sidecar": false
+  },
+  "crayon": {
+   "derivedFrom": "sprite-system",
+   "expressionMode": "general",
+   "vowelDepth": "whole",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "jasu": {
+   "derivedFrom": "sprite-system",
+   "expressionMode": "general",
+   "vowelDepth": "whole",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "pilgi": {
+   "derivedFrom": "sprite-system",
+   "expressionMode": "general",
+   "vowelDepth": "whole",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "dunggeun": {
+   "derivedFrom": "sprite-system",
+   "expressionMode": "general",
+   "vowelDepth": "whole",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
+  "butgeul": {
+   "derivedFrom": "sprite-system",
+   "expressionMode": "general",
+   "vowelDepth": "whole",
+   "codaDepth": "whole",
+   "sidecar": false
+  }
+ }
+}

@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>font-kku 데모 — 그림 자소 보기</title>
+    <link rel="stylesheet" href="lib/font-kku.css" />
+    <link rel="stylesheet" href="lib/profiles/sebul.css" />
+    <link rel="stylesheet" href="lib/profiles/sprite-example.css" />
+    <link rel="stylesheet" href="lib/profiles/sprite-system.css" />
+    <link rel="stylesheet" href="./demo.css" />
+    <style>
+      .sprite-sheet-preview {
+        display: block;
+        max-width: 100%;
+        margin-top: 0.5rem;
+        background: repeating-conic-gradient(#f6f6f6 0% 25%, transparent 0% 50%) 50% / 16px 16px;
+        border: 1px solid var(--demo-border, #e5e7eb);
+        border-radius: 8px;
+      }
+      .sprite-small-grid {
+        display: grid;
+        grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
+        gap: 0.6rem 0.8rem;
+        align-items: start;
+        margin-top: 1rem;
+      }
+      .sprite-small-grid .sprite-small-head,
+      .sprite-small-grid .sprite-small-size {
+        color: var(--demo-muted, #6b7280);
+        font-size: 0.82rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      .sprite-small-grid .sprite-small-sample {
+        min-block-size: 2.2rem;
+        padding: 0.45rem 0.5rem;
+        overflow: hidden;
+        border: 1px solid var(--demo-border, #e5e7eb);
+        border-radius: 6px;
+        background: #fff;
+      }
+      @media (max-width: 760px) {
+        .sprite-small-grid {
+          grid-template-columns: 3.5rem minmax(0, 1fr);
+        }
+        .sprite-small-grid .sprite-small-head:nth-child(3),
+        .sprite-small-grid .sprite-small-sample.reference {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-shell">
+      <header class="demo-topbar">
+        <a class="demo-brand" href="./index.html">
+          <span class="demo-badge">꾸</span>
+          <span class="demo-brand-text">
+            <strong>폰꾸</strong>
+            <span>font-kku</span>
+          </span>
+        </a>
+        <nav class="demo-nav" aria-label="데모 페이지" data-demo-nav></nav>
+      </header>
+
+	      <section class="demo-hero">
+	        <span class="demo-kicker">그림 자소 보기</span>
+	        <h1 class="demo-title">자모 40칸만 그리면 한글 11,172자</h1>
+	        <p class="demo-copy">
+	          font-kku의 <strong>기본 경로는 기기에 이미 깔린 한글 글꼴을 재료로 쓰는 것</strong>이고(<code>sebul</code>·<code>gothic</code>),
+	          이 페이지가 다루는 그림 자소(<code>sprite</code>)는 <strong>확장 경로</strong>다. 자음 19 + 모음 21, 40칸만 그리면
+	          한글 전체가 만들어지므로 글꼴 제작 도구 없이 웹·앱에서 바로 자기 손글씨를 글꼴처럼 쓸 수 있고,
+	          한글 글꼴이 깔려 있지 않은 기기에서도 웹 글꼴 없이 같은 모양으로 그려진다.
+	          손글씨·픽셀·스티커·컬러처럼 글꼴로는 표현할 수 없는 형태도 그대로 쓴다.
+	        </p>
+	        <p class="demo-copy">
+	          구현은 <code>profiles/sprite-example.css</code>가 한 장의 PNG에 있는 자음·모음 그림을
+	          <code>data-sprite-jamo</code>와 <code>--fy-sprite-jamo-index</code> 기반으로 자소 자리에 꽂는 방식이다.
+	          예를 들어 <code>광</code>은 자소판에서 <code>ㄱ</code>, <code>ㅗ</code>, <code>ㅏ</code>, <code>ㅇ</code> 칸을 각각 가져온다.
+	          기본 40칸에 더해 <strong>선택 확장 행</strong>(종성 전용 형태, 통짜 겹받침)을 얹으면 품질을 더 끌어올릴 수 있다 —
+	          아래 <code>sprite-system</code>이 그 도달점을 보여주는 실측 추출 예시다.
+	        </p>
+	      </section>
+
+	      <section class="demo-panel">
+	        <h2>예시 자소판</h2>
+	        <p class="demo-copy">
+	          획 중심선으로 직접 그린 SVG 자소판. 자음 19 · 모음 21자를 칸 100×100 격자에 배치했다. 투명 배경, 자소 하나당 한 칸이고,
+	          벡터라 어느 크기로 늘려도 브라우저가 다시 그려 선명하다.
+	        </p>
+	        <img class="sprite-sheet-preview" src="lib/profiles/sprite-example.svg" alt="칸 격자에 자음 19자, 모음 21자를 배치한 자소판" />
+        <p class="demo-note">
+          생성: <code>node scripts/build_jamo_svg.js --write --font sprite-example</code> — 획 정의는 <code>scripts/build_jamo_svg.js</code>,
+          칸마다 자모가 놓일 자리 상자는 <code>spec/sprite-layout.json</code>. 손으로 그린 PNG 칸 이미지로 만들려면
+          <code>python3 scripts/build_sprite.py --from-dir &lt;dir&gt;</code>(아래 검증 입력 참고).
+        </p>
+      </section>
+
+      <section class="demo-panel">
+        <h2>실사용 예시 — sprite-system</h2>
+        <p class="demo-copy">
+          같은 획으로 그린 <strong>6행 SVG 자소판</strong>이다.
+          자음 19 · 모음 21에 <strong>종성 전용 형태 16</strong>(받침은 초성보다 납작·넓다)과
+          <strong>통짜 겹받침 11</strong>(ㄳ~ㅄ), 문맥 행 둘(가로 모음 위 초성, 키 큰 초성 옆 합자 모음)을 얹었고,
+          합자 모음(ㅘ…)은 통짜 칸을 그대로 쓴다 (<code>--fy-vowel-depth: whole</code> · <code>--fy-coda-depth: whole</code>).
+          칸은 음절 1em 상자를 그대로 축소한 사상이라 자모가 제 위치에 프리포지션되고,
+          자리 값은 실측 적합(잉크 IoU + 상자 직해)으로, 압축된 획 굵기는 filter 팽창으로 보상했다.
+          도트 · 도장 · 분필은 같은 획을 다른 재료로 그린 자소판이다.
+        </p>
+        <img class="sprite-sheet-preview" src="lib/profiles/sprite-system.svg" alt="자음·모음·종성·겹받침과 문맥 변형 6행으로 구성된 sprite-system 자소판" />
+        <div class="demo-stack" style="margin-top: 1rem">
+          <div class="demo-sample">
+            <span class="demo-label">sprite-system (그림 자소 조립)</span>
+            <font-kku font="sprite-system" size="40">닭을 밟고 흙을 긁다</font-kku>
+          </div>
+          <div class="demo-sample">
+            <span class="demo-label">기기 글꼴 (평문)</span>
+            <div style="font: 700 40px sans-serif; line-height: 1.35">닭을 밟고 흙을 긁다</div>
+          </div>
+        </div>
+        <p class="demo-note">
+          생성: <code>node scripts/build_jamo_svg.js --write</code>(기본 제공 자소판 10종 — 획 뼈대 × 획 표현) — 적합 파이프라인은
+          <code>scripts/glyph_fit.py</code> · <code>glyph_solve_slot_box.py</code> · <code>glyph_sprite_stroke.py</code>.
+          글꼴 파일의 완성 음절에서 잘라 내는 길(<code>scripts/extract_sprite_from_syllables.py</code>)은 재배포가 허용된 글꼴(SIL OFL 등)에만 쓴다.
+        </p>
+      </section>
+
+      <section class="demo-panel">
+        <h2>재현 가능한 검증 입력</h2>
+	        <p class="demo-copy">
+	          저장소에는 일부만 그린 그림 자소 검증 입력(<code>tests/fixtures/sprite-partial</code>)이 포함돼 있다.
+	          이 경로는 자음 <code>ㄱ</code>과 모음 <code>ㅏ</code> PNG만 포함하므로, 스크립트가 빠진 자소 보고(missing-jamo report)와 투명 대체(transparent fallback)를 함께 다루는지를 항상 재현할 수 있다.
+        </p>
+<pre class="demo-code" data-api-lang="bash">python3 scripts/build_sprite.py \
+  --from-dir tests/fixtures/sprite-partial \
+  --out tmp/sprite-partial.png \
+  --css-out tmp/sprite-partial.css \
+  --report-out tmp/sprite-partial.json \
+  --font-name sprite-partial \
+  --scale 1 --scale 2</pre>
+        <p class="demo-note">
+          마감 검증에서는 <code>--fail-on-missing</code>를 추가해 빠진 자소를 에러로 승격할 수 있다.
+        </p>
+      </section>
+
+      <section class="demo-columns">
+        <article class="demo-panel">
+          <h2>sebul (기기 글꼴 기반)</h2>
+          <div class="demo-stack">
+            <div class="demo-sample">
+              <span class="demo-label">제목</span>
+              <font-kku font="sebul" size="42">광화문 광장</font-kku>
+            </div>
+            <div class="demo-sample">
+              <span class="demo-label">본문</span>
+              <font-kku font="sebul" size="26">닭을 밟고 흙을 긁다</font-kku>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2>sprite-example (그림 자소 기반)</h2>
+          <div class="demo-stack">
+            <div class="demo-sample">
+              <span class="demo-label">제목</span>
+              <font-kku font="sprite-example" size="42">광화문 광장</font-kku>
+            </div>
+            <div class="demo-sample">
+              <span class="demo-label">본문</span>
+              <font-kku font="sprite-example" size="26">닭을 밟고 흙을 긁다</font-kku>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="demo-panel">
+        <h2>작은 크기 비교</h2>
+        <div class="sprite-small-grid">
+          <div></div>
+          <div class="sprite-small-head">sprite-example</div>
+          <div class="sprite-small-head">sebul 기준</div>
+
+          <div class="sprite-small-size">16px</div>
+          <div class="sprite-small-sample">
+            <font-kku font="sprite-example" size="16">광화문 광장 읽 밟 흙</font-kku>
+          </div>
+          <div class="sprite-small-sample reference">
+            <font-kku font="sebul" size="16">광화문 광장 읽 밟 흙</font-kku>
+          </div>
+
+          <div class="sprite-small-size">20px</div>
+          <div class="sprite-small-sample">
+            <font-kku font="sprite-example" size="20">광화문 광장 읽 밟 흙</font-kku>
+          </div>
+          <div class="sprite-small-sample reference">
+            <font-kku font="sebul" size="20">광화문 광장 읽 밟 흙</font-kku>
+          </div>
+
+          <div class="sprite-small-size">24px</div>
+          <div class="sprite-small-sample">
+            <font-kku font="sprite-example" size="24">광화문 광장 읽 밟 흙</font-kku>
+          </div>
+          <div class="sprite-small-sample reference">
+            <font-kku font="sebul" size="24">광화문 광장 읽 밟 흙</font-kku>
+          </div>
+
+          <div class="sprite-small-size">32px</div>
+          <div class="sprite-small-sample">
+            <font-kku font="sprite-example" size="32">광화문 광장 읽 밟 흙</font-kku>
+          </div>
+          <div class="sprite-small-sample reference">
+            <font-kku font="sebul" size="32">광화문 광장 읽 밟 흙</font-kku>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-panel" id="vector-jamo">
+        <h2>벡터 자소 — 자모마다 SVG 하나</h2>
+        <p class="demo-copy">
+          같은 배치 글꼴을 <code>jamo-set</code>으로 그리면 자소판 칸 대신 자모마다 인라인 SVG가 들어간다(ADR-013).
+          획은 글자 색(<code>color</code>)을 따르고, 자리가 눌려도 굵기가 그대로이며, 페이지 CSS로 자모마다 색·굵기·끝 모양을 바꾼다.
+          자모 세트는 코드로 등록한다 — 기본 글꼴은 <code>profiles/&lt;글꼴&gt;.jamo.js</code> 모듈이 있고, 새 세트는 <code>FontKku.registerJamo</code>로 바로 넣는다.
+        </p>
+        <div class="demo-stack">
+          <div class="demo-sample">
+            <span class="demo-label">sprite-system 벡터 자소 (<code>jamo-set="sprite-system"</code>)</span>
+            <font-kku font="sprite-system" jamo-set="sprite-system" size="40" data-vector-sample>닭을 밟고 흙을 긁다 그 ㅋ</font-kku>
+          </div>
+          <div class="demo-sample">
+            <span class="demo-label">자모별 색·굵기·끝 모양 (페이지 CSS)</span>
+            <font-kku class="vector-tint" font="sprite-system" jamo-set="sprite-system" size="40">괜찮아요 밟고</font-kku>
+          </div>
+          <div class="demo-sample">
+            <span class="demo-label">코드로 등록한 점선 자모 세트 (<code>jamo-set="demo-dots"</code>)</span>
+            <font-kku class="vector-dots" font="sprite-system" jamo-set="demo-dots" size="56" data-vector-late>ㄱ ㅏ 가</font-kku>
+          </div>
+        </div>
+<pre class="demo-code" data-api-lang="js">FontKku.registerJamo("demo-dots", {
+  "r0-ㄱ": "M8 12 H44 V30 Q44 54 12 65",   // 칸 키 r&lt;행&gt;-&lt;자모&gt;, 좌표는 칸 0–100
+  "r1-ㅏ": ["M67 2 V86", "M67 39 H85"]
+}, { stroke: 8, cap: "round" });
+/* 페이지 CSS: 둥근 끝 + 0 길이 대시 = 점선 */
+.vector-dots [part="vector"] { stroke-dasharray: 0 11; }</pre>
+        <style>
+          .vector-tint [part~="choseong"] { color: #e63946; }
+          .vector-tint [part~="jungseong"] { color: #1d4ed8; }
+          .vector-tint [part~="jongseong"] { color: #f59e0b; --fy-vector-stroke: 0.05em; }
+          .vector-tint [part="vector"] { stroke-linecap: round; stroke-linejoin: round; }
+          .vector-dots { color: #0f766e; }
+          .vector-dots [part="vector"] { stroke-dasharray: 0 11; }
+        </style>
+      </section>
+
+	      <section class="demo-panel" id="mask-paint">
+        <h2>마스크 칠 — 자소판에 색 입히기</h2>
+        <p class="demo-copy">
+          <code>--fy-sprite-paint: mask</code>를 주면 자소판을 그림이 아니라 마스크로 쓰고, 칠은
+          <code>--fy-sprite-fill</code>(기본은 글자 색)이 한다(ADR-014). 손으로 그린 PNG 자소판에도 자모마다 색·그라데이션·무늬를 줄 수 있다.
+          획 모양은 자소판 그대로라 굵기는 바꾸지 못한다 — 굵기까지 바꾸려면 벡터 자소를 쓴다.
+        </p>
+        <div class="demo-stack">
+          <div class="demo-sample">
+            <span class="demo-label">sprite-system + 자모별 색·그라데이션·무늬</span>
+            <font-kku class="mask-tint" font="sprite-system" size="48" data-mask-sample>닭을 밟고 괜찮아</font-kku>
+          </div>
+        </div>
+<pre class="demo-code" data-api-lang="css">.mask-tint { --fy-sprite-paint: mask; }
+.mask-tint [part~="choseong"] { color: #e63946; }
+.mask-tint [part~="jungseong"] { --fy-sprite-fill: linear-gradient(#2563eb, #22d3ee); }
+.mask-tint [part~="jongseong"] { --fy-sprite-fill: repeating-linear-gradient(45deg, #16a34a 0 2px, #86efac 2px 4px); }</pre>
+        <style>
+          .mask-tint { --fy-sprite-paint: mask; }
+          .mask-tint [part~="choseong"] { color: #e63946; }
+          .mask-tint [part~="jungseong"] { --fy-sprite-fill: linear-gradient(#2563eb, #22d3ee); }
+          .mask-tint [part~="jongseong"] { --fy-sprite-fill: repeating-linear-gradient(45deg, #16a34a 0 2px, #86efac 2px 4px); }
+        </style>
+      </section>
+
+      <section class="demo-panel">
+	        <h2>자소 인덱스 계약</h2>
+	        <p class="demo-copy">
+	          런타임이 각 자소 노드에 <code>data-sprite-jamo</code>, <code>data-sprite-jamo-kind</code>,
+	          <code>--fy-sprite-jamo-index</code>(열)를 주입하고, 코어 CSS가 자소판을 칠한다.
+	          글꼴은 자소판과 행 선택만 변수로 선언한다.
+	        </p>
+<pre class="demo-code" data-api-lang="css">:where([data-fy-font="my-sprite"]) {
+  --fy-material: sprite;
+  --fy-sprite-url: url("./my-sprite.svg"); /* PNG도 된다 */
+  --fy-sprite-cols: 21;
+  --fy-sprite-rows: 2;
+  --fy-sprite-kinds: consonant vowel; /* 칸 없는 종류는 글자로 폴백 */
+}
+:where([data-fy-font="my-sprite"]) [data-sprite-jamo-kind="vowel"] {
+  --fy-sprite-row: 1; /* 자음은 0행(기본값) */
+}
+
+/* 선택 확장 행 (sprite-system 참고) — 3행: 종성 전용, 4행: 통짜 겹받침 */
+[part~="jongseong"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 2; }
+[data-sprite-jamo-kind="coda-cluster"] { --fy-sprite-row: 3; }</pre>
+        <p class="demo-note">
+          자세한 계약: <a href="lib/docs/ARCHITECTURE/image-sprite-fonts.md">docs/ARCHITECTURE/image-sprite-fonts.md</a>
+        </p>
+      </section>
+    </div>
+
+    <!-- 런타임보다 먼저 실린 벡터 자소 모듈은 FontKkuJamo 대기열이 받아 둔다 -->
+    <script src="lib/profiles/sprite-system.jamo.js"></script>
+    <script src="lib/font-kku.js"></script>
+    <script src="./demo.js"></script>
+    <script>
+      window.FontKkuDemo.renderNav("sprite-demo");
+      /* 렌더 뒤에 등록한 세트: 그 세트를 쓰는 바탕 요소가 다시 그려진다. */
+      setTimeout(function () {
+        FontKku.registerJamo("demo-dots", {
+          "r0-ㄱ": "M8 12 H44 V30 Q44 54 12 65",
+          "r1-ㅏ": ["M67 2 V86", "M67 39 H85"]
+        }, { stroke: 8, cap: "round" });
+      }, 50);
+    </script>
+  </body>
+</html>

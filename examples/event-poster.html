@@ -1,0 +1,254 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 행사 포스터. 글꼴: neon sticker. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>한글날 밤의 노래 — 야외 음악회</title>
+  <script src="../lib/font-kku.js" data-fonts="neon sticker"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --night: #0b0a1f;
+      --ink: #f3efff;
+      --muted: #b8b0dc;
+      --pink: #ff6fdf;
+      --cyan: #6ff4ff;
+      --yellow: #ffe14d;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 40px 16px;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--ink);
+      word-break: keep-all;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 0%, #2a1757 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 50% 100%, #3a0f3f 0%, transparent 70%),
+        var(--night);
+    }
+
+    /* 포스터 한 장 — A4 비율(640 × 905), 내용이 길면 아래로 늘어난다 */
+    .poster {
+      position: relative;
+      width: min(640px, 100%);
+      min-height: 905px;
+      padding: 44px 44px 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 8px;
+      background:
+        radial-gradient(1.5px 1.5px at 12% 18%, #fff 60%, transparent 61%),
+        radial-gradient(1px 1px at 28% 8%, #fff 60%, transparent 61%),
+        radial-gradient(1.5px 1.5px at 46% 22%, #ffe9fb 60%, transparent 61%),
+        radial-gradient(1px 1px at 63% 12%, #fff 60%, transparent 61%),
+        radial-gradient(1px 1px at 88% 34%, #fff 60%, transparent 61%),
+        radial-gradient(1.5px 1.5px at 8% 46%, #dffcff 60%, transparent 61%),
+        radial-gradient(1px 1px at 92% 58%, #fff 60%, transparent 61%),
+        radial-gradient(1px 1px at 38% 40%, #fff 60%, transparent 61%),
+        radial-gradient(ellipse 90% 45% at 50% 105%, rgb(255 79 216 / 22%) 0%, transparent 70%),
+        linear-gradient(180deg, #110b2b 0%, #1b1140 55%, #2b1046 100%);
+      box-shadow: 0 30px 80px rgb(0 0 0 / 55%), 0 0 0 1px rgb(255 255 255 / 6%);
+    }
+
+    /* 안쪽 네온 테두리 */
+    .poster::before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border: 1.5px solid rgb(255 111 223 / 55%);
+      border-radius: 4px;
+      box-shadow: 0 0 12px rgb(255 79 216 / 35%), inset 0 0 12px rgb(255 79 216 / 20%);
+      pointer-events: none;
+    }
+
+    /* 초승달 */
+    .moon {
+      position: absolute;
+      top: 54px;
+      right: 54px;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      box-shadow: inset -18px 8px 0 0 #ffe9a8;
+      filter: drop-shadow(0 0 14px rgb(255 233 168 / 55%));
+    }
+
+    .poster > :not(.moon) { position: relative; }
+
+    .kicker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin: 0;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--cyan);
+    }
+    .kicker em { font-style: normal; color: var(--muted); letter-spacing: 0.04em; font-weight: 500; }
+
+    .title-block {
+      margin-top: 36px;
+      background: radial-gradient(ellipse 55% 60% at 22% 38%, rgb(255 79 216 / 14%) 0%, transparent 70%);
+    }
+
+    /* 제목: 폰꾸 네온. max-width(em)로 "한글날 / 밤의 노래" 두 줄로 끊는다 */
+    .poster-title {
+      margin: 0;
+      max-width: 4.1em;
+    }
+
+    .lead {
+      margin: 20px 0 0;
+      max-width: 22em;
+      font-size: 17px;
+      line-height: 1.65;
+      color: #ddd6ff;
+    }
+
+    .info {
+      margin-top: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .date { margin: 0; line-height: 1.15; }
+    .date strong {
+      display: block;
+      font-size: 54px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      color: #fff;
+      text-shadow: 0 0 18px rgb(111 244 255 / 45%);
+    }
+    .date small { display: block; margin-top: 6px; font-size: 15px; color: var(--muted); }
+
+    /* 스티커는 색 바탕 위에 둔다 — 노란 원형 딱지 */
+    .badge {
+      flex: none;
+      width: 152px;
+      height: 152px;
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      gap: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fff38a 0%, var(--yellow) 55%, #ffc928 100%);
+      box-shadow: 0 0 0 6px rgb(255 225 77 / 18%), 0 10px 30px rgb(0 0 0 / 35%);
+      transform: rotate(8deg);
+      text-align: center;
+    }
+    .badge small { font-size: 13px; font-weight: 700; color: #4a2a00; }
+
+    .lineup {
+      margin-top: 34px;
+      padding-top: 18px;
+      border-top: 1px solid rgb(255 255 255 / 12%);
+    }
+    .lineup h2 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      color: var(--pink);
+    }
+    .lineup ol { margin: 0; padding: 0; list-style: none; }
+    .lineup li {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 12px;
+      align-items: baseline;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgb(255 255 255 / 10%);
+      font-size: 16px;
+    }
+    .lineup li:last-child { border-bottom: 0; }
+    .lineup time { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--cyan); }
+    .lineup .who { font-weight: 700; color: #fff; }
+    .lineup .what { color: var(--muted); font-size: 14px; }
+
+    /* 아래 표 조각 — 점선과 반원 홈 */
+    .stub {
+      margin: auto -44px 0;
+      padding: 22px 44px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px 24px;
+      font-size: 14px;
+      color: var(--muted);
+      background:
+        radial-gradient(circle at 0 0, var(--night) 12px, transparent 13px),
+        radial-gradient(circle at 100% 0, var(--night) 12px, transparent 13px),
+        rgb(255 255 255 / 5%);
+      border-top: 2px dashed rgb(255 255 255 / 18%);
+    }
+    .stub b { display: block; margin-bottom: 2px; font-size: 12px; letter-spacing: 0.12em; color: var(--pink); }
+    .stub p { margin: 0; }
+    .stub .where { color: #fff; font-weight: 600; }
+
+    @media (max-width: 560px) {
+      body { padding: 16px 12px; }
+      .poster { padding: 34px 26px 0; min-height: 0; }
+      .poster::before { inset: 10px; }
+      .moon { top: 92px; right: 30px; width: 52px; height: 52px; box-shadow: inset -12px 6px 0 0 #ffe9a8; }
+      .title-block { margin-top: 28px; }
+      .lead { font-size: 15px; }
+      .info { margin-top: 26px; gap: 12px; }
+      .date strong { font-size: 40px; }
+      .date small { font-size: 13px; }
+      .badge { width: 120px; height: 120px; }
+      .stub { margin: 26px -26px 0; padding: 20px 26px 24px; }
+      .lineup li { grid-template-columns: 50px 1fr; font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <article class="poster">
+    <div class="moon" aria-hidden="true"></div>
+
+    <p class="kicker">제7회 한글날 야외 음악회 <em>훈민정음 반포 580돌 기념</em></p>
+
+    <header class="title-block">
+      <h1 class="font-kku poster-title" data-font="neon" data-size="clamp(54px, 16vw, 104px)" data-animate="rise">한글날 밤의 노래</h1>
+      <p class="lead">글자가 노래가 되는 밤. 가을바람 부는 야외무대에서 우리말 노랫말을 다 함께 불러요.</p>
+    </header>
+
+    <div class="info">
+      <p class="date">
+        <strong>10.09</strong>
+        <small>금요일 저녁 6시 30분 – 9시 30분</small>
+      </p>
+      <div class="badge">
+        <font-kku font="sticker" size="clamp(24px, 6.4vw, 34px)">입장 무료</font-kku>
+        <small>선착순 500석</small>
+      </div>
+    </div>
+
+    <section class="lineup" aria-labelledby="lineup-title">
+      <h2 id="lineup-title">출연 순서</h2>
+      <ol>
+        <li><time>18:30</time><div><span class="who">소리결</span> <span class="what">· 가야금 앙상블 여는 무대</span></div></li>
+        <li><time>19:10</time><div><span class="who">달빛우체국</span> <span class="what">· 인디 밴드</span></div></li>
+        <li><time>19:50</time><div><span class="who">가람</span> <span class="what">· 싱어송라이터, 순우리말 노래</span></div></li>
+        <li><time>20:30</time><div><span class="who">훈민 크루</span> <span class="what">· 랩 × 손글씨 라이브 드로잉</span></div></li>
+        <li><time>21:10</time><div><span class="who">다 함께</span> <span class="what">· 〈한글날 노래〉 떼창</span></div></li>
+      </ol>
+    </section>
+
+    <footer class="stub">
+      <p><b>장소</b><span class="where">한글공원 야외무대</span><br />한글역 3번 출구에서 걸어서 5분</p>
+      <p><b>문의</b>hangul-night@example.com<br />비가 오면 실내 공연장으로 옮겨요</p>
+    </footer>
+  </article>
+</body>
+</html>

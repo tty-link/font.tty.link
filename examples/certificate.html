@@ -1,0 +1,219 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 칭찬 상장. 글꼴: gothic dojang. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>상장 — 우리말 바르게 쓰기</title>
+  <script src="../lib/font-kku.js" data-fonts="gothic dojang"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --paper: #fbf7ec;
+      --ink: #2b2116;
+      --muted: #7a6a55;
+      --gold: #a67c3d;
+      --gold-light: #e8d29b;
+      --seal: #c41e28;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 16px;
+      color: var(--ink);
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      word-break: keep-all;
+      background: radial-gradient(ellipse at 50% 30%, #efe9dc, #d9d1bf);
+    }
+
+    /* 상장 한 장 — A4 세로 비율. 바깥 금빛 빗살 띠 + 안쪽 겹줄 */
+    .cert {
+      position: relative;
+      width: min(720px, 100%);
+      min-height: 1018px;
+      margin: 0 auto;
+      padding: 22px;
+      border: 14px solid transparent;
+      border-image: repeating-linear-gradient(45deg, var(--gold) 0 5px, var(--gold-light) 5px 10px) 14;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 40%, #fffdf6 0%, transparent 70%),
+        repeating-linear-gradient(0deg, rgb(160 130 80 / 3%) 0 1px, transparent 1px 4px),
+        var(--paper);
+      box-shadow: 0 24px 60px rgb(70 50 20 / 28%);
+    }
+    .frame {
+      position: relative;
+      min-height: 930px;
+      padding: 44px 56px 48px;
+      display: flex;
+      flex-direction: column;
+      border: 4px double var(--gold);
+    }
+    .corner {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: var(--gold);
+      transform: rotate(45deg);
+    }
+    .corner.tl { top: -9px; left: -9px; }
+    .corner.tr { top: -9px; right: -9px; }
+    .corner.bl { bottom: -9px; left: -9px; }
+    .corner.br { bottom: -9px; right: -9px; }
+
+    .serial { margin: 0; font-size: 14px; color: var(--muted); letter-spacing: 0.08em; }
+
+    .cert-head { margin-top: 36px; text-align: center; }
+    /* 제목: 폰꾸 고딕, 글자 사이를 띄워 격식 있게 */
+    .cert-title { margin: 0; color: var(--ink); --fy-weight: 800; }
+    .cert-title [part~="jamo"] { text-shadow: 0 1px 0 rgb(255 255 255 / 70%); }
+
+    .rule {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: min(280px, 80%);
+      margin: 6px auto 0;
+      color: var(--gold);
+    }
+    .rule::before, .rule::after { content: ""; flex: 1; height: 1.5px; background: currentColor; }
+    .rule i { width: 9px; height: 9px; background: currentColor; transform: rotate(45deg); }
+
+    .who {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px 18px;
+      width: min(400px, 100%);
+      margin: 46px auto 0;
+      font-size: 18px;
+    }
+    .who dt {
+      font-size: 14px;
+      letter-spacing: 0.4em;
+      color: var(--muted);
+      align-self: end;
+      padding-bottom: 4px;
+    }
+    .who dd {
+      margin: 0;
+      padding-bottom: 4px;
+      border-bottom: 1.5px dotted #b9a684;
+      font-weight: 700;
+    }
+    .who .name { font-size: 24px; letter-spacing: 0.3em; }
+
+    .body-text {
+      position: relative;
+      margin: 44px 0 0;
+      font-size: 20px;
+      line-height: 2.1;
+      text-align: center;
+      text-wrap: balance;
+    }
+
+    .date { margin: 46px 0 0; text-align: center; font-size: 19px; letter-spacing: 0.18em; }
+
+    .issuer {
+      margin: auto 0 0;
+      padding-top: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+    .issuer small { font-size: 15px; font-weight: 500; color: var(--muted); letter-spacing: 0.04em; }
+
+    /* 네모 인장 — 도장 글꼴은 종이 바탕 위에 */
+    .seal-square {
+      display: inline-grid;
+      place-items: center;
+      padding: 5px 5px 3px;
+      border: 3px solid var(--seal);
+      border-radius: 4px;
+      transform: rotate(-3deg);
+      mix-blend-mode: multiply;
+    }
+
+    /* 둥근 칭찬 도장 */
+    .stamp {
+      position: absolute;
+      right: 40px;
+      bottom: 150px;
+      width: 160px;
+      height: 160px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border: 4px solid var(--seal);
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 6px var(--seal);
+      text-align: center;
+      transform: rotate(-12deg);
+      mix-blend-mode: multiply;
+      opacity: 0.92;
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 16px 10px; }
+      .cert { min-height: 0; padding: 12px; border-width: 10px; border-image-width: 10px; }
+      .frame { min-height: 0; padding: 26px 18px 28px; }
+      .cert-head { margin-top: 22px; }
+      .who { margin-top: 30px; font-size: 16px; gap: 10px 12px; }
+      .who dt { font-size: 12px; letter-spacing: 0.2em; }
+      .who .name { font-size: 20px; }
+      .body-text { margin-top: 30px; font-size: 16px; line-height: 2; }
+      .date { margin-top: 30px; font-size: 16px; }
+      .issuer { flex-wrap: wrap; padding-top: 120px; font-size: 16px; gap: 8px 12px; }
+      .issuer small { flex-basis: 100%; text-align: center; }
+      .stamp { right: 16px; bottom: 100px; width: 118px; height: 118px; padding: 8px; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 0; }
+      body { padding: 0; background: none; }
+      .cert { width: 210mm; min-height: 297mm; box-shadow: none; }
+      .frame { min-height: calc(297mm - 72px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="cert">
+    <div class="frame">
+      <span class="corner tl" aria-hidden="true"></span>
+      <span class="corner tr" aria-hidden="true"></span>
+      <span class="corner bl" aria-hidden="true"></span>
+      <span class="corner br" aria-hidden="true"></span>
+
+      <p class="serial">제 2026-1009 호</p>
+
+      <header class="cert-head">
+        <h1 class="font-kku cert-title" data-font="gothic" data-size="clamp(72px, 19vw, 120px)" data-spacing="0.45em">상 장</h1>
+        <div class="rule" aria-hidden="true"><i></i></div>
+      </header>
+
+      <dl class="who">
+        <dt>이름</dt><dd class="name">김하늘</dd>
+        <dt>학교</dt><dd>햇살초등학교 3학년 2반</dd>
+      </dl>
+
+      <p class="body-text">위 어린이는 한글날을 맞아 열린 「우리말 바르게 쓰기」 활동에서 고운 말과 바른 글씨로 친구들에게 좋은 본보기가 되었기에 이 상장을 주어 칭찬합니다.</p>
+
+      <p class="date">2026년 10월 9일</p>
+
+      <div class="stamp">
+        <font-kku font="dojang" size="clamp(22px, 5.6vw, 28px)">참 잘했어요</font-kku>
+      </div>
+
+      <p class="issuer">
+        <small>햇살초등학교 3학년 2반</small>
+        담임 교사 이다정
+        <span class="seal-square"><font-kku font="dojang" size="26">다정</font-kku></span>
+      </p>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,728 @@
+/* 문서 페이지(site/docs.html) 전용 부품 — site.css 위에 얹는다.
+ *
+ * 견본 상자(.d-example), 표 안 글꼴 견본(.d-swatch), 줄바꿈 상자, 움직임 격자,
+ * 값 조절기, 질문 접기, 개발 도구 카드. 아래 "예시 꾸밈" 구간의 규칙은 본문 코드
+ * 상자와 똑같이 맞춘 실제 예시라, 코드를 고치면 함께 고친다. */
+
+/* ── 머리말 ───────────────────────────────────────────── */
+.d-intro {
+  margin-bottom: 3rem;
+  padding: 0.5rem 0 2.5rem;
+  border-bottom: 1px solid var(--k-line);
+}
+
+.d-intro .k-kicker {
+  display: block;
+  margin-bottom: 0.9rem;
+}
+
+.d-intro .k-h1 {
+  margin-bottom: 1.1rem;
+}
+
+.d-intro .k-lead {
+  margin-bottom: 1.5rem;
+}
+
+.d-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.k-prose .d-quick {
+  padding: 0;
+}
+
+.k-prose .d-quick li {
+  margin: 0;
+}
+
+.d-quick a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-block-size: 2.4rem;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--k-line);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font-size: 0.92rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: border-color 160ms var(--k-ease);
+}
+
+.d-quick a:hover {
+  border-color: var(--k-ink);
+}
+
+.d-quick a span {
+  color: var(--k-red);
+  font-weight: 800;
+}
+
+/* ── 구획 ─────────────────────────────────────────────── */
+.k-prose > section + section {
+  padding-top: 3rem;
+  border-top: 1px solid var(--k-line);
+}
+
+.d-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.6rem !important;
+  color: var(--k-red) !important;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.d-kicker::before {
+  content: "";
+  inline-size: 0.7rem;
+  block-size: 0.7rem;
+  border: 1.5px solid var(--k-red);
+  background-image:
+    linear-gradient(var(--k-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+  background-size: 50% 50%;
+}
+
+.k-prose h3 {
+  color: var(--k-ink);
+}
+
+.k-prose h3 code {
+  font-size: 0.82em;
+}
+
+.k-prose h4 {
+  margin: 1.4rem 0 0.4rem;
+  color: var(--k-ink);
+  font-size: 1rem;
+}
+
+.k-prose .k-callout p:last-child,
+.k-prose .k-callout ul:last-child {
+  margin-bottom: 0;
+}
+
+.k-prose .k-callout strong {
+  color: var(--k-ink);
+}
+
+/* 표의 첫 칸(이름)만 줄을 바꾸지 않는다 — 나머지 칸이 눌리지 않게 */
+.k-prose .k-table td:first-child code {
+  white-space: nowrap;
+}
+
+.k-prose .k-table td {
+  color: var(--k-ink-2);
+}
+
+.k-prose .k-table td:first-child {
+  color: var(--k-ink);
+}
+
+/* 표 안 code는 낱말 중간에서 끊지 않는다(공백에서만) — 좁은 화면에서는 표가 가로로 밀린다 */
+.k-prose .k-table code {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* 표를 좁은 화면에서 가로로 밀 때 최소 폭 */
+.d-table-wide {
+  min-inline-size: 640px;
+}
+
+/* 코드는 글자 그대로 — 합자(=> → ⇒ 같은) 끄기 */
+.k-prose code,
+.k-prose .k-code pre,
+.d-log {
+  font-variant-ligatures: none;
+}
+
+/* 줄을 바꾸는 코드 상자: 한글은 낱말 단위로, 긴 주소만 아무 데서나 */
+.k-prose .k-code--wrap pre {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* 코드 상자 안 출력(주석) 줄 */
+.k-code .d-out {
+  color: var(--k-code-muted);
+}
+
+/* ── 견본 상자 ─────────────────────────────────────────── */
+.d-example {
+  margin: 0 0 1.25rem;
+  overflow: hidden;
+  border: 1px solid var(--k-line);
+  border-radius: var(--k-radius);
+  background: var(--k-paper);
+}
+
+.d-example-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  padding: 0.5rem 0.6rem 0.5rem 1rem;
+  border-bottom: 1px solid var(--k-line);
+  background: var(--k-paper-2);
+  color: var(--k-muted);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.d-example-bar > span::before {
+  content: "미리보기 · ";
+  color: var(--k-red);
+  font-weight: 800;
+}
+
+.d-example-bar button {
+  padding: 0.25rem 0.85rem;
+  border: 1px solid var(--k-ink);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.d-example-bar button:focus-visible,
+.d-controls input:focus-visible,
+.d-controls button:focus-visible {
+  outline: 3px solid var(--k-yellow);
+  outline-offset: 2px;
+}
+
+.k-prose .d-example .k-stage {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.d-example .k-stage + .k-stage {
+  border-top: 1px solid var(--k-line);
+}
+
+.d-example .k-stage[data-tone] + .k-stage,
+.d-example .k-stage + .k-stage[data-tone] {
+  border-top-color: transparent;
+}
+
+.d-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+
+.d-pair > .k-stage {
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.d-pair > .k-stage + .k-stage {
+  border-top: 0;
+  border-inline-start: 1px solid var(--k-line);
+}
+
+.d-label {
+  color: var(--k-muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+[data-tone="dark"] .d-label,
+[data-tone="board"] .d-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 조절기 줄 */
+.d-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.25rem;
+  padding: 0.85rem 1rem;
+  border-top: 1px solid var(--k-line);
+  background: var(--k-paper-2);
+  font-size: 0.86rem;
+}
+
+.d-controls label {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.55rem;
+  color: var(--k-ink-2);
+  font-weight: 650;
+}
+
+.d-controls output {
+  min-inline-size: 4.2em;
+  color: var(--k-ink);
+  font-family: var(--k-mono);
+  font-size: 0.8rem;
+}
+
+.d-controls input[type="range"] {
+  inline-size: 8.5rem;
+  accent-color: var(--k-red);
+}
+
+.d-controls .k-input {
+  flex: 1 1 12rem;
+  min-block-size: 2.4rem;
+}
+
+.d-sliders {
+  flex: 1 1 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 0.6rem 1.5rem;
+}
+
+.d-sliders label {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+  gap: 0.6rem;
+}
+
+.d-sliders label code {
+  justify-self: start;
+}
+
+.d-sliders input[type="range"] {
+  inline-size: 100%;
+}
+
+/* 표 안 글꼴 견본 */
+.d-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 6.5rem;
+  min-block-size: 3.2rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--k-radius-sm);
+  background: var(--k-tone, var(--k-paper-2));
+}
+
+.k-table td.d-swatch-cell {
+  padding-block: 0.4rem;
+  vertical-align: middle;
+}
+
+/* ── 줄바꿈 상자 ──────────────────────────────────────── */
+.d-wrap-rows {
+  display: grid;
+  gap: 0;
+}
+
+.d-wrap-row {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.d-wrap-row + .d-wrap-row {
+  border-top: 1px solid var(--k-line);
+}
+
+.d-wrap-row > div:first-child {
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.2rem;
+}
+
+.d-wrap-row > div:first-child code {
+  justify-self: start;
+}
+
+.d-wrap-row > div:first-child span {
+  color: var(--k-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.d-wrap-box {
+  inline-size: var(--d-box, 210px);
+  max-inline-size: 100%;
+  padding: 0.6rem;
+  border: 1.5px dashed rgba(214, 40, 57, 0.55);
+  border-radius: 6px;
+  background-color: var(--k-paper);
+  background-image:
+    linear-gradient(var(--k-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+
+/* ── 움직임 격자 ──────────────────────────────────────── */
+.d-motion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--k-line);
+}
+
+.d-motion-grid > div {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 1.1rem 0.75rem 1rem;
+  background: var(--k-paper);
+}
+
+.d-motion-grid code {
+  font-size: 0.8rem;
+}
+
+.d-motion-grid small {
+  color: var(--k-muted);
+  font-size: 0.74rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
+/* 조합 견본 — 같은 꾸밈을 여러 글꼴에, 칸마다 바탕을 따로 둘 수 있다 */
+.d-compose-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 1px;
+  background: var(--k-line);
+}
+
+.d-compose-grid > div {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 1.1rem 0.75rem 1rem;
+  background: var(--k-tone, var(--k-paper));
+}
+
+.d-compose-grid[data-tone] > div {
+  background: var(--k-tone);
+}
+
+.d-compose-grid code {
+  font-size: 0.78rem;
+}
+
+.d-axes td:first-child {
+  white-space: nowrap;
+}
+
+.d-motion-grid > div[data-tone] {
+  background: var(--k-tone);
+}
+
+/* 자모 움직임 칸 — 흩어진 자모가 이웃 칸을 덮지 않게(hidden은 스크롤 타임라인 기준을 바꾸므로 clip) */
+.d-motion-grid > div {
+  overflow: clip;
+}
+
+.d-motion-grid > [data-tone="dark"] small {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── 평문 모드 ────────────────────────────────────────── */
+.k-prose .k-terminal {
+  margin: 0 0 1.25rem;
+}
+
+.d-terminal-out {
+  font-size: 1.25rem !important;
+}
+
+/* ── API 견본의 기록 ──────────────────────────────────── */
+.d-log {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  border-top: 1px solid var(--k-line);
+  background: var(--k-code-bg);
+  color: var(--k-code-ink);
+  font-family: var(--k-mono);
+  font-size: 0.8rem;
+  line-height: 1.65;
+  white-space: pre;
+}
+
+/* 단추 줄 */
+.k-prose .d-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* ── 만들기 카드 · 개발 도구 카드 ─────────────────────── */
+.d-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+  gap: 0.9rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.k-prose .d-cards {
+  padding: 0;
+}
+
+.k-prose .d-cards li {
+  margin: 0;
+}
+
+.d-card {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  block-size: 100%;
+  padding: 1rem 1.1rem 1.1rem;
+  border: 1px solid var(--k-line);
+  border-radius: var(--k-radius);
+  background: var(--k-paper);
+  color: var(--k-ink-2);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-decoration: none;
+  transition: border-color 160ms var(--k-ease), transform 160ms var(--k-ease);
+}
+
+a.d-card:hover {
+  border-color: var(--k-ink);
+  transform: translateY(-2px);
+}
+
+.d-card strong {
+  color: var(--k-ink);
+  font-size: 1rem;
+}
+
+.d-card small {
+  color: var(--k-muted);
+  font-family: var(--k-mono);
+  font-size: 0.74rem;
+}
+
+.d-card-num {
+  color: var(--k-red);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+/* ── 자주 묻는 질문 ───────────────────────────────────── */
+.d-faq {
+  border-bottom: 1px solid var(--k-line);
+}
+
+.d-faq:first-of-type {
+  border-top: 1px solid var(--k-line);
+}
+
+.d-faq summary {
+  position: relative;
+  padding: 0.95rem 2.2rem 0.95rem 0;
+  color: var(--k-ink);
+  font-weight: 700;
+  line-height: 1.5;
+  list-style: none;
+  cursor: pointer;
+}
+
+.d-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.d-faq summary::after {
+  content: "+";
+  position: absolute;
+  inset-inline-end: 0.3rem;
+  inset-block-start: 0.75rem;
+  color: var(--k-red);
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.d-faq[open] summary::after {
+  content: "−";
+}
+
+.d-faq summary:focus-visible {
+  outline: 3px solid var(--k-yellow);
+  outline-offset: 2px;
+}
+
+.d-faq > div {
+  padding: 0 0 1rem;
+}
+
+/* ── 목차 (좁은 화면에서 접힘) ────────────────────────── */
+.k-docs-nav details > div > .k-docs-group:first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 960px) {
+  .k-docs-nav details > div {
+    padding: 0 0.5rem 0.75rem;
+  }
+
+  .k-docs-nav details > div > .k-docs-group:first-child {
+    margin-top: 0.25rem;
+  }
+}
+
+/* 좁은 화면: 표를 행마다 쌓는다. 셋째 칸부터는 머리글(data-label)을 앞에 붙인다 */
+@media (max-width: 720px) {
+  .k-prose .k-table-scroll {
+    overflow-x: visible;
+  }
+
+  .k-prose .k-table,
+  .k-prose .k-table tbody,
+  .k-prose .k-table tr,
+  .k-prose .k-table td {
+    display: block;
+  }
+
+  .k-prose .k-table {
+    min-inline-size: 0;
+    border-top: 1.5px solid var(--k-ink);
+  }
+
+  .k-prose .k-table thead {
+    display: none;
+  }
+
+  .k-prose .k-table tr {
+    padding: 0.7rem 0.1rem;
+    border-bottom: 1px solid var(--k-line);
+  }
+
+  .k-prose .k-table td {
+    padding: 0.08rem 0;
+    border: 0;
+  }
+
+  .k-prose .k-table td:first-child {
+    margin-bottom: 0.3rem;
+    color: var(--k-ink);
+    font-weight: 700;
+  }
+
+  .k-prose .k-table td[data-label] {
+    position: relative;
+    padding-inline-start: 5.4rem;
+  }
+
+  .k-prose .k-table td[data-label]::before {
+    content: attr(data-label);
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.12rem;
+    inline-size: 5rem;
+    color: var(--k-muted);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.9;
+  }
+
+  .k-prose .k-table td:first-child code {
+    white-space: normal;
+  }
+
+  .k-prose .k-table td.d-swatch-cell {
+    padding-block: 0 0.2rem;
+  }
+
+  .d-motion-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* 머리(메뉴가 두 줄)가 높아진 만큼 이동 위치를 내린다 */
+  .k-prose > section,
+  .k-prose h3 {
+    scroll-margin-top: 112px;
+  }
+
+  .d-wrap-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .d-pair > .k-stage + .k-stage {
+    border-inline-start: 0;
+    border-top: 1px solid var(--k-line);
+  }
+
+  .d-sliders label {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .d-sliders label input[type="range"] {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .d-quick a,
+  .d-card {
+    transition: none;
+  }
+}
+
+/* ── 예시 꾸밈 — 본문 코드 상자와 같은 규칙 ─────────────── */
+
+/* #customize: 역할마다 색 */
+.paint :is([part~="choseong"], [part~="head"]) { color: #d62839; }
+.paint [part~="jungseong"] { color: #1f4fd1; }
+.paint [part~="jongseong"] { color: #12965f; }
+
+/* #customize: 나만의 꾸밈 글꼴 — AI 설명서 §5의 kku-berry */
+.kku-berry { --fy-weight: 800; }
+.kku-berry :is([part~="choseong"], [part~="head"]) { color: #c2185b; }
+.kku-berry [part~="jungseong"] { color: #7b1fa2; }
+.kku-berry [part~="jongseong"] { color: #f06292; }
+.kku-berry [part~="jamo"] { text-shadow: 0.04em 0.04em 0 #ffd1e3; }
+
+/* #motion: 자소마다 다른 기울기 */
+.wobble [part~="jamo"] { --fy-rotate: calc((var(--fy-jamo-seed, 0.5) - 0.5) * 20deg); }
+
+/* #motion: 직접 만든 움직임 훅 */
+:where(font-kku, .font-kku)[data-fy-animate="shake"] [part="glyph"] {
+  animation: my-shake 0.4s ease-in-out infinite;
+  animation-delay: calc(var(--fy-glyph-index, 0) * 50ms);
+}
+
+@keyframes my-shake {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(0.08em); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(font-kku, .font-kku)[data-fy-animate="shake"] [part="glyph"] {
+    animation: none !important;
+  }
+}
+
+/* 획 깊이 견본 — 가획(added)만 빨갛게 */
+.d-origin [data-hoek-role="added"] { color: #e63946; }

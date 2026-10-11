@@ -1,0 +1,528 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 모바일 청첩장. 글꼴: geumbak malang. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>김하늘 ♥ 이도윤 결혼합니다</title>
+  <script src="../lib/font-kku.js" data-fonts="geumbak malang"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --night: #0f1530;
+      --navy: #162042;
+      --navy-2: #1d2a55;
+      --gold: #e9c46a;
+      --gold-soft: rgb(233 196 106 / 45%);
+      --cream: #f6ecd4;
+      --muted: #b7bed8;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px 48px;
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--cream);
+      word-break: keep-all;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, #26336a 0%, transparent 70%),
+        radial-gradient(circle at 1px 1px, rgb(233 196 106 / 12%) 1px, transparent 1.5px) 0 0 / 22px 22px,
+        var(--night);
+    }
+
+    /* 휴대폰 화면 한 장 폭의 청첩장 */
+    .card {
+      width: min(460px, 100%);
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid var(--gold-soft);
+      border-radius: 14px;
+      background: linear-gradient(180deg, var(--navy) 0%, #121a38 100%);
+      box-shadow: 0 30px 80px rgb(0 0 0 / 45%);
+    }
+
+    section {
+      padding: 56px 32px;
+      text-align: center;
+    }
+    section + section { border-top: 1px solid rgb(233 196 106 / 16%); }
+
+    .kicker {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      color: var(--gold);
+    }
+
+    /* 금빛 장식선 — 가운데 마름모 */
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 160px;
+      margin: 26px auto;
+      color: var(--gold);
+    }
+    .ornament::before, .ornament::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+    .ornament::after { background: linear-gradient(90deg, var(--gold), transparent); }
+    .ornament i {
+      width: 7px;
+      height: 7px;
+      rotate: 45deg;
+      border: 1px solid currentColor;
+    }
+
+    /* 표지 */
+    .cover {
+      padding-top: 64px;
+      background:
+        radial-gradient(ellipse 80% 55% at 50% 38%, rgb(233 196 106 / 13%) 0%, transparent 70%);
+    }
+    .names {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      margin: 30px 0 0;
+    }
+    .names .and {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+    }
+    .when {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.7;
+      color: #fff;
+    }
+    .where { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
+
+    .section-title { margin: 14px 0 0; }
+
+    /* 인사말 */
+    .verse { margin: 26px 0 0; }
+    .verse [part~="jamo"] { color: #f3e3bd; }
+    .greeting {
+      margin: 22px 0 0;
+      font-size: 15px;
+      line-height: 2;
+      color: #dfe3f3;
+    }
+    .parents {
+      display: grid;
+      gap: 8px;
+      margin: 30px auto 0;
+      padding: 18px 0 0;
+      max-width: 300px;
+      border-top: 1px dashed rgb(233 196 106 / 30%);
+      font-size: 15px;
+      color: var(--muted);
+    }
+    .parents b { color: #fff; font-weight: 700; }
+
+    /* 달력 */
+    .month { margin: 22px auto 0; max-width: 320px; }
+    .month-head {
+      margin: 0 0 12px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #fff;
+    }
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+    .days li {
+      display: grid;
+      place-items: center;
+      height: 36px;
+      color: #dfe3f3;
+    }
+    .days .dow { height: 28px; font-size: 12px; font-weight: 700; color: var(--muted); }
+    .days .sun { color: #f39a9a; }
+    .days .sat { color: #9ab8f3; }
+    .days .day-mark {
+      width: 34px;
+      border-radius: 50%;
+      font-weight: 800;
+      color: var(--night);
+      background: radial-gradient(circle at 35% 30%, #fff3c4 0%, var(--gold) 60%, #b98a2c 100%);
+      box-shadow: 0 0 0 4px rgb(233 196 106 / 18%);
+    }
+    .dday {
+      margin: 20px 0 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .dday strong { color: var(--gold); font-size: 16px; }
+
+    /* 오시는 길 — 지도 대신 CSS 약도 */
+    .map {
+      position: relative;
+      height: 220px;
+      margin: 24px 0 0;
+      overflow: hidden;
+      border: 1px solid rgb(233 196 106 / 30%);
+      border-radius: 10px;
+      background:
+        linear-gradient(90deg, transparent 0 62%, rgb(255 255 255 / 9%) 62% 70%, transparent 70%),
+        linear-gradient(180deg, transparent 0 46%, rgb(255 255 255 / 9%) 46% 54%, transparent 54%),
+        linear-gradient(180deg, transparent 0 78%, rgb(120 170 230 / 22%) 78% 90%, transparent 90%),
+        linear-gradient(135deg, #1a2550 0%, #141d40 100%);
+    }
+    .map .road-label {
+      position: absolute;
+      font-size: 11px;
+      color: rgb(255 255 255 / 55%);
+    }
+    .map .river { left: 12px; bottom: 15px; color: #9cc3f5; }
+    .map .road-a { left: 12px; top: 34%; }
+    .map .road-b { left: 71%; top: 10px; }
+    .map .station {
+      position: absolute;
+      left: 22%;
+      top: calc(50% - 15px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .map .station i {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-style: normal;
+      font-size: 12px;
+      background: #3aa65b;
+      box-shadow: 0 0 0 3px rgb(58 166 91 / 30%);
+    }
+    .map .pin {
+      position: absolute;
+      left: calc(66% - 15px);
+      top: calc(50% - 46px);
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+    }
+    .map .pin i {
+      width: 30px;
+      height: 30px;
+      border-radius: 50% 50% 50% 0;
+      rotate: -45deg;
+      background: radial-gradient(circle at 50% 50%, var(--night) 0 5px, var(--gold) 6px);
+      box-shadow: 0 6px 16px rgb(0 0 0 / 40%);
+    }
+    .map .pin b {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--night);
+      background: var(--gold);
+      white-space: nowrap;
+    }
+    .map .walk {
+      position: absolute;
+      left: calc(22% + 11px);
+      right: calc(34% - 4px);
+      top: 50%;
+      border-top: 2px dashed rgb(233 196 106 / 70%);
+    }
+
+    .route {
+      margin: 22px 0 0;
+      display: grid;
+      gap: 12px;
+      text-align: left;
+    }
+    .route div { display: grid; grid-template-columns: 52px 1fr; gap: 10px; font-size: 14px; line-height: 1.6; }
+    .route dt { font-weight: 700; color: var(--gold); }
+    .route dd { margin: 0; color: #dfe3f3; }
+    .address { margin: 20px 0 0; font-size: 15px; font-weight: 600; color: #fff; }
+
+    /* 마음 전하실 곳 */
+    .accounts { display: grid; gap: 14px; margin: 24px 0 0; text-align: left; }
+    .account-group {
+      padding: 16px 18px;
+      border: 1px solid rgb(233 196 106 / 24%);
+      border-radius: 10px;
+      background: rgb(255 255 255 / 3%);
+    }
+    .account-group h3 { margin: 0 0 8px; font-size: 14px; color: var(--gold); letter-spacing: 0.1em; }
+    .account {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+    .account + .account { border-top: 1px dashed rgb(255 255 255 / 10%); }
+    .account span { min-width: 0; color: #dfe3f3; line-height: 1.5; }
+    .account small { display: block; color: var(--muted); font-size: 12px; }
+
+    button {
+      flex: none;
+      padding: 7px 12px;
+      border: 1px solid var(--gold-soft);
+      border-radius: 999px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      background: transparent;
+      cursor: pointer;
+    }
+    button:hover { background: rgb(233 196 106 / 12%); }
+    button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    .thanks { padding-bottom: 64px; }
+    .credit { margin: 24px 0 0; font-size: 12px; line-height: 1.7; color: rgb(183 190 216 / 70%); }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      translate: -50% 20px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      color: var(--night);
+      background: var(--gold);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease, translate 200ms ease;
+    }
+    .toast.is-on { opacity: 1; translate: -50% 0; }
+
+    /* 자모가 하나씩 모여 이름이 조립된다 — 화면에 들어올 때(.is-in). 코어가 자모 노드에
+     * transform으로 배치를 잡으므로 움직임은 개별 속성 translate·rotate로 얹는다. */
+    .js-motion .assemble [part~="jamo"] { opacity: 0; }
+    .js-motion .assemble.is-in [part~="jamo"] {
+      opacity: 1;
+      animation: k-assemble 1100ms cubic-bezier(0.2, 0.8, 0.25, 1) backwards;
+      animation-delay: calc(var(--fy-glyph-index, 0) * 170ms + var(--k-role-delay, 0ms) + 120ms);
+    }
+    .assemble :is([part~="choseong"], [part~="head"]) { --k-from: -0.45em -0.35em; --k-turn: -16deg; --k-role-delay: 0ms; }
+    .assemble [part~="jungseong"] { --k-from: 0.5em -0.15em; --k-turn: 12deg; --k-role-delay: 130ms; }
+    .assemble [part~="jongseong"] { --k-from: 0 0.6em; --k-turn: 0deg; --k-role-delay: 260ms; }
+    @keyframes k-assemble {
+      from { opacity: 0; translate: var(--k-from, 0 0.4em); rotate: var(--k-turn, 0deg); filter: blur(3px); }
+      60% { filter: blur(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .js-motion .assemble [part~="jamo"] { opacity: 1; animation: none; }
+      .toast { transition: none; }
+    }
+
+    @media (max-width: 400px) {
+      body { padding: 0 0 32px; }
+      .card { border-radius: 0; border-inline: 0; }
+      section { padding: 48px 22px; }
+      .route div { grid-template-columns: 46px 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <section class="cover" aria-label="표지">
+      <p class="kicker">WEDDING INVITATION</p>
+      <h1 class="names">
+        <span class="font-kku assemble" data-font="geumbak" data-size="clamp(54px, 17vw, 80px)">김하늘</span>
+        <span class="and">그리고</span>
+        <span class="font-kku assemble" data-font="geumbak" data-size="clamp(54px, 17vw, 80px)">이도윤</span>
+      </h1>
+      <div class="ornament" aria-hidden="true"><i></i></div>
+      <p class="when">2026년 11월 21일 토요일 낮 12시 30분</p>
+      <p class="where">라온 웨딩홀 3층 아이리스홀</p>
+    </section>
+
+    <section aria-labelledby="invite-title">
+      <p class="kicker">INVITATION</p>
+      <h2 id="invite-title" class="font-kku section-title assemble" data-font="geumbak" data-size="clamp(30px, 9vw, 38px)">초대합니다</h2>
+      <p class="font-kku verse" data-font="malang" data-size="clamp(22px, 6.4vw, 28px)">서로의 봄이 되어 주기로 했습니다</p>
+      <p class="greeting">
+        가을이 깊어 가는 날,<br />
+        서로의 이름을 처음 불러 본 그날처럼<br />
+        설레는 마음으로 한 걸음을 내딛습니다.<br />
+        귀한 걸음 하시어 축복해 주시면<br />
+        더없는 기쁨으로 간직하겠습니다.
+      </p>
+      <div class="parents">
+        <span>김정호 · 박미경 의 아들 <b>하늘</b></span>
+        <span>이상훈 · 최은영 의 딸 <b>도윤</b></span>
+      </div>
+    </section>
+
+    <section aria-labelledby="date-title">
+      <p class="kicker">THE DAY</p>
+      <h2 id="date-title" class="font-kku section-title assemble" data-font="geumbak" data-size="clamp(30px, 9vw, 38px)">예식 안내</h2>
+      <div class="month">
+        <p class="month-head">2026. 11</p>
+        <ol class="days" aria-label="2026년 11월 달력, 21일 토요일 예식" data-calendar></ol>
+      </div>
+      <p class="dday" data-dday>결혼식 날까지 함께 손꼽아 주세요</p>
+    </section>
+
+    <section aria-labelledby="map-title">
+      <p class="kicker">LOCATION</p>
+      <h2 id="map-title" class="font-kku section-title assemble" data-font="geumbak" data-size="clamp(30px, 9vw, 38px)">오시는 길</h2>
+      <div class="map" role="img" aria-label="약도: 한빛역 4번 출구에서 한빛로를 따라 걸어서 3분, 라온타워">
+        <span class="road-label road-a">한빛로</span>
+        <span class="road-label road-b">강변북로</span>
+        <span class="road-label river">한빛천</span>
+        <span class="walk"></span>
+        <span class="station"><i>2</i>한빛역 4번 출구</span>
+        <span class="pin"><b>라온 웨딩홀</b><i></i></span>
+      </div>
+      <p class="address" data-address>서울특별시 중구 한빛로 21 라온타워</p>
+      <button type="button" data-copy="서울특별시 중구 한빛로 21 라온타워">주소 복사</button>
+      <dl class="route">
+        <div><dt>지하철</dt><dd>2호선 한빛역 4번 출구에서 한빛로를 따라 걸어서 3분</dd></div>
+        <div><dt>버스</dt><dd>한빛역 정류장 하차 — 간선 402, 지선 7011</dd></div>
+        <div><dt>주차</dt><dd>라온타워 지하 2–4층, 하객 2시간 무료</dd></div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="gift-title">
+      <p class="kicker">WITH LOVE</p>
+      <h2 id="gift-title" class="font-kku section-title assemble" data-font="geumbak" data-size="clamp(30px, 9vw, 38px)">마음 전하실 곳</h2>
+      <div class="accounts">
+        <div class="account-group">
+          <h3>신랑 측</h3>
+          <div class="account"><span>한빛은행 110-123-456789<small>신랑 김하늘</small></span><button type="button" data-copy="한빛은행 110-123-456789 김하늘">복사</button></div>
+          <div class="account"><span>가람은행 352-0987-6543-21<small>아버지 김정호</small></span><button type="button" data-copy="가람은행 352-0987-6543-21 김정호">복사</button></div>
+        </div>
+        <div class="account-group">
+          <h3>신부 측</h3>
+          <div class="account"><span>누리은행 1002-345-678901<small>신부 이도윤</small></span><button type="button" data-copy="누리은행 1002-345-678901 이도윤">복사</button></div>
+          <div class="account"><span>한빛은행 220-456-789012<small>어머니 최은영</small></span><button type="button" data-copy="한빛은행 220-456-789012 최은영">복사</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="thanks" aria-label="맺음말">
+      <p class="font-kku verse" data-font="malang" data-size="clamp(24px, 7vw, 30px)">함께해 주셔서 고맙습니다</p>
+      <div class="ornament" aria-hidden="true"><i></i></div>
+      <p class="credit">이름과 제목은 글꼴 파일 없이 폰꾸 금박으로 그렸습니다.<br />자모가 한 조각씩 날아와 글자로 조립됩니다.</p>
+    </section>
+  </main>
+
+  <p class="toast" role="status" aria-live="polite" data-toast></p>
+
+  <script>
+    (function () {
+      "use strict";
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!reduce && "IntersectionObserver" in window) {
+        document.documentElement.classList.add("js-motion");
+      }
+
+      // 달력 — 2026년 11월은 일요일에 시작하고 30일까지다
+      var calendar = document.querySelector("[data-calendar]");
+      var cells = ["일", "월", "화", "수", "목", "금", "토"].map(function (d, i) {
+        return '<li class="dow' + (i === 0 ? " sun" : i === 6 ? " sat" : "") + '" aria-hidden="true">' + d + "</li>";
+      });
+      for (var day = 1; day <= 30; day += 1) {
+        var dow = (day - 1) % 7;
+        var cls = day === 21 ? "day-mark" : dow === 0 ? "sun" : dow === 6 ? "sat" : "";
+        cells.push('<li' + (cls ? ' class="' + cls + '"' : "") + (day === 21 ? ' aria-current="date"' : "") + ">" + day + "</li>");
+      }
+      calendar.innerHTML = cells.join("");
+
+      // 남은 날
+      var wedding = new Date(2026, 10, 21);
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      var left = Math.round((wedding - today) / 86400000);
+      var dday = document.querySelector("[data-dday]");
+      if (left > 0) {
+        dday.innerHTML = "하늘 ♥ 도윤의 결혼식까지 <strong>" + left + "일</strong> 남았습니다";
+      } else if (left === 0) {
+        dday.innerHTML = "<strong>오늘</strong>이 바로 그날입니다";
+      } else {
+        dday.textContent = "축복해 주셔서 고맙습니다";
+      }
+
+      // 복사 — http로 연 페이지(비보안 문맥)에서는 execCommand로
+      var toast = document.querySelector("[data-toast]");
+      var toastTimer = 0;
+      function say(message) {
+        toast.textContent = message;
+        toast.classList.add("is-on");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove("is-on"); }, 1800);
+      }
+      function fallbackCopy(text) {
+        var area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (error) { ok = false; }
+        area.remove();
+        return ok;
+      }
+      document.addEventListener("click", function (event) {
+        var button = event.target.closest("[data-copy]");
+        if (!button) return;
+        var text = button.getAttribute("data-copy");
+        function done(ok) { say(ok ? "복사했습니다" : "복사하지 못했습니다 — 길게 눌러 복사해 주세요"); }
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallbackCopy(text)); });
+        } else {
+          done(fallbackCopy(text));
+        }
+      });
+
+      // 자모 조립 — 글꼴 CSS가 모두 도착한 뒤(한 줄 설치의 가림막이 걷힌 뒤), 화면에 들어올 때
+      if (!document.documentElement.classList.contains("js-motion")) return;
+      function whenReady(callback) {
+        var started = Date.now();
+        (function check() {
+          if (!document.querySelector("style[data-font-kku-loader]") || Date.now() - started > 3500) {
+            callback();
+          } else {
+            requestAnimationFrame(check);
+          }
+        })();
+      }
+      whenReady(function () {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-in");
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.4 });
+        Array.prototype.forEach.call(document.querySelectorAll(".assemble"), function (node) {
+          observer.observe(node);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

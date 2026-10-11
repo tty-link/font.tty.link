@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>font-kku 데모 — 놀이터</title>
+    <link rel="stylesheet" href="lib/font-kku.css" />
+    <link rel="stylesheet" href="lib/profiles/sebul.css" />
+    <link rel="stylesheet" href="lib/profiles/gothic.css" />
+    <link rel="stylesheet" href="./demo.css" />
+  </head>
+  <body>
+    <div class="demo-shell">
+      <header class="demo-topbar">
+        <a class="demo-brand" href="./index.html">
+          <span class="demo-badge">꾸</span>
+          <span class="demo-brand-text">
+            <strong>폰꾸</strong>
+            <span>font-kku</span>
+          </span>
+        </a>
+        <nav class="demo-nav" aria-label="데모 페이지" data-demo-nav></nav>
+      </header>
+
+      <section class="demo-hero">
+        <span class="demo-kicker">놀이터</span>
+        <h1 class="demo-title">놀이터 — DOM·평문·모델을 <em>한 화면</em>에서 같이 본다</h1>
+        <p class="demo-copy">
+          선언형 마크업 대신 <code>window.FontKku.render()</code>, <code>renderText()</code>, <code>createTextModel()</code>을
+          직접 제어하면서 DOM 그리기, 2줄 평문 출력, 구조 요약, TextModel JSON을 나란히 확인한다.
+        </p>
+        <div class="demo-pill-row">
+          <span class="demo-pill"><code>render()</code>: DOM 미리보기</span>
+          <span class="demo-pill"><code>renderText()</code>: 2줄 평문</span>
+          <span class="demo-pill"><code>createTextModel()</code>: 구조 요약</span>
+          <span class="demo-pill">터미널 명령: <code>bin/font-kku-text.js</code></span>
+        </div>
+      </section>
+
+      <section class="demo-stack">
+        <article class="demo-panel">
+          <h2>터미널 명령</h2>
+          <p class="demo-meta">
+            같은 평문 모드 규칙을 브라우저 밖에서도 바로 쓸 수 있게 <code>bin/font-kku-text.js</code>를 제공한다.
+          </p>
+<pre class="demo-code">node ./bin/font-kku-text.js "안녕하세요 반갑습니다"
+printf "안녕하세요 반갑습니다\n" | node ./bin/font-kku-text.js</pre>
+        </article>
+
+        <article class="demo-panel">
+          <h2>준비된 예문</h2>
+          <p class="demo-meta">
+            인사 문장, 복합모음/겹받침, 개행 포함 문장을 버튼 하나로 불러와 비교한다.
+          </p>
+          <div class="demo-preset-row">
+            <button
+              type="button"
+              class="demo-preset-button"
+              data-text-preset="안녕하세요 반갑습니다"
+              data-font="sebul"
+              data-size="34"
+              data-wrap-unit="word"
+            >
+              인사 문장
+            </button>
+            <button
+              type="button"
+              class="demo-preset-button"
+              data-text-preset="외국어를 읽고 왕과 획을 본다"
+              data-font="gothic"
+              data-size="34"
+              data-wrap-unit="word"
+            >
+              복합모음·겹받침
+            </button>
+            <button
+              type="button"
+              class="demo-preset-button"
+              data-text-preset="서울의 밤&#10;작은 광장"
+              data-font="sebul"
+              data-size="42"
+              data-wrap-unit="line"
+            >
+              개행 포함
+            </button>
+          </div>
+        </article>
+      </section>
+
+      <section class="demo-columns">
+        <article class="demo-panel">
+          <h2>조작</h2>
+          <form class="demo-toolbar" data-api-form>
+            <label>
+              글
+              <textarea name="text">외국어를 읽고 왕과 획을 본다</textarea>
+            </label>
+            <label>
+              DOM 글꼴
+              <select name="font">
+                <option value="sebul">sebul (탈네모꼴 세벌식)</option>
+                <option value="gothic" selected>gothic (본고딕식 네모꼴)</option>
+              </select>
+            </label>
+            <label>
+              DOM 크기
+              <input type="number" name="size" min="16" max="80" value="34" />
+            </label>
+            <label>
+              DOM 줄바꿈
+              <select name="wrapUnit">
+                <option value="word" selected>낱말 (word)</option>
+                <option value="glyph">글자 (glyph)</option>
+                <option value="line">줄 (line)</option>
+              </select>
+            </label>
+            <label>
+              움직임
+              <select name="animate">
+                <option value="">없음</option>
+                <option value="rise">rise</option>
+                <option value="fade">fade</option>
+                <option value="stagger">stagger</option>
+                <option value="bounce">bounce</option>
+                <option value="wiggle">wiggle</option>
+                <option value="drift">drift</option>
+              </select>
+            </label>
+            <button type="submit">미리보기 갱신</button>
+          </form>
+          <p class="demo-note">
+            글 입력은 모든 출력에 반영되고, 글꼴·크기·줄바꿈·움직임 조작은 DOM 미리보기에만 적용된다.
+            값을 바꾸면 즉시 다시 그리며, 오른쪽 평문 출력은 오직 입력 문자열과 한글 분해 규칙만 사용한다.
+          </p>
+        </article>
+
+        <article class="demo-panel">
+          <h2>DOM 미리보기</h2>
+          <div class="demo-sample">
+            <div class="font-kku" data-api-output></div>
+          </div>
+          <p class="demo-caption">브라우저 쪽 실제 그리기 결과다. 글꼴 CSS와 런타임 CSS가 모두 적용된다.</p>
+        </article>
+
+        <article class="demo-panel">
+          <h2>평문 출력</h2>
+          <div class="demo-code-panel">
+            <div class="demo-code-meta">같은 입력, 2줄 평문 출력</div>
+            <pre class="demo-code-block demo-code-block-scroll" data-api-text-output></pre>
+          </div>
+          <p class="demo-caption"><code>renderText()</code> 결과. 입력 한 줄당 위/아래 2줄이 생성되며, 글꼴과 크기는 무시되고 구조만 출력된다.</p>
+        </article>
+      </section>
+
+      <section class="demo-columns">
+        <article class="demo-panel">
+          <h2>구조 요약</h2>
+          <div class="demo-metric-grid" data-api-metrics></div>
+        </article>
+
+        <article class="demo-panel">
+          <h2>짜임 분포</h2>
+          <div class="demo-topology-list" data-api-topologies></div>
+          <p class="demo-caption">
+            <code>right:none</code>, <code>bottom:single</code>, <code>split-right:single</code> 같은 조합 비율을 빠르게 확인한다.
+          </p>
+        </article>
+      </section>
+
+      <section class="demo-columns">
+        <article class="demo-panel">
+          <h2>규칙 한눈에 보기</h2>
+          <div class="demo-rule-grid">
+            <div class="demo-rule-card">
+              <span class="demo-label">세로모음</span>
+              <p class="demo-meta"><code>강</code>처럼 초성과 중성이 좌우로 붙고 종성은 아래줄로 내려간다.</p>
+              <div class="demo-code-panel">
+                <pre class="demo-code-block">ㄱㅏ
+　ㅇ</pre>
+              </div>
+            </div>
+            <div class="demo-rule-card">
+              <span class="demo-label">가로모음</span>
+              <p class="demo-meta"><code>요</code>는 종성이 없으므로 초/중이 위아래로 나뉜다.</p>
+              <div class="demo-code-panel">
+                <pre class="demo-code-block">ㅇ
+ㅛ</pre>
+              </div>
+            </div>
+            <div class="demo-rule-card">
+              <span class="demo-label">섞임모음</span>
+              <p class="demo-meta"><code>봔</code>은 초성+앞 모음 합자와 뒤 모음으로 윗줄을 구성한다.</p>
+              <div class="demo-code-panel">
+                <pre class="demo-code-block">보ㅏ
+　ㄴ</pre>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-panel">
+          <h2>TextModel JSON</h2>
+          <div class="demo-code-panel">
+            <div class="demo-code-meta">공유 분절 트리</div>
+            <pre class="demo-code-block demo-code-block-scroll" data-api-model></pre>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <script src="lib/font-kku.js"></script>
+    <script src="./demo.js"></script>
+    <script>
+      window.FontKkuDemo.renderNav("api-studio");
+      window.FontKkuDemo.setupTextModeStudio();
+    </script>
+  </body>
+</html>

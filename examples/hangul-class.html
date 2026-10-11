@@ -1,0 +1,412 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 한글 학습지. 글꼴: saekdong. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>한글 짜임 놀이 — 국어 활동지</title>
+  <script src="../lib/font-kku.js" data-fonts="saekdong"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    /* 색동 글꼴의 역할 색과 같은 값 — 범례와 풀이 칩에 쓴다 */
+    :root {
+      --cho: #d62839;
+      --jung: #1f4fd1;
+      --tail: #f2a007;
+      --jong: #12965f;
+      --jong2: #e0569b;
+      --ink: #26232b;
+      --muted: #6f6a78;
+      --line: #e6e1d6;
+      --paper: #fffdf8;
+    }
+
+    body {
+      margin: 0;
+      padding: 28px 16px 56px;
+      color: var(--ink);
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      word-break: keep-all;
+      background:
+        radial-gradient(circle at 1px 1px, rgb(31 79 209 / 10%) 1px, transparent 1.5px) 0 0 / 22px 22px,
+        #eef1f6;
+    }
+
+    .sheet {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 36px 40px 40px;
+      background: var(--paper);
+      border-radius: 6px;
+      box-shadow: 0 1px 0 #d9d4c8, 0 16px 40px rgb(40 50 80 / 12%);
+      border-top: 10px solid transparent;
+      border-image: linear-gradient(90deg, var(--cho) 0 20%, var(--tail) 20% 40%, var(--jong) 40% 60%, var(--jung) 60% 80%, var(--jong2) 80%) 1;
+      border-bottom: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+
+    .sheet-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px 24px;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--ink);
+    }
+    .subject {
+      display: block;
+      width: fit-content;
+      margin: 0 0 12px;
+      padding: 4px 10px;
+      border: 1.5px solid var(--ink);
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .sheet-title { margin: 0; }
+    .sheet-head .lead { margin: 10px 0 0; font-size: 15px; color: var(--muted); }
+
+    .student { display: grid; grid-template-columns: repeat(3, auto); gap: 8px 14px; font-size: 14px; }
+    .student label { display: flex; align-items: flex-end; gap: 6px; white-space: nowrap; }
+    .student .blank { display: inline-block; width: 44px; border-bottom: 1.5px solid var(--ink); height: 1.2em; }
+    .student .name { grid-column: 1 / -1; }
+    .student .name .blank { flex: 1; width: auto; min-width: 120px; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .legend li { display: flex; align-items: center; gap: 6px; }
+    .legend i { width: 14px; height: 14px; border-radius: 4px; background: var(--c); }
+    .legend b { color: var(--ink); }
+
+    .task { margin-top: 34px; }
+    .task h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 16px;
+      font-size: 19px;
+    }
+    .task h2 .num {
+      flex: none;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    /* ① 낱말 카드 */
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .card {
+      padding: 20px 14px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      text-align: center;
+      background: #fff;
+    }
+    .card p { margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: var(--muted); }
+    .card p b { display: block; margin-bottom: 2px; font-size: 14px; color: var(--ink); }
+
+    /* ② 직접 풀어 보기 */
+    .play {
+      padding: 22px;
+      border-radius: 16px;
+      background: #f3f6ff;
+      border: 1.5px dashed #b9c6ee;
+    }
+    .play label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
+    .field { display: flex; gap: 8px; }
+    .field input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px 14px;
+      border: 2px solid #c7d1ef;
+      border-radius: 10px;
+      background: #fff;
+      font: inherit;
+      font-size: 18px;
+    }
+    .field input:focus { outline: none; border-color: var(--jung); }
+    .field button {
+      flex: none;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--ink);
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .stage {
+      margin-top: 18px;
+      padding: 20px 12px;
+      min-height: 120px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: #fff;
+    }
+    /* 글자 상자 아래 여백(1.17em 중 잉크 밖 부분)을 덜어 가운데로 보이게 */
+    .stage-word { max-width: 100%; margin-bottom: -0.16em; }
+
+    .parts { display: grid; gap: 8px; margin: 14px 0 0; padding: 0; list-style: none; }
+    .parts li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 15px;
+      color: var(--muted);
+    }
+    .parts .syl { width: 36px; font-size: 26px; font-weight: 800; color: var(--ink); text-align: center; }
+    .chip {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1.5px solid currentColor;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .chip small { font-size: 11px; font-weight: 700; opacity: 0.85; }
+    .chip .split { font-size: 13px; font-weight: 700; color: var(--muted); }
+    .is-cho { color: var(--cho); }
+    .is-jung { color: var(--jung); }
+    .is-tail { color: var(--tail); }
+    .is-jong { color: var(--jong); }
+    .is-jong2 { color: var(--jong2); }
+    .parts .other { font-size: 14px; }
+
+    /* ③ 받침 찾기 */
+    .pick-words { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pick-words button {
+      position: relative;
+      min-width: 86px;
+      padding: 12px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .pick-words button[aria-pressed="true"]::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border: 3px solid var(--cho);
+      border-radius: 50%;
+      transform: rotate(-6deg);
+    }
+
+    .sheet-foot {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 38px;
+      padding-top: 20px;
+      border-top: 1.5px dashed var(--line);
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .sheet-foot .write { flex: 1; min-width: 220px; }
+    .sheet-foot .write i { display: block; margin-top: 18px; border-bottom: 1.5px solid var(--line); }
+    .check {
+      flex: none;
+      width: 92px;
+      height: 92px;
+      display: grid;
+      place-items: center;
+      border: 2px dashed #d7cfc0;
+      border-radius: 50%;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 760px) {
+      .sheet { padding: 26px 20px 28px; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .student { grid-template-columns: repeat(3, auto); }
+    }
+    @media (max-width: 420px) {
+      body { padding: 12px 8px 32px; }
+      .play { padding: 16px 14px; }
+      .parts li { gap: 6px; padding: 10px; }
+      .parts .syl { width: 28px; font-size: 22px; }
+      /* 좁은 화면: 칩 이름을 글자 위로 올려 한 줄에 들어가게 */
+      .chip { flex-direction: column; align-items: center; gap: 0; padding: 3px 9px 4px; font-size: 18px; }
+      .chip small { font-size: 10px; }
+      .chip .split { font-size: 11px; }
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .sheet { box-shadow: none; max-width: none; }
+      .play .field button { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="sheet-head">
+      <div>
+        <p class="subject">국어 활동지 · 3학년</p>
+        <h1 class="font-kku sheet-title" data-font="saekdong" data-size="clamp(40px, 10vw, 64px)">한글 짜임 놀이</h1>
+        <p class="lead">글자 하나는 첫소리, 가운뎃소리, 끝소리가 모여 만들어져요.</p>
+      </div>
+      <div class="student" aria-label="이름 적는 칸">
+        <label><span class="blank"></span>학년</label>
+        <label><span class="blank"></span>반</label>
+        <label><span class="blank"></span>번</label>
+        <label class="name">이름 <span class="blank"></span></label>
+      </div>
+    </header>
+
+    <ul class="legend" aria-label="색 풀이">
+      <li><i style="--c: var(--cho)"></i><b>초성</b> 첫소리</li>
+      <li><i style="--c: var(--jung)"></i><b>중성</b> 가운뎃소리</li>
+      <li><i style="--c: var(--tail)"></i><b>겹모음</b> 뒷조각</li>
+      <li><i style="--c: var(--jong)"></i><b>받침</b> 끝소리</li>
+      <li><i style="--c: var(--jong2)"></i><b>겹받침</b> 둘째</li>
+    </ul>
+
+    <section class="task" aria-labelledby="t1">
+      <h2 id="t1"><span class="num">1</span>색으로 나누어 보아요</h2>
+      <div class="cards">
+        <div class="card"><font-kku font="saekdong" size="60">나무</font-kku><p><b>받침 없는 글자</b>ㄴ+ㅏ, ㅁ+ㅜ</p></div>
+        <div class="card"><font-kku font="saekdong" size="60">하늘</font-kku><p><b>받침 있는 글자</b>늘 = ㄴ+ㅡ+ㄹ</p></div>
+        <div class="card"><font-kku font="saekdong" size="60">과자</font-kku><p><b>모음이 둘인 글자</b>ㅘ = ㅗ+ㅏ</p></div>
+        <div class="card"><font-kku font="saekdong" size="60">닭</font-kku><p><b>받침이 둘인 글자</b>ㄺ = ㄹ+ㄱ</p></div>
+      </div>
+    </section>
+
+    <section class="task" aria-labelledby="t2">
+      <h2 id="t2"><span class="num">2</span>내 낱말을 풀어 보아요</h2>
+      <div class="play">
+        <label for="word-input">좋아하는 낱말을 써 보세요 (6자까지)</label>
+        <div class="field">
+          <input id="word-input" type="text" maxlength="6" value="꽃다발" autocomplete="off" spellcheck="false" />
+          <button type="button" id="word-random">다른 낱말</button>
+        </div>
+        <div class="stage">
+          <font-kku id="word-view" class="stage-word" font="saekdong" size="clamp(52px, 15vw, 88px)" wrap-unit="glyph">꽃다발</font-kku>
+        </div>
+        <ul class="parts" id="word-parts" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <section class="task" aria-labelledby="t3">
+      <h2 id="t3"><span class="num">3</span>받침이 있는 낱말을 눌러 ○ 하세요</h2>
+      <div class="pick-words">
+        <button type="button" aria-pressed="false">사과</button>
+        <button type="button" aria-pressed="false">연필</button>
+        <button type="button" aria-pressed="false">바다</button>
+        <button type="button" aria-pressed="false">꽃병</button>
+        <button type="button" aria-pressed="false">우유</button>
+        <button type="button" aria-pressed="false">김밥</button>
+      </div>
+    </section>
+
+    <footer class="sheet-foot">
+      <div class="write">오늘 새로 알게 된 것을 한 줄로 써 보세요.<i></i></div>
+      <div class="check">선생님<br />확인</div>
+    </footer>
+  </main>
+
+  <script>
+    // 조합형 자모(U+1100대)를 화면용 호환 자모(ㄱ, ㅏ …)로 바꾼다
+    var CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+    var JUNG = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ";
+    var JONG = "ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ";
+    function compat(ch) {
+      var c = ch.codePointAt(0);
+      if (c >= 0x1100 && c <= 0x1112) return CHO[c - 0x1100];
+      if (c >= 0x1161 && c <= 0x1175) return JUNG[c - 0x1161];
+      if (c >= 0x11a8 && c <= 0x11c2) return JONG[c - 0x11a8];
+      return ch;
+    }
+
+    function chip(roleClass, label, whole, pieces, pieceClasses) {
+      var html = '<span class="chip ' + roleClass + '"><small>' + label + "</small>" + whole;
+      if (pieces.length > 1) {
+        html += ' <span class="split">(' + pieces.map(function (p, i) {
+          return '<span class="' + pieceClasses[i] + '">' + p + "</span>";
+        }).join("+") + ")</span>";
+      }
+      return html + "</span>";
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });
+    }
+
+    function describe(ch) {
+      if (!FontKku.isHangulSyllable(ch)) {
+        return '<span class="syl">' + escapeHtml(ch) + '</span><span class="other">한글 글자가 아니라 나누지 않아요</span>';
+      }
+      var g = FontKku.decomposeGlyph(ch);
+      var parts = [chip("is-cho", "초성", compat(g.sourceJamo.choseong), [], [])];
+      parts.push(chip("is-jung", "중성", compat(g.sourceJamo.jungseong),
+        g.jamo.jungseong.map(compat), ["is-jung", "is-tail"]));
+      if (g.sourceJamo.jongseong) {
+        parts.push(chip("is-jong", "받침", compat(g.sourceJamo.jongseong),
+          g.jamo.jongseong.map(compat), ["is-jong", "is-jong2"]));
+      }
+      return '<span class="syl">' + ch + "</span>=" + parts.join("+");
+    }
+
+    var input = document.getElementById("word-input");
+    var view = document.getElementById("word-view");
+    var list = document.getElementById("word-parts");
+
+    function update() {
+      var text = input.value.trim() || "한글";
+      FontKku.refresh(view, { text: text });
+      list.innerHTML = Array.from(text).filter(function (ch) { return ch.trim(); })
+        .map(function (ch) { return "<li>" + describe(ch) + "</li>"; }).join("");
+    }
+
+    var samples = ["꽃다발", "무지개", "햇볕", "읽기", "왕관", "도서관", "닭갈비", "훈민정음"];
+    document.getElementById("word-random").addEventListener("click", function () {
+      var next = samples[(samples.indexOf(input.value) + 1) % samples.length];
+      input.value = next;
+      update();
+    });
+    input.addEventListener("input", update);
+    update();
+
+    // ③ 누르면 동그라미가 그려진다
+    document.querySelectorAll(".pick-words button").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        btn.setAttribute("aria-pressed", btn.getAttribute("aria-pressed") === "true" ? "false" : "true");
+      });
+    });
+  </script>
+</body>
+</html>

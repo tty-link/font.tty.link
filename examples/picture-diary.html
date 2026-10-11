@@ -1,0 +1,588 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 그림일기. 글꼴: crayon dojang. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>그림일기 — 한글박물관에 간 날</title>
+  <script src="../lib/font-kku.js" data-fonts="crayon dojang"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    /* 크레용 상자 — 원고지 글자와 덧그리기가 같은 색을 쓴다 */
+    :root {
+      --paper: #fffdf6;
+      --desk: #f3e7cf;
+      --ink: #3b3127;
+      --muted: #7b6d5c;
+      --grid: #9cc7a4;
+      --grid-soft: #d7eadb;
+      --red: #e23d3d;
+      --blue: #2c6fd8;
+      --green: #23a35a;
+      /* 원고지 글자의 자모 색 — 크레용 글꼴은 자소판을 모양(마스크)으로만 쓰고 색은 CSS가 칠한다 */
+      --cho: var(--red);
+      --jung: var(--blue);
+      --jong: var(--green);
+    }
+
+    body {
+      margin: 0;
+      padding: 28px 16px 56px;
+      color: var(--ink);
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      word-break: keep-all;
+      background:
+        radial-gradient(circle at 15% 10%, rgb(255 255 255 / 55%), transparent 40%),
+        repeating-linear-gradient(0deg, rgb(150 110 60 / 4%) 0 1px, transparent 1px 7px),
+        var(--desk);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 760px);
+      justify-content: center;
+      gap: 24px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    @media (min-width: 1100px) {
+      .layout { grid-template-columns: minmax(0, 760px) 320px; align-items: start; }
+      .tools { position: sticky; top: 20px; }
+    }
+
+    /* 일기장 한 쪽 */
+    .diary {
+      position: relative;
+      padding: 26px 26px 30px;
+      border-radius: 6px;
+      background: var(--paper);
+      box-shadow: 0 1px 0 #e6dcc8, 0 14px 34px rgb(90 60 20 / 18%);
+    }
+    /* 공책 철 구멍 */
+    .diary::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      bottom: 14px;
+      left: -9px;
+      width: 18px;
+      background: radial-gradient(circle at 9px 50%, var(--desk) 5px, transparent 5.5px) 0 0 / 18px 46px repeat-y;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      padding: 10px 14px;
+      border: 2px solid var(--grid);
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .meta label { color: var(--muted); }
+    .meta input[type="date"] {
+      min-width: 0;
+      padding: 4px 6px;
+      border: 1.5px dashed var(--grid);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+    }
+    .weekday { color: var(--red); }
+    .weather { display: flex; gap: 6px; margin-left: auto; }
+    .weather button {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 2px solid transparent;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+    .weather button svg { width: 30px; height: 30px; }
+    .weather button[aria-pressed="true"] { border-color: var(--red); background: #fff1ec; }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 14px 0 12px;
+      padding: 6px 14px;
+      border-bottom: 2px solid var(--grid);
+      min-width: 0;
+    }
+    .title-row b { flex: none; font-size: 15px; color: var(--muted); }
+    .title-row h1 { margin: 0; min-width: 0; }
+
+    /* 그림 칸 — 아이 그림(SVG) 위에 덧그리기 캔버스 */
+    .picture {
+      position: relative;
+      aspect-ratio: 2 / 1;
+      border: 2px solid var(--grid);
+      border-radius: 4px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .picture svg, .picture canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .picture canvas { filter: url(#crayon-tex); cursor: crosshair; touch-action: auto; }
+    .picture[data-drawing="true"] canvas { touch-action: none; }
+    .picture[data-drawing="true"] { outline: 3px dashed var(--red); outline-offset: 3px; }
+
+    /* 원고지 — 칸마다 크레용 글자 하나 */
+    .manuscript {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 12), 1fr);
+      margin-top: 16px;
+      border-top: 2px solid var(--grid);
+      border-left: 2px solid var(--grid);
+      box-shadow: inset -2px 0 var(--grid);
+    }
+    .cell {
+      container-type: inline-size;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 1;
+      border-right: 1.5px solid var(--grid-soft);
+      border-bottom: 1.5px solid var(--grid);
+      overflow: hidden;
+    }
+    /* 제목과 원고지의 크레용 글자 — 고른 크레용 색으로 자모마다 칠한다 */
+    .diary [data-fy-font="crayon"] [part~="choseong"] { color: var(--cho); }
+    .diary [data-fy-font="crayon"] [part~="jungseong"] { color: var(--jung); }
+    .diary [data-fy-font="crayon"] [part~="jongseong"] { color: var(--jong); }
+
+    .teacher {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 18px;
+      padding: 12px 4px 0;
+      border-top: 1.5px dashed var(--grid);
+    }
+    .teacher p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
+    .teacher p b { color: var(--ink); }
+    .stamp {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 104px;
+      height: 104px;
+      border: 4px solid #c41e28;
+      border-radius: 50%;
+      rotate: -12deg;
+      opacity: 0.9;
+      text-align: center;
+      line-height: 1;
+    }
+    .stamp-lines { display: grid; justify-items: center; gap: 2px; }
+
+    /* 꾸미는 도구 */
+    .tools {
+      padding: 20px;
+      border-radius: 10px;
+      background: rgb(255 255 255 / 72%);
+      box-shadow: 0 8px 24px rgb(90 60 20 / 12%);
+      font-size: 14px;
+    }
+    .tools h2 { margin: 0 0 10px; font-size: 16px; }
+    .tools section + section { margin-top: 20px; padding-top: 18px; border-top: 1px dashed #d9c9ab; }
+    .tools label { display: block; margin: 10px 0 6px; font-weight: 700; color: var(--muted); }
+    .tools input[type="text"], .tools textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1.5px solid #d9c9ab;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 15px;
+    }
+    .tools textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+    .count { margin: 4px 0 0; font-size: 12px; text-align: right; color: var(--muted); }
+    .note { margin: 10px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+
+    .role { display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 8px; margin-top: 8px; }
+    .role span { font-weight: 800; }
+    .swatches { display: flex; flex-wrap: wrap; gap: 5px; }
+    .swatches button {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      background: var(--c);
+      box-shadow: 0 0 0 1px rgb(0 0 0 / 15%);
+      cursor: pointer;
+    }
+    .swatches button[aria-pressed="true"] { box-shadow: 0 0 0 2.5px var(--ink); }
+    .buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .buttons button {
+      padding: 8px 12px;
+      border: 1.5px solid #d9c9ab;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .buttons button[aria-pressed="true"] { border-color: var(--red); color: var(--red); background: #fff1ec; }
+
+    @media (max-width: 560px) {
+      body { padding: 14px 10px 36px; }
+      .diary { padding: 16px 12px 20px; }
+      .diary::before { display: none; }
+      .meta { font-size: 14px; padding: 8px 10px; gap: 8px 10px; }
+      .weather button { width: 34px; height: 34px; }
+      .weather button svg { width: 26px; height: 26px; }
+      .title-row { padding: 6px 4px; }
+      .stamp { width: 84px; height: 84px; }
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .layout { display: block; }
+      .diary { box-shadow: none; }
+      .diary::before, .tools { display: none; }
+      .picture[data-drawing="true"] { outline: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 크레용 질감: 종이 눈에 덜 묻은 틈과 무른 가장자리 (그림과 덧그리기에 쓴다) -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute">
+    <filter id="crayon-tex" x="-3%" y="-3%" width="106%" height="106%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="tooth" />
+      <feColorMatrix in="tooth" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.2 0 0 0 -1.05" result="toothA" />
+      <feComposite in="SourceGraphic" in2="toothA" operator="in" result="grain" />
+      <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" seed="2" result="warp" />
+      <feDisplacementMap in="grain" in2="warp" scale="3" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </svg>
+
+  <div class="layout">
+    <main class="diary">
+      <div class="meta">
+        <label for="day">날짜</label>
+        <input id="day" type="date" value="2026-10-09" />
+        <span class="weekday" id="weekday">금요일</span>
+        <div class="weather" role="group" aria-label="날씨">
+          <button type="button" aria-pressed="true" aria-label="맑음">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="#f08c00" stroke-width="2.6" stroke-linecap="round"><circle cx="16" cy="16" r="6" fill="#ffd43b" /><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8" /></g></svg>
+          </button>
+          <button type="button" aria-pressed="false" aria-label="구름">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 24h15a5 5 0 0 0 0-10 7 7 0 0 0-13.4-1.6A5.8 5.8 0 0 0 9 24z" fill="#dbe4f0" stroke="#7b8ba3" stroke-width="2.4" stroke-linejoin="round" /></svg>
+          </button>
+          <button type="button" aria-pressed="false" aria-label="비">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 19h15a5 5 0 0 0 0-10 7 7 0 0 0-13.4-1.6A5.8 5.8 0 0 0 9 19z" fill="#dbe4f0" stroke="#7b8ba3" stroke-width="2.4" stroke-linejoin="round" /><path d="M11 23l-2 4M17 23l-2 4M23 23l-2 4" stroke="#2c6fd8" stroke-width="2.4" stroke-linecap="round" /></svg>
+          </button>
+          <button type="button" aria-pressed="false" aria-label="눈">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><g stroke="#4dabf7" stroke-width="2.4" stroke-linecap="round"><path d="M16 4v24M5.6 10l20.8 12M5.6 22l20.8-12" /><path d="M13 6l3 3 3-3M13 26l3-3 3 3" fill="none" /></g></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="title-row">
+        <b>제목</b>
+        <h1 class="font-kku" id="title-view" data-font="crayon" data-size="clamp(30px, 6.4vw, 46px)">한글박물관에 간 날</h1>
+      </div>
+
+      <div class="picture" id="picture" data-drawing="false">
+        <svg viewBox="0 0 600 300" role="img" aria-label="크레용으로 그린 그림: 해가 뜬 날 한글박물관 앞에 선 가족">
+          <g filter="url(#crayon-tex)" stroke-linecap="round" stroke-linejoin="round">
+            <!-- 하늘과 땅 -->
+            <path d="M0 18 Q150 30 300 16 T600 20" fill="none" stroke="#74c0fc" stroke-width="14" />
+            <path d="M0 262 Q150 250 300 260 T600 254 V300 H0z" fill="#8ce99a" stroke="#40c057" stroke-width="5" />
+            <!-- 해 -->
+            <circle cx="72" cy="70" r="30" fill="#ffd43b" stroke="#f08c00" stroke-width="5" />
+            <path d="M72 22v-12M72 130v-12M24 70H12M132 70h-12M38 36l-8-8M106 104l8 8M38 104l-8 8M106 36l8-8" stroke="#f08c00" stroke-width="5" />
+            <!-- 박물관 -->
+            <path d="M232 112 L330 58 L428 112z" fill="#ffc9c9" stroke="#e03131" stroke-width="5" />
+            <rect x="244" y="112" width="172" height="14" fill="#ffe3e3" stroke="#e03131" stroke-width="4" />
+            <path d="M262 128v118M296 128v118M364 128v118M398 128v118" stroke="#868e96" stroke-width="9" />
+            <path d="M318 246v-56a12 12 0 0 1 24 0v56" fill="#a5d8ff" stroke="#1c7ed6" stroke-width="5" />
+            <path d="M236 248h188" stroke="#495057" stroke-width="6" />
+            <!-- 박물관 깃발: ㄱ ㄴ ㄷ -->
+            <path d="M330 58V22" stroke="#495057" stroke-width="4" />
+            <path d="M330 22h50v22h-50" fill="#fff3bf" stroke="#f59f00" stroke-width="4" />
+            <path d="M336 28h8v10M349 28v10h8M371 28h-8v10h8" fill="none" stroke="#e03131" stroke-width="3" />
+            <!-- 나무 -->
+            <path d="M520 250v-70" stroke="#8d5524" stroke-width="12" />
+            <circle cx="520" cy="160" r="40" fill="#b2f2bb" stroke="#2f9e44" stroke-width="5" />
+            <circle cx="503" cy="150" r="6" fill="#fa5252" stroke="none" />
+            <circle cx="536" cy="172" r="6" fill="#fa5252" stroke="none" />
+            <!-- 가족 셋 (손잡고) -->
+            <g stroke="#343a40" stroke-width="5" fill="none">
+              <circle cx="120" cy="170" r="16" fill="#ffe8cc" />
+              <path d="M120 186v42M120 228l-14 26M120 228l14 26M120 198l-20 14M120 198l26 6" />
+              <circle cx="172" cy="182" r="12" fill="#ffe8cc" />
+              <path d="M172 194v30M172 224l-10 24M172 224l10 24M146 204l26-4l22 6" />
+              <circle cx="214" cy="168" r="16" fill="#ffe8cc" />
+              <path d="M214 184v44M214 228l-14 26M214 228l14 26M194 206l20-8l18 14" />
+            </g>
+            <path d="M104 190 l16 -8 l16 8 v32 h-32z" fill="#ffa8a8" stroke="#e03131" stroke-width="4" />
+            <path d="M162 200 l10 -4 l10 4 v22 h-20z" fill="#ffec99" stroke="#f59f00" stroke-width="4" />
+            <path d="M198 186 l16 -8 l16 8 v34 h-32z" fill="#a5d8ff" stroke="#1c7ed6" stroke-width="4" />
+            <!-- 꽃 -->
+            <g stroke-width="4">
+              <path d="M460 262v-22" stroke="#2f9e44" />
+              <circle cx="460" cy="234" r="9" fill="#f783ac" stroke="#d6336c" />
+              <path d="M40 262v-20" stroke="#2f9e44" />
+              <circle cx="40" cy="236" r="8" fill="#ffd43b" stroke="#f08c00" />
+            </g>
+          </g>
+        </svg>
+        <canvas id="doodle" width="1200" height="600" aria-label="덧그리기 칸"></canvas>
+      </div>
+
+      <div class="manuscript" id="manuscript" aria-hidden="true"></div>
+      <p class="sr" id="diary-sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)"></p>
+
+      <footer class="teacher">
+        <p><b>선생님 한마디</b><br />박물관에서 본 것을 자세히 썼구나! 자음과 모음으로 이름을 만든 이야기가 정말 재미있어요.</p>
+        <div class="stamp" role="img" aria-label="참 잘했어요 도장"><span class="stamp-lines"><font-kku font="dojang" size="clamp(19px, 5.4vw, 25px)" wrap-unit="line">참 잘</font-kku><font-kku font="dojang" size="clamp(19px, 5.4vw, 25px)" wrap-unit="line">했어요</font-kku></span></div>
+      </footer>
+    </main>
+
+    <aside class="tools" aria-label="일기 꾸미기">
+      <section>
+        <h2>일기 쓰기</h2>
+        <label for="title-input">제목</label>
+        <input id="title-input" type="text" maxlength="14" value="한글박물관에 간 날" autocomplete="off" />
+        <label for="text-input">일기 (원고지에 한 칸씩)</label>
+        <textarea id="text-input" maxlength="96">오늘은 한글날이라서 가족과 함께 한글박물관에 갔다. 옛날 글자들이 정말 신기했다. 자음과 모음을 모아서 내 이름도 만들어 보았다. 다음에 또 가고 싶다.</textarea>
+        <p class="count" id="count"></p>
+      </section>
+
+      <section>
+        <h2>크레용 색 고르기</h2>
+        <div class="role"><span style="color: var(--cho)">초성</span><div class="swatches" data-role="cho" role="group" aria-label="초성 크레용"></div></div>
+        <div class="role"><span style="color: var(--jung)">중성</span><div class="swatches" data-role="jung" role="group" aria-label="중성 크레용"></div></div>
+        <div class="role"><span style="color: var(--jong)">받침</span><div class="swatches" data-role="jong" role="group" aria-label="받침 크레용"></div></div>
+        <div class="buttons">
+          <button type="button" id="rainbow" aria-pressed="false">알록달록 칸마다</button>
+          <button type="button" id="reset-colors">처음 색으로</button>
+        </div>
+        <p class="note">크레용 글꼴은 SVG로 그린 자소판을 모양(마스크)으로만 쓰고, 색은 CSS가 칠해요. 그래서 한 글자 안에서도 초성·중성·받침 색을 따로 고를 수 있어요.</p>
+      </section>
+
+      <section>
+        <h2>그림 덧그리기</h2>
+        <div class="buttons">
+          <button type="button" id="draw-toggle" aria-pressed="false">덧그리기 켜기</button>
+          <button type="button" id="draw-clear">덧그린 것 지우기</button>
+        </div>
+        <p class="note">켜면 그림 위에 손가락이나 마우스로 그려요. 색은 초성 크레용 색이에요.</p>
+      </section>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var CRAYONS = [
+        ["빨강", "#e23d3d"], ["주황", "#f76707"], ["노랑", "#f2b705"], ["연두", "#74b816"],
+        ["초록", "#23a35a"], ["하늘", "#1c9ad6"], ["파랑", "#2c6fd8"], ["보라", "#7048e8"],
+        ["분홍", "#e64980"], ["갈색", "#8d5524"], ["검정", "#2b2b2b"]
+      ];
+      var DEFAULTS = { cho: "#e23d3d", jung: "#2c6fd8", jong: "#23a35a" };
+      var root = document.documentElement;
+      var colors = { cho: DEFAULTS.cho, jung: DEFAULTS.jung, jong: DEFAULTS.jong };
+
+      // ── 날짜와 날씨 ──
+      var day = document.getElementById("day");
+      var weekday = document.getElementById("weekday");
+      function showWeekday() {
+        var date = new Date(day.value + "T00:00:00");
+        weekday.textContent = isNaN(date) ? "" : "일월화수목금토".charAt(date.getDay()) + "요일";
+      }
+      day.addEventListener("input", showWeekday);
+      showWeekday();
+      document.querySelectorAll(".weather button").forEach(function (button, _, all) {
+        button.addEventListener("click", function () {
+          all.forEach(function (other) { other.setAttribute("aria-pressed", String(other === button)); });
+        });
+      });
+
+      // ── 제목 ──
+      var titleView = document.getElementById("title-view");
+      var titleInput = document.getElementById("title-input");
+      titleInput.addEventListener("input", function () {
+        FontKku.refresh(titleView, { text: titleInput.value.trim() || "오늘의 일기" });
+      });
+
+      // ── 원고지: 칸마다 크레용 글자 하나 ──
+      var sheet = document.getElementById("manuscript");
+      var textInput = document.getElementById("text-input");
+      var count = document.getElementById("count");
+      var srText = document.getElementById("diary-sr");
+      var cols = 0;
+      var cells = [];
+      var CAPACITY = 108;
+      var rainbow = false;
+
+      // 원고지 쓰는 법: 문단 첫 칸은 비우고, 줄 첫 칸에는 띄어쓰기를 하지 않는다
+      function layout(text) {
+        var out = [];
+        text.split(/\n+/).forEach(function (paragraph) {
+          paragraph = paragraph.trim();
+          if (!paragraph) return;
+          while (out.length % cols) out.push("");
+          out.push("");
+          Array.from(paragraph).forEach(function (ch) {
+            if (ch === " " && out.length % cols === 0) return;
+            out.push(ch === " " ? "" : ch);
+          });
+        });
+        return out;
+      }
+
+      function build() {
+        var next = sheet.clientWidth < 420 ? 10 : 12;
+        if (next === cols) return;
+        cols = next;
+        sheet.style.setProperty("--cols", cols);
+        var rows = Math.ceil(CAPACITY / cols);
+        sheet.innerHTML = "";
+        cells = [];
+        for (var i = 0; i < rows * cols; i += 1) {
+          var cell = document.createElement("span");
+          cell.className = "cell";
+          var host = document.createElement("span");
+          host.className = "font-kku";
+          host.setAttribute("data-font", "crayon");
+          host.setAttribute("data-size", "74cqi");
+          cell.appendChild(host);
+          sheet.appendChild(cell);
+          cells.push({ cell: cell, host: host, text: "" });
+        }
+        FontKku.upgradeAll(sheet);
+        paintRainbow();
+        write();
+      }
+
+      function write() {
+        var chars = layout(textInput.value);
+        cells.forEach(function (item, i) {
+          var ch = chars[i] || "";
+          if (ch === item.text) return;
+          item.text = ch;
+          FontKku.refresh(item.host, { text: ch });
+        });
+        count.textContent = Array.from(textInput.value).length + " / 96자";
+        srText.textContent = textInput.value;
+      }
+
+      // ── 크레용 색 ──
+      function applyColors() {
+        root.style.setProperty("--cho", colors.cho);
+        root.style.setProperty("--jung", colors.jung);
+        root.style.setProperty("--jong", colors.jong);
+        document.querySelectorAll(".swatches").forEach(function (group) {
+          var role = group.getAttribute("data-role");
+          group.querySelectorAll("button").forEach(function (button) {
+            button.setAttribute("aria-pressed", String(button.getAttribute("data-color") === colors[role]));
+          });
+        });
+      }
+      // 칸마다 다른 크레용 세 자루 — 칸 순번으로 정하므로 다시 그려도 같은 색이다
+      function paintRainbow() {
+        cells.forEach(function (item, i) {
+          ["cho", "jung", "jong"].forEach(function (role, k) {
+            if (rainbow) {
+              item.cell.style.setProperty("--" + role, CRAYONS[(i * 5 + k * 4) % 9][1]);
+            } else {
+              item.cell.style.removeProperty("--" + role);
+            }
+          });
+        });
+      }
+      document.querySelectorAll(".swatches").forEach(function (group) {
+        var role = group.getAttribute("data-role");
+        group.innerHTML = CRAYONS.map(function (crayon) {
+          return '<button type="button" data-color="' + crayon[1] + '" style="--c: ' + crayon[1] + '" aria-label="' + crayon[0] + '"></button>';
+        }).join("");
+        group.addEventListener("click", function (event) {
+          var button = event.target.closest("button");
+          if (!button) return;
+          colors[role] = button.getAttribute("data-color");
+          applyColors();
+        });
+      });
+      var rainbowButton = document.getElementById("rainbow");
+      rainbowButton.addEventListener("click", function () {
+        rainbow = !rainbow;
+        rainbowButton.setAttribute("aria-pressed", String(rainbow));
+        paintRainbow();
+      });
+      document.getElementById("reset-colors").addEventListener("click", function () {
+        colors = { cho: DEFAULTS.cho, jung: DEFAULTS.jung, jong: DEFAULTS.jong };
+        rainbow = false;
+        rainbowButton.setAttribute("aria-pressed", "false");
+        applyColors();
+        paintRainbow();
+      });
+
+      // ── 덧그리기 ──
+      var picture = document.getElementById("picture");
+      var canvas = document.getElementById("doodle");
+      var ctx = canvas.getContext("2d");
+      var drawing = false;
+      var last = null;
+      var toggle = document.getElementById("draw-toggle");
+      toggle.addEventListener("click", function () {
+        drawing = !drawing;
+        picture.setAttribute("data-drawing", String(drawing));
+        toggle.setAttribute("aria-pressed", String(drawing));
+        toggle.textContent = drawing ? "덧그리기 끄기" : "덧그리기 켜기";
+      });
+      document.getElementById("draw-clear").addEventListener("click", function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      });
+      function point(event) {
+        var rect = canvas.getBoundingClientRect();
+        return [(event.clientX - rect.left) * canvas.width / rect.width, (event.clientY - rect.top) * canvas.height / rect.height];
+      }
+      canvas.addEventListener("pointerdown", function (event) {
+        if (!drawing) return;
+        canvas.setPointerCapture(event.pointerId);
+        last = point(event);
+      });
+      canvas.addEventListener("pointermove", function (event) {
+        if (!drawing || !last) return;
+        var next = point(event);
+        ctx.strokeStyle = colors.cho;
+        ctx.lineWidth = 12;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        ctx.moveTo(last[0], last[1]);
+        ctx.lineTo(next[0], next[1]);
+        ctx.stroke();
+        last = next;
+      });
+      ["pointerup", "pointercancel", "pointerleave"].forEach(function (type) {
+        canvas.addEventListener(type, function () { last = null; });
+      });
+
+      textInput.addEventListener("input", write);
+      applyColors();
+      build();
+      if ("ResizeObserver" in window) {
+        new ResizeObserver(build).observe(sheet);
+      }
+    })();
+  </script>
+</body>
+</html>

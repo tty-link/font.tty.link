@@ -1,0 +1,567 @@
+@layer font-kku.font, font-kku.jamo, font-kku.context;
+
+/* Font contract v2 (docs/ADR/ADR-008-font-contract-v2.md)
+ *
+ * Fonts declare everything inside the three layers above; every font file
+ * repeats the same statement so the order never depends on load order.
+ *   font-kku.font     host values (font, role, parent slot, slot vars) and
+ *                     slot-granular node rules
+ *   font-kku.jamo     rules keyed on jamo identity ([data-jamo], optionally
+ *                     with [data-fy-pos])
+ *   font-kku.context  rules keyed on the neighbourhood (:has(), topology)
+ * Later layers win regardless of specificity; unlayered page CSS wins over
+ * every font. The rules in this file stay unlayered so page resets cannot
+ * break jamo placement, which also means a font can only reach jamo nodes
+ * through variables.
+ *
+ * One composition rule for every jamo property:
+ *   absolute value  page ?? slot ?? parent slot ?? role ?? font ?? builtin
+ *                   (same variable re-declared on a node replaces the host
+ *                   value; the generated dispatch below builds the chain)
+ *   corrections     accumulate, one variable per level: jamo, context, page
+ *                   (--fy-jamo-dx + --fy-ctx-dx; jamo × ctx × page scale;
+ *                   jamo + ctx + page rotate)
+ * Page-only variables (--fy-top, --fy-clip, --fy-scale-x, --fy-sprite-filter,
+ * ...) are never declared by fonts, so the page always has the last word. */
+
+/* A url() inside an unregistered custom property resolves against the
+ * stylesheet that uses var() — this file — not the font that declared it.
+ * Registered <url> properties resolve where they are declared, so a font's
+ * relative sheet path (./my-sprite.png) stays relative to the font file.
+ * --fy-sprite-url-2x/-3x exist so multi-scale sheets can build
+ * --fy-sprite-image: image-set(var(--fy-sprite-url) 1x, var(--fy-sprite-url-2x) 2x). */
+@property --fy-sprite-url { syntax: "<url> | none"; inherits: true; initial-value: none; }
+@property --fy-sprite-url-2x { syntax: "<url> | none"; inherits: true; initial-value: none; }
+@property --fy-sprite-url-3x { syntax: "<url> | none"; inherits: true; initial-value: none; }
+
+/* Autoload (ADR-019): while the runtime fetches the font CSS this host asked
+ * for, the not-yet-placed jamo stay hidden (layout kept). The runtime removes
+ * the attribute when the CSS arrives, fails, or after 3 seconds. */
+:where(font-kku, .font-kku)[data-fy-font-pending] [part="root"] {
+  visibility: hidden;
+}
+
+:where(font-kku, .font-kku)[data-fy-upgraded="true"] {
+  display: inline-block;
+  font-size: var(--fy-size, 24px);
+  line-height: 1;
+  vertical-align: top;
+  font-family:
+    var(--fy-font-family, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif);
+}
+
+:where(font-kku, .font-kku)[data-fy-wrap-unit="line"] {
+  display: block;
+}
+
+:where(font-kku, .font-kku)[data-fy-upgraded="true"] [part="root"] {
+  display: inline;
+}
+
+/* Visually hidden source-text mirror for screen readers.
+ * The managed [part="root"] tree is aria-hidden; this node carries the
+ * original text for assistive tech without affecting layout. */
+:where(font-kku, .font-kku)[data-fy-upgraded="true"] [part="sr-source"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+:where(font-kku, .font-kku) [part="line"] {
+  display: block;
+  min-block-size: var(--fy-glyph-height, 1.2em);
+  margin-block-start: var(--fy-line-gap, 0);
+}
+
+:where(font-kku, .font-kku) [part="line"][data-empty="true"]::after {
+  content: "";
+  display: block;
+  block-size: var(--fy-glyph-height, 1.2em);
+}
+
+:where(font-kku, .font-kku) [part="word"] {
+  display: inline-flex;
+  vertical-align: top;
+  margin-inline-end: var(--fy-word-gap, 0);
+}
+
+:where(font-kku, .font-kku)[data-fy-wrap-unit="glyph"] [part="word"] {
+  flex-wrap: wrap;
+}
+
+:where(font-kku, .font-kku)[data-fy-wrap-unit="word"] [part="word"],
+:where(font-kku, .font-kku)[data-fy-wrap-unit="line"] [part="word"] {
+  white-space: nowrap;
+}
+
+:where(font-kku, .font-kku)[data-fy-wrap-unit="line"] [part="line"] {
+  white-space: nowrap;
+}
+
+:where(font-kku, .font-kku) [part="space"] {
+  display: inline-block;
+  inline-size: calc(var(--fy-space-count, 1) * var(--fy-space-width, 0.5em));
+  block-size: 1px;
+}
+
+:where(font-kku, .font-kku) [part="glyph"] {
+  position: relative;
+  display: inline-block;
+  inline-size: var(--fy-glyph-width, 1em);
+  block-size: var(--fy-glyph-height, 1.2em);
+  vertical-align: top;
+  margin-inline-end: var(--fy-glyph-gap, 0);
+}
+
+:where(font-kku, .font-kku) [part~="glyph-body"] {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  transform-origin:
+    var(--fy-body-origin-x, 0)
+    var(--fy-body-origin-y, 0);
+  transform:
+    translate(var(--fy-body-x, 0), var(--fy-body-y, 0))
+    scale(var(--fy-body-scale-x, 1), var(--fy-body-scale-y, 1))
+    rotate(var(--fy-body-rotate, 0deg));
+}
+
+:where(font-kku, .font-kku) [part~="cluster"] {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  transform-origin:
+    var(--fy-cluster-origin-x, 0)
+    var(--fy-cluster-origin-y, 0);
+}
+
+/* Cluster dispatch follows the same fallback idea as jamo slots: a variant
+ * (--fy-jung-cluster-open-*, --fy-jong-cluster-right-* ...) falls back to its
+ * cluster (--fy-jung-cluster-*, --fy-jong-cluster-*), which falls back to the
+ * generic --fy-cluster-* tier. */
+/* BEGIN GENERATED CSS CONTRACT: cluster */
+/* Source: spec/css-variables.json. Regenerate with: node scripts/check_css_contract.js --write */
+
+:where(font-kku, .font-kku) [part~="jungseong-cluster"] {
+  transform-origin:
+    var(--fy-jung-cluster-origin-x, var(--fy-cluster-origin-x, 0))
+    var(--fy-jung-cluster-origin-y, var(--fy-cluster-origin-y, 0));
+  transform:
+    translate(var(--fy-jung-cluster-x, var(--fy-cluster-x, 0)), var(--fy-jung-cluster-y, var(--fy-cluster-y, 0)))
+    scale(var(--fy-jung-cluster-scale-x, var(--fy-cluster-scale-x, 1)), var(--fy-jung-cluster-scale-y, var(--fy-cluster-scale-y, 1)))
+    rotate(var(--fy-jung-cluster-rotate, var(--fy-cluster-rotate, 0deg)));
+}
+
+:where(font-kku, .font-kku) [part~="jungseong-cluster"][data-fy-open="open"] {
+  transform-origin:
+    var(--fy-jung-cluster-open-origin-x, var(--fy-jung-cluster-origin-x, var(--fy-cluster-origin-x, 0)))
+    var(--fy-jung-cluster-open-origin-y, var(--fy-jung-cluster-origin-y, var(--fy-cluster-origin-y, 0)));
+  transform:
+    translate(var(--fy-jung-cluster-open-x, var(--fy-jung-cluster-x, var(--fy-cluster-x, 0))), var(--fy-jung-cluster-open-y, var(--fy-jung-cluster-y, var(--fy-cluster-y, 0))))
+    scale(var(--fy-jung-cluster-open-scale-x, var(--fy-jung-cluster-scale-x, var(--fy-cluster-scale-x, 1))), var(--fy-jung-cluster-open-scale-y, var(--fy-jung-cluster-scale-y, var(--fy-cluster-scale-y, 1))))
+    rotate(var(--fy-jung-cluster-open-rotate, var(--fy-jung-cluster-rotate, var(--fy-cluster-rotate, 0deg))));
+}
+
+:where(font-kku, .font-kku) [part~="jungseong-cluster"][data-fy-open="closed"] {
+  transform-origin:
+    var(--fy-jung-cluster-closed-origin-x, var(--fy-jung-cluster-origin-x, var(--fy-cluster-origin-x, 0)))
+    var(--fy-jung-cluster-closed-origin-y, var(--fy-jung-cluster-origin-y, var(--fy-cluster-origin-y, 0)));
+  transform:
+    translate(var(--fy-jung-cluster-closed-x, var(--fy-jung-cluster-x, var(--fy-cluster-x, 0))), var(--fy-jung-cluster-closed-y, var(--fy-jung-cluster-y, var(--fy-cluster-y, 0))))
+    scale(var(--fy-jung-cluster-closed-scale-x, var(--fy-jung-cluster-scale-x, var(--fy-cluster-scale-x, 1))), var(--fy-jung-cluster-closed-scale-y, var(--fy-jung-cluster-scale-y, var(--fy-cluster-scale-y, 1))))
+    rotate(var(--fy-jung-cluster-closed-rotate, var(--fy-jung-cluster-rotate, var(--fy-cluster-rotate, 0deg))));
+}
+
+:where(font-kku, .font-kku) [part~="jongseong-cluster"] {
+  transform-origin:
+    var(--fy-jong-cluster-origin-x, var(--fy-cluster-origin-x, 0))
+    var(--fy-jong-cluster-origin-y, var(--fy-cluster-origin-y, 0));
+  transform:
+    translate(var(--fy-jong-cluster-x, var(--fy-cluster-x, 0)), var(--fy-jong-cluster-y, var(--fy-cluster-y, 0)))
+    scale(var(--fy-jong-cluster-scale-x, var(--fy-cluster-scale-x, 1)), var(--fy-jong-cluster-scale-y, var(--fy-cluster-scale-y, 1)))
+    rotate(var(--fy-jong-cluster-rotate, var(--fy-cluster-rotate, 0deg)));
+}
+
+:where(font-kku, .font-kku) [part~="jongseong-cluster"][data-fy-axis="right"] {
+  transform-origin:
+    var(--fy-jong-cluster-right-origin-x, var(--fy-jong-cluster-origin-x, var(--fy-cluster-origin-x, 0)))
+    var(--fy-jong-cluster-right-origin-y, var(--fy-jong-cluster-origin-y, var(--fy-cluster-origin-y, 0)));
+  transform:
+    translate(var(--fy-jong-cluster-right-x, var(--fy-jong-cluster-x, var(--fy-cluster-x, 0))), var(--fy-jong-cluster-right-y, var(--fy-jong-cluster-y, var(--fy-cluster-y, 0))))
+    scale(var(--fy-jong-cluster-right-scale-x, var(--fy-jong-cluster-scale-x, var(--fy-cluster-scale-x, 1))), var(--fy-jong-cluster-right-scale-y, var(--fy-jong-cluster-scale-y, var(--fy-cluster-scale-y, 1))))
+    rotate(var(--fy-jong-cluster-right-rotate, var(--fy-jong-cluster-rotate, var(--fy-cluster-rotate, 0deg))));
+}
+
+:where(font-kku, .font-kku) [part~="jongseong-cluster"][data-fy-axis="bottom"] {
+  transform-origin:
+    var(--fy-jong-cluster-bottom-origin-x, var(--fy-jong-cluster-origin-x, var(--fy-cluster-origin-x, 0)))
+    var(--fy-jong-cluster-bottom-origin-y, var(--fy-jong-cluster-origin-y, var(--fy-cluster-origin-y, 0)));
+  transform:
+    translate(var(--fy-jong-cluster-bottom-x, var(--fy-jong-cluster-x, var(--fy-cluster-x, 0))), var(--fy-jong-cluster-bottom-y, var(--fy-jong-cluster-y, var(--fy-cluster-y, 0))))
+    scale(var(--fy-jong-cluster-bottom-scale-x, var(--fy-jong-cluster-scale-x, var(--fy-cluster-scale-x, 1))), var(--fy-jong-cluster-bottom-scale-y, var(--fy-jong-cluster-scale-y, var(--fy-cluster-scale-y, 1))))
+    rotate(var(--fy-jong-cluster-bottom-rotate, var(--fy-jong-cluster-rotate, var(--fy-cluster-rotate, 0deg))));
+}
+
+:where(font-kku, .font-kku) [part~="jongseong-cluster"][data-fy-axis="split"] {
+  transform-origin:
+    var(--fy-jong-cluster-split-origin-x, var(--fy-jong-cluster-origin-x, var(--fy-cluster-origin-x, 0)))
+    var(--fy-jong-cluster-split-origin-y, var(--fy-jong-cluster-origin-y, var(--fy-cluster-origin-y, 0)));
+  transform:
+    translate(var(--fy-jong-cluster-split-x, var(--fy-jong-cluster-x, var(--fy-cluster-x, 0))), var(--fy-jong-cluster-split-y, var(--fy-jong-cluster-y, var(--fy-cluster-y, 0))))
+    scale(var(--fy-jong-cluster-split-scale-x, var(--fy-jong-cluster-scale-x, var(--fy-cluster-scale-x, 1))), var(--fy-jong-cluster-split-scale-y, var(--fy-jong-cluster-scale-y, var(--fy-cluster-scale-y, 1))))
+    rotate(var(--fy-jong-cluster-split-rotate, var(--fy-jong-cluster-rotate, var(--fy-cluster-rotate, 0deg))));
+}
+
+/* END GENERATED CSS CONTRACT: cluster */
+
+:where(font-kku, .font-kku) [part~="jamo"] {
+  position: absolute;
+  inset: auto;
+  /* % offsets use the glyph box like slot top/left; em offsets use the node. */
+  inset-block-start: calc(
+    var(--fy-top, var(--fy-slot-top, var(--fy-role-top, 0%)))
+    + var(--fy-jamo-dy, 0%) + var(--fy-ctx-dy, 0%)
+  );
+  inset-inline-start: calc(
+    var(--fy-left, var(--fy-slot-left, var(--fy-role-left, 0%)))
+    + var(--fy-jamo-dx, 0%) + var(--fy-ctx-dx, 0%)
+  );
+  display: block;
+  font: inherit;
+  font-weight: var(--fy-weight, var(--fy-slot-weight, var(--fy-role-weight, var(--fy-font-weight, inherit))));
+  font-size: var(--fy-font-size, var(--fy-slot-font-size, var(--fy-role-font-size, 1em)));
+  -webkit-text-stroke-width: var(--fy-stroke, var(--fy-slot-stroke, var(--fy-role-stroke, var(--fy-font-stroke, 0px))));
+  clip-path: var(--fy-clip, var(--fy-slot-clip, var(--fy-role-clip, none)));
+  line-height: 1;
+  white-space: nowrap;
+  transform-origin: top left;
+}
+
+/* BEGIN GENERATED CSS CONTRACT: dispatch */
+/* Source: spec/css-variables.json. Regenerate with: node scripts/check_css_contract.js --write */
+:where(font-kku, .font-kku) [data-fy-pos="t"] { --fy-slot-top: var(--fy-t-top, var(--fy-tc-top, var(--fy-role-top, 0%))); --fy-slot-left: var(--fy-t-left, var(--fy-tc-left, var(--fy-role-left, 8%))); --fy-slot-font-size: var(--fy-t-size, var(--fy-tc-size, var(--fy-role-font-size, 0.68em))); --fy-slot-scale-x: var(--fy-t-scale-x, var(--fy-tc-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-t-scale-y, var(--fy-tc-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-t-rotate, var(--fy-tc-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-t-weight, var(--fy-tc-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-t-stroke, var(--fy-tc-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-t-clip, var(--fy-tc-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-t-dilate, var(--fy-tc-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="tt"] { --fy-slot-top: var(--fy-tt-top, var(--fy-tc-top, var(--fy-role-top, 0%))); --fy-slot-left: var(--fy-tt-left, var(--fy-tc-left, var(--fy-role-left, 4%))); --fy-slot-font-size: var(--fy-tt-size, var(--fy-tc-size, var(--fy-role-font-size, 0.60em))); --fy-slot-scale-x: var(--fy-tt-scale-x, var(--fy-tc-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-tt-scale-y, var(--fy-tc-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-tt-rotate, var(--fy-tc-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-tt-weight, var(--fy-tc-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-tt-stroke, var(--fy-tc-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-tt-clip, var(--fy-tc-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-tt-dilate, var(--fy-tc-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="tlo"] { --fy-slot-top: var(--fy-tlo-top, var(--fy-tl-top, var(--fy-role-top, 0%))); --fy-slot-left: var(--fy-tlo-left, var(--fy-tl-left, var(--fy-role-left, 0%))); --fy-slot-font-size: var(--fy-tlo-size, var(--fy-tl-size, var(--fy-role-font-size, 0.62em))); --fy-slot-scale-x: var(--fy-tlo-scale-x, var(--fy-tl-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-tlo-scale-y, var(--fy-tl-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-tlo-rotate, var(--fy-tl-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-tlo-weight, var(--fy-tl-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-tlo-stroke, var(--fy-tl-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-tlo-clip, var(--fy-tl-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-tlo-dilate, var(--fy-tl-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="tlc"] { --fy-slot-top: var(--fy-tlc-top, var(--fy-tl-top, var(--fy-role-top, 0%))); --fy-slot-left: var(--fy-tlc-left, var(--fy-tl-left, var(--fy-role-left, 0%))); --fy-slot-font-size: var(--fy-tlc-size, var(--fy-tl-size, var(--fy-role-font-size, 0.62em))); --fy-slot-scale-x: var(--fy-tlc-scale-x, var(--fy-tl-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-tlc-scale-y, var(--fy-tl-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-tlc-rotate, var(--fy-tl-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-tlc-weight, var(--fy-tl-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-tlc-stroke, var(--fy-tl-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-tlc-clip, var(--fy-tl-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-tlc-dilate, var(--fy-tl-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="tls"] { --fy-slot-top: var(--fy-tls-top, var(--fy-tl-top, var(--fy-role-top, 0%))); --fy-slot-left: var(--fy-tls-left, var(--fy-tl-left, var(--fy-role-left, 0%))); --fy-slot-font-size: var(--fy-tls-size, var(--fy-tl-size, var(--fy-role-font-size, 0.62em))); --fy-slot-scale-x: var(--fy-tls-scale-x, var(--fy-tl-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-tls-scale-y, var(--fy-tl-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-tls-rotate, var(--fy-tl-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-tls-weight, var(--fy-tl-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-tls-stroke, var(--fy-tl-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-tls-clip, var(--fy-tl-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-tls-dilate, var(--fy-tl-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="ttl"] { --fy-slot-top: var(--fy-ttl-top, var(--fy-tl-top, var(--fy-role-top, 0%))); --fy-slot-left: var(--fy-ttl-left, var(--fy-tl-left, var(--fy-role-left, 0%))); --fy-slot-font-size: var(--fy-ttl-size, var(--fy-tl-size, var(--fy-role-font-size, 0.54em))); --fy-slot-scale-x: var(--fy-ttl-scale-x, var(--fy-tl-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-ttl-scale-y, var(--fy-tl-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-ttl-rotate, var(--fy-tl-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-ttl-weight, var(--fy-tl-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-ttl-stroke, var(--fy-tl-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-ttl-clip, var(--fy-tl-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-ttl-dilate, var(--fy-tl-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="hs"] { --fy-slot-top: var(--fy-hs-top, var(--fy-h-top, var(--fy-role-top, 0%))); --fy-slot-left: var(--fy-hs-left, var(--fy-h-left, var(--fy-role-left, 0%))); --fy-slot-font-size: var(--fy-hs-size, var(--fy-h-size, var(--fy-role-font-size, 0.78em))); --fy-slot-scale-x: var(--fy-hs-scale-x, var(--fy-h-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-hs-scale-y, var(--fy-h-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-hs-rotate, var(--fy-h-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-hs-weight, var(--fy-h-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-hs-stroke, var(--fy-h-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-hs-clip, var(--fy-h-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-hs-dilate, var(--fy-h-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="hts"] { --fy-slot-top: var(--fy-hts-top, var(--fy-h-top, var(--fy-role-top, 0%))); --fy-slot-left: var(--fy-hts-left, var(--fy-h-left, var(--fy-role-left, 0%))); --fy-slot-font-size: var(--fy-hts-size, var(--fy-h-size, var(--fy-role-font-size, 0.78em))); --fy-slot-scale-x: var(--fy-hts-scale-x, var(--fy-h-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-hts-scale-y, var(--fy-h-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-hts-rotate, var(--fy-h-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-hts-weight, var(--fy-h-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-hts-stroke, var(--fy-h-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-hts-clip, var(--fy-h-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-hts-dilate, var(--fy-h-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="tro"] { --fy-slot-top: var(--fy-tro-top, var(--fy-tr-top, var(--fy-role-top, 5%))); --fy-slot-left: var(--fy-tro-left, var(--fy-tr-left, var(--fy-role-left, 40%))); --fy-slot-font-size: var(--fy-tro-size, var(--fy-tr-size, var(--fy-role-font-size, 0.60em))); --fy-slot-scale-x: var(--fy-tro-scale-x, var(--fy-tr-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-tro-scale-y, var(--fy-tr-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-tro-rotate, var(--fy-tr-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-tro-weight, var(--fy-tr-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-tro-stroke, var(--fy-tr-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-tro-clip, var(--fy-tr-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-tro-dilate, var(--fy-tr-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="trc"] { --fy-slot-top: var(--fy-trc-top, var(--fy-tr-top, var(--fy-role-top, 5%))); --fy-slot-left: var(--fy-trc-left, var(--fy-tr-left, var(--fy-role-left, 40%))); --fy-slot-font-size: var(--fy-trc-size, var(--fy-tr-size, var(--fy-role-font-size, 0.60em))); --fy-slot-scale-x: var(--fy-trc-scale-x, var(--fy-tr-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-trc-scale-y, var(--fy-tr-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-trc-rotate, var(--fy-tr-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-trc-weight, var(--fy-tr-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-trc-stroke, var(--fy-tr-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-trc-clip, var(--fy-tr-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-trc-dilate, var(--fy-tr-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="m"] { --fy-slot-top: var(--fy-m-top, var(--fy-mc-top, var(--fy-role-top, 28%))); --fy-slot-left: var(--fy-m-left, var(--fy-mc-left, var(--fy-role-left, 12%))); --fy-slot-font-size: var(--fy-m-size, var(--fy-mc-size, var(--fy-role-font-size, 0.62em))); --fy-slot-scale-x: var(--fy-m-scale-x, var(--fy-mc-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-m-scale-y, var(--fy-mc-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-m-rotate, var(--fy-mc-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-m-weight, var(--fy-mc-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-m-stroke, var(--fy-mc-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-m-clip, var(--fy-mc-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-m-dilate, var(--fy-mc-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="mt"] { --fy-slot-top: var(--fy-mt-top, var(--fy-mc-top, var(--fy-role-top, 22%))); --fy-slot-left: var(--fy-mt-left, var(--fy-mc-left, var(--fy-role-left, 10%))); --fy-slot-font-size: var(--fy-mt-size, var(--fy-mc-size, var(--fy-role-font-size, 0.54em))); --fy-slot-scale-x: var(--fy-mt-scale-x, var(--fy-mc-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-mt-scale-y, var(--fy-mc-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-mt-rotate, var(--fy-mc-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-mt-weight, var(--fy-mc-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-mt-stroke, var(--fy-mc-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-mt-clip, var(--fy-mc-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-mt-dilate, var(--fy-mc-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="mw"] { --fy-slot-top: var(--fy-mw-top, var(--fy-mx-top, var(--fy-role-top, 8%))); --fy-slot-left: var(--fy-mw-left, var(--fy-mx-left, var(--fy-role-left, 8%))); --fy-slot-font-size: var(--fy-mw-size, var(--fy-mx-size, var(--fy-role-font-size, 0.62em))); --fy-slot-scale-x: var(--fy-mw-scale-x, var(--fy-mx-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-mw-scale-y, var(--fy-mx-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-mw-rotate, var(--fy-mx-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-mw-weight, var(--fy-mx-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-mw-stroke, var(--fy-mx-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-mw-clip, var(--fy-mx-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-mw-dilate, var(--fy-mx-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="mtw"] { --fy-slot-top: var(--fy-mtw-top, var(--fy-mx-top, var(--fy-role-top, 6%))); --fy-slot-left: var(--fy-mtw-left, var(--fy-mx-left, var(--fy-role-left, 8%))); --fy-slot-font-size: var(--fy-mtw-size, var(--fy-mx-size, var(--fy-role-font-size, 0.58em))); --fy-slot-scale-x: var(--fy-mtw-scale-x, var(--fy-mx-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-mtw-scale-y, var(--fy-mx-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-mtw-rotate, var(--fy-mx-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-mtw-weight, var(--fy-mx-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-mtw-stroke, var(--fy-mx-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-mtw-clip, var(--fy-mx-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-mtw-dilate, var(--fy-mx-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="ml"] { --fy-slot-top: var(--fy-ml-top, var(--fy-xb-top, var(--fy-role-top, 20%))); --fy-slot-left: var(--fy-ml-left, var(--fy-xb-left, var(--fy-role-left, 6%))); --fy-slot-font-size: var(--fy-ml-size, var(--fy-xb-size, var(--fy-role-font-size, 0.50em))); --fy-slot-scale-x: var(--fy-ml-scale-x, var(--fy-xb-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-ml-scale-y, var(--fy-xb-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-ml-rotate, var(--fy-xb-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-ml-weight, var(--fy-xb-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-ml-stroke, var(--fy-xb-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-ml-clip, var(--fy-xb-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-ml-dilate, var(--fy-xb-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="mtl"] { --fy-slot-top: var(--fy-mtl-top, var(--fy-xb-top, var(--fy-role-top, 18%))); --fy-slot-left: var(--fy-mtl-left, var(--fy-xb-left, var(--fy-role-left, 8%))); --fy-slot-font-size: var(--fy-mtl-size, var(--fy-xb-size, var(--fy-role-font-size, 0.48em))); --fy-slot-scale-x: var(--fy-mtl-scale-x, var(--fy-xb-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-mtl-scale-y, var(--fy-xb-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-mtl-rotate, var(--fy-xb-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-mtl-weight, var(--fy-xb-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-mtl-stroke, var(--fy-xb-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-mtl-clip, var(--fy-xb-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-mtl-dilate, var(--fy-xb-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="trs"] { --fy-slot-top: var(--fy-trs-top, var(--fy-xt-top, var(--fy-role-top, 5%))); --fy-slot-left: var(--fy-trs-left, var(--fy-xt-left, var(--fy-role-left, 40%))); --fy-slot-font-size: var(--fy-trs-size, var(--fy-xt-size, var(--fy-role-font-size, 0.60em))); --fy-slot-scale-x: var(--fy-trs-scale-x, var(--fy-xt-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-trs-scale-y, var(--fy-xt-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-trs-rotate, var(--fy-xt-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-trs-weight, var(--fy-xt-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-trs-stroke, var(--fy-xt-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-trs-clip, var(--fy-xt-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-trs-dilate, var(--fy-xt-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="ttr"] { --fy-slot-top: var(--fy-ttr-top, var(--fy-xt-top, var(--fy-role-top, 3%))); --fy-slot-left: var(--fy-ttr-left, var(--fy-xt-left, var(--fy-role-left, 38%))); --fy-slot-font-size: var(--fy-ttr-size, var(--fy-xt-size, var(--fy-role-font-size, 0.50em))); --fy-slot-scale-x: var(--fy-ttr-scale-x, var(--fy-xt-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-ttr-scale-y, var(--fy-xt-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-ttr-rotate, var(--fy-xt-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-ttr-weight, var(--fy-xt-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-ttr-stroke, var(--fy-xt-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-ttr-clip, var(--fy-xt-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-ttr-dilate, var(--fy-xt-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="b"] { --fy-slot-top: var(--fy-b-top, var(--fy-bs-top, var(--fy-role-top, 52%))); --fy-slot-left: var(--fy-b-left, var(--fy-bs-left, var(--fy-role-left, 12%))); --fy-slot-font-size: var(--fy-b-size, var(--fy-bs-size, var(--fy-role-font-size, 0.56em))); --fy-slot-scale-x: var(--fy-b-scale-x, var(--fy-bs-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-b-scale-y, var(--fy-bs-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-b-rotate, var(--fy-bs-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-b-weight, var(--fy-bs-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-b-stroke, var(--fy-bs-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-b-clip, var(--fy-bs-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-b-dilate, var(--fy-bs-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="brs"] { --fy-slot-top: var(--fy-brs-top, var(--fy-bs-top, var(--fy-role-top, 46%))); --fy-slot-left: var(--fy-brs-left, var(--fy-bs-left, var(--fy-role-left, 24%))); --fy-slot-font-size: var(--fy-brs-size, var(--fy-bs-size, var(--fy-role-font-size, 0.54em))); --fy-slot-scale-x: var(--fy-brs-scale-x, var(--fy-bs-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-brs-scale-y, var(--fy-bs-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-brs-rotate, var(--fy-bs-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-brs-weight, var(--fy-bs-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-brs-stroke, var(--fy-bs-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-brs-clip, var(--fy-bs-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-brs-dilate, var(--fy-bs-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="bbrs"] { --fy-slot-top: var(--fy-bbrs-top, var(--fy-bs-top, var(--fy-role-top, 50%))); --fy-slot-left: var(--fy-bbrs-left, var(--fy-bs-left, var(--fy-role-left, 24%))); --fy-slot-font-size: var(--fy-bbrs-size, var(--fy-bs-size, var(--fy-role-font-size, 0.50em))); --fy-slot-scale-x: var(--fy-bbrs-scale-x, var(--fy-bs-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-bbrs-scale-y, var(--fy-bs-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-bbrs-rotate, var(--fy-bs-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-bbrs-weight, var(--fy-bs-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-bbrs-stroke, var(--fy-bs-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-bbrs-clip, var(--fy-bs-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-bbrs-dilate, var(--fy-bs-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="bw"] { --fy-slot-top: var(--fy-bw-top, var(--fy-bx-top, var(--fy-role-top, 47%))); --fy-slot-left: var(--fy-bw-left, var(--fy-bx-left, var(--fy-role-left, 10%))); --fy-slot-font-size: var(--fy-bw-size, var(--fy-bx-size, var(--fy-role-font-size, 0.56em))); --fy-slot-scale-x: var(--fy-bw-scale-x, var(--fy-bx-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-bw-scale-y, var(--fy-bx-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-bw-rotate, var(--fy-bx-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-bw-weight, var(--fy-bx-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-bw-stroke, var(--fy-bx-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-bw-clip, var(--fy-bx-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-bw-dilate, var(--fy-bx-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="brw"] { --fy-slot-top: var(--fy-brw-top, var(--fy-bx-top, var(--fy-role-top, 47%))); --fy-slot-left: var(--fy-brw-left, var(--fy-bx-left, var(--fy-role-left, 10%))); --fy-slot-font-size: var(--fy-brw-size, var(--fy-bx-size, var(--fy-role-font-size, 0.54em))); --fy-slot-scale-x: var(--fy-brw-scale-x, var(--fy-bx-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-brw-scale-y, var(--fy-bx-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-brw-rotate, var(--fy-bx-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-brw-weight, var(--fy-bx-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-brw-stroke, var(--fy-bx-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-brw-clip, var(--fy-bx-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-brw-dilate, var(--fy-bx-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="bbw"] { --fy-slot-top: var(--fy-bbw-top, var(--fy-bx-top, var(--fy-role-top, 51%))); --fy-slot-left: var(--fy-bbw-left, var(--fy-bx-left, var(--fy-role-left, 10%))); --fy-slot-font-size: var(--fy-bbw-size, var(--fy-bx-size, var(--fy-role-font-size, 0.52em))); --fy-slot-scale-x: var(--fy-bbw-scale-x, var(--fy-bx-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-bbw-scale-y, var(--fy-bx-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-bbw-rotate, var(--fy-bx-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-bbw-weight, var(--fy-bx-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-bbw-stroke, var(--fy-bx-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-bbw-clip, var(--fy-bx-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-bbw-dilate, var(--fy-bx-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="bl"] { --fy-slot-top: var(--fy-bl-top, var(--fy-xl-top, var(--fy-role-top, 48%))); --fy-slot-left: var(--fy-bl-left, var(--fy-xl-left, var(--fy-role-left, 10%))); --fy-slot-font-size: var(--fy-bl-size, var(--fy-xl-size, var(--fy-role-font-size, 0.50em))); --fy-slot-scale-x: var(--fy-bl-scale-x, var(--fy-xl-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-bl-scale-y, var(--fy-xl-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-bl-rotate, var(--fy-xl-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-bl-weight, var(--fy-xl-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-bl-stroke, var(--fy-xl-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-bl-clip, var(--fy-xl-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-bl-dilate, var(--fy-xl-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="blr"] { --fy-slot-top: var(--fy-blr-top, var(--fy-xl-top, var(--fy-role-top, 48%))); --fy-slot-left: var(--fy-blr-left, var(--fy-xl-left, var(--fy-role-left, 10%))); --fy-slot-font-size: var(--fy-blr-size, var(--fy-xl-size, var(--fy-role-font-size, 0.50em))); --fy-slot-scale-x: var(--fy-blr-scale-x, var(--fy-xl-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-blr-scale-y, var(--fy-xl-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-blr-rotate, var(--fy-xl-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-blr-weight, var(--fy-xl-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-blr-stroke, var(--fy-xl-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-blr-clip, var(--fy-xl-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-blr-dilate, var(--fy-xl-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="bbl"] { --fy-slot-top: var(--fy-bbl-top, var(--fy-xl-top, var(--fy-role-top, 52%))); --fy-slot-left: var(--fy-bbl-left, var(--fy-xl-left, var(--fy-role-left, 10%))); --fy-slot-font-size: var(--fy-bbl-size, var(--fy-xl-size, var(--fy-role-font-size, 0.48em))); --fy-slot-scale-x: var(--fy-bbl-scale-x, var(--fy-xl-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-bbl-scale-y, var(--fy-xl-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-bbl-rotate, var(--fy-xl-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-bbl-weight, var(--fy-xl-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-bbl-stroke, var(--fy-xl-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-bbl-clip, var(--fy-xl-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-bbl-dilate, var(--fy-xl-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="br"] { --fy-slot-top: var(--fy-br-top, var(--fy-xr-top, var(--fy-role-top, 46%))); --fy-slot-left: var(--fy-br-left, var(--fy-xr-left, var(--fy-role-left, 24%))); --fy-slot-font-size: var(--fy-br-size, var(--fy-xr-size, var(--fy-role-font-size, 0.54em))); --fy-slot-scale-x: var(--fy-br-scale-x, var(--fy-xr-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-br-scale-y, var(--fy-xr-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-br-rotate, var(--fy-xr-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-br-weight, var(--fy-xr-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-br-stroke, var(--fy-xr-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-br-clip, var(--fy-xr-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-br-dilate, var(--fy-xr-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="brd"] { --fy-slot-top: var(--fy-brd-top, var(--fy-xr-top, var(--fy-role-top, 46%))); --fy-slot-left: var(--fy-brd-left, var(--fy-xr-left, var(--fy-role-left, 24%))); --fy-slot-font-size: var(--fy-brd-size, var(--fy-xr-size, var(--fy-role-font-size, 0.54em))); --fy-slot-scale-x: var(--fy-brd-scale-x, var(--fy-xr-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-brd-scale-y, var(--fy-xr-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-brd-rotate, var(--fy-xr-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-brd-weight, var(--fy-xr-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-brd-stroke, var(--fy-xr-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-brd-clip, var(--fy-xr-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-brd-dilate, var(--fy-xr-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-pos="bbrd"] { --fy-slot-top: var(--fy-bbrd-top, var(--fy-xr-top, var(--fy-role-top, 50%))); --fy-slot-left: var(--fy-bbrd-left, var(--fy-xr-left, var(--fy-role-left, 24%))); --fy-slot-font-size: var(--fy-bbrd-size, var(--fy-xr-size, var(--fy-role-font-size, 0.50em))); --fy-slot-scale-x: var(--fy-bbrd-scale-x, var(--fy-xr-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-bbrd-scale-y, var(--fy-xr-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-bbrd-rotate, var(--fy-xr-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-bbrd-weight, var(--fy-xr-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-bbrd-stroke, var(--fy-xr-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-bbrd-clip, var(--fy-xr-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-bbrd-dilate, var(--fy-xr-dilate, var(--fy-role-dilate))); }
+:where(font-kku, .font-kku) [data-fy-role="head"] { --fy-role-top: var(--fy-head-top); --fy-role-left: var(--fy-head-left); --fy-role-font-size: var(--fy-head-size); --fy-role-scale-x: var(--fy-head-scale-x); --fy-role-scale-y: var(--fy-head-scale-y); --fy-role-rotate: var(--fy-head-rotate); --fy-role-weight: var(--fy-head-weight); --fy-role-stroke: var(--fy-head-stroke); --fy-role-clip: var(--fy-head-clip); --fy-role-dilate: var(--fy-head-dilate); }
+:where(font-kku, .font-kku) [data-fy-role="choseong"] { --fy-role-top: var(--fy-choseong-top); --fy-role-left: var(--fy-choseong-left); --fy-role-font-size: var(--fy-choseong-size); --fy-role-scale-x: var(--fy-choseong-scale-x); --fy-role-scale-y: var(--fy-choseong-scale-y); --fy-role-rotate: var(--fy-choseong-rotate); --fy-role-weight: var(--fy-choseong-weight); --fy-role-stroke: var(--fy-choseong-stroke); --fy-role-clip: var(--fy-choseong-clip); --fy-role-dilate: var(--fy-choseong-dilate); }
+:where(font-kku, .font-kku) [data-fy-role="jung-main"] { --fy-role-top: var(--fy-jung-main-top); --fy-role-left: var(--fy-jung-main-left); --fy-role-font-size: var(--fy-jung-main-size); --fy-role-scale-x: var(--fy-jung-main-scale-x); --fy-role-scale-y: var(--fy-jung-main-scale-y); --fy-role-rotate: var(--fy-jung-main-rotate); --fy-role-weight: var(--fy-jung-main-weight); --fy-role-stroke: var(--fy-jung-main-stroke); --fy-role-clip: var(--fy-jung-main-clip); --fy-role-dilate: var(--fy-jung-main-dilate); }
+:where(font-kku, .font-kku) [data-fy-role="jung-base"] { --fy-role-top: var(--fy-jung-base-top); --fy-role-left: var(--fy-jung-base-left); --fy-role-font-size: var(--fy-jung-base-size); --fy-role-scale-x: var(--fy-jung-base-scale-x); --fy-role-scale-y: var(--fy-jung-base-scale-y); --fy-role-rotate: var(--fy-jung-base-rotate); --fy-role-weight: var(--fy-jung-base-weight); --fy-role-stroke: var(--fy-jung-base-stroke); --fy-role-clip: var(--fy-jung-base-clip); --fy-role-dilate: var(--fy-jung-base-dilate); }
+:where(font-kku, .font-kku) [data-fy-role="jung-tail"] { --fy-role-top: var(--fy-jung-tail-top); --fy-role-left: var(--fy-jung-tail-left); --fy-role-font-size: var(--fy-jung-tail-size); --fy-role-scale-x: var(--fy-jung-tail-scale-x); --fy-role-scale-y: var(--fy-jung-tail-scale-y); --fy-role-rotate: var(--fy-jung-tail-rotate); --fy-role-weight: var(--fy-jung-tail-weight); --fy-role-stroke: var(--fy-jung-tail-stroke); --fy-role-clip: var(--fy-jung-tail-clip); --fy-role-dilate: var(--fy-jung-tail-dilate); }
+:where(font-kku, .font-kku) [data-fy-role="jong-main"] { --fy-role-top: var(--fy-jong-main-top); --fy-role-left: var(--fy-jong-main-left); --fy-role-font-size: var(--fy-jong-main-size); --fy-role-scale-x: var(--fy-jong-main-scale-x); --fy-role-scale-y: var(--fy-jong-main-scale-y); --fy-role-rotate: var(--fy-jong-main-rotate); --fy-role-weight: var(--fy-jong-main-weight); --fy-role-stroke: var(--fy-jong-main-stroke); --fy-role-clip: var(--fy-jong-main-clip); --fy-role-dilate: var(--fy-jong-main-dilate); }
+:where(font-kku, .font-kku) [data-fy-role="jong-left"] { --fy-role-top: var(--fy-jong-left-top); --fy-role-left: var(--fy-jong-left-left); --fy-role-font-size: var(--fy-jong-left-size); --fy-role-scale-x: var(--fy-jong-left-scale-x); --fy-role-scale-y: var(--fy-jong-left-scale-y); --fy-role-rotate: var(--fy-jong-left-rotate); --fy-role-weight: var(--fy-jong-left-weight); --fy-role-stroke: var(--fy-jong-left-stroke); --fy-role-clip: var(--fy-jong-left-clip); --fy-role-dilate: var(--fy-jong-left-dilate); }
+:where(font-kku, .font-kku) [data-fy-role="jong-right"] { --fy-role-top: var(--fy-jong-right-top); --fy-role-left: var(--fy-jong-right-left); --fy-role-font-size: var(--fy-jong-right-size); --fy-role-scale-x: var(--fy-jong-right-scale-x); --fy-role-scale-y: var(--fy-jong-right-scale-y); --fy-role-rotate: var(--fy-jong-right-rotate); --fy-role-weight: var(--fy-jong-right-weight); --fy-role-stroke: var(--fy-jong-right-stroke); --fy-role-clip: var(--fy-jong-right-clip); --fy-role-dilate: var(--fy-jong-right-dilate); }
+/* END GENERATED CSS CONTRACT: dispatch */
+
+:where(font-kku, .font-kku) [part~="head"],
+:where(font-kku, .font-kku) [part~="choseong"],
+:where(font-kku, .font-kku) [part~="jungseong"],
+:where(font-kku, .font-kku) [part~="jongseong"] {
+  /* Absolute scale/rotation come from the slot chain (role is its last
+   * fallback, not a factor); jamo, context and page each add a correction. */
+  transform:
+    scale(var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)), var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)))
+    scale(var(--fy-jamo-scale-x, 1), var(--fy-jamo-scale-y, 1))
+    scale(var(--fy-ctx-scale-x, 1), var(--fy-ctx-scale-y, 1))
+    scale(var(--fy-scale-x, 1), var(--fy-scale-y, 1))
+    rotate(var(--fy-slot-rotate, var(--fy-role-rotate, 0deg)))
+    rotate(var(--fy-jamo-rotate, 0deg))
+    rotate(var(--fy-ctx-rotate, 0deg))
+    rotate(var(--fy-rotate, 0deg));
+}
+
+/* Non-Hangul glyphs keep the syllable box height so the text baseline keeps
+ * running with the Hangul, but they take their own advance width: a comma must
+ * not reserve a full syllable cell. `--fy-content-advance` opts a profile back
+ * into a fixed cell (e.g. full-width punctuation) and
+ * `--fy-content-side-bearing` adds symmetric breathing room, which also absorbs
+ * the negative `--fy-glyph-gap` a preceding syllable applies. */
+:where(font-kku, .font-kku) [part="glyph"][data-hangul="false"] {
+  inline-size: var(--fy-content-advance, auto);
+  margin-inline-end: 0;
+}
+
+/* [part="content"] is emitted only for non-Hangul glyphs. It is a static
+ * line-height:1 box anchored at the glyph box top — exactly the same vertical
+ * frame the jamo nodes are placed in — so punctuation lands on the Hangul
+ * baseline instead of floating at the cell centre. */
+:where(font-kku, .font-kku) [part="content"] {
+  display: inline-block;
+  padding-inline: var(--fy-content-side-bearing, 0);
+  font: inherit;
+  font-size: var(--fy-content-size, 1em);
+  line-height: 1;
+  white-space: nowrap;
+  transform-origin: center;
+  transform:
+    translate(var(--fy-content-x, 0), var(--fy-content-y, 0))
+    scale(var(--fy-content-scale-x, 1), var(--fy-content-scale-y, 1))
+    rotate(var(--fy-content-rotate, 0deg));
+}
+
+/* Sprite material (ADR-008 §5). The runtime stamps data-fy-material and
+ * data-fy-sprite-kinds from the font's --fy-material / --fy-sprite-kinds, so
+ * only jamo kinds that have cells in the sheet are painted; the rest fall back
+ * to font text. Fonts supply the sheet through variables only:
+ * --fy-sprite-url (registered above; or --fy-sprite-image for image-set()),
+ * --fy-sprite-cell, --fy-sprite-cols, --fy-sprite-rows, the per-node
+ * --fy-sprite-row, and stroke compensation through the slot chain
+ * (--fy-<slot>-dilate → parent → role → font-level --fy-sprite-dilate).
+ * --fy-sprite-rendering picks how the scaled sheet is resampled (auto, or
+ * pixelated / crisp-edges for pixel-art sheets).
+ * Page-only: --fy-sprite-filter and the --fy-optical-sprite-* presets win over
+ * every font value. */
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-kinds~="consonant"] [data-sprite-jamo-kind="consonant"]:not([data-fy-vector-cell]),
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-kinds~="vowel"] [data-sprite-jamo-kind="vowel"]:not([data-fy-vector-cell]),
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-kinds~="coda-cluster"] [data-sprite-jamo-kind="coda-cluster"]:not([data-fy-vector-cell]) {
+  inline-size: var(--fy-sprite-cell, 1em);
+  block-size: var(--fy-sprite-cell, 1em);
+  overflow: hidden;
+  background-image: var(--fy-sprite-image, var(--fy-sprite-url, none));
+  background-size:
+    calc(var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * var(--fy-sprite-cols, 21))
+    calc(var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * var(--fy-sprite-rows, 2));
+  background-repeat: no-repeat;
+  background-position:
+    calc(var(--fy-sprite-jamo-index, 0) * var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * -1
+      + var(--fy-optical-sprite-crop-x, var(--fy-sprite-crop-x, 0em)))
+    calc(var(--fy-sprite-row, 0) * var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * -1
+      + var(--fy-optical-sprite-crop-y, var(--fy-sprite-crop-y, 0em)));
+  filter: var(--fy-sprite-filter, var(--fy-optical-sprite-filter,
+    var(--fy-slot-dilate, var(--fy-role-dilate, var(--fy-sprite-dilate, none)))));
+  image-rendering: var(--fy-sprite-rendering, auto);
+}
+
+/* The sheet paints the cell, so the node's own text is hidden. With mask
+ * paint the text is hidden by fill color instead and `color` stays for the
+ * fill (below). */
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"]):not([data-fy-sprite-paint="mask"])[data-fy-sprite-kinds~="consonant"] [data-sprite-jamo-kind="consonant"]:not([data-fy-vector-cell]),
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"]):not([data-fy-sprite-paint="mask"])[data-fy-sprite-kinds~="vowel"] [data-sprite-jamo-kind="vowel"]:not([data-fy-vector-cell]),
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"]):not([data-fy-sprite-paint="mask"])[data-fy-sprite-kinds~="coda-cluster"] [data-sprite-jamo-kind="coda-cluster"]:not([data-fy-vector-cell]) {
+  color: transparent;
+}
+
+/* Mask paint (ADR-014). `--fy-sprite-paint: mask` (font or page; the runtime
+ * stamps data-fy-sprite-paint="mask") uses the sheet's alpha as a mask and
+ * paints through it with --fy-sprite-fill (an <image>, default the text
+ * color), so page CSS colors, gradients or textures each jamo like a device
+ * font — a hand-drawn PNG sheet included. The node's text stays transparent
+ * through -webkit-text-fill-color. Filters apply before masking, so stroke
+ * compensation (--fy-*-dilate) has no effect here. */
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-paint="mask"][data-fy-sprite-kinds~="consonant"] [data-sprite-jamo-kind="consonant"]:not([data-fy-vector-cell]),
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-paint="mask"][data-fy-sprite-kinds~="vowel"] [data-sprite-jamo-kind="vowel"]:not([data-fy-vector-cell]),
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-paint="mask"][data-fy-sprite-kinds~="coda-cluster"] [data-sprite-jamo-kind="coda-cluster"]:not([data-fy-vector-cell]) {
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  background-image: var(--fy-sprite-fill, linear-gradient(currentColor, currentColor));
+  background-size: 100% 100%;
+  background-position: 0 0;
+  -webkit-mask-image: var(--fy-sprite-image, var(--fy-sprite-url, none));
+  mask-image: var(--fy-sprite-image, var(--fy-sprite-url, none));
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size:
+    calc(var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * var(--fy-sprite-cols, 21))
+    calc(var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * var(--fy-sprite-rows, 2));
+  mask-size:
+    calc(var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * var(--fy-sprite-cols, 21))
+    calc(var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * var(--fy-sprite-rows, 2));
+  -webkit-mask-position:
+    calc(var(--fy-sprite-jamo-index, 0) * var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * -1
+      + var(--fy-optical-sprite-crop-x, var(--fy-sprite-crop-x, 0em)))
+    calc(var(--fy-sprite-row, 0) * var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * -1
+      + var(--fy-optical-sprite-crop-y, var(--fy-sprite-crop-y, 0em)));
+  mask-position:
+    calc(var(--fy-sprite-jamo-index, 0) * var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * -1
+      + var(--fy-optical-sprite-crop-x, var(--fy-sprite-crop-x, 0em)))
+    calc(var(--fy-sprite-row, 0) * var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * -1
+      + var(--fy-optical-sprite-crop-y, var(--fy-sprite-crop-y, 0em)));
+}
+
+/* A standalone jamo (ㅋ, a composing ㄱ) is a non-Hangul glyph. In a sprite
+ * host the runtime stamps the same data-sprite-jamo* surface on its content
+ * node, so the rule above paints the font's cell for it as well — a device
+ * without a Hangul font never needs a system glyph. The cell keeps the em-box
+ * mapping of a jamo node: a block at the top of the glyph box, no side
+ * bearing (--fy-content-* still moves it). */
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-kinds~="consonant"] [part="content"][data-sprite-jamo-kind="consonant"],
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-kinds~="vowel"] [part="content"][data-sprite-jamo-kind="vowel"],
+:where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-kinds~="coda-cluster"] [part="content"][data-sprite-jamo-kind="coda-cluster"],
+:where(font-kku, .font-kku)[data-fy-material="vector"][data-fy-sprite-kinds~="consonant"] [part="content"][data-sprite-jamo-kind="consonant"],
+:where(font-kku, .font-kku)[data-fy-material="vector"][data-fy-sprite-kinds~="vowel"] [part="content"][data-sprite-jamo-kind="vowel"],
+:where(font-kku, .font-kku)[data-fy-material="vector"][data-fy-sprite-kinds~="coda-cluster"] [part="content"][data-sprite-jamo-kind="coda-cluster"] {
+  display: block;
+  padding-inline: 0;
+}
+
+/* -----------------------------------------------------------------------
+ * Vector jamo (ADR-013). A sprite-layout font rendered with
+ * jamo-set="<name>" draws every jamo as an inline SVG of the registered set
+ * (FontKku.registerJamo) instead of a sheet cell: the runtime stamps
+ * data-fy-material="vector" and appends [part="vector"] — a 0–100 cell —
+ * only where the set supplies a drawing. data-fy-vector-cell gates text
+ * hiding; missing drawings retain the font's sprite or mask material.
+ * The node keeps its text, transparent, and its color: strokes and fills use
+ * currentColor, so page CSS colors jamo exactly as with a device font. The
+ * stroke keeps its width under slot scaling (non-scaling-stroke); the set's
+ * width (--fy-vector-stroke-cells, cell units) follows the sheet zoom, and
+ * the page may set --fy-vector-stroke (a length) per host, part or node.
+ * --fy-sprite-zoom/crop place the cell like the sheet; stroke compensation
+ * (--fy-*-dilate) is not used, page --fy-sprite-filter still applies.
+ * --------------------------------------------------------------------- */
+:where(font-kku, .font-kku)[data-fy-material="vector"][data-fy-sprite-kinds~="consonant"] [data-sprite-jamo-kind="consonant"][data-fy-vector-cell],
+:where(font-kku, .font-kku)[data-fy-material="vector"][data-fy-sprite-kinds~="vowel"] [data-sprite-jamo-kind="vowel"][data-fy-vector-cell],
+:where(font-kku, .font-kku)[data-fy-material="vector"][data-fy-sprite-kinds~="coda-cluster"] [data-sprite-jamo-kind="coda-cluster"][data-fy-vector-cell] {
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  inline-size: var(--fy-sprite-cell, 1em);
+  block-size: var(--fy-sprite-cell, 1em);
+  filter: var(--fy-sprite-filter, var(--fy-optical-sprite-filter, none));
+}
+
+:where(font-kku, .font-kku)[data-fy-material="vector"] [part="vector"] {
+  position: absolute;
+  inset-inline-start: var(--fy-optical-sprite-crop-x, var(--fy-sprite-crop-x, 0em));
+  inset-block-start: var(--fy-optical-sprite-crop-y, var(--fy-sprite-crop-y, 0em));
+  inline-size: calc(var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)));
+  block-size: calc(var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)));
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--fy-vector-stroke,
+    calc(var(--fy-vector-stroke-cells, 7.2) * 0.01em * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1))));
+}
+
+:where(font-kku, .font-kku)[data-fy-material="vector"] [part="vector"] > * {
+  vector-effect: non-scaling-stroke;
+}
+
+:where(font-kku, .font-kku)[data-fy-material="vector"] [part="vector"] > [data-fill] {
+  fill: currentColor;
+  stroke: none;
+}
+
+
+/* -----------------------------------------------------------------------
+ * Stroke depth (ADR-018). stroke-depth="stroke" (or --fy-stroke-depth) on a
+ * vector host makes every stroke its own node [part="hoek"], one level
+ * below the jamo: data-hoek (order in the jamo), data-hoek-kind / -from /
+ * -letter / -role (spec/strokes.json), --fy-hoek-index and --fy-hoek-order
+ * (reading order across the host), pathLength 1. Page CSS moves one stroke
+ * without its jamo: --fy-hoek-dx/dy in cell units (0–100 of the jamo cell),
+ * --fy-hoek-rotate and --fy-hoek-scale-x/y about the stroke's own box.
+ * --------------------------------------------------------------------- */
+:where(font-kku, .font-kku)[data-fy-stroke-depth="stroke"] [part="hoek"] {
+  transform-box: fill-box;
+  transform-origin: center;
+  translate: calc(var(--fy-hoek-dx, 0) * 1px) calc(var(--fy-hoek-dy, 0) * 1px);
+  rotate: var(--fy-hoek-rotate, 0deg);
+  scale: var(--fy-hoek-scale-x, 1) var(--fy-hoek-scale-y, 1);
+}
+
+/* -----------------------------------------------------------------------
+ * Built-in animation hooks. Activated by the resolved host surface
+ * `data-fy-animate="<name>"`.
+ * All transforms target [part="glyph"] to avoid clashing with jamo slot
+ * transforms. Timing/keyframes are a public authoring contract.
+ * --------------------------------------------------------------------- */
+
+:where(font-kku, .font-kku)[data-fy-animate="rise"] [part="glyph"] {
+  animation: fy-rise 360ms ease both;
+  animation-delay: calc(var(--fy-glyph-index, 0) * 20ms);
+}
+
+:where(font-kku, .font-kku)[data-fy-animate="fade"] [part="glyph"] {
+  animation: fy-fade 400ms ease both;
+}
+
+:where(font-kku, .font-kku)[data-fy-animate="stagger"] [part="glyph"] {
+  animation: fy-fade 400ms ease both;
+  animation-delay: calc(var(--fy-glyph-index, 0) * 40ms);
+}
+
+:where(font-kku, .font-kku)[data-fy-animate="bounce"] [part="glyph"] {
+  animation: fy-bounce 1.2s ease-in-out infinite;
+  animation-delay: calc(var(--fy-glyph-index, 0) * 80ms);
+}
+
+:where(font-kku, .font-kku)[data-fy-animate="wiggle"] [part="glyph"] {
+  animation: fy-wiggle 1.6s ease-in-out infinite;
+  animation-delay: calc(var(--fy-glyph-index, 0) * 60ms);
+  transform-origin: center;
+}
+
+:where(font-kku, .font-kku)[data-fy-animate="drift"] [part="glyph"] {
+  animation: fy-drift 4s ease-in-out infinite;
+  animation-delay: calc(var(--fy-glyph-index, 0) * -250ms);
+}
+
+@keyframes fy-rise {
+  from { opacity: 0; transform: translateY(0.4em); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fy-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fy-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-0.12em); }
+}
+
+@keyframes fy-wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate( 3deg); }
+}
+
+@keyframes fy-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25%      { transform: translate(0.02em, -0.02em) rotate(-1deg); }
+  50%      { transform: translate(0, 0.02em) rotate(0deg); }
+  75%      { transform: translate(-0.02em, -0.01em) rotate(1deg); }
+}
+
+/* Accessibility: honor reduced-motion preference across every animate hook. */
+@media (prefers-reduced-motion: reduce) {
+  :where(font-kku, .font-kku)[data-fy-animate] [part="glyph"],
+  :where(font-kku, .font-kku)[data-fy-animate] [part~="jamo"] {
+    animation: none !important;
+    transition: none !important;
+  }
+}

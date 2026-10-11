@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko" data-en-title="Notepad — font-kku">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메모장 — 폰꾸 font-kku</title>
+    <meta name="description" content="영문 자판으로 두벌식·세벌식 한글을 쓰는 메모장. 한글 입력기도 한글 글꼴도 없는 기기에서 폰꾸 그림 자소로 그려 편집하고, 브라우저에 저장하고, 유니코드 글로 복사·내려받습니다." />
+    <script src="lib/font-kku.js" data-fonts="sebul sprite-system pixel dojang chalk"></script>
+    <script src="lib/font-kku-ime.js"></script>
+    <link rel="stylesheet" href="./site.css" />
+    <link rel="stylesheet" href="./apps.css" />
+  </head>
+
+  <body>
+    <header class="k-header">
+      <div class="k-wrap k-header-inner">
+        <a class="k-brand" href="./index.html">
+          <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20" data-nofont-font="pixel">꾸</font-kku></span>
+          <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
+        </a>
+        <nav class="k-nav" aria-label="사이트" data-demo-nav></nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="k-wrap k-page-head app-head" aria-labelledby="memo-title">
+        <span class="k-kicker" data-en="Web app · works without a Korean font or IME">웹 앱 · 한글 글꼴·입력기 없이</span>
+        <h1 id="memo-title" class="font-kku k-h1 k-mark" data-font="sebul" data-nofont-font="sprite-system" data-size="clamp(44px, 7vw, 88px)">메모장</h1>
+        <p class="k-lead" data-en="Write Korean with an English keyboard in 2-set or 3-set. Every character on the page is drawn by font-kku from image jamo, so you can read and edit Korean on a device with no Korean font. Notes stay in this browser; copy or download them as ordinary Unicode text.">
+          영문 자판으로 두벌식·세벌식 한글을 씁니다. 편집면의 글자는 모두 폰꾸가 자소판 그림으로 그려, 한글 글꼴이 없는
+          기기에서도 읽고 고칩니다. 메모는 이 브라우저에 저장되고, 복사·내려받기는 보통 유니코드 글입니다.
+        </p>
+        <p class="app-nofont" role="note">
+          <strong>No Korean font on this device.</strong>
+          <span>Korean is drawn by font-kku from image jamo, and the interface is in English.</span>
+        </p>
+      </section>
+
+      <section class="k-wrap app-layout" aria-label="메모장" data-memo-app>
+        <div class="app-toolbar">
+          <button type="button" class="app-mode" data-ime-toggle aria-label="한/영 전환">
+            <span class="app-mode-badge" data-ime-badge></span>
+            <span data-ime-mode-label></span>
+          </button>
+          <div class="k-chips" role="group" aria-label="자판 배열" data-layouts></div>
+          <span class="app-status" data-memo-status aria-live="polite"></span>
+        </div>
+
+        <div class="app-toolbar">
+          <div class="k-chips" role="group" aria-label="글꼴" data-font-choices>
+            <button type="button" data-font="sprite-system" aria-pressed="true" data-en="Plain">실측판</button>
+            <button type="button" data-font="pixel" aria-pressed="false" data-en="Dot">도트</button>
+            <button type="button" data-font="dojang" aria-pressed="false" data-en="Stamp">도장</button>
+            <button type="button" data-font="chalk" aria-pressed="false" data-en="Chalk">분필</button>
+          </div>
+          <div class="k-chips" role="group" aria-label="글자 크기" data-sizes>
+            <button type="button" data-size="24" aria-pressed="false" data-en="S">작게</button>
+            <button type="button" data-size="34" aria-pressed="true" data-en="M">보통</button>
+            <button type="button" data-size="46" aria-pressed="false" data-en="L">크게</button>
+          </div>
+        </div>
+
+        <div class="memo-paper" data-memo-paper></div>
+
+        <div class="app-actions">
+          <button type="button" class="k-btn k-btn--primary" data-memo-copy data-en="Copy text">글 복사</button>
+          <button type="button" class="k-btn" data-memo-download data-en="Download .txt">.txt 내려받기</button>
+          <button type="button" class="k-btn" data-memo-clear data-en="Clear">지우기</button>
+          <button type="button" class="k-btn" data-keyboard-toggle aria-expanded="true" data-en="On-screen keys">화면 자판</button>
+        </div>
+
+        <div class="app-field" data-keyboard-wrap>
+          <ul class="kk-legend">
+            <li><i style="background: #d62839"></i><span data-en="initial">초성</span></li>
+            <li><i style="background: #1f4fd1"></i><span data-en="medial">중성</span></li>
+            <li><i style="background: #12965f"></i><span data-en="final">종성</span></li>
+            <li><span data-en="Shift+Space: Korean / English">Shift+Space: 한/영</span></li>
+          </ul>
+          <div data-keyboard></div>
+        </div>
+      </section>
+
+      <section class="k-section k-section--tint" aria-labelledby="memo-how">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true" data-en="How">쓰는 법</span>
+            <span class="k-kicker" data-en="How it works">쓰는 법</span>
+            <h2 id="memo-how" class="font-kku k-h2" data-font="sebul" data-nofont-font="sprite-system" data-size="clamp(30px, 4.4vw, 52px)">글꼴 없이 쓰고 고치기</h2>
+          </header>
+          <ul class="memo-help">
+            <li><span data-en="Keys go to a hidden text field; the page composes Hangul itself (font-kku-ime) and font-kku draws the visible page, with the caret and the syllable being composed underlined.">키는 숨은 입력 칸이 받고, 한글 조합은 페이지가 직접 하며(font-kku-ime), 보이는 면은 폰꾸가 그립니다. 캐럿과 조합 중인 음절(밑줄)도 그 위에 그립니다.</span></li>
+            <li><span data-en="Arrows, Home/End, Shift to select, Cmd/Ctrl+Z to undo. Click or drag on the page to move the caret.">화살표·Home·End로 옮기고 Shift로 고르며, Cmd/Ctrl+Z로 되돌립니다. 면을 누르거나 끌어 캐럿을 옮깁니다.</span></li>
+            <li><span data-en="On a touch screen, use the on-screen keys: each key shows the jamo it types in the chosen layout.">터치 화면에서는 화면 자판을 씁니다. 키마다 고른 배열에서 치는 자모가 보입니다.</span></li>
+            <li><span data-en="Copy and download give real Unicode text — paste it anywhere.">복사와 내려받기는 진짜 유니코드 글입니다. 어디에나 붙여 넣습니다.</span></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="k-footer">
+      <div class="k-wrap k-footer-inner">
+        <span data-en="font-kku · MIT-licensed code">폰꾸 font-kku · 코드는 MIT</span>
+        <nav aria-label="바닥 링크">
+          <a href="./sign.html" data-en="LED sign">전광판</a>
+          <a href="./showcase.html#apps" data-en="Web apps">웹 앱</a>
+          <a href="./docs.html#nofont" data-en="Docs: no Korean font">문서 · 글꼴 없는 기기</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="./demo.js"></script>
+    <script src="./kk.js"></script>
+    <script src="./app-kit.js"></script>
+    <script src="./memo.js"></script>
+  </body>
+</html>

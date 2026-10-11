@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>사례 — 폰꾸 font-kku</title>
+    <meta name="description" content="폰꾸로 꾸민 청첩장·네온 간판·RPG 대화창·예능 자막·그림일기·해커톤 포스터·공방 클래스·포스터·블로그·발표 표지·메뉴판·학습지·게임 공지·상장 템플릿과 봇·터미널 예제. 열어 보고, HTML을 복사하거나 내려받고, 같은 결과를 내는 AI 프롬프트를 가져갑니다." />
+    <script src="lib/font-kku.js" data-fonts="sebul"></script>
+    <link rel="stylesheet" href="./site.css" />
+    <link rel="stylesheet" href="./apps.css" />
+  </head>
+
+  <body>
+    <header class="k-header">
+      <div class="k-wrap k-header-inner">
+        <a class="k-brand" href="./index.html">
+          <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20">꾸</font-kku></span>
+          <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
+        </a>
+        <nav class="k-nav" aria-label="사이트" data-demo-nav></nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="k-wrap k-page-head" aria-labelledby="cases-title">
+        <h1 id="cases-title" class="font-kku k-h1 k-mark" data-font="sebul" data-size="clamp(44px, 7vw, 88px)">가져다 쓰는 사례</h1>
+        <p class="k-lead">
+          완성된 HTML 템플릿입니다. 열어 보고, <strong>HTML 복사</strong>나 <strong>내려받기</strong>로 가져가 글만 바꾸면 됩니다.
+          가져간 HTML은 런타임 주소가 jsDelivr로 바뀌어 있습니다. 같은 결과를 AI에게 맡기려면 <strong>AI 프롬프트</strong>를 복사하세요.
+        </p>
+      </section>
+
+      <section class="k-wrap k-showcase" aria-label="템플릿" data-showcase>
+        <p class="k-note">사례를 불러오는 중…</p>
+      </section>
+
+      <section class="k-section" id="apps" aria-labelledby="apps-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">앱</span>
+            <span class="k-kicker">웹 앱 · 한글 글꼴·입력기 없이</span>
+            <h2 id="apps-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">영문 자판으로 쓰는 한글</h2>
+            <p class="k-lead">
+              한글 입력기도 한글 글꼴도 없는 기기에서 영문 자판으로 두벌식·세벌식 한글을 칩니다. 조합은 입력기 모듈
+              <code>font-kku-ime.js</code>가, 그리기는 그림 자소 글꼴이 맡아 기기 글꼴 없이 한글이 보입니다.
+            </p>
+          </header>
+          <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute">
+            <filter id="k-app-led" color-interpolation-filters="sRGB"><feFlood flood-color="#ff3b30" /><feComposite in2="SourceAlpha" operator="in" /></filter>
+          </svg>
+          <div class="k-apps">
+            <a class="k-app-card" href="./sign.html" data-app="sign">
+              <span class="k-app-preview k-app-preview--sign" aria-hidden="true"><font-kku font="pixel" size="52">어서 오세요</font-kku></span>
+              <h3>전광판</h3>
+              <p>도트 전광판에 흐르기·깜빡이기·멈춤으로 띄웁니다. 글꼴·속도·색·크기를 고르고 전체 화면으로 켜며, 주소에 전광판이 담겨 링크로 나눕니다.</p>
+              <ul class="k-fontrow-tags"><li><code>pixel</code></li><li><code>sprite-system</code></li><li><code>dojang</code></li><li><code>chalk</code></li></ul>
+            </a>
+            <a class="k-app-card" href="./memo.html" data-app="memo">
+              <span class="k-app-preview k-app-preview--memo" aria-hidden="true"><font-kku font="sprite-system" size="30">오늘 할 일</font-kku></span>
+              <h3>메모장</h3>
+              <p>폰꾸가 그린 면에서 캐럿·조합 중인 음절을 보며 쓰고 고칩니다. 화면 자판에 키마다 자모가 보이고, 브라우저에 저장하고 유니코드 글로 복사·내려받습니다.</p>
+              <ul class="k-fontrow-tags"><li><code>sprite-system</code></li><li><code>font-kku-ime</code></li><li>두벌식 · 세벌식 390 · 세벌식 최종</li></ul>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="k-section k-section--tint" id="bot" aria-labelledby="bot-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">봇</span>
+            <span class="k-kicker">봇·터미널</span>
+            <h2 id="bot-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">알림과 로그를 크게</h2>
+            <p class="k-lead">HTML이 아닌 곳에서는 한글을 2줄 평문으로 풀어 강조합니다. 슬랙·디스코드는 코드 블록으로 감싸야 줄이 맞습니다.</p>
+          </header>
+          <div class="k-split">
+            <div class="k-terminal">
+              <div class="k-terminal-bar"><span>#배포-알림 · 슬랙 미리보기</span></div>
+              <pre data-bot-preview role="img" aria-label="배포 완료를 2줄로 풀어 쓴 슬랙 메시지"></pre>
+            </div>
+            <div class="k-stack">
+              <div class="k-code">
+                <div class="k-code-bar"><span>슬랙 봇 (Bolt for JavaScript)</span><button type="button" data-copy="#case-slack">복사</button></div>
+                <pre id="case-slack"><code>const { App } = require("@slack/bolt");
+const { renderText } = require("font-kku");
+
+const app = new App({
+  token: process.env.SLACK_BOT_TOKEN,
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+});
+
+// /big 배포 완료  →  한글을 2줄로 크게
+app.command("/big", async ({ command, ack, respond }) =&gt; {
+  await ack();
+  const big = renderText(command.text || "배포 완료").join("\n");
+  await respond("```\n" + big + "\n```");
+});
+
+app.start(3000);</code></pre>
+              </div>
+              <div class="k-code">
+                <div class="k-code-bar"><span>GitHub Actions 로그</span><button type="button" data-copy="#case-actions">복사</button></div>
+                <pre id="case-actions"><code>- name: 배포 완료 배너
+  run: npx font-kku-text "배포 완료"</code></pre>
+              </div>
+              <div class="k-code">
+                <div class="k-code-bar"><span>터미널 배너 (셸)</span><button type="button" data-copy="#case-shell">복사</button></div>
+                <pre id="case-shell"><code>echo "빌드 성공" | npx font-kku-text</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="k-footer">
+      <div class="k-wrap k-footer-inner">
+        <span>폰꾸 font-kku · 코드는 MIT</span>
+        <nav aria-label="바닥 링크">
+          <a href="lib/README.md">README</a>
+          <a href="lib/skill/SKILL.md">AI 설명서</a>
+          <a href="lib/docs/GLOSSARY.md">용어집</a>
+          <a href="./docs.html#dev-tools">개발 도구</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="./demo.js"></script>
+    <script src="./kk.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        window.FontKkuDemo.renderNav("showcase");
+        var site = window.FontKkuSite;
+
+        var preview = document.querySelector("[data-bot-preview]");
+        preview.textContent = "배포봇  오후 3:02\n" + window.FontKku.renderText("배포 완료").join("\n");
+
+        function escapeHtml(value) {
+          return String(value).replace(/[&<>"]/g, function (ch) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch];
+          });
+        }
+
+        var mount = document.querySelector("[data-showcase]");
+
+        function card(item) {
+          var href = "./examples/" + item.file;
+          var prompt = "이 설명서를 읽고 따라 해 줘: " + site.SKILL_URL + "\n\n" + item.prompt;
+          return '<article class="k-showcase-card" data-case="' + escapeHtml(item.file) + '">' +
+            '<a class="k-case-frame" href="' + href + '" target="_blank" rel="noopener" aria-label="' + escapeHtml(item.title) + ' 새 창에서 열기">' +
+            '<iframe src="' + href + '" title="' + escapeHtml(item.title) + ' 미리보기" loading="lazy" tabindex="-1" aria-hidden="true"></iframe></a>' +
+            '<div class="k-showcase-body">' +
+            "<h2>" + escapeHtml(item.title) + "</h2>" +
+            "<p>" + escapeHtml(item.summary) + "</p>" +
+            '<ul class="k-fontrow-tags">' + (item.fonts || []).map(function (font) {
+              return '<li><a href="./fonts.html#' + escapeHtml(font) + '"><code>' + escapeHtml(font) + "</code></a></li>";
+            }).join("") + "</ul>" +
+            '<div class="k-showcase-actions">' +
+            '<a class="k-btn k-btn--small k-btn--primary" href="' + href + '" target="_blank" rel="noopener">열어 보기</a>' +
+            '<button type="button" class="k-btn k-btn--small" data-template="' + href + '">HTML 복사</button>' +
+            '<button type="button" class="k-btn k-btn--small" data-template="' + href + '" data-template-download>내려받기</button>' +
+            '<button type="button" class="k-btn k-btn--small" data-copy-text="' + escapeHtml(prompt) + '">AI 프롬프트</button>' +
+            "</div></div></article>";
+        }
+
+        fetch("./examples/index.json").then(function (response) {
+          if (!response.ok) throw new Error(String(response.status));
+          return response.json();
+        }).then(function (data) {
+          mount.innerHTML = (data.examples || []).map(card).join("");
+        }).catch(function () {
+          mount.innerHTML = '<p class="k-note">사례 목록(<code>examples/index.json</code>)을 불러오지 못했습니다. 정적 서버로 열었는지 확인하세요.</p>';
+        });
+      })();
+    </script>
+  </body>
+</html>

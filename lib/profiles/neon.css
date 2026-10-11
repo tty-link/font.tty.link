@@ -1,0 +1,426 @@
+/* neon — 파생 폰트 (기하: sebul)
+ *
+ * 자모 배치는 profiles/sebul.css를 scripts/build_derived_fonts.js가 아래
+ * GENERATED 구간에 복사한 것이다. 구간은 다시 생성되므로 고치지 않는다 — 기반
+ * 폰트가 바뀌면 `node scripts/build_derived_fonts.js --write`로 따라간다. 이 폰트만의
+ * 꾸밈은 구간 아래 레이어 블록에 쓴다(같은 레이어에서 뒤 규칙이 이긴다).
+ */
+@layer font-kku.font, font-kku.jamo, font-kku.context;
+/* BEGIN GENERATED: scripts/build_derived_fonts.js — base profiles/sebul.css */
+@layer font-kku.font {
+  :where([data-fy-font="neon"]) {
+    --fy-font-id: neon;
+    --fy-contract: 2;
+    --fy-material: system;
+    --fy-expression-mode: sebeol;
+    --fy-font-jamo-depth: syllable;
+    --fy-glyph-width: 0.96em;
+    --fy-glyph-height: 1.17em;
+    --fy-glyph-gap: -0.095em;
+    --fy-space-width: 0.263em;
+    --fy-word-gap: 0px;
+    --fy-line-gap: 0.12em;
+    --fy-font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif;
+    --fy-font-weight: 700;
+    --fy-font-stroke: 0.014em;
+    --fy-content-y: 0em;
+    --fy-content-size: 1em;
+    --fy-content-side-bearing: 0em;
+    --fy-content-scale-x: 1;
+    --fy-content-scale-y: 1;
+
+    --fy-tlo-top: -23%; --fy-tlo-left: 0.7%;   --fy-tlo-size: 0.834em; --fy-tlo-scale-x: 0.754; --fy-tlo-scale-y: 1.088;
+    --fy-tlc-top: -21.1%; --fy-tlc-left: -0.4%; --fy-tlc-size: 0.784em; --fy-tlc-scale-x: 0.836; --fy-tlc-scale-y: 1.031;
+    --fy-t-top: -24.7%;   --fy-t-left: 10.3%;   --fy-t-size: 0.98em;    --fy-t-scale-x: 0.782;     --fy-t-scale-y: 1.073;
+    --fy-tt-top: -18%;  --fy-tt-left: 9.7%;  --fy-tt-size: 0.864em;    --fy-tt-scale-x: 0.891;    --fy-tt-scale-y: 0.755;
+    --fy-tls-top: -21.8%; --fy-tls-left: -8.6%; --fy-tls-size: 0.744em; --fy-tls-scale-x: 1.098;  --fy-tls-scale-y: 1.1;
+    --fy-ttl-top: -19.1%; --fy-ttl-left: -7%; --fy-ttl-size: 0.772em; --fy-ttl-scale-x: 1.059;  --fy-ttl-scale-y: 0.919;
+
+    --fy-tro-top: -7.8%;  --fy-tro-left: 32.6%; --fy-tro-size: 0.964em; --fy-tro-scale-x: 0.85; --fy-tro-scale-y: 0.852;
+    --fy-trc-top: -8.9%;  --fy-trc-left: 30.7%; --fy-trc-size: 0.912em; --fy-trc-scale-x: 0.922; --fy-trc-scale-y: 0.712;
+    --fy-trs-top: -12%;  --fy-trs-left: 30.9%; --fy-trs-size: 0.96em; --fy-trs-scale-x: 0.912; --fy-trs-scale-y: 0.917;
+    --fy-ttr-top: -11.4%;  --fy-ttr-left: 28.8%; --fy-ttr-size: 1.03em; --fy-ttr-scale-x: 0.872; --fy-ttr-scale-y: 0.705;
+
+    --fy-m-top: -16.6%;  --fy-m-left: 1.97%;  --fy-m-size: 1em;     --fy-m-scale-x: 0.957; --fy-m-scale-y: 1.096;
+    --fy-mt-top: -26.7%; --fy-mt-left: 1.94%; --fy-mt-size: 1.05em;    --fy-mt-scale-x: 0.915; --fy-mt-scale-y: 1.053;
+    --fy-ml-top: -29.3%; --fy-ml-left: -3.1%; --fy-ml-size: 0.81em; --fy-ml-scale-x: 1.137;    --fy-ml-scale-y: 1.57;
+    --fy-mtl-top: -31.3%; --fy-mtl-left: -1.9%; --fy-mtl-size: 0.83em; --fy-mtl-scale-x: 0.913;  --fy-mtl-scale-y: 1.64;
+
+    --fy-jong-main-top: 27.9%;
+    --fy-jong-main-left: 2.2%;
+    --fy-jong-main-size: 0.992em;
+    --fy-jong-main-scale-x: 0.972;
+    --fy-jong-main-scale-y: 0.878;
+    --fy-jong-left-top: 26%;
+    --fy-jong-left-left: 5.5%;
+    --fy-jong-left-size: 0.588em;
+    --fy-jong-left-scale-x: 0.961;
+    --fy-jong-left-scale-y: 1.332;
+    --fy-jong-right-top: 26.8%;
+    --fy-jong-right-left: 30.9%;
+    --fy-jong-right-size: 0.6em;
+    --fy-jong-right-scale-x: 1;
+    --fy-jong-right-scale-y: 1.223;
+
+    --fy-b-top: 32.4%;    --fy-b-left: 10.1%;    --fy-b-size: 1.072em;  --fy-b-scale-x: 0.721224;  --fy-b-scale-y: 0.719082;
+    --fy-brs-top: 28.3%;  --fy-brs-left: 16.6%;  --fy-brs-size: 1.008em; --fy-brs-scale-x: 0.754272; --fy-brs-scale-y: 0.770884;
+    --fy-bbrs-top: 48.341%; --fy-bbrs-left: -3.8%; --fy-bbrs-size: 1.042em; --fy-bbrs-scale-x: 0.966168; --fy-bbrs-scale-y: 0.709424;
+
+    --fy-bl-top: 25.1%;   --fy-bl-left: 11.9%;   --fy-bl-size: 0.518em;  --fy-bl-scale-x: 0.923521;  --fy-bl-scale-y: 1.670328;
+    --fy-blr-top: 23.2%;  --fy-blr-left: 10%;  --fy-blr-size: 0.51em; --fy-blr-scale-x: 1.038841; --fy-blr-scale-y: 1.722276;
+    --fy-bbl-top: 26.7%;  --fy-bbl-left: 6.8%;  --fy-bbl-size: 0.568em; --fy-bbl-scale-x: 1.203172; --fy-bbl-scale-y: 1.503828;
+
+    --fy-br-top: 23.1%;   --fy-br-left: 30.9%;   --fy-br-size: 0.6em;  --fy-br-scale-x: 0.93;  --fy-br-scale-y: 1.567886;
+    --fy-brd-top: 26.8%;  --fy-brd-left: 38.5%;  --fy-brd-size: 0.51em; --fy-brd-scale-x: 1.028; --fy-brd-scale-y: 1.581339;
+    --fy-bbrd-top: 23.6%; --fy-bbrd-left: 25.8%; --fy-bbrd-size: 0.542em; --fy-bbrd-scale-x: 1.246; --fy-bbrd-scale-y: 1.660834;
+  }
+
+  :where([data-fy-font="neon"]) {
+    --fy-b-stroke: 0.038em;
+    --fy-bbl-stroke: 0.032em;
+    --fy-bbrd-stroke: 0.032em;
+    --fy-bbrs-stroke: 0.038em;
+    --fy-bl-stroke: 0.038em;
+    --fy-blr-stroke: 0.038em;
+    --fy-br-stroke: 0.038em;
+    --fy-brd-stroke: 0.038em;
+    --fy-brs-stroke: 0.038em;
+    --fy-ml-stroke: 0.026em;
+    --fy-mtl-stroke: 0.038em;
+    --fy-t-stroke: 0.026em;
+    --fy-tlc-stroke: 0.038em;
+    --fy-tlo-stroke: 0.038em;
+    --fy-tls-stroke: 0.038em;
+    --fy-trc-stroke: 0.038em;
+    --fy-trs-stroke: 0.038em;
+    --fy-tt-stroke: 0.038em;
+    --fy-ttl-stroke: 0.038em;
+    --fy-ttr-stroke: 0.038em;
+    --fy-tro-stroke: 0.047em;
+  }
+
+  :where([data-fy-font="neon"]) {
+    --fy-mw-top: 8%; --fy-mw-left: 8%; --fy-mw-size: 0.62em; --fy-mw-scale-x: 1; --fy-mw-scale-y: 1;
+    --fy-mtw-top: 6%; --fy-mtw-left: 8%; --fy-mtw-size: 0.58em; --fy-mtw-scale-x: 1; --fy-mtw-scale-y: 1;
+    --fy-bw-top: 30.61%; --fy-bw-left: 4.75%; --fy-bw-size: 0.54em; --fy-bw-scale-x: 1.614492; --fy-bw-scale-y: 1.50577;
+    --fy-brw-top: 26.76%; --fy-brw-left: 4.75%; --fy-brw-size: 0.54em; --fy-brw-scale-x: 1.614492; --fy-brw-scale-y: 1.50577;
+    --fy-bbw-top: 61.0077%; --fy-bbw-left: 6.2%; --fy-bbw-size: 0.54em; --fy-bbw-scale-x: 1.04004; --fy-bbw-scale-y: 0.806882;
+    --fy-hs-top: -5.1%; --fy-hs-left: -3.9%; --fy-hs-size: 0.852em; --fy-hs-scale-x: 1; --fy-hs-scale-y: 1;
+    --fy-hts-top: -7.83%; --fy-hts-left: -2.9%; --fy-hts-size: 0.972em; --fy-hts-scale-x: 0.85; --fy-hts-scale-y: 0.833;
+  }
+
+  :where([data-fy-font="neon"][data-fy-vowel-depth="syllable"]) {
+    --fy-trs-top: -10.5%; --fy-trs-left: 38%; --fy-trs-size: 0.94em; --fy-trs-scale-x: 0.912; --fy-trs-scale-y: 0.878;
+    --fy-ttr-top: -7.5%; --fy-ttr-left: 31.6%; --fy-ttr-size: 1.018em; --fy-ttr-scale-x: 0.872; --fy-ttr-scale-y: 0.786;
+    --fy-bbrs-top: 34.15%; --fy-bbrs-left: 1.77%; --fy-bbrs-size: 1.022em; --fy-bbrs-scale-x: 0.76; --fy-bbrs-scale-y: 0.744;
+    --fy-bbw-top: 31.89%; --fy-bbw-left: -4.94%; --fy-bbw-size: 0.54em; --fy-bbw-scale-x: 1.614492; --fy-bbw-scale-y: 1.50577;
+  }
+}
+
+@layer font-kku.jamo {
+
+  :where([data-fy-font="neon"]) :is([data-jamo="ᅥ"], [data-jamo="ᅧ"]) {
+    --fy-jamo-dx: -0.065em;
+
+    --fy-jamo-dy: -0.07em;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="bbrs"][data-jamo="ᆫ"] {
+
+    --fy-bbrs-scale-x: 0.7533;
+    --fy-bbrs-scale-y: 0.7458;
+    --fy-bbrs-left: -0.63%;
+    --fy-bbrs-top: 34.4%;
+  }
+
+  :where([data-fy-font="neon"]) :is([data-fy-pos="hs"], [data-fy-pos="hts"]):is([data-jamo-base="ᅮ"], [data-jamo-base="ᅲ"]) {
+    --fy-hs-top: -9%;
+    --fy-hts-top: -9.9%;
+
+    --fy-hs-scale-x: 0.95;
+    --fy-hts-scale-x: 0.82;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="hs"][data-jamo="우"] {
+    --fy-hs-left: -8%;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="tlc"][data-jamo="ᄋ"] {
+    --fy-tlc-left: 0.9%;
+  }
+
+  :where([data-fy-font="neon"]) :is([data-fy-pos="trs"], [data-fy-pos="ttr"]):is([data-jamo="ᅥ"], [data-jamo="ᅧ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"]) {
+    --fy-jamo-dy: -0.06em;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="ttr"][data-jamo="ᅥ"] {
+    --fy-ttr-clip: inset(-1em -1em -1em 34%);
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"]) {
+    --fy-jamo-dx: 0em;
+  }
+  :where([data-fy-font="neon"]) :is([data-jamo="ᅢ"], [data-jamo="ᅤ"]) {
+    --fy-jamo-dx: -0.048em;
+  }
+  :where([data-fy-font="neon"]) :is([data-jamo="ᅦ"], [data-jamo="ᅨ"]) {
+    --fy-jamo-dx: -0.071em;
+  }
+  :where([data-fy-font="neon"]) [data-jamo="ᅵ"] {
+    --fy-jamo-dx: -0.019em;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄂ"]) {
+    --fy-t-left: 9.64%;
+    --fy-t-scale-x: 0.817;
+    --fy-t-top: -21.71%;
+    --fy-t-scale-y: 0.768;
+
+    --fy-t-stroke: 0.038em;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄃ"], [data-jamo="ᄄ"]) {
+    --fy-t-left: 10.42%;
+    --fy-t-scale-x: 0.771;
+    --fy-t-top: -23.36%;
+    --fy-t-scale-y: 0.806;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄅ"]) {
+    --fy-t-left: 11.11%;
+    --fy-t-scale-x: 0.747;
+    --fy-t-top: -25.64%;
+    --fy-t-scale-y: 0.906;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄆ"]) {
+    --fy-t-left: 11.11%;
+    --fy-t-scale-x: 0.757;
+    --fy-t-top: -22.79%;
+    --fy-t-scale-y: 0.795;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄇ"], [data-jamo="ᄈ"]) {
+    --fy-t-left: 11.11%;
+    --fy-t-scale-x: 0.757;
+    --fy-t-top: -22.22%;
+    --fy-t-scale-y: 0.801;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄉ"], [data-jamo="ᄊ"]) {
+    --fy-t-left: 9.03%;
+    --fy-t-scale-x: 0.8;
+    --fy-t-top: -22.22%;
+    --fy-t-scale-y: 0.788;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄌ"], [data-jamo="ᄍ"]) {
+    --fy-t-left: 8.33%;
+    --fy-t-scale-x: 0.772;
+    --fy-t-top: -22.79%;
+    --fy-t-scale-y: 0.796;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄎ"]) {
+    --fy-t-left: 8.33%;
+    --fy-t-scale-x: 0.782;
+    --fy-t-top: -19.37%;
+    --fy-t-scale-y: 0.71;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄐ"]) {
+    --fy-t-left: 11.11%;
+    --fy-t-scale-x: 0.746;
+    --fy-t-top: -26.78%;
+    --fy-t-scale-y: 0.932;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄑ"]) {
+    --fy-t-left: 9.72%;
+    --fy-t-scale-x: 0.785;
+    --fy-t-top: -23.93%;
+    --fy-t-scale-y: 0.806;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄒ"]) {
+    --fy-t-left: 7.64%;
+    --fy-t-scale-x: 0.839;
+    --fy-t-top: -22.22%;
+    --fy-t-scale-y: 0.799;
+  }
+
+  :where([data-fy-font="neon"]) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-m-top: -14.9%;
+    --fy-m-scale-y: 1.083;
+    --fy-m-clip: inset(46.8% -1em -1em -1em);
+    --fy-mt-top: -24.72%;
+    --fy-mt-scale-y: 1.022;
+    --fy-mt-clip: inset(47.7% -1em -1em -1em);
+  }
+
+  :where([data-fy-font="neon"]) :is([data-fy-pos="ml"], [data-fy-pos="mtl"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-ml-top: -10.7%;
+    --fy-ml-scale-y: 1.222;
+    --fy-mtl-top: -10.6%;
+    --fy-mtl-scale-y: 1.045;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="m"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+    --fy-m-top: -0.1%;
+    --fy-m-scale-y: 1.05;
+    --fy-m-clip: inset(-1em -1em 35.4% -1em);
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+    --fy-mt-top: -11%;
+    --fy-mt-scale-y: 1.088;
+    --fy-mt-clip: inset(-1em -1em 41.9% -1em);
+  }
+
+  :where([data-fy-font="neon"]) :is([data-fy-pos="ml"], [data-fy-pos="mtl"]):is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+    --fy-ml-top: -9.5%;
+    --fy-ml-scale-y: 1.25;
+    --fy-mtl-top: -6.1%;
+    --fy-mtl-scale-y: 1.076;
+    --fy-ml-clip: inset(-1em -1em 31% -1em);
+    --fy-mtl-clip: inset(-1em -1em 31% -1em);
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="t"][data-jamo="ᄋ"] {
+    --fy-t-top: -22.9%;
+    --fy-t-left: 18.4%;
+    --fy-t-size: 0.592em;
+    --fy-t-scale-x: 1.053;
+    --fy-t-scale-y: 1.512;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="tt"][data-jamo="ᄋ"] {
+    --fy-tt-top: -21.9%;
+    --fy-tt-left: 15.6%;
+    --fy-tt-size: 0.584em;
+    --fy-tt-scale-x: 1.153;
+    --fy-tt-scale-y: 1.356;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+    --fy-tls-top: -18.6%;
+    --fy-tls-left: 3.4%;
+    --fy-tls-size: 0.72em;
+    --fy-tls-scale-x: 0.933;
+    --fy-tls-scale-y: 1.019;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
+    --fy-ttl-left: 3%;
+    --fy-ttl-scale-x: 0.904;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+    --fy-tls-left: 3%;
+    --fy-tls-scale-x: 0.904;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="ttl"][data-jamo="ᄋ"] {
+    --fy-ttl-top: -17.5%;
+    --fy-ttl-left: 1.3%;
+    --fy-ttl-size: 0.76em;
+    --fy-ttl-scale-x: 0.908;
+    --fy-ttl-scale-y: 0.919;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="b"][data-jamo="ᆼ"] {
+    --fy-b-top: 27.1%;
+    --fy-b-left: -0.3%;
+    --fy-b-size: 0.992em;
+    --fy-b-scale-x: 0.982692;
+    --fy-b-scale-y: 0.709424;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="brs"][data-jamo="ᆼ"] {
+    --fy-brs-top: 30.7%;
+    --fy-brs-left: 19.6%;
+    --fy-brs-size: 1.006em;
+    --fy-brs-scale-x: 0.71928;
+    --fy-brs-scale-y: 0.74191;
+  }
+  :where([data-fy-font="neon"]) [data-fy-pos="bbrs"][data-jamo="ᆼ"] {
+    --fy-bbrs-top: 18%;
+    --fy-bbrs-left: 15%;
+    --fy-bbrs-size: 1.022em;
+    --fy-bbrs-scale-x: 0.8748;
+    --fy-bbrs-scale-y: 0.7463;
+    --fy-jamo-dx: -5.6%;
+    --fy-jamo-dy: 15.1795%;
+  }
+
+  :where([data-fy-font="neon"]) [data-fy-pos="hs"][data-jamo="으"] {
+
+    --fy-jamo-dx: 2.8%;
+  }
+}
+
+@layer font-kku.context {
+
+  :where([data-fy-font="neon"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄋ"], [data-jamo="ᄒ"])) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-m-top: -14.12%;
+    --fy-m-clip: inset(46.9% -1em -1em -1em);
+    --fy-mt-top: -21.53%;
+    --fy-mt-clip: inset(47.7% -1em -1em -1em);
+  }
+
+  :where([data-fy-font="neon"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+
+    --fy-m-top: -13.72%;
+    --fy-m-scale-y: 1.062;
+    --fy-m-clip: inset(28.6% -1em -1em -1em);
+    --fy-mt-top: -22.17%;
+    --fy-mt-scale-y: 0.975;
+    --fy-mt-clip: inset(26.6% -1em -1em -1em);
+  }
+
+  :where([data-fy-font="neon"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅭ"],
+  :where([data-fy-font="neon"]) [part="glyph"]:has([part~="choseong"][data-jamo="ᄁ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅩ"] {
+    --fy-m-clip: inset(47.4% -1em -1em -1em);
+    --fy-mt-clip: inset(47.5% -1em -1em -1em);
+  }
+
+  :where([data-fy-font="neon"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) :is([data-fy-pos="tro"], [data-fy-pos="trc"])[data-jamo="ᅨ"] {
+    --fy-tro-clip: inset(-1em -1em -1em 28.3%);
+    --fy-trc-clip: inset(-1em -1em -1em 30.3%);
+  }
+
+  :where([data-fy-font="neon"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="b"][data-jamo="ᆼ"] {
+    --fy-ctx-dy: 0.095em;
+  }
+
+  :where([data-fy-font="neon"]) [part="glyph"]:has([data-fy-pos="trs"][data-jamo="ᅢ"]) [data-fy-pos="hs"] {
+    --fy-hs-scale-x: 0.82;
+  }
+  :where([data-fy-font="neon"]) [part="glyph"]:has([data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="hts"] {
+    --fy-hts-scale-x: 0.78;
+  }
+}
+/* END GENERATED: scripts/build_derived_fonts.js */
+
+/* 꾸밈 — 네온관. 속을 비운 획(외곽선)이 관이 되고, 빛번짐을 겹 그림자로 낸다.
+ * 어두운 바탕에서 쓴다. 관 굵기는 sebul의 slot 외곽선 보정(0.026–0.047em)이다.
+ * 초성·받침은 분홍, 중성은 하늘색 관. 페이지가 색을 바꾸려면 페이지 CSS에서
+ * [part~="jamo"]의 -webkit-text-stroke-color와 text-shadow를 덮는다.
+ * 비한글 글자는 host의 칠(채운 분홍 + 빛번짐)을 상속한다. */
+@layer font-kku.font {
+  :where([data-fy-font="neon"]) {
+    color: #ffc2f1;
+    text-shadow: 0 0 0.04em #fff, 0 0 0.12em #ff4fd8, 0 0 0.3em #ff2fb0, 0 0 0.6em #b0007a;
+  }
+  :where([data-fy-font="neon"]) [part~="jamo"] {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke-color: #ff6fdf;
+  }
+  :where([data-fy-font="neon"]) [part~="jungseong"] {
+    -webkit-text-stroke-color: #6ff4ff;
+    text-shadow: 0 0 0.04em #fff, 0 0 0.12em #5ef2ff, 0 0 0.3em #19c6ff, 0 0 0.6em #0077b6;
+  }
+}
+
+@layer font-kku.jamo {
+  /* 자른 획 둘레의 빛 — 세벌 배치는 ㅗ·ㅛ 꼭지 위, ㅜ·ㅠ 내림획 아래, 워의 ㅓ·계의 ㅖ 왼쪽을 slot clip으로
+   * 자른다. clip은 그림자를 그린 뒤에 자르므로 넓은 빛번짐이 자른 선에서 곧게 끊겨 어두운 상자가 보였다
+   * (노·두·유). 이 모음은 가장 넓은 빛(0.6em)을 빼고 남은 빛을 자르는 쪽 반대로 민다 — 자른 선에 닿는
+   * 빛이 줄어 끊김이 거의 보이지 않는다. 빛을 자른 뒤에 그리는 SVG 필터는 Safari가 data: 주소로 받지
+   * 못하고, 페이지가 text-shadow로 관 빛을 바꾸는 계약도 깨져 쓰지 않는다. */
+  :where([data-fy-font="neon"]) [part~="jungseong"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    text-shadow: 0 0 0.04em #fff, 0 0.04em 0.12em #5ef2ff, 0 0.12em 0.26em #19c6ff;
+  }
+  :where([data-fy-font="neon"]) [part~="jungseong"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+    text-shadow: 0 0 0.04em #fff, 0 -0.04em 0.12em #5ef2ff, 0 -0.12em 0.26em #19c6ff;
+  }
+  :where([data-fy-font="neon"]) [part~="jungseong"]:is([data-fy-pos="ttr"][data-jamo="ᅥ"], [data-jamo="ᅨ"]:is([data-fy-pos="tro"], [data-fy-pos="trc"])) {
+    text-shadow: 0 0 0.04em #fff, 0.04em 0 0.12em #5ef2ff, 0.12em 0 0.26em #19c6ff;
+  }
+}

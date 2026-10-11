@@ -1,0 +1,375 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 예능 자막. 글꼴: sticker saekdong retro. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>동네 한 바퀴 먹방 원정대 3화 — 자막 미리보기</title>
+  <script src="../lib/font-kku.js" data-fonts="sticker saekdong retro"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --bg: #101014;
+      --panel: #1b1b22;
+      --ink: #f3f3f6;
+      --muted: #a5a5b4;
+      --accent: #ffd23f;
+    }
+
+    html { background: var(--bg); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 32px 16px 48px;
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--ink);
+      word-break: keep-all;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, #24243a 0%, transparent 70%) no-repeat, var(--bg);
+    }
+
+    .studio { width: min(1040px, 100%); margin: 0 auto; }
+
+    .head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6px 16px;
+      margin: 0 0 14px;
+    }
+    .head h1 { margin: 0; font-size: 18px; font-weight: 800; }
+    .head p { margin: 0; font-size: 13px; color: var(--muted); }
+
+    /* 16:9 방송 화면. 안쪽 글자 크기는 화면 폭(cqi)을 따라 함께 줄고 는다 */
+    .screen {
+      position: relative;
+      container-type: inline-size;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #000;
+      box-shadow: 0 24px 60px rgb(0 0 0 / 55%), 0 0 0 1px rgb(255 255 255 / 8%);
+    }
+    .scene { position: absolute; inset: 0; }
+    .scene[hidden] { display: none; }
+
+    /* 장면 1 — 낮 시장 골목: 하늘, 줄무늬 차양, 등 */
+    .scene-market {
+      background:
+        radial-gradient(circle at 12% 36%, #ffd166 0 2cqi, transparent 2.1cqi),
+        radial-gradient(circle at 27% 36%, #ef476f 0 2cqi, transparent 2.1cqi),
+        radial-gradient(circle at 73% 36%, #ef476f 0 2cqi, transparent 2.1cqi),
+        radial-gradient(circle at 88% 36%, #ffd166 0 2cqi, transparent 2.1cqi),
+        linear-gradient(180deg, transparent 0 30%, #4a3426 30% 31%, transparent 31%),
+        repeating-linear-gradient(90deg, #e63946 0 4cqi, #fff3e6 4cqi 8cqi) 0 31% / 100% 7% no-repeat,
+        linear-gradient(180deg, transparent 0 38%, #7b5b45 38% 82%, #8d8a86 82%),
+        linear-gradient(180deg, #8ecae6 0%, #cfeefc 60%);
+    }
+    /* 장면 2 — 먹방 상: 나무 상, 국수 그릇, 김 */
+    .scene-food {
+      background:
+        radial-gradient(ellipse 22% 9% at 50% 66%, #fff7e8 0 60%, #e8c58e 61% 70%, transparent 71%),
+        radial-gradient(ellipse 25% 18% at 50% 70%, #c0392b 0 70%, transparent 71%),
+        repeating-linear-gradient(0deg, #a0673d 0 1.6cqi, #98603a 1.6cqi 3.2cqi) 0 100% / 100% 45% no-repeat,
+        radial-gradient(ellipse 70% 60% at 50% 30%, #ffe1b8 0%, #f4a261 100%);
+    }
+    .steam {
+      position: absolute;
+      left: 50%;
+      top: 34%;
+      width: 18cqi;
+      height: 16cqi;
+      translate: -50% 0;
+      background:
+        radial-gradient(circle at 30% 70%, rgb(255 255 255 / 70%) 0 1.6cqi, transparent 3cqi),
+        radial-gradient(circle at 55% 45%, rgb(255 255 255 / 60%) 0 1.8cqi, transparent 3.4cqi),
+        radial-gradient(circle at 72% 72%, rgb(255 255 255 / 55%) 0 1.4cqi, transparent 2.8cqi);
+      filter: blur(0.6cqi);
+      animation: k-steam 3.2s ease-in-out infinite;
+    }
+    @keyframes k-steam {
+      0% { opacity: 0; translate: -50% 3cqi; }
+      40% { opacity: 1; }
+      100% { opacity: 0; translate: -50% -4cqi; }
+    }
+    /* 장면 3 — 반전: 예능의 집중선 */
+    .scene-twist {
+      background:
+        radial-gradient(circle at 50% 50%, #3d1d5c 0 16%, transparent 44%),
+        repeating-conic-gradient(from 0deg at 50% 50%, rgb(255 255 255 / 85%) 0deg 1.2deg, transparent 1.2deg 7deg),
+        #1a0b2e;
+    }
+    .scene-twist::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, #2a1446 0 30%, transparent 62%);
+    }
+    /* 장면 4 — 노을 언덕 */
+    .scene-sunset {
+      background:
+        radial-gradient(ellipse 60% 40% at 30% 100%, #5b3a6b 0 60%, transparent 61%),
+        radial-gradient(ellipse 70% 45% at 85% 105%, #3f2a55 0 60%, transparent 61%),
+        radial-gradient(circle at 70% 58%, #fff1b8 0 6cqi, #ffd166 6.2cqi 7cqi, transparent 7.5cqi),
+        linear-gradient(180deg, #ff9e7a 0%, #ffbf86 45%, #ffd6a0 70%, #f7a072 100%);
+    }
+
+    /* 화면 위 고정물 — 채널 로고와 프로그램 이름 */
+    .bug {
+      position: absolute;
+      top: 3cqi;
+      left: 3cqi;
+      z-index: 3;
+      padding: 0.5cqi 1.2cqi;
+      border-radius: 0.8cqi;
+      font-size: max(9px, 1.7cqi);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: #fff;
+      background: rgb(0 0 0 / 45%);
+    }
+    .bug b { color: var(--accent); }
+    .program {
+      position: absolute;
+      top: 3.2cqi;
+      right: 3cqi;
+      z-index: 3;
+      font-size: max(9px, 1.5cqi);
+      font-weight: 700;
+      color: rgb(255 255 255 / 85%);
+      text-shadow: 0 1px 3px rgb(0 0 0 / 60%);
+    }
+
+    /* 자막 자리 */
+    .cap { position: absolute; z-index: 2; margin: 0; line-height: 1; }
+    .cap-main { left: 50%; top: 60%; translate: -50% -50%; text-align: center; white-space: nowrap; }
+    .cap-aside { right: 5cqi; top: 14%; rotate: 6deg; }
+    .cap-aside.left { right: auto; left: 5cqi; rotate: -5deg; }
+    .cap-sfx { left: 6cqi; top: 20%; rotate: -10deg; }
+    .cap-sfx.right { left: auto; right: 7cqi; top: 58%; rotate: 8deg; }
+    .cap-small { left: 50%; top: 34%; translate: -50% 0; white-space: nowrap; }
+
+    /* 혼잣말·속마음은 흰 상자에 — 어느 장면 위에서도 읽힌다 */
+    .slide {
+      padding: 0.6cqi 1.4cqi 0.8cqi;
+      border-radius: 1.2cqi;
+      background: rgb(255 255 255 / 90%);
+      box-shadow: 0 0.4cqi 1.2cqi rgb(0 0 0 / 25%);
+    }
+
+    /* 하단 이름표(로어서드) */
+    .lower-third {
+      position: absolute;
+      left: 4cqi;
+      bottom: 6cqi;
+      z-index: 2;
+      display: flex;
+      align-items: stretch;
+      max-width: 70%;
+      font-size: max(10px, 1.9cqi);
+      animation: k-slide 600ms cubic-bezier(0.2, 0.9, 0.3, 1) 900ms backwards;
+    }
+    .lower-third b {
+      padding: 0.7cqi 1.4cqi;
+      font-weight: 900;
+      color: #1b1b22;
+      background: var(--accent);
+    }
+    .lower-third span {
+      padding: 0.7cqi 1.6cqi;
+      font-weight: 700;
+      color: #fff;
+      background: rgb(20 20 30 / 82%);
+    }
+    @keyframes k-slide { from { opacity: 0; translate: -6cqi 0; } }
+
+    /* ── 자모 단위 움직임 ────────────────────────────────────────
+     * 코어가 자모 노드에 transform으로 배치를 잡으므로 개별 속성(translate·scale·rotate)으로 얹는다.
+     * 큰 자막: 글자가 통통 튀어 오르고, 받침은 한 박자 늦게 위에서 톡 떨어진다. */
+    .pop [part="glyph"] {
+      animation: k-pop 560ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+      animation-delay: calc(var(--fy-glyph-index, 0) * 70ms);
+    }
+    .pop [part~="jongseong"] {
+      animation: k-drop 620ms cubic-bezier(0.3, 0.7, 0.4, 1) backwards;
+      animation-delay: calc(var(--fy-glyph-index, 0) * 70ms + 420ms);
+    }
+    @keyframes k-pop {
+      from { opacity: 0; scale: 0.2; translate: 0 0.35em; }
+    }
+    @keyframes k-drop {
+      0% { opacity: 0; translate: 0 -1.1em; }
+      55% { opacity: 1; translate: 0 0.08em; }
+      78% { translate: 0 -0.05em; }
+      100% { translate: 0 0; }
+    }
+    /* 혼잣말: 옆에서 스르륵, 중성이 마지막에 들어온다 */
+    .slide [part~="jamo"] {
+      animation: k-in 520ms ease-out backwards;
+      animation-delay: calc(var(--fy-glyph-index, 0) * 60ms + 500ms);
+    }
+    .slide [part~="jungseong"] { animation-delay: calc(var(--fy-glyph-index, 0) * 60ms + 680ms); }
+    @keyframes k-in { from { opacity: 0; translate: 0.5em 0; } }
+    /* 효과음: 글자마다 어긋나게 덜덜 떤다 */
+    .shake [part="glyph"] {
+      animation: k-pop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards, k-shake 1.4s ease-in-out 700ms infinite;
+      animation-delay: calc(var(--fy-glyph-index, 0) * 50ms + 250ms), calc(var(--fy-glyph-index, 0) * 90ms + 700ms);
+    }
+    @keyframes k-shake {
+      0%, 30%, 100% { rotate: 0deg; }
+      6% { rotate: -9deg; }
+      12% { rotate: 8deg; }
+      18% { rotate: -6deg; }
+      24% { rotate: 4deg; }
+    }
+
+    /* 조작 */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 16px 0 0;
+    }
+    .dots { display: flex; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .dots li { width: 10px; height: 10px; border-radius: 50%; background: #3a3a48; }
+    .dots li[aria-current="step"] { background: var(--accent); }
+    .buttons { display: flex; gap: 8px; }
+    button {
+      padding: 11px 18px;
+      border: 0;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      color: #1b1b22;
+      background: var(--accent);
+      cursor: pointer;
+    }
+    button.ghost { color: var(--ink); background: #2a2a36; }
+    button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .legend li {
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+      background: var(--panel);
+    }
+    .legend b { display: block; margin-bottom: 4px; color: var(--ink); }
+    .legend code { color: var(--accent); }
+
+    @media (max-width: 560px) {
+      body { padding: 20px 12px 36px; }
+      .controls { justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pop [part="glyph"], .pop [part~="jongseong"], .slide [part~="jamo"], .shake [part="glyph"],
+      .lower-third, .steam { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="studio">
+    <header class="head">
+      <h1>〈동네 한 바퀴 먹방 원정대〉 3화 자막</h1>
+      <p>편집 미리보기 · 글꼴 파일 없이 웹에서 바로 그린 자막</p>
+    </header>
+
+    <div class="screen" role="region" aria-label="방송 화면 미리보기" aria-roledescription="자막 장면">
+      <span class="bug" aria-hidden="true"><b>KKU</b> TV</span>
+      <span class="program" aria-hidden="true">동네 한 바퀴 먹방 원정대</span>
+
+      <div class="scene scene-market" data-scene aria-label="장면 1: 시장 도착">
+        <p class="cap cap-sfx shake"><font-kku font="retro" size="7cqi">두둥!</font-kku></p>
+        <p class="cap cap-main pop"><font-kku font="sticker" size="9.5cqi">드디어 도착!!</font-kku></p>
+        <p class="cap cap-aside slide"><font-kku font="saekdong" size="4.2cqi">(이미 배고픔)</font-kku></p>
+        <div class="lower-third"><b>막내 PD</b><span>김폰꾸 · 오늘의 길잡이</span></div>
+      </div>
+
+      <div class="scene scene-food" data-scene hidden aria-label="장면 2: 국수 먹방">
+        <span class="steam" aria-hidden="true"></span>
+        <p class="cap cap-sfx right shake"><font-kku font="retro" size="6.4cqi">후루룩</font-kku></p>
+        <p class="cap cap-main pop" style="top: 24%"><font-kku font="sticker" size="8.6cqi">한 입에 사르르~</font-kku></p>
+        <p class="cap cap-aside left slide" style="top: 46%"><font-kku font="saekdong" size="4cqi">(국물 원샷 각)</font-kku></p>
+        <div class="lower-third"><b>먹방 담당</b><span>이한글 · 국수 열 그릇의 사나이</span></div>
+      </div>
+
+      <div class="scene scene-twist" data-scene hidden aria-label="장면 3: 반전">
+        <p class="cap cap-small slide" style="top: 22%"><font-kku font="saekdong" size="4.4cqi">그런데 그때…</font-kku></p>
+        <p class="cap cap-main pop"><font-kku font="retro" size="10cqi">계산은 누가?!</font-kku></p>
+        <p class="cap cap-sfx right shake" style="top: 72%"><font-kku font="sticker" size="5.6cqi">띠용</font-kku></p>
+        <p class="cap cap-aside left slide" style="top: 74%"><font-kku font="saekdong" size="3.6cqi">(정적)</font-kku></p>
+      </div>
+
+      <div class="scene scene-sunset" data-scene hidden aria-label="장면 4: 마무리">
+        <p class="cap cap-sfx shake" style="top: 14%"><font-kku font="retro" size="5.4cqi">짝짝짝</font-kku></p>
+        <p class="cap cap-main pop" style="top: 44%"><font-kku font="sticker" size="8.4cqi">맛집 지도 완성!</font-kku></p>
+        <p class="cap cap-small slide" style="top: 62%"><font-kku font="saekdong" size="4.6cqi">다음 주에 또 만나요~</font-kku></p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <ol class="dots" aria-label="장면" data-dots></ol>
+      <div class="buttons">
+        <button type="button" class="ghost" data-replay>다시 보기</button>
+        <button type="button" data-next>다음 자막 ▶</button>
+      </div>
+    </div>
+
+    <ul class="legend">
+      <li><b>큰 자막 · 스티커</b>글자가 통통 튀어 오르고 <strong>받침만 한 박자 늦게 위에서 톡</strong> 떨어집니다. 자모를 따로 그리니까 받침만 움직일 수 있어요.</li>
+      <li><b>혼잣말 · 색동</b>초성·중성·받침이 저마다 다른 색이고, 모음이 마지막에 들어오며 글자가 완성됩니다.</li>
+      <li><b>효과음 · 레트로</b>입체 그림자 글자가 한 자씩 어긋나게 떱니다. 크기는 화면 폭(<code>cqi</code>)을 따라 줄고 늘어요.</li>
+    </ul>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+      var scenes = Array.prototype.slice.call(document.querySelectorAll("[data-scene]"));
+      var dots = document.querySelector("[data-dots]");
+      var current = 0;
+
+      dots.innerHTML = scenes.map(function (_, i) { return "<li" + (i === 0 ? ' aria-current="step"' : "") + "></li>"; }).join("");
+
+      // 장면을 보여 주고, 그 안의 자막을 다시 그려 등장 움직임을 처음부터 돌린다
+      function show(index) {
+        current = (index + scenes.length) % scenes.length;
+        scenes.forEach(function (scene, i) { scene.hidden = i !== current; });
+        Array.prototype.forEach.call(dots.children, function (dot, i) {
+          if (i === current) dot.setAttribute("aria-current", "step"); else dot.removeAttribute("aria-current");
+        });
+        var scene = scenes[current];
+        var lower = scene.querySelector(".lower-third");
+        if (lower) {
+          lower.style.animation = "none";
+          void lower.offsetWidth;
+          lower.style.animation = "";
+        }
+        if (window.FontKku) {
+          Array.prototype.forEach.call(scene.querySelectorAll("font-kku"), function (host) {
+            window.FontKku.refresh(host);
+          });
+        }
+      }
+
+      document.querySelector("[data-next]").addEventListener("click", function () { show(current + 1); });
+      document.querySelector("[data-replay]").addEventListener("click", function () { show(current); });
+    })();
+  </script>
+</body>
+</html>

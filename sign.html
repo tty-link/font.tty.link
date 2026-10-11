@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ko" data-en-title="LED sign — font-kku">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>전광판 — 폰꾸 font-kku</title>
+    <meta name="description" content="영문 자판으로 두벌식·세벌식 한글을 쳐서 도트 전광판에 띄웁니다. 한글 입력기도 한글 글꼴도 없는 기기에서 폰꾸 그림 자소로 그립니다. 주소로 전광판을 나눕니다." />
+    <script src="lib/font-kku.js" data-fonts="sebul pixel sprite-system dojang chalk"></script>
+    <script src="lib/font-kku-ime.js"></script>
+    <link rel="stylesheet" href="./site.css" />
+    <link rel="stylesheet" href="./apps.css" />
+  </head>
+
+  <body>
+    <header class="k-header">
+      <div class="k-wrap k-header-inner">
+        <a class="k-brand" href="./index.html">
+          <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20" data-nofont-font="pixel">꾸</font-kku></span>
+          <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
+        </a>
+        <nav class="k-nav" aria-label="사이트" data-demo-nav></nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="k-wrap k-page-head app-head" aria-labelledby="sign-title">
+        <span class="k-kicker" data-en="Web app · works without a Korean font or IME">웹 앱 · 한글 글꼴·입력기 없이</span>
+        <h1 id="sign-title" class="font-kku k-h1 k-mark" data-font="sebul" data-nofont-font="pixel" data-size="clamp(44px, 7vw, 88px)">전광판</h1>
+        <p class="k-lead" data-en="Type Korean on an English keyboard (2-set or 3-set) and show it on a dot-matrix sign. The page composes Hangul itself and font-kku draws it from image jamo, so it works on a device with no Korean input method and no Korean font. The address keeps the sign, so you can share it.">
+          영문 자판으로 두벌식·세벌식 한글을 쳐서 도트 전광판에 띄웁니다. 한글 조합은 페이지가 하고 글자는 폰꾸가 자소판
+          그림으로 그리므로, 한글 입력기도 한글 글꼴도 없는 기기에서 그대로 동작합니다. 주소에 전광판이 담겨 링크로 나눕니다.
+        </p>
+        <p class="app-nofont" role="note">
+          <strong>No Korean font on this device.</strong>
+          <span>Korean is drawn by font-kku from image jamo, and the interface is in English.</span>
+        </p>
+      </section>
+
+      <section class="k-wrap app-layout" aria-label="전광판" data-sign-app>
+        <div class="sign" data-sign data-mode="scroll">
+          <div class="sign-window" data-sign-window>
+            <div class="sign-lit">
+              <div class="sign-track" data-sign-track>
+                <font-kku font="pixel" size="var(--sign-size)" wrap-unit="line" data-sign-text>어서 오세요 · 폰꾸 전광판</font-kku>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="sign-fullscreen" data-sign-fullscreen aria-label="전체 화면">⤢</button>
+        </div>
+
+        <div class="app-field">
+          <span data-en="Text — Shift+Space switches Korean/English">글 — Shift+Space로 한/영 전환</span>
+          <div class="sign-input" data-sign-editor></div>
+        </div>
+
+        <div class="app-toolbar">
+          <button type="button" class="app-mode" data-ime-toggle aria-label="한/영 전환">
+            <span class="app-mode-badge" data-ime-badge></span>
+            <span data-ime-mode-label></span>
+          </button>
+          <div class="k-chips" role="group" aria-label="자판 배열" data-layouts></div>
+          <button type="button" class="k-btn k-btn--small" data-keyboard-toggle aria-expanded="false" data-en="On-screen keys">화면 자판</button>
+        </div>
+
+        <div data-keyboard hidden></div>
+
+        <div class="app-controls">
+          <div class="app-field">
+            <span data-en="Font">글꼴</span>
+            <div class="k-chips" role="group" aria-label="글꼴" data-font-choices>
+              <button type="button" data-font="pixel" aria-pressed="true" data-en="Dot">도트</button>
+              <button type="button" data-font="sprite-system" aria-pressed="false" data-en="Plain">실측판</button>
+              <button type="button" data-font="dojang" aria-pressed="false" data-en="Stamp">도장</button>
+              <button type="button" data-font="chalk" aria-pressed="false" data-en="Chalk">분필</button>
+            </div>
+          </div>
+          <div class="app-field">
+            <span data-en="Motion">움직임</span>
+            <div class="k-chips" role="group" aria-label="움직임" data-modes>
+              <button type="button" data-mode="scroll" aria-pressed="true" data-en="Scroll">흐르기</button>
+              <button type="button" data-mode="blink" aria-pressed="false" data-en="Blink">깜빡이기</button>
+              <button type="button" data-mode="static" aria-pressed="false" data-en="Still">멈춤</button>
+            </div>
+          </div>
+          <label class="app-field">
+            <span data-en="Speed">속도</span>
+            <span class="app-range"><input type="range" min="1" max="10" step="1" value="4" data-speed-range aria-label="속도" /><output data-speed-out>4</output></span>
+          </label>
+          <label class="app-field">
+            <span data-en="Size">크기</span>
+            <span class="app-range"><input type="range" min="48" max="240" step="8" value="120" data-size-range aria-label="크기" /><output data-size-out>120px</output></span>
+          </label>
+          <div class="app-field">
+            <span data-en="Colour">색</span>
+            <div class="sign-swatches" role="group" aria-label="색" data-colors>
+              <button type="button" style="--swatch: #ff3b30" data-color="#ff3b30" aria-pressed="true" aria-label="빨강"></button>
+              <button type="button" style="--swatch: #ff9f0a" data-color="#ff9f0a" aria-pressed="false" aria-label="주황"></button>
+              <button type="button" style="--swatch: #ffd60a" data-color="#ffd60a" aria-pressed="false" aria-label="노랑"></button>
+              <button type="button" style="--swatch: #30d158" data-color="#30d158" aria-pressed="false" aria-label="초록"></button>
+              <button type="button" style="--swatch: #64d2ff" data-color="#64d2ff" aria-pressed="false" aria-label="하늘"></button>
+              <button type="button" style="--swatch: #f5f5f7" data-color="#f5f5f7" aria-pressed="false" aria-label="흰색"></button>
+              <input type="color" value="#ff3b30" data-color-custom aria-label="직접 고르기" />
+            </div>
+          </div>
+          <div class="app-field">
+            <span data-en="Dots">점</span>
+            <div class="k-chips" role="group" aria-label="점 격자" data-dot-choices>
+              <button type="button" data-dot="on" aria-pressed="true" data-en="LED dots">LED 점</button>
+              <button type="button" data-dot="off" aria-pressed="false" data-en="Solid">통짜</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-actions">
+          <button type="button" class="k-btn k-btn--primary" data-sign-fullscreen data-en="Full screen">전체 화면</button>
+          <button type="button" class="k-btn" data-share data-en="Copy link">링크 복사</button>
+          <button type="button" class="k-btn" data-copy-text-live data-en="Copy text">글 복사</button>
+        </div>
+      </section>
+
+      <section class="k-section k-section--tint" aria-labelledby="sign-how">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true" data-en="How">쓰는 법</span>
+            <span class="k-kicker" data-en="How it works">쓰는 법</span>
+            <h2 id="sign-how" class="font-kku k-h2" data-font="sebul" data-nofont-font="sprite-system" data-size="clamp(30px, 4.4vw, 52px)">영문 자판으로 한글을</h2>
+          </header>
+          <ul class="memo-help">
+            <li><span data-en="2-set (Dubeolsik): the keys of a Korean keyboard, Shift for tense consonants —">두벌식: 한글 자판 자리 그대로, 된소리는 Shift —</span> <code>dkssud</code> → <font-kku font="sebul" size="22">안녕</font-kku></li>
+            <li><span data-en="3-set (390 / Final): initials on the right hand, vowels in the middle, finals on the left —">세벌식 390·최종: 초성은 오른손, 중성은 가운데, 종성은 왼손 —</span> <code>jfs</code> → <font-kku font="sebul" size="22">안</font-kku></li>
+            <li><span data-en="Shift+Space or the KO/EN button switches Korean and English. While a syllable is being composed, Backspace removes one jamo.">Shift+Space나 한/영 단추로 한글·영문을 바꿉니다. 조합 중에는 Backspace가 자모 하나씩 지웁니다.</span></li>
+            <li><span data-en="The address (#…) holds the text, font, motion, speed, size and colour — copy the link to show the same sign on another device.">주소(#…)에 글·글꼴·움직임·속도·크기·색이 담깁니다. 링크를 복사하면 다른 기기에서 같은 전광판이 뜹니다.</span></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="k-footer">
+      <div class="k-wrap k-footer-inner">
+        <span data-en="font-kku · MIT-licensed code">폰꾸 font-kku · 코드는 MIT</span>
+        <nav aria-label="바닥 링크">
+          <a href="./memo.html" data-en="Notepad">메모장</a>
+          <a href="./showcase.html#apps" data-en="Web apps">웹 앱</a>
+          <a href="./docs.html#nofont" data-en="Docs: no Korean font">문서 · 글꼴 없는 기기</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="./demo.js"></script>
+    <script src="./kk.js"></script>
+    <script src="./app-kit.js"></script>
+    <script src="./sign.js"></script>
+  </body>
+</html>

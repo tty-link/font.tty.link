@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>움직임 — 폰꾸 font-kku</title>
+    <meta name="description" content="자모가 따로 움직이는 폰꾸의 움직임과 상호작용 — animate 한 단어로 붙는 자모 조립·받침 톡·물결·깜빡임·색 순환·반짝·스크롤 조립, data-kku-fx로 붙는 두벌식 타자·흩어지기·커서 자석·씨앗 섞기. 코드 복사로 HTML 한 장째 가져갑니다." />
+    <!-- 한 줄 설치: 글꼴 CSS와 함께 움직임(motion)·상호작용(fx) 확장을 붙인다 -->
+    <script src="lib/font-kku.js" data-fonts="sebul" data-addons="motion fx"></script>
+    <link rel="stylesheet" href="./site.css" />
+    <link rel="stylesheet" href="./effects.css" />
+
+    <!-- 카드에 따로 필요한 CSS만 여기 있다. '코드 복사'도 이 글을 그대로 담는다. -->
+    <style data-fx-css="type">
+      /* 쓰는 줄 끝의 커서. 세벌 글꼴 잉크가 글자 칸 위쪽으로 올라 있어 높이를 거기 맞춘다 */
+      .typing [part="line"]:last-of-type::after {
+        content: "";
+        display: inline-block;
+        inline-size: 0.06em;
+        block-size: 0.94em;
+        margin-block-start: -0.14em;
+        margin-inline-start: 0.08em;
+        vertical-align: top;
+        background: #d62839;
+        animation: caret-blink 1.1s steps(1, end) infinite;
+      }
+
+      @keyframes caret-blink {
+        50% { opacity: 0; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .typing [part="line"]::after { animation: none; }
+      }
+    </style>
+
+    <style data-fx-css="magnet">
+      /* 터치로 끌어도 화면이 옆으로 밀리지 않게 */
+      .magnet { touch-action: pan-y; }
+    </style>
+
+    <style data-fx-css="shuffle">
+      /* 자모마다 받은 씨앗값(0–1)으로 기울기와 높낮이를 정한다 — 같은 씨앗값이면 언제나 같은 모양 */
+      .hand [part~="jamo"] {
+        --fy-rotate: calc((var(--fy-jamo-seed, 0.5) - 0.5) * 14deg);
+        translate: 0 calc((var(--fy-jamo-seed, 0.5) - 0.5) * 0.08em);
+      }
+    </style>
+
+    <style data-fx-css="origin">
+      /* 획 깊이에서 획마다 data-hoek-role이 붙는다 — 자음은 기본자(base)·가획(added)·이체(variant),
+         모음은 천(heaven ·)·지(earth ㅡ)·인(person ㅣ). 획은 글자 색(currentColor)으로 그으므로 color로 칠한다 */
+      .origin [data-hoek-role="base"] { color: #1d3557; }
+      .origin [data-hoek-role="added"] { color: #e63946; }
+      .origin [data-hoek-role="variant"] { color: #7b4fa8; }
+      .origin [data-hoek-role="heaven"] { color: #e09f00; }
+      .origin [data-hoek-role="earth"] { color: #2a9d8f; }
+      .origin [data-hoek-role="person"] { color: #3a6ea5; }
+    </style>
+  </head>
+
+  <body>
+    <header class="k-header">
+      <div class="k-wrap k-header-inner">
+        <a class="k-brand" href="./index.html">
+          <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20">꾸</font-kku></span>
+          <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
+        </a>
+        <nav class="k-nav" aria-label="사이트" data-demo-nav></nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="k-wrap k-page-head" aria-labelledby="fx-title">
+        <h1 id="fx-title" class="font-kku k-h1 k-mark" data-font="sebul" data-size="clamp(44px, 7vw, 88px)" data-animate="assemble">움직임</h1>
+        <p class="k-lead">
+          글꼴 파일은 글자를 통째로 그려서 글자 안을 나눠 움직이지 못합니다. 폰꾸는 초성·중성·받침을 따로 그리기 때문에
+          자모 하나하나가 따로 날아오고, 떨어지고, 깜빡입니다. 움직임과 상호작용은 폰꾸가 글자 모양을 고르는 여섯 축
+          <span class="fx-axes">글꼴 · 꾸밈 · 변주 · <strong>움직임</strong> · <strong>상호작용</strong> · 바탕</span> 가운데
+          두 축이라, 어느 글꼴·꾸밈에든 그대로 얹힙니다.
+        </p>
+        <ul class="fx-ways">
+          <li><strong>움직임</strong> — 속성 한 단어. <code>animate="wave"</code> · 한 줄 설치에 <code>data-addons="motion"</code></li>
+          <li><strong>상호작용</strong> — 입력에 반응. <code>data-kku-fx="magnet"</code> · 한 줄 설치에 <code>data-addons="fx"</code></li>
+        </ul>
+        <div class="fx-toolbar">
+          <nav class="fx-index" aria-label="움직임 목록" data-fx-index></nav>
+          <button type="button" class="k-btn k-btn--small" data-fx-pause aria-pressed="false">움직임 멈추기</button>
+        </div>
+      </section>
+
+      <section class="k-wrap fx-group" id="motion" aria-labelledby="fx-motion-title">
+        <header class="fx-group-head">
+          <h2 id="fx-motion-title">움직임 <code>animate</code></h2>
+          <p>CSS만으로 돕니다. 글자가 아니라 자모 노드를 움직이고, 시차는 글자 순번과 초성 → 중성 → 받침 차례로 줍니다. 한 번 도는 움직임은 다시 그리면 다시 돕니다.</p>
+        </header>
+        <div class="fx-grid">
+          <article class="fx-card" id="fx-assemble" data-fx="assemble" data-fx-fonts="sebul" data-fx-addons="motion" data-fx-replay>
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">1</span><h3>자모 조립</h3></header>
+            <p class="fx-how"><code>animate="assemble"</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 초성·중성·받침이 각자 다른 방향에서 날아와 한 글자로 맞물립니다.</p>
+            <div class="k-stage fx-stage" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="sebul" animate="assemble" size="clamp(52px, 7vw, 88px)">한글 조립</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+
+          <article class="fx-card" id="fx-drop" data-fx="drop" data-fx-fonts="sebul" data-fx-addons="motion" data-fx-replay>
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">2</span><h3>받침 톡</h3></header>
+            <p class="fx-how"><code>animate="drop"</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 받침만 따로 떨어뜨립니다. 초성·중성은 가만히 있고 받침이 위에서 떨어져 두 번 튀고 자리 잡습니다.</p>
+            <div class="k-stage fx-stage fx-stage--tall" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="sebul" animate="drop" size="clamp(56px, 7.5vw, 92px)">받침 톡톡</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+
+          <article class="fx-card" id="fx-wave" data-fx="wave" data-fx-fonts="sticker" data-fx-addons="motion">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">3</span><h3>물결</h3></header>
+            <p class="fx-how"><code>animate="wave"</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 글자 안에서도 초성·중성·받침이 서로 다른 박자로 출렁입니다. 오려 붙인 스티커 조각들이 물 위에 뜬 것처럼 보입니다.</p>
+            <div class="k-stage fx-stage" data-tone="pink" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="sticker" animate="wave" size="clamp(46px, 6vw, 76px)">물결 타는 자모</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+
+          <article class="fx-card" id="fx-flicker" data-fx="flicker" data-fx-fonts="neon" data-fx-addons="motion">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">4</span><h3>고장 난 네온</h3></header>
+            <p class="fx-how"><code>animate="flicker"</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 글자 하나가 아니라 단어 둘째 글자 &lsquo;업&rsquo;의 받침 ㅂ 관 하나만 접촉 불량으로 깜빡입니다.</p>
+            <div class="k-stage fx-stage" data-tone="dark" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="neon" animate="flicker" size="clamp(60px, 8vw, 100px)">영업 중</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+
+          <article class="fx-card" id="fx-cycle" data-fx="cycle" data-fx-fonts="gothic" data-fx-addons="motion">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">5</span><h3>색 순환</h3></header>
+            <p class="fx-how"><code>animate="cycle"</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 한 글자 안의 초성·중성·받침이 다른 색입니다. 오방색이 시차를 두고 자모 사이를 돕니다. 색은 <code>--kku-cycle-1</code>~<code>4</code>로 바꿉니다.</p>
+            <div class="k-stage fx-stage" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="gothic" animate="cycle" size="clamp(50px, 7vw, 84px)">오방색 한글</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+
+          <article class="fx-card" id="fx-shine" data-fx="shine" data-fx-fonts="sprite-system" data-fx-addons="motion">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">6</span><h3>금박 반짝</h3></header>
+            <p class="fx-how"><code>animate="shine"</code></p>
+            <p class="fx-why"><strong>마스크 칠이라서</strong> 그림 자소의 모양만 빌리고 칠은 글자 색입니다. 자모마다 그 색 위로 빛줄기가 지나갑니다.</p>
+            <div class="k-stage fx-stage" data-tone="dark" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="sprite-system" animate="shine" style="color: #d9a43a" size="clamp(60px, 8vw, 100px)">금빛 반짝</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+
+          <article class="fx-card" id="fx-scroll" data-fx="scroll" data-fx-fonts="gothic" data-fx-addons="motion">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">7</span><h3>스크롤 조립</h3></header>
+            <p class="fx-how"><code>animate="scroll-assemble"</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 화면을 내릴수록 사방에 흩어져 있던 자모가 모여 글자가 됩니다. 스크롤을 올리면 다시 흩어집니다. 방향은 자모마다 받은 씨앗값으로 정합니다.</p>
+            <div class="k-stage fx-stage fx-stage--tall" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="gothic" animate="scroll-assemble" seed="scroll" jamo-seeds size="clamp(48px, 6.6vw, 80px)">모여라 자모</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions><span class="fx-hint">화면을 위아래로 움직여 보세요</span></div>
+          </article>
+
+          <article class="fx-card" id="fx-draw" data-fx="draw" data-fx-fonts="sprite-system" data-fx-addons="motion" data-fx-jamo-sets="sprite-system" data-fx-replay>
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">8</span><h3>획순 그리기</h3></header>
+            <p class="fx-how"><code>animate="draw"</code> · <code>jamo-set="sprite-system"</code></p>
+            <p class="fx-why"><strong>획 단위라서</strong> 벡터 자소를 자모보다 한 단계 더 쪼개 획순대로 한 획씩 긋습니다. ㅎ은 꼭지 → 가로 → 동그라미, ㅏ는 세로 → 점입니다. 기기 글꼴에서는 자모가 같은 차례로 나타납니다.</p>
+            <div class="k-stage fx-stage" data-tone="paper" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="sprite-system" jamo-set="sprite-system" animate="draw" size="clamp(60px, 8vw, 104px)">한글 쓰기</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+
+          <article class="fx-card" id="fx-basic" data-fx="basic" data-fx-fonts="sebul" data-fx-replay>
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">9</span><h3>글자 단위 여섯</h3></header>
+            <p class="fx-how"><code>rise</code> · <code>fade</code> · <code>stagger</code> · <code>bounce</code> · <code>wiggle</code> · <code>drift</code></p>
+            <p class="fx-why"><strong>확장 없이</strong> 런타임에 들어 있는 글자 단위 움직임입니다. 위 움직임들과 같은 <code>animate</code> 속성으로 고릅니다.</p>
+            <div class="k-stage fx-stage fx-stage--grid" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="sebul" animate="rise" size="34">떠올라</font-kku>
+<font-kku font="sebul" animate="fade" size="34">나타나</font-kku>
+<font-kku font="sebul" animate="stagger" size="34">차례로</font-kku>
+<font-kku font="sebul" animate="bounce" size="34">통통통</font-kku>
+<font-kku font="sebul" animate="wiggle" size="34">흔들흔</font-kku>
+<font-kku font="sebul" animate="drift" size="34">둥실둥</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="k-wrap fx-group" id="interaction" aria-labelledby="fx-interaction-title">
+        <header class="fx-group-head">
+          <h2 id="fx-interaction-title">상호작용 <code>data-kku-fx</code></h2>
+          <p>치고, 올리고, 누르면 자모가 반응합니다. 속성만 적으면 저절로 붙고, JS로 쓰려면 <code>FontKkuFx.type(host, [문장들])</code>처럼 부릅니다. 사용자가 움직임 줄이기를 켜면 쉽니다.</p>
+        </header>
+        <div class="fx-grid">
+          <article class="fx-card" id="fx-type" data-fx="type" data-fx-fonts="sebul" data-fx-addons="fx">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">10</span><h3>두벌식 타자</h3></header>
+            <p class="fx-how"><code>data-kku-fx="type"</code> · <code>data-kku-phrases</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 글자 하나를 ㅎ → 하 → 한으로 조립하며 칩니다. 지울 때는 거꾸로 풀고, 앞부분이 같으면 남겨 둡니다.</p>
+            <div class="k-stage fx-stage fx-stage--start" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku class="typing" font="sebul" data-kku-fx="type" data-kku-phrases="두벌식으로 칩니다|자모가 모여 글자로|지울 때는 거꾸로" size="clamp(34px, 4.6vw, 56px)">두벌식으로 칩니다</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+
+          <article class="fx-card" id="fx-scatter" data-fx="scatter" data-fx-fonts="saekdong" data-fx-addons="fx">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">11</span><h3>흩어졌다 모이기</h3></header>
+            <p class="fx-how"><code>data-kku-fx="scatter"</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 마우스를 올리면(휴대폰은 누르면) 자모가 제 역할 쪽으로 흩어지고, 떼면 제자리로 돌아와 다시 조립됩니다.</p>
+            <div class="k-stage fx-stage fx-stage--tall" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku font="saekdong" data-kku-fx="scatter" seed="scatter" jamo-seeds tabindex="0" size="clamp(52px, 7vw, 84px)">흩어져라</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions><span class="fx-hint">올려 보거나 눌러 보세요</span></div>
+          </article>
+
+          <article class="fx-card" id="fx-magnet" data-fx="magnet" data-fx-fonts="sebul" data-fx-addons="fx">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">12</span><h3>커서 자석</h3></header>
+            <p class="fx-how"><code>data-kku-fx="magnet"</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 커서에 가까운 자모만 밀려납니다. 한 글자 안에서도 초성은 비켜서고 받침은 제자리에 남습니다.</p>
+            <div class="k-stage fx-stage fx-stage--tall" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku class="magnet" font="sebul" data-kku-fx="magnet" size="clamp(46px, 6vw, 76px)">가까이 오지 마</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions><span class="fx-hint">글자 위로 커서를 움직여 보세요</span></div>
+          </article>
+
+          <article class="fx-card" id="fx-shuffle" data-fx="shuffle" data-fx-fonts="sebul" data-fx-addons="fx">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">13</span><h3>씨앗 섞기</h3></header>
+            <p class="fx-how"><code>FontKkuFx.shuffle(hosts)</code> · 한 줄이면 <code>data-kku-fx="shuffle"</code></p>
+            <p class="fx-why"><strong>자소라서</strong> 자모마다 씨앗값을 받아 손으로 쓴 듯 기웁니다. 같은 씨앗값이면 언제 그려도 같은 모양이라 두 줄이 늘 똑같고, 섞으면 둘이 함께 바뀝니다. 한 줄만 쓸 때는 속성 하나로 누를 때마다 섞입니다.</p>
+            <div class="k-stage fx-stage fx-stage--column" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku class="hand" font="sebul" seed="손맛-1" jamo-seeds size="clamp(42px, 5.6vw, 64px)">손으로 쓴 듯</font-kku>
+<font-kku class="hand" font="sebul" seed="손맛-1" jamo-seeds size="clamp(42px, 5.6vw, 64px)">손으로 쓴 듯</font-kku>
+<p class="seed-controls">
+  <button type="button" data-reseed>다시 섞기</button>
+  <button type="button" data-seed-reset>처음 씨앗값</button>
+  씨앗값 <output data-seed-out>손맛-1</output>
+</p>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="k-wrap fx-group" id="recipe" aria-labelledby="fx-recipe-title">
+        <header class="fx-group-head">
+          <h2 id="fx-recipe-title">페이지 CSS 조리법</h2>
+          <p>확장 없이 페이지 CSS 몇 줄로 만드는 꾸밈입니다. 자모는 <code>[part~="jamo"]</code>, 획 깊이(<code>stroke-depth="stroke"</code>)의 획은 <code>[part="hoek"]</code>와 획 종류·역할 속성으로 고릅니다.</p>
+        </header>
+        <div class="fx-grid">
+          <article class="fx-card" id="fx-origin" data-fx="origin" data-fx-fonts="sprite-system" data-fx-jamo-sets="sprite-system">
+            <header class="fx-card-head"><span class="fx-no" aria-hidden="true">14</span><h3>제자원리 보기</h3></header>
+            <p class="fx-how">페이지 CSS · <code>stroke-depth="stroke"</code></p>
+            <p class="fx-why"><strong>획 단위라서</strong> 획마다 어디서 왔는지(<code>data-hoek-role</code>)가 붙습니다. 자음은
+              <span class="fx-role" data-role="base">기본자</span>에 <span class="fx-role" data-role="added">가획</span>을 더하고(ㄱ → ㅋ, ㄴ → ㄷ → ㅌ, ㅅ → ㅈ → ㅊ, ㅇ → ㅎ),
+              ㄹ은 <span class="fx-role" data-role="variant">이체</span>입니다. 모음은 <span class="fx-role" data-role="heaven">천(·)</span>·<span class="fx-role" data-role="earth">지(ㅡ)</span>·<span class="fx-role" data-role="person">인(ㅣ)</span>입니다.</p>
+            <div class="k-stage fx-stage fx-stage--tall" data-tone="paper" data-fx-stage></div>
+            <template data-fx-html>
+<font-kku class="origin" font="sprite-system" jamo-set="sprite-system" stroke-depth="stroke" size="clamp(40px, 5.4vw, 64px)">ㄱㅋ ㄴㄷㅌ ㅅㅈㅊ ㅇㅎ ㄹ</font-kku>
+<font-kku class="origin" font="sprite-system" jamo-set="sprite-system" stroke-depth="stroke" size="clamp(40px, 5.4vw, 64px)">ㅏㅑ ㅗㅛ ㅡㅣ 한글</font-kku>
+            </template>
+            <div class="fx-actions" data-fx-actions></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="k-section k-section--tint" aria-labelledby="fx-more-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">더</span>
+            <span class="k-kicker">직접 만들기</span>
+            <h2 id="fx-more-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">자모를 고르는 선택자 셋</h2>
+            <p class="k-lead">
+              확장에 없는 움직임은 페이지 CSS 몇 줄입니다. 자모는 <code>[part~="jamo"]</code>, 역할은 <code>choseong</code>·<code>jungseong</code>·<code>jongseong</code>로
+              고르고, 글자 순번 <code>--fy-glyph-index</code>와 자모 씨앗값 <code>--fy-jamo-seed</code>로 시차와 변주를 줍니다.
+              자모 자리는 코어가 <code>transform</code>으로 잡으므로 움직임은 <code>translate</code>·<code>rotate</code>·<code>scale</code>로 줍니다.
+              조상에 <code>data-kku-paused</code>를 두면 확장의 움직임과 상호작용이 그 자리에 섭니다.
+            </p>
+          </header>
+          <div class="k-hero-actions">
+            <a class="k-btn k-btn--primary" href="./docs.html#customize">꾸미기 문서</a>
+            <a class="k-btn" href="./fonts.html">글꼴과 테마</a>
+            <a class="k-btn" href="./showcase.html">사례 보기</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="k-footer">
+      <div class="k-wrap k-footer-inner">
+        <span>폰꾸 font-kku · 코드는 MIT</span>
+        <nav aria-label="바닥 링크">
+          <a href="lib/README.md">README</a>
+          <a href="lib/skill/SKILL.md">AI 설명서</a>
+          <a href="lib/docs/GLOSSARY.md">용어집</a>
+          <a href="./docs.html#dev-tools">개발 도구</a>
+        </nav>
+      </div>
+    </footer>
+
+    <!-- 카드에 따로 필요한 JS. effects.js가 견본을 꽂은 뒤 실행하고, '코드 복사'에도 그대로 담는다. -->
+    <script type="text/plain" data-fx-js="shuffle">
+      // 두 줄이 같은 씨앗값을 나눠 쓴다. data-addons="fx"는 페이지 뒤에 도착할 수 있어 load를 기다린다.
+      function startShuffle() {
+        var out = document.querySelector("[data-seed-out]");
+        var shuffle = FontKkuFx.shuffle(document.querySelectorAll(".hand"), {
+          on: null,
+          onSeed: function (seed) { out.textContent = seed; }
+        });
+        document.querySelector("[data-reseed]").addEventListener("click", function () { shuffle.reseed(); });
+        document.querySelector("[data-seed-reset]").addEventListener("click", function () { shuffle.reset(); });
+      }
+      if (window.FontKkuFx) startShuffle();
+      else window.addEventListener("load", startShuffle);
+    </script>
+    <script src="./demo.js"></script>
+    <script src="./kk.js"></script>
+    <script src="./effects.js"></script>
+  </body>
+</html>

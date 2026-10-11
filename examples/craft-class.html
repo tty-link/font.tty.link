@@ -1,0 +1,432 @@
+<!doctype html>
+<!-- 폰꾸 사례 템플릿 — 공방 원데이 클래스. 글꼴: jasu riso. 공개 후에는 src를 https://font.tty.link/lib/font-kku.js 로 바꿔 쓰세요. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>실과 바늘 공방 — 한글 이름 수놓기 원데이 클래스</title>
+  <script src="../lib/font-kku.js" data-fonts="jasu riso"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --linen: #efe6d6;
+      --ink: #3d3027;
+      --muted: #7a6a5a;
+      --thread: #b8323f;
+      --wood: #c89a62;
+      --wood-dark: #8f6534;
+      --paper: #fbf7ee;
+      --pink: #ff48b0;
+      --blue: #0078bf;
+    }
+
+    body {
+      margin: 0;
+      padding: 0 16px 56px;
+      color: var(--ink);
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      word-break: keep-all;
+      line-height: 1.65;
+      /* 리넨 천 — 가로·세로 올이 엇갈린다 */
+      background:
+        repeating-linear-gradient(0deg, rgb(120 90 50 / 5%) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(90deg, rgb(120 90 50 / 5%) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(0deg, rgb(255 255 255 / 25%) 0 2px, transparent 2px 11px),
+        var(--linen);
+    }
+
+    .page { max-width: 1040px; margin: 0 auto; }
+
+    /* 머리 */
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 22px 0;
+      border-bottom: 2px dashed rgb(184 50 63 / 45%);
+    }
+    .top nav { display: flex; gap: 16px; font-size: 14px; font-weight: 700; }
+    .top nav a { color: var(--muted); text-decoration: none; }
+    .top nav a:hover { color: var(--thread); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 36px;
+      padding: 46px 0 30px;
+    }
+    .hero .kicker { margin: 0 0 8px; font-size: 14px; font-weight: 800; letter-spacing: 0.12em; color: var(--thread); }
+    .hero h1 { margin: 0; }
+    .hero h1 font-kku { display: block; }
+    .hero .lead { margin: 16px 0 0; font-size: 17px; color: var(--muted); }
+    .hero .lead b { color: var(--ink); }
+
+    /* 수틀 — 나무 테 안의 천에 자수 글자 */
+    .hoop-wrap { display: grid; justify-items: center; gap: 14px; }
+    .hoop {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: min(340px, 78vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(0deg, rgb(120 90 50 / 7%) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(90deg, rgb(120 90 50 / 7%) 0 1px, transparent 1px 3px),
+        #f6efe2;
+      box-shadow:
+        0 0 0 10px var(--wood),
+        0 0 0 12px var(--wood-dark),
+        0 0 0 14px rgb(255 255 255 / 30%),
+        0 16px 30px 12px rgb(80 50 20 / 25%);
+    }
+    /* 수틀 조임쇠 */
+    .hoop-wrap::before {
+      content: "";
+      width: 34px;
+      height: 22px;
+      margin-bottom: -20px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--wood-dark), var(--wood), var(--wood-dark));
+      z-index: 1;
+    }
+    .hoop font-kku { white-space: nowrap; }
+    .hoop-tools {
+      display: grid;
+      gap: 10px;
+      width: min(340px, 100%);
+      padding: 14px 16px;
+      border: 2px dashed rgb(184 50 63 / 40%);
+      border-radius: 10px;
+      background: rgb(255 255 255 / 45%);
+      font-size: 14px;
+    }
+    .hoop-tools label { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 10px; font-weight: 700; color: var(--muted); }
+    .hoop-tools input[type="text"] {
+      min-width: 0;
+      padding: 6px 10px;
+      border: 1.5px solid #d8c7ad;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 16px;
+    }
+    .hoop-tools output { min-width: 48px; font-variant-numeric: tabular-nums; text-align: right; }
+    .threads { display: flex; gap: 8px; }
+    .threads button {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: var(--c);
+      box-shadow: 0 0 0 1px rgb(0 0 0 / 15%);
+      cursor: pointer;
+    }
+    .threads button[aria-pressed="true"] { box-shadow: 0 0 0 2.5px var(--ink); }
+    .hoop-note { margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+
+    /* 종이 쪽지 — 리소 두 판 인쇄 */
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px;
+      margin: 26px 0 10px;
+    }
+    .note {
+      position: relative;
+      padding: 26px 24px 22px;
+      background: var(--paper);
+      box-shadow: 0 10px 22px rgb(80 50 20 / 16%);
+      rotate: -1.2deg;
+    }
+    .note:nth-child(2) { rotate: 1.4deg; }
+    .note::before {
+      content: "";
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      width: 90px;
+      height: 22px;
+      margin-left: -45px;
+      background: rgb(255 72 176 / 28%);
+      rotate: -3deg;
+    }
+    .note h2 { margin: 0 0 10px; }
+    .price { margin: 0; font-size: 15px; color: var(--muted); }
+    .price b { display: block; font-size: 34px; line-height: 1.2; color: var(--blue); font-variant-numeric: tabular-nums; }
+    .note ul { margin: 12px 0 0; padding: 0; list-style: none; font-size: 15px; }
+    .note li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1.5px dashed rgb(0 120 191 / 25%); }
+    .note li small { color: var(--pink); font-weight: 800; }
+    .note li.full { color: #a99a8a; text-decoration: line-through; }
+    .note li.full small { color: #a99a8a; }
+
+    /* 본문 */
+    .section {
+      margin-top: 40px;
+      padding: 28px 30px;
+      border: 2px dashed rgb(184 50 63 / 40%);
+      border-radius: 14px;
+      background: rgb(255 255 255 / 40%);
+    }
+    .section h2 { margin: 0 0 14px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; }
+    .steps { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+    .steps li { position: relative; padding: 0 0 14px 40px; counter-increment: step; }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 1px;
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border: 2px dashed var(--thread);
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--thread);
+    }
+    .steps b { display: block; }
+    .steps span { font-size: 14px; color: var(--muted); }
+    .kit { margin: 0; padding-left: 20px; }
+    .kit li { margin: 4px 0; }
+    .kit-label { margin: 18px 0 6px; font-weight: 800; }
+    .kit-label:first-child { margin-top: 0; }
+    .map {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #e9e0cd;
+    }
+    .map svg { width: 100%; height: 100%; display: block; }
+    .way { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+    .way b { color: var(--ink); }
+
+    /* 신청 */
+    .apply form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: 12px; align-items: end; }
+    .apply label { display: grid; gap: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+    .apply input, .apply select {
+      min-width: 0;
+      height: 46px;
+      padding: 10px 12px;
+      border: 1.5px solid #d8c7ad;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 15px;
+    }
+    .apply button {
+      padding: 11px 22px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--thread);
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 0 3px var(--linen), 0 0 0 5px var(--thread);
+    }
+    .apply .done { margin: 14px 0 0; font-weight: 700; color: var(--thread); }
+
+    .foot { margin-top: 36px; font-size: 13px; color: var(--muted); text-align: center; }
+
+    @media (max-width: 880px) {
+      .hero { grid-template-columns: 1fr; padding-top: 30px; }
+      .apply form { grid-template-columns: 1fr 1fr; }
+      .apply button { grid-column: 1 / -1; }
+    }
+    @media (max-width: 600px) {
+      body { padding: 0 12px 40px; }
+      .top nav { display: none; }
+      .notes, .grid-2 { grid-template-columns: 1fr; }
+      .section { padding: 22px 18px; }
+      .apply form { grid-template-columns: 1fr; }
+      .hoop-tools label { grid-template-columns: 56px 1fr auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="top">
+      <font-kku font="jasu" size="clamp(26px, 5vw, 34px)" aria-label="실과 바늘 공방">실과 바늘 공방</font-kku>
+      <nav aria-label="바로 가기"><a href="#learn">배우는 것</a><a href="#kit">준비물</a><a href="#way">오시는 길</a><a href="#apply">신청</a></nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="kicker">원데이 클래스 · 3시간</p>
+          <h1 aria-label="한글 이름 수놓기">
+            <font-kku font="jasu" size="clamp(54px, 10vw, 104px)" wrap-unit="word">한글 이름</font-kku>
+            <font-kku font="jasu" size="clamp(54px, 10vw, 104px)" wrap-unit="word">수놓기</font-kku>
+          </h1>
+          <p class="lead">내 이름이나 좋아하는 낱말을 리넨 천에 한 땀씩 수놓아 <b>작은 수틀 액자</b>로 가져가요. 바늘을 처음 잡아도 괜찮아요.</p>
+        </div>
+
+        <div class="hoop-wrap">
+          <div class="hoop" id="hoop">
+            <font-kku id="hoop-text" font="jasu" size="120">다온</font-kku>
+          </div>
+          <div class="hoop-tools">
+            <label>수놓을 글 <input id="hoop-input" type="text" maxlength="4" value="다온" autocomplete="off" aria-label="수틀에 수놓을 글" /><span></span></label>
+            <label>크기 <input id="hoop-size" type="range" min="48" max="240" step="4" value="120" aria-label="자수 글자 크기" /><output id="hoop-size-out">120px</output></label>
+            <label>실 색
+              <span class="threads" role="group" aria-label="실 색">
+                <button type="button" style="--c: #b8323f" data-filter="none" aria-label="진홍 실" aria-pressed="true"></button>
+                <button type="button" style="--c: #2f5fae" data-filter="hue-rotate(222deg) saturate(1.05)" aria-label="쪽빛 실" aria-pressed="false"></button>
+                <button type="button" style="--c: #3f8a4a" data-filter="hue-rotate(135deg) saturate(0.8)" aria-label="풀빛 실" aria-pressed="false"></button>
+                <button type="button" style="--c: #c88a1d" data-filter="hue-rotate(38deg) saturate(1.25) brightness(1.15)" aria-label="겨자 실" aria-pressed="false"></button>
+                <button type="button" style="--c: #3a3530" data-filter="saturate(0) brightness(0.55)" aria-label="먹 실" aria-pressed="false"></button>
+              </span>
+              <span></span>
+            </label>
+            <p class="hoop-note">자수 글꼴의 자소판은 실땀을 SVG로 그린 그림이라, 240px까지 키워도 땀의 빛과 그림자가 뭉개지지 않아요. 실 색을 바꿔도 땀의 결은 그대로예요.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="notes">
+        <article class="note" aria-labelledby="price-title">
+          <h2 id="price-title"><font-kku font="riso" size="clamp(30px, 5vw, 40px)">참가비</font-kku></h2>
+          <p class="price"><b>45,000원</b>재료비·수틀 액자 포함, 1인</p>
+          <ul>
+            <li><span>둘이 함께 신청</span><small>8,000원 할인</small></li>
+            <li><span>다시 오는 분</span><small>실 한 타래 선물</small></li>
+          </ul>
+        </article>
+        <article class="note" aria-labelledby="date-title">
+          <h2 id="date-title"><font-kku font="riso" size="clamp(30px, 5vw, 40px)">토요일 오후 두 시</font-kku></h2>
+          <ul>
+            <li class="full"><span>10월 18일 (토) 14:00</span><small>마감</small></li>
+            <li><span>10월 25일 (토) 14:00</span><small>2자리 남음</small></li>
+            <li><span>11월 1일 (토) 14:00</span><small>5자리 남음</small></li>
+            <li><span>11월 8일 (토) 14:00</span><small>6자리 남음</small></li>
+          </ul>
+        </article>
+      </div>
+
+      <section class="section" id="learn" aria-labelledby="learn-title">
+        <h2 id="learn-title"><font-kku font="jasu" size="clamp(34px, 5vw, 46px)">이런 걸 배워요</font-kku></h2>
+        <div class="grid-2">
+          <ol class="steps">
+            <li><b>수틀에 천 걸기</b><span>천이 팽팽해야 땀이 고르게 놓여요.</span></li>
+            <li><b>도안 옮기기</b><span>이름을 크게 뽑아 지워지는 펜으로 따라 그려요.</span></li>
+            <li><b>홈질과 백스티치</b><span>글자의 줄기는 백스티치로 또박또박.</span></li>
+          </ol>
+          <ol class="steps" start="4" style="counter-reset: step 3">
+            <li><b>프렌치 노트로 점 찍기</b><span>ㅇ과 ㅎ의 동그라미, 마침표를 도톰하게.</span></li>
+            <li><b>뒷면 정리</b><span>매듭 없이 깔끔하게 실을 숨겨요.</span></li>
+            <li><b>액자 마무리</b><span>수틀 그대로 벽에 거는 액자가 돼요.</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section" id="kit" aria-labelledby="kit-title">
+        <h2 id="kit-title"><font-kku font="jasu" size="clamp(34px, 5vw, 46px)">준비물과 오시는 길</font-kku></h2>
+        <div class="grid-2">
+          <div>
+            <p class="kit-label">공방에서 모두 드려요</p>
+            <ul class="kit">
+              <li>지름 15cm 나무 수틀</li>
+              <li>내추럴 리넨 천과 심지</li>
+              <li>25수 자수실 여섯 가지 색</li>
+              <li>자수 바늘, 실 끼우개, 지워지는 펜</li>
+            </ul>
+            <p class="kit-label">가져오실 것</p>
+            <ul class="kit">
+              <li>수놓고 싶은 이름이나 낱말 하나</li>
+              <li>돋보기 안경(필요하면)</li>
+            </ul>
+          </div>
+          <div id="way">
+            <div class="map">
+              <svg viewBox="0 0 320 180" role="img" aria-label="약도: 바늘골역 1번 출구에서 꽃집을 지나 두 번째 골목 안 2층">
+                <rect width="320" height="180" fill="#ece3cf" />
+                <path d="M0 120 H320" stroke="#fff" stroke-width="18" />
+                <path d="M210 0 V180" stroke="#fff" stroke-width="12" />
+                <path d="M120 120 V40" stroke="#fff" stroke-width="10" />
+                <rect x="22" y="134" width="56" height="30" rx="6" fill="#0078bf" />
+                <text x="50" y="154" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="system-ui, sans-serif">바늘골역</text>
+                <circle cx="150" cy="96" r="7" fill="#ff48b0" />
+                <text x="150" y="80" fill="#7a6a5a" font-size="11" text-anchor="middle" font-family="system-ui, sans-serif">꽃집</text>
+                <path d="M78 140 H120 V58" fill="none" stroke="#b8323f" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" />
+                <circle cx="120" cy="50" r="12" fill="#b8323f" />
+                <text x="120" y="54" fill="#fff" font-size="11" font-weight="800" text-anchor="middle" font-family="system-ui, sans-serif">공방</text>
+              </svg>
+            </div>
+            <p class="way"><b>바늘골 7-2, 2층</b><br />바늘골역 1번 출구로 나와 꽃집을 끼고 두 번째 골목으로 들어오세요. 걸어서 3분이에요.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section apply" id="apply" aria-labelledby="apply-title">
+        <h2 id="apply-title"><font-kku font="riso" size="clamp(30px, 5vw, 40px)">신청하기</font-kku></h2>
+        <form id="apply-form">
+          <label>이름 <input name="name" type="text" required autocomplete="name" /></label>
+          <label>연락처 <input name="phone" type="tel" required autocomplete="tel" placeholder="010-0000-0000" /></label>
+          <label>날짜
+            <select name="date">
+              <option>10월 25일 (토) 14:00</option>
+              <option>11월 1일 (토) 14:00</option>
+              <option>11월 8일 (토) 14:00</option>
+            </select>
+          </label>
+          <button type="submit">자리 잡기</button>
+        </form>
+        <p class="done" id="apply-done" role="status"></p>
+      </section>
+    </main>
+
+    <footer class="foot">실과 바늘 공방 · 화–토 11:00–19:00 · 문의 hello@silbanul.example</footer>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var hoopText = document.getElementById("hoop-text");
+      var input = document.getElementById("hoop-input");
+      var size = document.getElementById("hoop-size");
+      var sizeOut = document.getElementById("hoop-size-out");
+
+      input.addEventListener("input", function () {
+        FontKku.refresh(hoopText, { text: input.value.trim() || "이름" });
+      });
+      // 크기는 바탕 요소의 size 속성 — 자소판이 SVG라 다시 그려도 땀이 선명하다
+      size.addEventListener("input", function () {
+        hoopText.setAttribute("size", size.value);
+        sizeOut.value = size.value + "px";
+      });
+      // 실 색: 페이지 전용 --fy-sprite-filter로 자소판 색만 돌린다(땀의 빛·그림자는 그대로)
+      var threads = document.querySelectorAll(".threads button");
+      threads.forEach(function (button) {
+        button.addEventListener("click", function () {
+          var filter = button.getAttribute("data-filter");
+          if (filter === "none") {
+            hoopText.style.removeProperty("--fy-sprite-filter");
+          } else {
+            hoopText.style.setProperty("--fy-sprite-filter", filter);
+          }
+          threads.forEach(function (other) { other.setAttribute("aria-pressed", String(other === button)); });
+        });
+      });
+
+      document.getElementById("apply-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        var data = new FormData(event.currentTarget);
+        document.getElementById("apply-done").textContent =
+          (data.get("name") || "신청하신 분") + "님, " + data.get("date") + " 자리를 잡아 두었어요. 문자로 안내드릴게요.";
+      });
+    })();
+  </script>
+</body>
+</html>

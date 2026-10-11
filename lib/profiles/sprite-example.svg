@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1344" height="128" viewBox="0 0 2100 200">
+<!-- 폰꾸 그림 자소판 · sprite-example · 칸 100×100, 21열 × 2행
+     행 0 자음 · 행 1 모음
+     열: 자음 ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ · 모음 ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ · 겹받침 ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ
+     scripts/build_jamo_svg.js가 spec/sprite-layout.json의 자리 상자에 획을 그려 만든다.
+     칸 <g id="r<행>-<자모>">의 좌표는 칸 기준 0–100이다. MIT License. -->
+<style>path,ellipse{fill:none;stroke:#17130d;stroke-width:3.8;stroke-linecap:round;stroke-linejoin:round}</style>
+<g>
+<!-- 행 0: 자음 -->
+<g id="r0-ㄱ" transform="translate(0 0)"><path d="M26.9 30L70 30L70 63.7"/></g>
+<g id="r0-ㄲ" transform="translate(100 0)"><path d="M25.3 28.5L46.5 28.5L46.5 63.7"/><path d="M53.5 28.5L73.1 28.5L73.1 63.7"/></g>
+<g id="r0-ㄴ" transform="translate(200 0)"><path d="M31.6 28.5L31.6 60.6L73.1 60.6"/></g>
+<g id="r0-ㄷ" transform="translate(300 0)"><path d="M71.5 30L31.6 30L31.6 59L71.5 59"/></g>
+<g id="r0-ㄸ" transform="translate(400 0)"><path d="M51.2 30L28.5 30L28.5 60.6L51.2 60.6"/><path d="M79.3 30L58.1 30L58.1 60.6L79.3 60.6"/></g>
+<g id="r0-ㄹ" transform="translate(500 0)"><path d="M31.6 28.5L70 28.5L70 44.55L31.6 44.55L31.6 60.6L70 60.6"/></g>
+<g id="r0-ㅁ" transform="translate(600 0)"><path d="M31.6 30L68.4 30L68.4 60.6L31.6 60.6Z"/></g>
+<g id="r0-ㅂ" transform="translate(700 0)"><path d="M33.1 28.5L33.1 62.2L70 62.2L70 28.5"/><path d="M33.1 44L70 44"/></g>
+<g id="r0-ㅃ" transform="translate(800 0)"><path d="M28.5 30L28.5 60.6L48.1 60.6L48.1 30"/><path d="M28.5 44.08L48.1 44.08"/><path d="M56.6 30L56.6 60.6L76.2 60.6L76.2 30"/><path d="M56.6 44.08L76.2 44.08"/></g>
+<g id="r0-ㅅ" transform="translate(900 0)"><path d="M50.8 28.5L28.5 65.3"/><path d="M43.22 41.01L73.1 65.3"/></g>
+<g id="r0-ㅆ" transform="translate(1000 0)"><path d="M36.75 28.5L23.8 62.2"/><path d="M32.35 39.96L49.7 62.2"/><path d="M65.6 28.5L51.9 63.7"/><path d="M60.94 40.47L79.3 63.7"/></g>
+<g id="r0-ㅇ" transform="translate(1100 0)"><ellipse cx="50" cy="46.1" rx="20" ry="17.6"/></g>
+<g id="r0-ㅈ" transform="translate(1200 0)"><path d="M26.9 28.5L71.5 28.5"/><path d="M49.2 28.5L26.9 62.2"/><path d="M41.62 39.96L71.5 62.2"/></g>
+<g id="r0-ㅉ" transform="translate(1300 0)"><path d="M22.2 28.5L48.1 28.5"/><path d="M35.15 28.5L22.2 63.7"/><path d="M30.75 40.47L48.1 63.7"/><path d="M50.3 28.5L77.8 28.5"/><path d="M64.05 28.5L50.3 63.7"/><path d="M59.38 40.47L77.8 63.7"/></g>
+<g id="r0-ㅊ" transform="translate(1400 0)"><path d="M39.84 25.3L60.16 25.3"/><path d="M26.9 36.53L73.1 36.53"/><path d="M50 36.53L26.9 66.9"/><path d="M42.15 46.85L73.1 66.9"/></g>
+<g id="r0-ㅋ" transform="translate(1500 0)"><path d="M28.5 28.5L68.4 28.5L68.4 63.7"/><path d="M28.5 45.4L68.4 45.4"/></g>
+<g id="r0-ㅌ" transform="translate(1600 0)"><path d="M70 30L31.6 30L31.6 62.2L70 62.2"/><path d="M31.6 46.1L67.7 46.1"/></g>
+<g id="r0-ㅍ" transform="translate(1700 0)"><path d="M26.9 30L74.7 30"/><path d="M26.9 59L74.7 59"/><path d="M39.81 30L39.81 59"/><path d="M61.79 30L61.79 59"/></g>
+<g id="r0-ㅎ" transform="translate(1800 0)"><path d="M41.69 25.3L61.41 25.3"/><path d="M26.9 36.07L76.2 36.07"/><ellipse cx="51.55" cy="54.18" rx="18.73" ry="11.64"/></g>
+<!-- 행 1: 모음 -->
+<g id="r1-ㅏ" transform="translate(0 100)"><path d="M41 19.1L41 79.3"/><path d="M41 44.99L62.2 44.99"/></g>
+<g id="r1-ㅐ" transform="translate(100 100)"><path d="M39.4 19.1L39.4 79.3"/><path d="M63.7 19.1L63.7 79.3"/><path d="M39.4 46.79L63.7 46.79"/></g>
+<g id="r1-ㅑ" transform="translate(200 100)"><path d="M41 19.1L41 79.3"/><path d="M41 36.56L63.7 36.56"/><path d="M41 54.62L63.7 54.62"/></g>
+<g id="r1-ㅒ" transform="translate(300 100)"><path d="M37.8 19.1L37.8 79.3"/><path d="M63.7 19.1L63.7 79.3"/><path d="M37.8 37.16L63.7 37.16"/><path d="M37.8 54.02L63.7 54.02"/></g>
+<g id="r1-ㅓ" transform="translate(400 100)"><path d="M37.8 44.38L62.2 44.38"/><path d="M62.2 19.1L62.2 79.3"/></g>
+<g id="r1-ㅔ" transform="translate(500 100)"><path d="M30 44.01L49.7 44.01"/><path d="M49.7 20.7L49.7 76.2"/><path d="M63.3 19.1L63.3 79.3"/></g>
+<g id="r1-ㅕ" transform="translate(600 100)"><path d="M37.8 35.35L60.6 35.35"/><path d="M37.8 54.02L60.6 54.02"/><path d="M60.6 19.1L60.6 79.3"/></g>
+<g id="r1-ㅖ" transform="translate(700 100)"><path d="M36.52 36.78L48.1 36.78"/><path d="M36.52 53.52L48.1 53.52"/><path d="M48.1 22.2L48.1 76.2"/><path d="M63.3 19.1L63.3 79.3"/></g>
+<g id="r1-ㅗ" transform="translate(800 100)"><path d="M45.59 26.9L45.59 62.2"/><path d="M19.1 62.2L79.3 62.2"/></g>
+<g id="r1-ㅘ" transform="translate(900 100)"><path d="M40.04 46.19L40.04 60.04"/><path d="M20.7 60.04L57.03 60.04"/><path d="M67.58 19.1L67.58 79.3"/><path d="M67.58 49.2L79.3 49.2"/></g>
+<g id="r1-ㅙ" transform="translate(1000 100)"><path d="M37.83 46.19L37.83 58.83"/><path d="M20.7 58.83L52.11 58.83"/><path d="M59.53 19.1L59.53 79.3"/><path d="M77.8 19.1L77.8 79.3"/><path d="M59.53 49.2L77.8 49.2"/></g>
+<g id="r1-ㅚ" transform="translate(1100 100)"><path d="M43.2 46.19L43.2 60.04"/><path d="M22.2 60.04L61.57 60.04"/><path d="M74.7 19.1L74.7 79.3"/></g>
+<g id="r1-ㅛ" transform="translate(1200 100)"><path d="M38.76 30L38.76 60.6"/><path d="M55.62 30L55.62 60.6"/><path d="M20.7 60.6L80.9 60.6"/></g>
+<g id="r1-ㅜ" transform="translate(1300 100)"><path d="M20.7 30L80.9 30"/><path d="M50.8 30L50.8 65.3"/></g>
+<g id="r1-ㅝ" transform="translate(1400 100)"><path d="M20.7 41L60.6 41"/><path d="M39.85 41L39.85 73.1"/><path d="M53.5 54.02L73.1 54.02"/><path d="M73.1 19.1L73.1 79.3"/></g>
+<g id="r1-ㅞ" transform="translate(1500 100)"><path d="M20.7 41L52.8 41"/><path d="M36.11 41L36.11 70"/><path d="M42.5 52.89L60.6 52.89"/><path d="M60.6 20.7L60.6 76.2"/><path d="M73.45 19.1L73.45 79.3"/></g>
+<g id="r1-ㅟ" transform="translate(1600 100)"><path d="M22.2 44.38L61.9 44.38"/><path d="M42.56 44.38L42.56 70.27"/><path d="M73.1 19.1L73.1 79.3"/></g>
+<g id="r1-ㅠ" transform="translate(1700 100)"><path d="M20.7 28.5L80.9 28.5"/><path d="M38.76 28.5L38.76 62.2"/><path d="M62.24 28.5L62.24 62.2"/></g>
+<g id="r1-ㅡ" transform="translate(1800 100)"><path d="M20.7 37.5L80.9 37.5"/></g>
+<g id="r1-ㅢ" transform="translate(1900 100)"><path d="M23.8 53.41L64.67 53.41"/><path d="M76.2 19.1L76.2 79.3"/></g>
+<g id="r1-ㅣ" transform="translate(2000 100)"><path d="M52.3 20.7L52.3 79.3"/></g>
+</g>
+</svg>
