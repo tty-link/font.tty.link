@@ -1,6 +1,6 @@
 # 조합하기 — 꾸밈 · 변주 · 움직임 · 상호작용 (테마)
 
-목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
+목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
 
 글자 모양은 여섯 축의 조합이다: **글꼴**(`font`) · **꾸밈**(`class="kku-look-…"`) · **변주**(`seed` + `jamo-seeds` + `class="kku-vary-…"`) · **움직임**(`animate`) · **상호작용**(`data-kku-fx`) · **바탕**(페이지 배경). 축마다 하나씩 고르면 된다. 자주 쓰는 조합에는 이름(테마)이 있다. 움직이는 모습은 `https://font.tty.link/effects.html`에서 본다.
 
@@ -26,11 +26,11 @@
 
 ## 조합 요령
 
-- **조합이 필요하면 조합한다.** "고딕인데 네온처럼", "도트 글자에 레트로 색", "붓글씨를 인주색으로"처럼 글꼴과 칠·움직임을 따로 말하면 꾸러미 글꼴을 찾지 말고 `font` + 꾸밈 `kku-look-*` + `animate`로 만든다. 꾸러미 글꼴은 그 칠이 그 글꼴에 맞을 때 쓰는 지름길이다(`font="neon"` = `font="sebul" class="kku-look-neon"`, 확장 없이 CSS 한 장).
+- **조합이 필요하면 조합한다.** "고딕인데 네온처럼", "도트 글자에 레트로 색", "붓글씨를 인주색으로"처럼 글꼴과 칠·움직임을 따로 말하면 꾸러미 글꼴을 찾지 말고 `font` + 꾸밈 `kku-look-*` + `animate`로 만든다. 꾸러미 글꼴은 그 칠이 그 글꼴에 맞을 때 쓰는 지름길이다 — `font="neon"`은 확장 없이 CSS 한 장이고 기기 한글 글꼴로 그린다. 같은 칠을 `class="kku-look-neon"`으로 글꼴을 비운 세벌 고정이나 `sebul`·`gothic`에 걸면 CSS 획(원소 재료)에 칠해 한글 글꼴이 없는 기기에서도 보인다.
 - 꾸밈은 글꼴의 칠을 **바꾼다**(섞지 않는다). 그림 자소 글꼴(`pixel`·`chalk`·`pilgi`…)에서는 색과 글자 그림자만 바뀌고 획 질감은 남는다.
 - 꾸밈마다 어울리는 바탕이 있다 — `neon`·`geumbak`·`glitch`는 어두운 바탕, `blueprint`는 파란 도면 바탕, `sticker`는 색 바탕, `riso`·`inju`는 종이색 바탕.
-- 변주는 은은하다(겹치지 않는 범위). 눈에 띄는 무작위는 `hue`·`ink`와 씨앗 반응 글꼴([styling.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/styling.md))로 낸다.
-- `draw` 획순 그리기는 벡터 자소(`jamo-set`)에서만 획 단위로 움직인다 — [draw-jamo.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/draw-jamo.md)의 획 깊이.
+- 변주는 은은하다(겹치지 않는 범위). 눈에 띄는 무작위는 `hue`·`ink`와 씨앗 반응 글꼴([styling.md](https://font.tty.link/lib/skill/styling.md))로 낸다.
+- `draw` 획순 그리기는 그림 자소 글꼴의 벡터 자소(`font="sprite-system" jamo-set="sprite-system"` 등)에서만 획 단위로 움직이고, 원소 획·그림 세트(`jamo-set="pilgi-box"` 등)에서는 자모 단위로 나타난다 — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md)의 획 깊이.
 - 움직임은 사용자의 '동작 줄이기' 설정에서 저절로 꺼진다.
 
 ## 상호작용을 JS로 걸 때

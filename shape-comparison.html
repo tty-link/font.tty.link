@@ -26,9 +26,14 @@
         <span class="demo-kicker">짜임 비교</span>
         <h1 class="demo-title">네모꼴과 탈네모꼴, <em>짜임</em>별로 본다</h1>
         <p class="demo-copy">
-          기준 글자와 두 조합 모두 외부 웹 글꼴 없이 기기 한글 글꼴을 쓴다.
+          기준 글자는 외부 웹 글꼴 없이 기기 한글 글꼴 그대로이고, 두 조합은 자모를 CSS 획(원소)으로 긋는다.
           엔진은 같은 짜임 메타데이터를 쓰고 <code>sebul</code>은 탈네모꼴 조합으로, <code>gothic</code>은 본고딕식 네모꼴로 정렬한다.
           아래 단일 글자 샘플은 <code>size=120</code>, 마지막 문장 비교는 <code>size=60</code>으로, 기준 상자와 자리 정렬 차이를 직접 비교하기 위한 것이다.
+        </p>
+        <p class="demo-copy">
+          짜임별 자리는 글꼴을 밝힌 바탕 요소(<code>font="sebul"</code>·<code>font="gothic"</code>)의 문맥 배치에서 쓰인다. 글꼴을 밝히지 않은
+          기본 <code>&lt;font-kku&gt;</code>는 세벌 고정이라 짜임과 상관없이 같은 역할의 같은 자모를 같은 자리·크기로 찍는다 — 짜임 분류(<code>layout bucket</code>·<code>layout</code>)는
+          그대로 붙지만 자리는 바뀌지 않는다. 두 배치 비교는 <a href="./faces.html">재료와 깊이</a> 페이지의 ‘배치’에 있다.
         </p>
       </section>
 
@@ -344,6 +349,8 @@
         <h2>짜임 목록</h2>
         <p class="demo-specimen-note">
           단일 글자 샘플을 <code>layout bucket + layout</code> 기준으로 묶어 본다.
+          주요 자리는 <code>gothic</code> 샘플에서 읽은 자리 이름이다 — <code>sebul</code>은 합자 모음을 완성형 머리(<code>hs</code>·<code>hts</code>)로,
+          겹받침을 통짜(<code>brw</code>·<code>bw</code>·<code>bbw</code>)로 그려 그 줄의 이름이 다르다.
           현재 기본 제공 일반 글꼴은 선택자 표 대신 한 블록의 자리 변수를 쓰지만, 구조를 읽는 기준 자체는 이 분류를 그대로 따른다.
         </p>
         <div class="demo-specimen-catalog-wrap">
@@ -545,7 +552,7 @@
             "right-closed|right:double": "tlc + trc + blr/brd + jong-cluster",
             "bottom-open|bottom:none": "t + m",
             "bottom-closed|bottom:single": "tt + mt + b",
-            "bottom-closed|bottom:double": "tt + mt + blb/brb + jong-cluster",
+            "bottom-closed|bottom:double": "tt + mt + bl/br + jong-cluster",
             "split-open|split-right:none": "tls + ml + trs + jung-cluster",
             "split-closed|split-right:single": "ttl + mtl + ttr + bbrs + jung-cluster",
             "split-closed|split-right:double": "ttl + mtl + ttr + bbl/bbrd + jung-cluster + jong-cluster"

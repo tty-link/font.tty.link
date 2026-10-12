@@ -1,9 +1,9 @@
 {
   "name": "@tty.link/font-kku",
   "version": "0.1.1",
-  "commit": "8e5a9b2",
+  "commit": "5789be7",
   "dirty": false,
-  "built": "2026-10-12T15:38:53+00:00",
+  "built": "2026-10-12T16:44:17+00:00",
   "base": "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/",
-  "skill": "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md"
+  "skill": "https://font.tty.link/lib/skill/SKILL.md"
 }

@@ -1,6 +1,6 @@
 # 페이지 CSS로 더 꾸미기 · 씨앗
 
-목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
+목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
 
 ## 자소 고르기 — `part`
 
@@ -10,7 +10,8 @@
 |---|---|
 | `[part~="jamo"]` | 모든 자소 |
 | `[part~="choseong"]` | 초성 |
-| `[part~="head"]` | 초성과 모음 앞쪽을 한 덩어리로 그린 머리(`sebul` 계열의 '과'를 '고'+ㅏ로 그릴 때) — 초성 색을 바꿀 때 함께 고른다 |
+| `[part~="head"]` | 초성과 모음 앞쪽을 한 덩어리로 그린 머리(`font="sebul"`·`malang`이 '과'를 '고'+ㅏ로 그릴 때, 세벌 고정에는 없다) — 초성 색을 바꿀 때 함께 고른다 |
+| `[part="glyph"]` | 글자 하나(자모를 모두 담는다) — 그림자·테두리를 `filter: drop-shadow()`로 줄 때 |
 | `[part~="jungseong"]` | 중성(모음) |
 | `[part~="jongseong"]` | 받침 |
 
@@ -20,8 +21,9 @@
 .title [part~="jungseong"] { color: #1d4ed8; }
 .title [part~="jongseong"] { color: #f59e0b; }
 
-/* 네온 색 바꾸기 — 관은 외곽선 색, 빛은 color를 따른다 */
-.title [part~="jamo"] { -webkit-text-stroke-color: #7cf7d4; color: #3dffc0; }
+/* 네온 색 바꾸기 — 관은 color(기기 글꼴 neon은 외곽선 색도), 빛은 글자의 drop-shadow */
+.title [part~="jamo"] { color: #3dffc0; -webkit-text-stroke-color: #7cf7d4; }
+.title [part="glyph"] { filter: drop-shadow(0 0 0.05em #3dffc0) drop-shadow(0 0 0.16em #3dffc0); }
 
 /* 크레용 색 바꾸기 — 크레용은 자소판을 마스크로 써서 color가 그대로 크레용 색이 된다 */
 .title [part~="jungseong"] { color: #8e44ad; }
@@ -29,8 +31,9 @@
 
 - 선택자는 바탕 요소의 클래스(`.title`)에서 시작한다. `span { … }`처럼 요소 이름만 쓰지 않는다.
 - 자모 위치(`--fy-top`, `--fy-left`)와 크기는 바꾸지 않는다 — 조립이 무너진다.
-- 네온(`neon`·`kku-look-neon`)의 빛번짐은 자모를 자른 뒤에 그리는 빛 칠이다. 빛 모양은 `--fy-glow`(drop-shadow 목록)로 바꾸고, `--fy-glow: none`이면 끈다. 자모 `text-shadow`는 글자와 함께 잘리므로 넓은 빛에 쓰지 않는다. 네온 자모 하나를 숨길 때는 `visibility` 대신 `opacity: 0`을 쓴다.
-- 색·외곽선·그림자·굵기 같은 재료 전체 표는 [custom-font.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/custom-font.md).
+- 네온 빛번짐은 둘이다. 꾸러미 `font="neon"`(기기 글꼴)은 자모를 자른 뒤에 그리는 빛 칠 `--fy-glow`(drop-shadow 목록, 빛 색은 자모 `color`)이고, 원소 획에 건 `kku-look-neon`(글꼴을 비우거나 `sebul`·`gothic`)은 `[part="glyph"]`의 `filter`다. 위 예처럼 둘 다 적으면 어느 쪽이든 바뀐다. 빛을 끄려면 바탕 요소에 `--fy-glow: none`과 `[part="glyph"] { filter: none; }`.
+- 자모 `text-shadow`는 글자와 함께 잘리므로 넓은 빛에 쓰지 않는다(원소 획에는 아예 듣지 않는다). 네온 자모 하나를 숨길 때는 `visibility` 대신 `opacity: 0`을 쓴다.
+- 색·외곽선·그림자·굵기 같은 재료 전체 표(원소 획과 기기 글꼴에서 각각 듣는 것)는 [custom-font.md](https://font.tty.link/lib/skill/custom-font.md).
 
 자소마다 무작위로 살짝 기울이기:
 
@@ -41,7 +44,7 @@
 </style>
 ```
 
-직접 기울일 때는 ±3° 이하로 둔다 — 자모가 이웃 자모에 쉽게 닿는다. 더 흔들려면 겹침을 검사한 변주 클래스(`kku-vary-tilt` 등, [compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md))를 쓴다.
+직접 기울일 때는 ±3° 이하로 둔다 — 자모가 이웃 자모에 쉽게 닿는다. 더 흔들려면 겹침을 검사한 변주 클래스(`kku-vary-tilt` 등, [compose.md](https://font.tty.link/lib/skill/compose.md))를 쓴다.
 
 ## 매번 다르게 · 언제나 같게 (씨앗)
 
@@ -57,5 +60,5 @@
 ```
 
 - 사용자가 "매번 다르게", "손글씨처럼 들쭉날쭉", "살아 있는 느낌"을 원하면 `seed="auto"`, "다시 만들어도 같게", "통일감"을 원하면 의미 있는 고정 씨앗(문서 이름·행사 이름)을 쓴다.
-- 다른 글꼴은 씨앗만 줘서는 모양이 그대로다. 어느 글꼴이든 흔들려면 변주 클래스(`kku-vary-*`, compose.md)를 함께 준다 — 기울기·들썩임·굵기·너비·색조·농담 여섯 가지이고, 폭은 겹침 검사를 통과한 범위다.
+- 다른 글꼴은 씨앗만 줘서는 모양이 그대로다. 어느 글꼴이든 흔들려면 변주 클래스(`kku-vary-*`, compose.md)를 함께 준다 — 기울기·들썩임·너비·색조·농담(굵기 `weight`는 기기 글꼴에서만, 획마다 `hoek`은 획 깊이에서)이고, 폭은 겹침 검사를 통과한 범위다.
 - 자모의 씨앗값은 CSS에서 `var(--fy-jamo-seed)`(0~1)로 읽는다.

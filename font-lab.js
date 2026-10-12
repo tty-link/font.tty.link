@@ -135,7 +135,7 @@
   function skillPrompt() {
     return "이 설명서를 읽고 따라 해 줘: " + config.skillUrl + "\n\n" +
       "붓으로 쓴 듯한 느낌의 폰꾸 그림 자소 글꼴을 만들어 줘.\n" +
-      "설명서 §5b대로 자모를 SVG로 직접 그리고(코드로 그리기 권장), sprite-system 위에 바꿔 끼운\n" +
+      "설명서 목차의 draw-jamo.md(자모를 SVG로 직접 그리기)대로 자모를 코드로 그리고, sprite-system 위에 바꿔 끼운\n" +
       "미리보기 HTML 한 장으로 '다람쥐 헌 쳇바퀴에 타고파'를 큰 제목으로 보여 줘.";
   }
 

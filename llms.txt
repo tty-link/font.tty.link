@@ -1,39 +1,50 @@
 # 폰꾸 (font-kku)
 
-> 한글을 초성·중성·종성으로 나눠 다시 조립해 그리는 브라우저 런타임이다. 스크립트 한 줄로 웹 제목과 강조 문구를 네온·스티커·색동·도장 같은 글꼴로 꾸미고, 꾸밈·움직임·상호작용을 조합하고, 나만의 꾸밈 글꼴이나 직접 그린 그림 자소 글꼴을 만들고, 봇·터미널에서 한글을 크게 강조한다.
+> 한글을 초성·중성·종성으로 나눠 다시 조립해 그리는 브라우저 런타임이다. 스크립트 한 줄로 웹 제목과 강조 문구를 네온·스티커·색동·도장 같은 글꼴로 꾸미고, 꾸밈·움직임·상호작용을 조합하고, 나만의 꾸밈 글꼴이나 직접 그린 그림 자소 글꼴·그림 세트를 만들고, 봇·터미널에서 한글을 크게 강조한다. 글꼴을 밝히지 않으면 기본 세벌(세벌 고정)로 그리고, 획을 CSS로 그어 글꼴 파일도 기기의 한글 글꼴도 필요 없다. Python·Go·Rust·Ruby 렌더러가 같은 결과를 정적 HTML과 평문으로 낸다.
 
-AI agents: before building anything with font-kku, read the usage guide [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md). It is a table of contents — open only the topic files your task needs.
+AI agents: before building anything with font-kku, read the usage guide [SKILL.md](https://font.tty.link/lib/skill/SKILL.md). It is a table of contents — open only the topic files your task needs.
 
-AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)를 먼저 읽는다. SKILL.md는 목차다 — 할 일에 맞는 주제 파일만 더 연다. 런타임은 `<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="neon sticker"></script>` 한 줄로 붙인다.
+AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)를 먼저 읽는다. SKILL.md는 목차다 — 할 일에 맞는 주제 파일만 더 연다. 런타임은 `<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul neon sticker"></script>` 한 줄로 붙인다(`sebul`은 글꼴을 밝히지 않은 글도 쓴다).
+
+## 지금 판에서 알아 둘 것
+
+- 기본 배치: 글꼴을 밝히지 않은 `<font-kku>`·`class="font-kku"`는 세벌 고정이다(`data-fy-layout="sebul-fixed-v1"`) — 초성·중성·받침을 역할마다 정해진 자리와 크기로 찍는다. `font="sebul"`처럼 글꼴을 밝히면 그 글꼴의 문맥 배치(모음·받침에 따라 자리가 바뀐다)이고, 0.1.0의 기본 배치가 이것이다.
+- 재료: 세벌·고딕·말랑은 기본으로 획을 CSS로 긋는다(기기와 무관 — 기기 한글 글꼴로 그리려면 페이지 CSS `--fy-face: device`). 네온·스티커처럼 칠만 다른 꾸러미 글꼴은 기기 한글 글꼴을 재료로 쓴다. 그림 자소 글꼴과 그림 세트(`jamo-set`)는 SVG 그림으로 그린다.
+- 접근성: 런타임과 정적 렌더러는 바탕 요소에 `aria-label`·`role`을 붙이지 않는다. 읽히는 글은 숨은 원문 `[part="sr-source"]` 하나이고 원문은 `data-source`에도 남는다. 작성자가 단 `aria-label`은 건드리지 않는다.
+- 정적 렌더러: 글꼴을 밝히지 않은 `render_html(text)`(Python·Go·Rust·Ruby)는 브라우저처럼 세벌 고정과 CSS 획을 그린다. 기기 글꼴 글자는 `face="device"`(Ruby `face:`, Go `WithFace`, Rust `HtmlOptions.face`).
+- 디자인(실험): `FontKku.validateDesign`·`registerDesign(name, json, { replace: true })`·`unregisterDesign`·`designs()`로 그림 세트·조립식·배치를 정하고 CSS `--fy-design: <이름>`으로 고르며, `FontKku.layoutStability(host)`로 세벌 고정이 지켜지는지 본다. 디자인을 받지 않는 글꼴에는 `data-fy-design-status="DESIGN_UNSUPPORTED_FONT"`가 붙는다.
 
 ## 사용 설명서
 
-- [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md): 목차, 가장 짧은 사용법, 꼭 지킬 것, 주소
-- [setup.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/setup.md): 스크립트 한 줄 설치, 속성 표, 동적 변경·재시도
-- [fonts.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/fonts.md): 기본 제공 글꼴과 필요한 바탕
-- [compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md): 꾸밈·변주·움직임·상호작용·테마
-- [styling.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/styling.md): 페이지 CSS로 자소 색 바꾸기, 씨앗
-- [custom-font.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/custom-font.md): 나만의 꾸밈 글꼴
-- [draw-jamo.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/draw-jamo.md): 자모를 SVG로 그려 그림 자소 글꼴 만들기, 글꼴 파일 내보내기
-- [examples.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/examples.md): 완성 HTML과 사례 템플릿 14종
-- [terminal.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/terminal.md): 봇·터미널에서 한글 크게
-- [no-hangul-device.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/no-hangul-device.md): 한글 글꼴·입력기 없는 기기
-- [troubleshooting.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/troubleshooting.md): 확인과 문제 해결
+- [SKILL.md](https://font.tty.link/lib/skill/SKILL.md): 목차, 가장 짧은 사용법, 꼭 지킬 것, 주소
+- [setup.md](https://font.tty.link/lib/skill/setup.md): 스크립트 한 줄 설치, 속성 표, 읽기·복사(접근성), 동적 변경·재시도
+- [fonts.md](https://font.tty.link/lib/skill/fonts.md): 기본 배치 세벌 고정과 `font="sebul"`의 문맥 배치, 재료(CSS 획·기기 글꼴·그림 세트), 기본 제공 글꼴과 필요한 바탕
+- [compose.md](https://font.tty.link/lib/skill/compose.md): 꾸밈·변주·움직임·상호작용·테마
+- [styling.md](https://font.tty.link/lib/skill/styling.md): 페이지 CSS로 자소 색 바꾸기, 씨앗
+- [custom-font.md](https://font.tty.link/lib/skill/custom-font.md): 나만의 꾸밈 글꼴
+- [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md): 자모를 SVG로 그려 그림 자소 글꼴 만들기, 원형 8자부터 그리는 그림 세트, 디자인 API(실험), 글꼴 작업실에서 디자인 만들기, 글꼴 파일 내보내기
+- [examples.md](https://font.tty.link/lib/skill/examples.md): 완성 HTML과 사례 템플릿 14종
+- [terminal.md](https://font.tty.link/lib/skill/terminal.md): 봇·터미널에서 한글 크게, 서버에서 JS 없는 정적 HTML(`render_html`)
+- [no-hangul-device.md](https://font.tty.link/lib/skill/no-hangul-device.md): 한글 글꼴·입력기 없는 기기
+- [troubleshooting.md](https://font.tty.link/lib/skill/troubleshooting.md): 확인과 문제 해결, 디자인 진단, 0.1.0에서 올린 뒤 모양이 바뀌었을 때
 
 ## 라이브러리
 
-- [font-kku.min.js](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js): 런타임(jsDelivr 즉석 압축본, 소스는 `.min`을 뺀 `font-kku.js`). 글꼴 CSS(`profiles/<글꼴>.css`)와 확장은 같은 폴더에서 런타임이 `.min` 압축본으로 받는다
+- [font-kku.min.js](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js): 런타임(jsDelivr 즉석 압축본, 소스는 `.min`을 뺀 `font-kku.js`). 글꼴 CSS(`profiles/<글꼴>.css`)와 확장·그림 세트는 같은 폴더에서 런타임이 `.min` 압축본으로 받는다
+- [font-kku.d.ts](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.d.ts): 공개 API 타입(실험 API 포함)
 - [spec/themes.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/spec/themes.json): 이름 있는 조합(테마) 목록
 - [spec/fonts.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/spec/fonts.json): 글꼴 목록
+- [spec/design.schema.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/spec/design.schema.json): 디자인 JSON 형식(실험)
 - [npm @tty.link/font-kku](https://www.npmjs.com/package/@tty.link/font-kku): `npm install @tty.link/font-kku` — 번들러 프로젝트, Node·명령줄(`font-kku-text`)
 
 ## 데모
 
-- [소개](https://font.tty.link/): 대표 쓰임과 AI 프롬프트
+- [소개](https://font.tty.link/): 대표 쓰임, AI 프롬프트, 이 판에서 바뀐 것
 - [사례](https://font.tty.link/showcase.html): 완성 템플릿 14종(소스를 본보기로 읽는다)
 - [글꼴](https://font.tty.link/fonts.html): 테마 갤러리, 조합기, 글꼴 견본
 - [움직임](https://font.tty.link/effects.html): 자모 움직임과 상호작용
 - [문서](https://font.tty.link/docs.html): 설치·속성·꾸미기·API
+- [작업실](https://font.tty.link/font-studio.html): 세벌 고정 디자인, 그림 세트 그리기(원형 8자 → 24 → 40), 글꼴 CSS 편집, 자소판 그리기
 
 ## Optional
 

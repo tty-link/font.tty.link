@@ -1,6 +1,6 @@
 # 붙이기 — 스크립트 한 줄과 속성
 
-목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
+목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
 
 ## 스크립트 한 줄
 
@@ -12,13 +12,13 @@
 
 | 스크립트 속성 | 하는 일 |
 |---|---|
-| `data-fonts` | 처음부터 받을 글꼴(공백·쉼표로 나눔). 첫 화면 제목 글꼴은 여기에 적는다 — 받는 동안 잠깐(최대 3초) 가려진다. 비우면 기본 CSS만 붙인다 |
+| `data-fonts` | 처음부터 받을 글꼴(공백·쉼표로 나눔). 첫 화면 제목 글꼴은 여기에 적는다 — 받는 동안 잠깐(최대 3초) 가려진다. 글꼴을 밝히지 않은 글(세벌 고정)은 `sebul`로 적는다. 비우면 기본 CSS만 붙인다 |
 | `data-addons` | 확장: `looks`(꾸밈 `kku-look-*`·변주 `kku-vary-*`), `motion`(자모 움직임), `fx`(타자·흩어지기·자석·섞기). 예: `data-addons="looks motion fx"` |
-| `data-jamo-sets` | 벡터 자소 세트를 처음부터 받는다(예: `sprite-system`) — [draw-jamo.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/draw-jamo.md) |
+| `data-jamo-sets` | 벡터 자소 세트를 처음부터 받는다(예: `sprite-system`) — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md) |
 | `data-autoload="false"` | 필요할 때 받기를 끈다. 이때는 쓰는 글꼴을 모두 `data-fonts`에 적는다 |
 
 - `data-fonts`에 없는 글꼴도 쓸 수 있다 — 화면에 나올 때 받는다.
-- 꾸러미 글꼴(`neon` 등) 여러 개 대신 `font="sebul" class="kku-look-neon"`처럼 꾸밈 클래스를 쓰면 CSS를 덜 받는다([compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md)).
+- 꾸러미 글꼴(`neon` 등) 여러 개 대신 `font="sebul" class="kku-look-neon"`처럼 꾸밈 클래스를 쓰면 CSS를 덜 받는다([compose.md](https://font.tty.link/lib/skill/compose.md)).
 - 런타임은 스크립트 주소를 기준으로 CSS와 글꼴 파일을 받는다. 스크립트 주소를 고치거나 런타임 내용을 페이지에 복사해 넣지 않는다.
 - 주소의 `font-kku.min.js`는 jsDelivr가 즉석으로 만든 압축본이다 — 런타임이 CSS·글꼴·확장도 `.min` 압축본으로 받는다. 소스를 읽거나 오류를 따라갈 때만 `.min`을 뺀 `font-kku.js`를 쓴다.
 
@@ -36,20 +36,27 @@
 - 런타임이 바탕 요소 안의 글자를 자소 노드로 바꾸므로, 꾸밀 요소 안에는 **글자만** 넣는다(다른 태그·아이콘을 섞지 않는다).
 - 바탕 요소의 글은 태그에 **붙여서** 쓴다(`<h1 …>가을 신메뉴</h1>`). 태그 안의 줄바꿈·앞뒤 공백은 그대로 줄바꿈이 된다.
 
+## 읽기·복사 (접근성)
+
+- 런타임은 그린 자모를 화면 낭독기에서 숨기고(`aria-hidden`), 원문을 보이지 않는 글자 하나(`[part="sr-source"]`)로 남긴다. 낭독기는 원문을 한 번 읽고, 바탕 요소를 골라 복사하면 원문만 복사된다.
+- 런타임은 바탕 요소에 `aria-label`·`role`을 쓰지 않는다. 버튼·링크·제목의 이름도 원문에서 정해진다(`<button class="font-kku">확인</button>`은 "확인").
+- 같은 글을 `aria-label`로 또 달지 않는다. 다르게 읽혀야 할 때만 직접 단다(`<button class="font-kku" aria-label="대화 상자 닫기">닫기</button>`) — 런타임이 직접 단 값을 덮지 않는다.
+- 원문을 코드에서 읽을 때는 바탕 요소의 `data-source`를 읽는다.
+
 ## 속성
 
 전용 태그는 왼쪽 이름, 클래스 방식은 `data-` 이름을 쓴다.
 
 | 전용 태그 | 클래스 방식 | 기본값 | 값 |
 |---|---|---|---|
-| `font` | `data-font` | `sebul` | 글꼴 이름 — [fonts.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/fonts.md) |
+| `font` | `data-font` | 없음 = 세벌 고정 | 글꼴 이름. 비우면 기본 배치 세벌 고정, `sebul`을 밝히면 세벌 문맥 배치 — [fonts.md](https://font.tty.link/lib/skill/fonts.md) |
 | `size` | `data-size` | `24px` | px 숫자(`48`) 또는 CSS 길이(`3rem`, `clamp(36px, 8vw, 72px)`) |
 | `spacing` | `data-spacing` | 없음 | 띄어쓰기 폭과 낱말 사이 간격(CSS 길이) |
 | `wrap-unit` | `data-wrap-unit` | `word` | 줄바꿈 단위: `word` 낱말 · `glyph` 글자 · `line` 줄 |
-| `animate` | `data-animate` | 없음 | 움직임 이름 — [compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md) |
-| `seed` | `data-seed` | 없음 | 씨앗: `auto`(그릴 때마다 새로) 또는 고정 글(`"가을축제"`) — [styling.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/styling.md) |
+| `animate` | `data-animate` | 없음 | 움직임 이름 — [compose.md](https://font.tty.link/lib/skill/compose.md) |
+| `seed` | `data-seed` | 없음 | 씨앗: `auto`(그릴 때마다 새로) 또는 고정 글(`"가을축제"`) — [styling.md](https://font.tty.link/lib/skill/styling.md) |
 | `jamo-seeds` | `data-jamo-seeds` | 꺼짐 | 붙이면 자모마다 씨앗을 나눠 준다(값 없이 `jamo-seeds`) |
-| `jamo-set` | `data-jamo-set` | 없음 | 그림 자소 글꼴을 자모별 SVG(벡터 자소)로 그린다 — [draw-jamo.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/draw-jamo.md) |
+| `jamo-set` | `data-jamo-set` | 없음 | 자모를 그림 세트로 그린다 — 글꼴을 비운 글·`sebul`·`gothic`에는 `pilgi-box`·`dunggeun-box`·`butgeul-box`나 직접 그린 세트, 그림 자소 글꼴에는 벡터 자소(`sprite-system` 등) — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md) |
 | `stroke-depth` | `data-stroke-depth` | 없음 | `stroke`면 벡터 자소를 획 단위로 쪼갠다 — draw-jamo.md |
 
 상호작용은 속성 `data-kku-fx`(두 방식 모두 같은 이름)로 건다 — compose.md.
@@ -63,6 +70,7 @@
 - 자동 글꼴·자모 모듈 로딩에 실패하면 `FontKku.retryFont(host)`로 재시도한다. 실패는 `font-kku:loaderror` 이벤트의 `detail: { kind, name, url, error }`로 확인한다. `retryFont`는 성공을 기다리는 Promise가 아니다. 직접 CSS URL의 완료를 기다리려면 `await FontKku.loadFont(url)`을 쓴다.
 - `<style>` 내용·CSS 행 선택처럼 load 이벤트가 없는 변경 뒤에는 `FontKku.refreshAll(host)`로 스타일을 다시 해석한다.
 - `font-kku:render`는 기존 DOM을 유지한 갱신에서도 발생한다. 이벤트에서 하는 후처리는 같은 노드에 반복해도 안전하게 작성한다.
+- 바탕 요소가 지금 어떻게 그려졌는지는 `FontKku.fontInfo(host)`로 본다 — 주요 값은 `{ font, face, layout, design, designStatus, loaded }`. `face`는 재료(`"element"` 원소 획 · `"device"` 기기 글꼴 · `"svg"` 그림 세트, 그림 자소 글꼴은 `null`), `layout`은 세벌 고정이면 `{ profile: "sebul-fixed-v1", … }`이고 문맥 배치면 `null`이다.
 
 ## 번들러·ESM에서
 

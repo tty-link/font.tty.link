@@ -26,14 +26,20 @@
         <span class="demo-kicker">기본 글</span>
         <h1 class="demo-title">탈네모꼴과 네모꼴, <em>같은 문장</em>을 양쪽에서 본다</h1>
         <p class="demo-copy">
-          엔진은 같은 짜임 메타데이터를 쓰고, 표현 방향은 각 글꼴 CSS가 정한다.
-          <code>sebul</code>은 기기 글꼴의 한글 자모를 탈네모꼴 세벌식으로 배치하고, <code>gothic</code>은 같은 계열 자모를 네모꼴에 가깝게 묶는다.
+          엔진은 같은 짜임 메타데이터를 쓰고, 배치는 각 글꼴 CSS가 정한다. 두 글꼴 모두 자모를 CSS 획(원소)으로 그어 글꼴 파일도
+          기기 한글 글꼴도 없이 어느 기기에서나 같은 모양이다 — <code>sebul</code>은 탈네모꼴 세벌식으로, <code>gothic</code>은 네모꼴에 가깝게 묶는다.
+          기준 글자는 기기 한글 글꼴 그대로다.
+        </p>
+        <p class="demo-copy">
+          이 페이지는 글꼴을 밝혀(<code>font="sebul"</code>·<code>font="gothic"</code>) 짜임마다 자리가 바뀌는 문맥 배치로 그린다. 글꼴을 밝히지 않은
+          <code>&lt;font-kku&gt;</code>는 세벌 고정 — 같은 역할의 같은 자모를 어느 글자에서나 같은 자리에 찍는다. 두 배치는
+          <a href="./faces.html">재료와 깊이</a> 페이지의 ‘배치’에서 나란히 본다.
         </p>
         <div class="demo-pill-row">
-          <span class="demo-pill">탈네모 배치: 기기 한글 글꼴</span>
+          <span class="demo-pill">기준 글자: 기기 한글 글꼴</span>
           <span class="demo-pill"><code>sebul</code> 탈네모꼴 세벌식</span>
           <span class="demo-pill"><code>gothic</code> 본고딕식 네모꼴</span>
-          <span class="demo-pill">네모 기준: Noto Sans KR</span>
+          <span class="demo-pill">자모: CSS 획(원소)</span>
         </div>
       </section>
 
@@ -41,7 +47,7 @@
         <article class="demo-panel">
           <h2>한 줄 빠른 비교</h2>
           <p class="demo-meta">
-            같은 기기 글꼴 문장과 sebul·gothic 조합을 나란히 올려 배치 방향 차이를 한눈에 본다.
+            기기 글꼴로 쓴 기준 문장과 sebul·gothic이 조립한 문장을 나란히 올려 배치 방향 차이를 한눈에 본다.
           </p>
           <div class="demo-compare-grid">
             <div class="demo-sample demo-sample-tone-default">
@@ -73,7 +79,7 @@
               <span class="demo-label">sebul</span>
               <font-kku font="sebul" size="44">광장으로 가는 길</font-kku>
               <font-kku font="sebul" size="24">바람이 부는 저녁의 거리</font-kku>
-              <p class="demo-caption">탈네모꼴 세벌식. 둥근 자소로 포스터·본문·장식 문구에 모두 어울린다.</p>
+              <p class="demo-caption">탈네모꼴 세벌식. 받침이 아래로 매달리는 리듬으로 포스터·본문·장식 문구에 두루 어울린다.</p>
             </div>
             <div class="demo-sample demo-sample-tone-gothic">
               <span class="demo-label">gothic</span>

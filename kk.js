@@ -12,13 +12,14 @@
  * 변경도 그대로 보여 준다. 밖으로 가져가는 코드는 toCdn()이 jsDelivr 주소로 바꾼다. 런타임은
  * jsDelivr 압축본 RUNTIME(`font-kku.min.js`)이다 — 런타임이 CSS·글꼴·확장도 `.min`으로 받는다(ADR-019 §2).
  * SKILL_PATH는 이 사이트가 직접 읽는 설명서 자리(배포 빌드가 lib/skill/로 옮긴다)이고, 프롬프트에 넣는
- * SKILL_URL은 언제나 npm 패키지의 설명서다. */
+ * SKILL_URL은 font.tty.link의 최신 설명서다 — 문서는 npm 공개 없이 사이트로 고친다(ADR-022 §6, 2026-10-13).
+ * 설명서 안의 코드 주소는 공개된 판(jsDelivr `@<버전>`)에 고정돼 있어 받는 코드와 어긋나지 않는다. */
 (function () {
   "use strict";
 
   var CDN = "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/";
   var SKILL_PATH = "skill/SKILL.md";
-  var SKILL_URL = "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md";
+  var SKILL_URL = "https://font.tty.link/lib/skill/SKILL.md";
   var SITE_ROOT = new URL("lib/", document.currentScript ? document.currentScript.src : location.href).href;
   /* 배포 빌드가 CDN을 사이트 lib/로 바꾸면(--base) 그곳에는 즉석 압축본이 없어 원본 이름을 쓴다. */
   var RUNTIME = CDN + (/^https:\/\/cdn\.jsdelivr\.net\//.test(CDN) ? "font-kku.min.js" : "font-kku.js");

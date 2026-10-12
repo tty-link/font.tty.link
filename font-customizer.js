@@ -6,20 +6,24 @@
  * 같은 문자열이다. 자모 위치(--fy-top/--fy-left)와 크기는 건드리지 않는다 — 조립이 무너진다.
  *
  * 글꼴마다 "색"이 무엇을 바꾸는지 다르다(paint 모델):
- *   fill         기기 글꼴 채움 — color
+ *   element      원소 재료(sebul·gothic·malang 기본, ADR-024) — 획 상자를 글자 색으로 칠한다(color).
+ *                글자 칠(text-shadow·-webkit-text-stroke·font-weight)이 닿지 않으므로 외곽선·그림자는
+ *                글자 칸의 filter: drop-shadow(), 굵기는 --fy-element-width(글꼴 굵기의 배수)로 준다
+ *   fill         기기 글꼴 채움(옛 꾸러미 글꼴) — color
  *   hollow       속 빈 선 글자(neon·blueprint) — -webkit-text-stroke-color. glow가 있는
  *                글꼴(neon)은 빛번짐도 그 색으로 바꾼다
  *   sprite       그림 자소(자소판 그림 그대로) — 색을 주면 마스크 칠(ADR-014)로 바꾼다
  *   sprite-mask  이미 마스크 칠인 그림 자소(crayon) — color
  * 그라데이션 칠은 기기 글꼴이면 자모마다 background-clip:text, 그림 자소면 --fy-sprite-fill이다.
- * 그림자는 기기 글꼴 채움이면 text-shadow, 그림 자소·그라데이션 칠이면 글자 칸의
+ * 원소 획에는 글자 칠이 없어 그라데이션을 고르면 그 꾸밈만 기기 글꼴 재료(--fy-face: device)로 그린다.
+ * 그림자는 기기 글꼴 채움이면 text-shadow, 원소 획·그림 자소·그라데이션 칠이면 글자 칸의
  * filter: drop-shadow()로 준다(투명 글자의 text-shadow는 숨은 글자 모양을 비추고,
  * background-clip:text 위에서는 그라데이션을 덮는다 — 그래서 그라데이션 칠은 글꼴의
  * text-shadow도 지운다).
  *
  * 변주(씨앗): 바탕 요소에 seed와 jamo-seeds를 주면 런타임이 자모 노드마다 --fy-jamo-seed(0–1)를
  * 건다. 변주 폭은 이 값으로 기울기(--fy-rotate)·크기(--fy-scale-x/y)·굵기(--fy-weight, 기기
- * 글꼴만)·미세 위치(translate)·색조(oklch 상대 색, 초성·중성·받침 색 칠에서만)를 흔든다.
+ * 글꼴 글자만)·미세 위치(translate)·색조(oklch 상대 색, 초성·중성·받침 색 칠에서만)를 흔든다.
  * 씨앗이 없으면 var(…, 0.5)라 흔들림이 0이다. 위치는 페이지 변수 --fy-top/--fy-left가 아니라
  * 개별 속성 translate로 아주 작게, 그림 자소의 색조는 filter(코어가 쓴다)가 아니라 마스크 칠의
  * color로 돌린다. 씨앗에 반응하는 글꼴(fonts[].seed)은 변주를 켜면 글꼴의 흔들림도 함께 산다.
@@ -89,6 +93,14 @@
   function isSprite(item) {
     return item.paint === "sprite" || item.paint === "sprite-mask";
   }
+
+  /* 원소 획으로 칠하는가 — 원소 재료 글꼴이라도 그라데이션 칠은 기기 글꼴 재료로 그린다. */
+  function drawsElements(item, s) {
+    return item.paint === "element" && s.p !== "gradient";
+  }
+
+  /* 굵기 고르기(font-weight 값)를 원소 획 굵기 배수로 — 700이 글꼴 굵기 그대로다. */
+  var ELEMENT_WEIGHT = { 300: 0.6, 400: 0.75, 500: 0.85, 600: 0.92, 700: 1, 800: 1.15, 900: 1.3 };
 
   function slug(value, id) {
     var name = String(value || "").toLowerCase().replace(/^kku-/, "").replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
@@ -207,15 +219,22 @@
   function buildCss(item, s) {
     var cls = "." + s.n;
     var sprite = isSprite(item);
+    var elements = drawsElements(item, s);
     var gradientFill = s.p === "gradient";
-    var filterShadow = sprite || gradientFill;
+    var filterShadow = sprite || elements || gradientFill;
     var host = [];
     var jamo = [];
     var roles = [];
     var shadow = [];
     var glyphFilters = [];
 
-    if (!sprite && s.w) host.push("--fy-weight: " + s.w);
+    // 원소 재료 글꼴에 그라데이션: 획 상자에는 글자 칠이 없어 기기 한글 글꼴 재료로 바꿔 그린다(ADR-023)
+    if (item.paint === "element" && gradientFill) host.push("--fy-face: device");
+    if (elements && s.w && ELEMENT_WEIGHT[s.w]) {
+      host.push("--fy-element-width: calc(var(--fy-font-element-width, 0.1em) * " + ELEMENT_WEIGHT[s.w] + ")");
+    } else if (!sprite && !elements && s.w) {
+      host.push("--fy-weight: " + s.w);
+    }
 
     if (s.p === "color") {
       if (item.paint === "sprite") host.push("--fy-sprite-paint: mask");
@@ -234,7 +253,7 @@
     }
 
     if (s.ol > 0) {
-      if (sprite) {
+      if (sprite || elements) {
         var w = round(s.ol) + "em";
         glyphFilters.push("drop-shadow(" + w + " 0 0 " + s.olc + ")", "drop-shadow(-" + w + " 0 0 " + s.olc + ")",
           "drop-shadow(0 " + w + " 0 " + s.olc + ")", "drop-shadow(0 -" + w + " 0 " + s.olc + ")");
@@ -251,7 +270,7 @@
         var scale = "calc(1 + sin(" + J + " * 29rad) * " + round(s.vs / 100) + ")";
         jamo.push("--fy-scale-x: " + scale, "--fy-scale-y: " + scale);
       }
-      if (s.vw > 0 && !sprite) {
+      if (s.vw > 0 && !sprite && !elements) {
         var baseWeight = s.w || "var(--fy-slot-weight, var(--fy-role-weight, var(--fy-font-weight, 700)))";
         jamo.push("--fy-weight: calc(" + baseWeight + " + sin(" + J + " * 37rad) * " + s.vw + ")");
       }
@@ -270,7 +289,7 @@
       }
     }
 
-    if (s.sh === "none" && !gradientFill) {
+    if (s.sh === "none" && !gradientFill && !elements) {
       shadow.push(block(cls + ' :is([part="glyph"], [part~="jamo"])', ["text-shadow: none"]));
     } else if (s.sh !== "font") {
       if (filterShadow) {
@@ -567,7 +586,6 @@
     var drawNo = $("[data-kku-draw-no]");
     drawNo.hidden = !state.dr;
     drawNo.querySelector("code").textContent = state.dr;
-    $("[data-kku-vw-wrap]").hidden = sprite;
     Array.prototype.forEach.call(dialog.querySelectorAll("[data-kku-bg]"), function (button) {
       button.setAttribute("aria-pressed", String(button.getAttribute("data-kku-bg") === state.bg));
     });
@@ -580,6 +598,9 @@
 
   function syncVisibility() {
     var sprite = isSprite(font);
+    var elements = drawsElements(font, state);
+    // 굵기 흔들림은 기기 글꼴 글자의 font-weight라 원소 획·그림 자소에는 없다
+    $("[data-kku-vw-wrap]").hidden = sprite || elements;
     $("[data-kku-roles]").hidden = state.p !== "color";
     $("[data-kku-presets]").hidden = state.p === "gradient";
     $("[data-kku-gradient]").hidden = state.p !== "gradient";
@@ -590,13 +611,16 @@
     if (state.p === "font") {
       hint = sprite && font.paint === "sprite"
         ? "자소판 그림의 색 그대로입니다. 색을 고르면 자소판을 마스크로 써서 그 색으로 칠합니다."
+        : elements ? "글꼴이 정한 색 그대로입니다. 자모는 CSS로 긋는 원소 획이라 한글 글꼴이 없는 기기에서도 같은 모양입니다."
         : "글꼴이 정한 색 그대로입니다.";
     } else if (state.p === "color") {
       hint = font.paint === "hollow" ? (font.glow ? "속 빈 관의 색과 빛번짐을 자소 역할마다 바꿉니다." : "속 빈 선 글자의 선 색을 자소 역할마다 바꿉니다.")
         : sprite ? "자소판을 마스크로 써서(--fy-sprite-paint: mask) 자소 역할마다 칠합니다."
+        : elements ? "초성·중성·받침 획을 따로 칠합니다. 외곽선·그림자는 글자 칸의 filter: drop-shadow로, 굵기는 획 굵기(--fy-element-width)로 바꿉니다."
         : "초성(완성형 덩어리 포함)·중성·받침을 따로 칠합니다.";
     } else {
       hint = sprite ? "자소판 모양 안을 위→아래 그라데이션으로 칠합니다(--fy-sprite-fill)."
+        : font.paint === "element" ? "원소 획에는 그라데이션을 칠할 수 없어, 이 칠은 기기 한글 글꼴 재료(--fy-face: device)로 그립니다 — 자모 모양이 방문자 기기의 한글 글꼴을 따르고, 한글 글꼴이 없는 기기에서는 제대로 그려지지 않습니다. 자모 하나하나를 위→아래로 칠합니다(background-clip: text)."
         : "자모 하나하나를 위→아래 그라데이션으로 칠합니다(background-clip: text). 글꼴의 글자 그림자는 지우고, 그림자는 아래에서 다시 고릅니다.";
     }
     $("[data-kku-paint-hint]").textContent = hint;

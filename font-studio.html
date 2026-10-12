@@ -16,6 +16,91 @@
     <link rel="stylesheet" href="./font-studio-palette.css" />
     <link rel="stylesheet" href="./font-studio-bundle.css" />
     <link rel="stylesheet" href="./font-studio-history.css" />
+    <style>
+      /* 작업실 안내 — 처음 쓰는 사람에게 순서·배치 두 가지·저장을 한 칸에. 접으면 그 상태를 기억한다(아래 스크립트) */
+      .studio-guide {
+        flex: 1 1 100%;
+        font-size: 13px;
+        line-height: 1.55;
+        min-inline-size: 0;
+      }
+      .studio-guide[open] {
+        padding: 10px 16px;
+        border: 1px solid var(--demo-border);
+        border-radius: 14px;
+        background: var(--demo-panel);
+      }
+      .studio-guide > summary {
+        cursor: pointer;
+        inline-size: fit-content;
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--demo-accent);
+      }
+      .studio-guide[open] > summary {
+        font-size: 15px;
+        color: inherit;
+      }
+      .studio-guide > summary small {
+        margin-inline-start: 6px;
+        font-weight: 400;
+        font-size: 12px;
+        color: var(--demo-muted);
+      }
+      .studio-guide-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+        gap: 10px 14px;
+        margin: 10px 0 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: studio-guide;
+      }
+      .studio-guide-steps li {
+        display: grid;
+        gap: 2px;
+        counter-increment: studio-guide;
+      }
+      .studio-guide-steps strong::before {
+        content: counter(studio-guide);
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.4em;
+        block-size: 1.4em;
+        margin-inline-end: 6px;
+        border-radius: 999px;
+        background: var(--demo-accent-soft);
+        color: var(--demo-accent);
+        font-size: 12px;
+      }
+      .studio-guide-steps span,
+      .studio-guide-layouts dd {
+        color: var(--demo-ink-soft);
+      }
+      .studio-guide-layouts {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+        gap: 8px 14px;
+        margin: 12px 0 2px;
+        padding-block-start: 10px;
+        border-block-start: 1px solid var(--demo-border);
+      }
+      .studio-guide-layouts dt {
+        font-weight: 700;
+      }
+      .studio-guide-layouts dt small {
+        margin-inline-start: 4px;
+        padding: 0 8px;
+        border: 1px solid var(--demo-accent);
+        border-radius: 999px;
+        font-weight: 400;
+        font-size: 11px;
+        color: var(--demo-accent);
+      }
+      .studio-guide-layouts dd {
+        margin: 2px 0 0;
+      }
+    </style>
   </head>
   <body>
     <div class="demo-shell">
@@ -34,20 +119,47 @@
         <section class="studio-head">
           <div>
             <span class="demo-kicker">글꼴 작업실</span>
-            <h1 class="demo-title">자소를 고르고, <em>어느 레벨에</em> 고칠지 정하세요</h1>
-            <p class="demo-meta">
-              처음 화면은 세벌 고정 디자인입니다. 무엇으로 그릴지 고르면 비교 칸이 같은 자모가 어느 글자에서나 같은 자리에 찍히는지 보여 줍니다.
-              글꼴 CSS는 자리 → 자모 → 문맥 레벨로 값을 좁혀 갑니다. 자소를 클릭하면 각 값이 어느 규칙에서
-              왔는지 보이고, 편집은 고른 범위의 규칙 한 줄만 바꿉니다. 주석과 손으로 쓴 규칙은 그대로 남습니다.
-            </p>
+            <h1 class="demo-title">디자인을 고르고, <em>자소 하나까지</em> 고치세요</h1>
+            <p class="demo-meta">디자인 칸에서 무엇으로·어떤 배치로 그릴지 정하고, 그 아래에서 글꼴 CSS를 자소 하나까지 고칩니다.</p>
           </div>
           <div class="studio-status" aria-live="polite">
-            <span>글꼴 <output data-studio-font-id>-</output></span>
+            <span>글꼴 CSS <output data-studio-font-id>-</output></span>
             <span>계약 <output data-studio-contract>-</output></span>
             <span>재료 <output data-studio-material>-</output></span>
             <span><output data-studio-changes>0</output>줄 바뀜</span>
             <span class="studio-draft-status" data-studio-draft-status></span>
           </div>
+          <details class="studio-guide" data-studio-guide open>
+            <summary>작업실 안내 <small>쓰는 순서 · 배치 두 가지 · 저장과 공유</small></summary>
+            <ol class="studio-guide-steps">
+              <li>
+                <strong>무엇으로 그릴지 고르기</strong>
+                <span>디자인 칸의 세 단추가 재료를 바꿉니다 — 선·원(기기 글꼴 없이 어디서나 같은 모양), 직접 그려(SVG 그림 세트, ‘그리기 8 → 24 → 40’), 기존 글꼴(기기·웹 글꼴, ‘글꼴 팔레트’ 탭에서 섞기). 재료를 바꿔도 배치는 그대로입니다.</span>
+              </li>
+              <li>
+                <strong>자모 살펴보고 고르기</strong>
+                <span>비교 칸은 같은 자모가 몇 가지 자리에 찍히는지 잽니다. 미리보기에서 자소를 누르면 그 자소의 출처가 보이고, ‘조립식·binding’ 탭에서 그 자모를 원본·조립식 가운데 고르거나 조각마다 소스를 정합니다. 바꾼 것은 ‘편집 기록’에서 되돌립니다.</span>
+              </li>
+              <li>
+                <strong>글꼴 CSS 고치기</strong>
+                <span>도구 막대에서 글꼴을 불러오거나 새로 만들고, 자소를 눌러 고른 범위(자리·자모·문맥)의 규칙 한 줄만 고칩니다. 세벌 고정에서는 배치가 자리를 정하므로 네모 문맥으로 바꾸거나 디자인을 끄고 고칩니다.</span>
+              </li>
+              <li>
+                <strong>저장하고 나누기</strong>
+                <span>디자인 JSON은 디자인만, 묶음은 디자인과 직접 그린 그림을 한 파일로, 페이지용 코드는 내 페이지에 붙일 등록 코드, 프로젝트 저장은 글꼴 CSS·자소판·디자인 전부입니다. 고친 것은 이 브라우저에 초안으로도 남습니다.</span>
+              </li>
+            </ol>
+            <dl class="studio-guide-layouts">
+              <div>
+                <dt>세벌 고정 <small>기본 · 처음 화면</small></dt>
+                <dd>세벌식 타자기처럼 초성·중성·종성을 역할마다 정해진 자리와 크기로 찍습니다. 같은 역할의 같은 자모는 어느 글자에서나 같은 자리·크기·모양이고 받침 자리는 늘 비워 둡니다. 글꼴을 밝히지 않은 <code>&lt;font-kku&gt;</code>가 이 배치입니다.</dd>
+              </div>
+              <div>
+                <dt>네모 문맥</dt>
+                <dd>보통 글꼴처럼 모음 모양과 받침에 따라 자리와 크기가 바뀝니다(글꼴 CSS의 자리·문맥 값). <code>font="sebul"</code>처럼 글꼴을 밝힌 페이지와 같은 짜임이고, ‘고급 — 배치·문맥·JSON’에서 고릅니다.</dd>
+              </div>
+            </dl>
+          </details>
         </section>
 
         <section class="studio-design" data-studio-design aria-labelledby="studio-design-title">
@@ -101,8 +213,8 @@
             <div class="studio-design-advanced-body">
               <fieldset class="studio-design-layout" data-design-layout-field>
                 <legend>배치</legend>
-                <label><input type="radio" name="design-layout" value="sebul-fixed-v1" /> 세벌 고정 — 기본. 역할마다 도장 하나, 받침 자리는 늘 비워 둔다</label>
-                <label><input type="radio" name="design-layout" value="square-context-v1" /> 네모 문맥 — 모음·받침에 따라 자리·크기가 바뀐다(글꼴 CSS의 자리·문맥 값)</label>
+                <label><input type="radio" name="design-layout" value="sebul-fixed-v1" /> 세벌 고정 — 기본. 역할마다 정해진 자리·크기(도장) 하나, 받침 자리는 늘 비워 둔다</label>
+                <label><input type="radio" name="design-layout" value="square-context-v1" /> 네모 문맥 — 모음·받침에 따라 자리·크기가 바뀐다(글꼴 CSS의 자리·문맥 값, 글꼴을 밝힌 페이지와 같은 짜임)</label>
                 <label data-design-legacy-option hidden><input type="radio" name="design-layout" value="legacy" disabled /> 지금 배치 — 배치를 적지 않은 1.0·1.1 디자인(그대로 둔다)</label>
               </fieldset>
               <div class="studio-design-context" data-design-context-tab hidden>
@@ -204,7 +316,7 @@
             </div>
             <p class="studio-hint">
               자소 클릭으로 선택 · 드래그로 이동(한 번이 되돌리기 한 단계) · 방향키 0.1% (Shift 1%) · 값 칸을 비우면 그 규칙에서 선언을 지웁니다.
-              다른 규칙이 값을 덮어 편집이 보이지 않으면 경고합니다.
+              다른 규칙이 값을 덮어 편집이 보이지 않으면 경고합니다. 세벌 고정에서는 자리를 배치가 정해 글꼴 CSS를 바꾸지 않습니다 — 자소를 고르면 나오는 ‘네모 문맥으로’나 ‘디자인 끄고 글꼴 CSS로’를 누르세요.
             </p>
             <section class="studio-checks" aria-label="검증">
               <h2>검증 <small data-studio-check-summary></small></h2>
@@ -247,7 +359,7 @@
           <p>
             <strong data-material-intro-font>-</strong> 글꼴은 <code>--fy-material: <span data-material-intro-kind>system</span></code> 재료라
             그릴 자소판이 없습니다. 자소를 직접 그려 글꼴을 만들려면 그림 자소 글꼴을 여세요 —
-            자음 19 + 모음 21칸을 그리면 한글 11,172자가 됩니다.
+            자음 19 + 모음 21칸을 그리면 한글 11,172자가 됩니다. 픽셀 그림 대신 벡터로 그리려면 위 디자인의 ‘직접 그려 만들기’(SVG 그림 세트)를 쓰세요.
           </p>
           <div class="studio-material-buttons">
             <button type="button" data-material-open-example>sprite-example 열어 그리기</button>
@@ -376,6 +488,36 @@
     <script src="./demo.js"></script>
     <script>
       window.FontKkuDemo.renderNav(location.hash === "#studio-material" ? "sprite-draw" : "font-studio");
+      /* 작업실 안내 — 고른 대로(접기·펼치기) 다음에도 연다. 고른 적이 없으면 맨 주소의 넓은 화면에서만 펼친다 */
+      (function () {
+        var guide = document.querySelector("[data-studio-guide]");
+        var summary = guide && guide.querySelector("summary");
+        var key = "font-kku-studio-guide";
+        if (!guide || !summary) {
+          return;
+        }
+        var saved = null;
+        try {
+          saved = window.localStorage.getItem(key);
+        } catch (error) {
+          saved = null; // 저장소를 못 읽으면 화면 폭으로만 정한다
+        }
+        var narrow = Boolean(window.matchMedia && window.matchMedia("(max-width: 700px)").matches);
+        /* 글꼴(?font·?src)이나 자소판(#studio-material)을 밝히고 들어오면 고칠 것이 정해져 있다 — 디자인 칸처럼 접어 둔다 */
+        var params = new URLSearchParams(location.search);
+        var focused = params.has("font") || params.has("src") || location.hash === "#studio-material";
+        if (saved === "closed" || (saved !== "open" && (narrow || focused))) {
+          guide.open = false;
+        }
+        /* 사람이 접고 펼친 것만 기억한다(위의 화면 폭 접기는 남기지 않는다). click은 toggle보다 먼저 온다 */
+        summary.addEventListener("click", function () {
+          try {
+            window.localStorage.setItem(key, guide.open ? "closed" : "open");
+          } catch (error) {
+            /* 기억하지 못해도 접기·펼치기는 된다 */
+          }
+        });
+      })();
     </script>
     <script src="./font-studio-model.js"></script>
     <script src="./font-kku-lint.js"></script>

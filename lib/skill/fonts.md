@@ -1,12 +1,13 @@
 # 글꼴 고르기
 
-목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
+목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
 
-`font`(클래스 방식은 `data-font`)에 이름을 준다. 모양을 직접 보려면 `https://font.tty.link/fonts.html`.
+`font`(클래스 방식은 `data-font`)에 이름을 준다. 비우면 세벌 고정(아래 「배치」)이다. 모양을 직접 보려면 `https://font.tty.link/fonts.html`.
 
 | `font` | 이름 | 분위기 | 바탕 | 어울리는 곳 |
 |---|---|---|---|---|
-| `sebul` | 세벌 | 둥근 탈네모꼴, 경쾌함 | 아무 바탕 | 기본값, 포스터 제목 |
+| (비움) | 세벌 고정 | 세벌 타자기처럼 자모마다 한 자리, 아래 끝이 들쭉날쭉한 탈네모 | 아무 바탕 | 기본값, 한글 원리가 보이는 제목 |
+| `sebul` | 세벌 | 둥근 탈네모꼴, 경쾌함(문맥 배치) | 아무 바탕 | 포스터 제목 |
 | `gothic` | 고딕 | 단정한 네모꼴 | 아무 바탕 | 공지·배너 |
 | `neon` | 네온 | 빛나는 관, 밤거리 | **어두운 바탕 필수** | 바·공연·이벤트 |
 | `sticker` | 스티커 | 흰 테두리 컬러 조각, 다꾸 | **색 바탕**(흰 바탕이면 테두리가 안 보임) | 굿즈·이벤트·SNS |
@@ -26,7 +27,7 @@
 | `dunggeun` | 둥근 | 굵고 둥근 끝, 둥글린 모서리 | 밝은·분홍 바탕 | 어린이·카페·UI 배지 |
 | `butgeul` | 붓 | 누르며 들어가 빼며 나가는 붓 획 | 종이색 밝은 바탕 | 붓글씨 제목·전통·초대장 |
 
-그 밖에 `sprite-system`(검정 획 그림 자소)은 직접 그리는 그림 자소 글꼴의 바탕이다 — [draw-jamo.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/draw-jamo.md).
+그 밖에 `sprite-system`(검정 획 그림 자소)은 직접 그리는 그림 자소 글꼴의 바탕이다 — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md).
 
 ## 배치 — 세벌 고정(기본)과 문맥 배치
 
@@ -43,22 +44,27 @@
 | `<font-kku font="sebul">한글</font-kku>` | 세벌 문맥 |
 | `<font-kku font="gothic">한글</font-kku>` | 고딕 네모꼴 |
 
-꾸러미 칠을 세벌 고정에 얹으려면 글꼴 대신 꾸밈 클래스를 쓴다: `<font-kku class="kku-look-neon">`.
+꾸러미 칠을 세벌 고정에 얹으려면 글꼴 대신 꾸밈 클래스를 쓴다: `<font-kku class="kku-look-neon">`(확장 `data-addons="looks"`).
+
+- **0.1.0으로 만든 페이지:** 0.1.1에서 둘이 바뀌었다 — 글꼴을 밝히지 않은 `<font-kku>`가 세벌 고정이 되었고, `sebul`·`gothic`·`malang`(과 글꼴을 비운 글)이 자모를 기기 한글 글꼴 대신 CSS 획(아래 「재료」의 원소)으로 긋는다. 예전 배치는 `font="sebul"`, 예전 모양까지는 `font="sebul"`에 페이지 CSS `--fy-face: device`를 더한다(그러면 `text-shadow`·`--fy-weight`도 다시 듣는다). 꾸러미 글꼴(`neon`·`sticker` …)은 전처럼 기기 글꼴로 그린다.
+- 지금 배치는 `FontKku.fontInfo(host).layout`(세벌 고정이면 `{ profile: "sebul-fixed-v1", … }`, 문맥 배치면 `null`)으로 본다.
+- 페이지 CSS가 이웃 자모를 보고 자모를 옮기면 세벌 고정이 깨진다. `FontKku.layoutStability(host)`가 `stable: false`와 어긋난 자모(`drifted`)를 알려 준다.
+- 디자인 JSON에서도 배치를 고른다(`layout`, 실험 — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md)「디자인」).
 
 ## 재료 — 세벌·고딕 계열과 그림 자소
 
 - **세벌·고딕 계열**: `sebul`·`gothic`·`malang`과 칠을 얹은 꾸러미 `neon`·`sticker`·`retro`·`saekdong`·`geumbak`·`glitch`·`riso`·`blueprint`. 배치는 CSS가 정하고 자모를 무엇으로 그릴지 고른다(재료).
-  - **원소(기본)**: `sebul`·`gothic`·`malang`은 자모를 CSS 획으로 긋는다 — 받는 파일 없이 어느 기기에서나, 한글 글꼴이 없어도 같은 모양(낱자 `ㅋㅋ`·`ㅘ`도 획으로). 굵기 `--fy-element-width`(바탕 요소 글자 크기 기준, 예 `0.12em`), 끝 `--fy-element-cap: round`.
+  - **원소(기본)**: `sebul`·`gothic`·`malang`과 글꼴을 밝히지 않은 글은 자모를 CSS 획으로 긋는다 — 받는 파일 없이 어느 기기에서나, 한글 글꼴이 없어도 같은 모양(낱자 `ㅋㅋ`·`ㅘ`도 획으로). 획이 촘촘한 자모(ㄹ·ㅌ·겹받침)는 작은 글씨에서 틈이 열리게 획을 조금 가늘게 긋는다. 굵기 `--fy-element-width`(바탕 요소 글자 크기 기준, 예 `0.12em`), 끝 `--fy-element-cap: round`. 칠은 글자 칠과 다르다 — 그림자·테두리·속 빈 획은 [custom-font.md](https://font.tty.link/lib/skill/custom-font.md)의 재료 표.
   - **기기 글꼴**: 페이지 CSS `--fy-face: device` — 방문자 기기의 한글 글꼴을 같은 자리에 맞춰 그린다(다듬은 획, 기기마다 조금 다름). 꾸러미 글꼴은 글자 칠(외곽선·그림자)이 정체라 이것이 기본이고, 한글 글꼴이 없는 기기에서는 네모(두부)로 보인다. 같은 칠을 원소로 쓰려면 `sebul` + `class="kku-look-neon"`.
-  - **그림 세트**: `jamo-set="pilgi-box"`(필기)·`"dunggeun-box"`(둥근)·`"butgeul-box"`(붓) 또는 직접 그린 세트 — [draw-jamo.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/draw-jamo.md)「세벌·고딕에 그림 세트 걸기」.
-  - **글꼴 팔레트(실험)**: 여러 글꼴을 역할·자모·조각마다 섞는다 — `FontKku.registerDesign("mix", { mode: "font", sources: { A: { kind: "font", family: "Nanum Myeongjo" }, B: { kind: "font", family: "Pretendard", weight: 700 } }, defaults: { source: "A" }, roleSources: { medial: "B" }, rules: [{ id: "ppa", match: { jamo: "ㅃ" }, apply: { method: "compose", recipe: "double-bieup", bindings: { right: { source: "B" } } } }] })` 뒤 CSS `--fy-design: mix`. 글꼴은 페이지가 미리 실어 둔다(폰꾸가 받지 않는다). 그 글꼴에 한글이 없으면 기본 한글 글꼴로 그려지고 `FontKku.traceOf(host)`가 `identity: "fallback-suspected"`로 알린다.
-- **그림 자소 재료**: `pixel`·`dojang`·`chalk`·`crayon`·`jasu`·`pilgi`·`dunggeun`·`butgeul`·`sprite-system`. 직접 그린 자모 그림으로 조립해 어느 기기에서나 같은 모양이다 — [no-hangul-device.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/no-hangul-device.md).
+  - **그림 세트**: `jamo-set="pilgi-box"`(필기)·`"dunggeun-box"`(둥근)·`"butgeul-box"`(붓) 또는 직접 그린 세트 — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md)「세벌·고딕에 그림 세트 걸기」.
+  - **글꼴 팔레트(실험)**: 페이지가 실어 둔 여러 한글 글꼴을 역할·자모·조각마다 섞는다 — 디자인 `mode: "font"`, 예와 규칙은 [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md)「디자인」. 폰꾸는 글꼴 파일을 받지 않는다. 그 글꼴에 한글이 없으면 기본 한글 글꼴로 그려지고 `FontKku.traceOf(host)`가 `identity: "fallback-suspected"`로 알린다.
+- **그림 자소 재료**: `pixel`·`dojang`·`chalk`·`crayon`·`jasu`·`pilgi`·`dunggeun`·`butgeul`·`sprite-system`. 직접 그린 자모 그림으로 조립해 어느 기기에서나 같은 모양이다 — [no-hangul-device.md](https://font.tty.link/lib/skill/no-hangul-device.md).
 
 ## 꾸러미 글꼴과 색
 
-- `neon`·`sticker`·`geumbak`·`glitch`·`retro`·`saekdong`·`riso`·`blueprint`는 칠만 다른 **꾸러미 글꼴**이다 — 같은 칠을 꾸밈(`class="kku-look-neon"` 등)으로 다른 글꼴에도 걸 수 있다([compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md)).
+- `neon`·`sticker`·`geumbak`·`glitch`·`retro`·`saekdong`·`riso`·`blueprint`는 칠만 다른 **꾸러미 글꼴**이다 — 같은 칠을 꾸밈(`class="kku-look-neon"` 등)으로 다른 글꼴에도 걸 수 있다([compose.md](https://font.tty.link/lib/skill/compose.md)).
 - `pilgi`·`dunggeun`·`butgeul`은 `color`가 그대로 먹색이 된다.
-- `crayon`은 역할 색(초성 빨강·중성 파랑·받침 초록)이 정해져 있어 `color`는 초성만 바꾼다 — 중성·받침은 `[part~="jungseong"]`·`[part~="jongseong"]`의 `color`로 바꾼다([styling.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/styling.md)).
+- `crayon`은 역할 색(초성 빨강·중성 파랑·받침 초록)이 정해져 있어 `color`는 초성만 바꾼다 — 중성·받침은 `[part~="jungseong"]`·`[part~="jongseong"]`의 `color`로 바꾼다([styling.md](https://font.tty.link/lib/skill/styling.md)).
 - 씨앗에 반응하는 글꼴(`malang`·`crayon`·`chalk`·`jasu`·`sticker`·`glitch`)은 `seed`와 `jamo-seeds`를 주면 자모마다 조금씩 달라진다(styling.md).
 
 ## 고르는 요령

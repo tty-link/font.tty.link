@@ -48,6 +48,11 @@
         .faces-readout {
           grid-column: 1;
         }
+        /* 원소 그림만 쓰는 깊이의 겹받침(ᆲ = @line + …)이 좁은 화면에서 가로로 넘치지 않게 */
+        .faces-jamo code {
+          white-space: normal;
+          overflow-wrap: anywhere;
+        }
       }
     </style>
   </head>
@@ -68,16 +73,19 @@
         <span class="demo-kicker">재료와 깊이</span>
         <h1 class="demo-title">한글을 <em>원리대로</em>, 여러 깊이로 그린다</h1>
         <p class="demo-copy">
-          세벌·고딕의 배치는 그대로 두고 자모를 무엇으로 채우는지 바꾼다. 기기 한글 글꼴을 표준 자리에 맞추거나(<code>device</code>),
-          획을 CSS 상자로 긋거나(<code>element</code>, 받을 파일 없음), 사람·AI가 그린 그림 세트로 그린다(<code>svg</code>).
-          그림 세트는 그린 만큼이 깊이다 — 그리지 않은 자모는 짝·가획·천지인·원소로 조립한다(ADR-024). 덜 그린 셈 치는 미리보기는
-          디자인 소스의 보이는 칸(<code>cells</code>)으로 한다(ADR-025).
+          배치는 그대로 두고 자모를 무엇으로 채우는지 바꾼다. 획을 CSS 상자로 긋거나(<code>element</code>, 기본 — 받을 파일 없음),
+          기기 한글 글꼴을 표준 자리에 맞추거나(<code>device</code>), 사람·AI가 그린 그림 세트로 그린다(<code>svg</code>). 세 재료는 같은
+          배치를 쓴다 — 세벌 고정이면 같은 도장이다(ADR-026). 그림 세트는 그린 만큼이 깊이다. 그리지 않은 자모는 짝·선 조립식·가획·천지인으로
+          조립하고, 그림이 맡지 않은 획(ㅋ의 더한 획, ㅏ의 점)은 그 세트의 원소 그림(<code>@line</code>·<code>@dot</code>·<code>@ring</code>)으로, 없으면
+          ㅡ·ㆍ·ㅇ 그림으로 긋는다 — 둘 다 없을 때만 CSS 상자다(ADR-024·025). 덜 그린 셈 치는 미리보기는
+          디자인 소스의 보이는 칸(<code>cells</code>)으로 한다.
         </p>
         <div class="demo-pill-row">
           <span class="demo-pill"><code>--fy-face: element</code></span>
           <span class="demo-pill"><code>jamo-set="dunggeun-box"</code></span>
           <span class="demo-pill"><code>FontKku.stagePreview(set, "origin8")</code> · <code>authoringProgress</code></span>
           <span class="demo-pill"><code>--fy-element-width</code> · <code>--fy-element-cap</code></span>
+          <span class="demo-pill"><code>data-fy-layout</code> · <code>FontKku.layoutStability(host)</code></span>
         </div>
       </section>
 
@@ -110,7 +118,7 @@
             </label>
             <label>
               획 굵기 (em, 비우면 글꼴 기본)
-              <input type="number" name="width" min="0.02" max="0.2" step="0.005" placeholder="0.09" />
+              <input type="number" name="width" min="0.02" max="0.2" step="0.005" placeholder="0.1" />
             </label>
             <label>
               획 끝
@@ -124,34 +132,41 @@
         </article>
         <article class="demo-panel">
           <h2>깊이 사다리</h2>
-          <p class="demo-note">그림 세트에서 어느 층까지 그림을 쓸지 고정한다. 그 위의 그림은 없는 셈 친다.</p>
+          <p class="demo-note">같은 그림 세트를 이 층까지만 그린 셈 치고 본다(<code>FontKku.stagePreview</code>) — 그 위의 그림은 없는 셈 친다.
+            렌더러 모드가 아니라 제작 안내다.</p>
           <ul class="demo-inline-list">
             <li><strong>확장 40</strong> — 자음 19·모음 21을 모두 그림으로. 겹받침만 짝(ㄺ = ㄹ + ㄱ)</li>
             <li><strong>기본 24</strong> — 자음 14·모음 10. 쌍자음·이중모음은 짝(ㄲ = ㄱ + ㄱ, ㅘ = ㅗ + ㅏ)</li>
-            <li><strong>원형 8</strong> — ㄱ ㄴ ㅁ ㅅ ㅇ, ㆍ ㅡ ㅣ. 가획(ㅋ = ㄱ + 획), ㅎ = ㆍ + ㅡ + ㅇ, 이체 ㄹ과 ㅂ·ㅍ은 ㅡ·ㅣ 선, 천지인(ㅏ = ㅣ + 점)</li>
+            <li><strong>원형 8</strong> — ㄱ ㄴ ㅁ ㅅ ㅇ, ㆍ ㅡ ㅣ. 가획(ㅋ = ㄱ + 획), ㅎ = ㆍ + ㅡ + ㅇ, 이체 ㄹ과 ㅂ·ㅍ은 ㅡ·ㅣ 선, 천지인(ㅏ = ㅣ + 점).
+              더한 획과 점도 그 세트의 그림(원소 그림 <code>@line</code>·<code>@dot</code>, 없으면 ㅡ·ㆍ)이라 CSS 상자가 남지 않는다</li>
             <li><strong>원소 3</strong> — <code>@line</code> <code>@dot</code> <code>@ring</code>만. 모든 자모를 획 하나씩</li>
             <li><strong>CSS 원소</strong> — 그림 없이 획을 CSS 상자로</li>
           </ul>
         </article>
       </section>
 
-      <section class="demo-section" data-faces-layout>
+      <section class="demo-section" id="layout" data-faces-layout>
         <div class="demo-section-head">
           <h2 class="demo-section-title">배치</h2>
-          <p class="demo-section-lead">세벌 고정(기본)은 타자기처럼 초성·중성·종성을 역할마다 정해진 자리와 크기로 찍는다 — 위 줄의 초성 ㄱ, 아래 줄의
-            ㅏ는 어느 글자에서나 같은 도장이고 받침 자리는 늘 비워 둔다. 세벌 문맥은 글꼴을 밝힌 sebul의 지금 배치로, 모음과 받침에 따라
-            자리와 크기가 바뀐다(ADR-026).</p>
+          <p class="demo-section-lead">세벌 고정(기본)은 타자기처럼 초성·중성·종성을 역할마다 정해진 자리와 크기로 찍는다 — 앞 다섯 글자의 초성 ㄱ, 뒤 네 글자의
+            ㅏ는 어느 글자에서나 같은 도장이고 받침 자리는 늘 비워 둔다. 재료를 바꿔도(그림 세트) 도장은 같다. 세벌 문맥은 글꼴을 밝힌
+            <code>font="sebul"</code>의 배치로, 모음과 받침에 따라 자리와 크기가 바뀌고 과·곽의 윗부분은 그 글꼴의 고를 재서 따른다(ADR-026, ADR-024 §2).
+            아래 줄은 <code>data-fy-layout</code>과 <code>FontKku.layoutStability(host)</code> — 같은 역할·자모 노드의 자리·크기·변환이 모두 같으면 stable이다.</p>
         </div>
-        <div class="faces-row"><div class="faces-row-label"><strong>세벌 고정</strong><small>글꼴을 밝히지 않은 기본 — sebul-fixed-v1</small></div>
-          <font-kku size="56">가 고 과 각 곽 · 가 나 간 난</font-kku><p class="faces-readout"></p></div>
-        <div class="faces-row"><div class="faces-row-label"><strong>세벌 문맥</strong><small>font="sebul" — 지금 배치</small></div>
-          <font-kku font="sebul" size="56">가 고 과 각 곽 · 가 나 간 난</font-kku><p class="faces-readout"></p></div>
+        <div class="faces-row"><div class="faces-row-label"><strong>세벌 고정</strong><small>글꼴을 밝히지 않은 기본 — sebul-fixed-v1, 원소 재료</small></div>
+          <font-kku size="56" data-faces-layout-host>가 고 과 각 곽 · 가 나 간 난</font-kku><p class="faces-readout"></p></div>
+        <div class="faces-row"><div class="faces-row-label"><strong>세벌 고정 · 그림 세트</strong><small>jamo-set="dunggeun-box" — 같은 도장, 다른 재료</small></div>
+          <font-kku size="56" jamo-set="dunggeun-box" data-faces-layout-host>가 고 과 각 곽 · 가 나 간 난</font-kku><p class="faces-readout"></p></div>
+        <div class="faces-row"><div class="faces-row-label"><strong>세벌 문맥</strong><small>font="sebul" — 글꼴을 밝힌 배치</small></div>
+          <font-kku font="sebul" size="56" data-faces-layout-host>가 고 과 각 곽 · 가 나 간 난</font-kku><p class="faces-readout"></p></div>
       </section>
 
       <section class="demo-section">
         <div class="demo-section-head">
           <h2 class="demo-section-title">재료</h2>
-          <p class="demo-section-lead">같은 배치, 다른 재료. 아래 줄은 그 바탕 요소가 쓴 그림(그림 세트) 또는 재료다.</p>
+          <p class="demo-section-lead">같은 배치, 다른 재료. 아래 줄은 그 바탕 요소가 쓴 그림(그림 세트) 또는 재료다. 그림 세트의 선 그림은 화면에서
+            원소 획과 같은 굵기로 긋고(획 굵기 칸이 둘 다 바꾼다), 붓 세트처럼 칠한 그림은 그림 그대로 늘어난다. ㄹ·ㅌ·겹받침처럼 평행 획이 촘촘한
+            자모는 획이 0.75–1배로 가늘어져 작은 글씨에서도 틈이 남고, ㅎ·ㅊ의 꼭지는 가로획과 떨어진다(ADR-024 §3).</p>
         </div>
         <div data-faces-rows="face"></div>
       </section>
@@ -350,10 +365,31 @@
           build(document.querySelector('[data-faces-rows="jamo"]'), "jamo", s, syllable, Math.max(s.size, 72));
         }
 
+        /* 배치 칸: 프로파일(data-fy-layout)·재료와 고정 확인(FontKku.layoutStability) — 문맥 배치는 고정을 약속하지 않아 null이다 */
+        function layoutReadout(host) {
+          var box = host.parentNode.querySelector(".faces-readout");
+          if (!box || !host.isConnected) {
+            return;
+          }
+          var stability = FontKku.layoutStability(host);
+          box.textContent = "배치 " + (host.dataset.fyLayout || "글꼴 문맥(data-fy-layout 없음)") + " · 재료 " + (host.dataset.fyFace || "없음") +
+            " · layoutStability " + (stability.stable === null ? "null — 고정을 약속하지 않는 배치"
+              : (stability.stable ? "stable" : "어긋남 " + stability.drifted.join(", ")) + " (열쇠 " + stability.keys + "개, 자모 노드 " + stability.nodes + "개)");
+        }
+
         document.addEventListener("font-kku:render", function (event) {
           if (event.target.closest && event.target.closest("[data-faces-rows]")) {
             readout(event.target);
             showProgress(settings().set);
+          }
+          if (event.target.hasAttribute && event.target.hasAttribute("data-faces-layout-host")) {
+            var host = event.target;
+            requestAnimationFrame(function () { layoutReadout(host); });
+          }
+        });
+        document.querySelectorAll("[data-faces-layout-host]").forEach(function (host) {
+          if (host.getAttribute("data-fy-upgraded") === "true") {
+            requestAnimationFrame(function () { layoutReadout(host); });
           }
         });
         form.addEventListener("input", renderAll);

@@ -68,18 +68,22 @@
 	        <span class="demo-kicker">그림 자소 보기</span>
 	        <h1 class="demo-title">자모 40칸만 그리면 한글 11,172자</h1>
 	        <p class="demo-copy">
-	          font-kku의 <strong>기본 경로는 기기에 이미 깔린 한글 글꼴을 재료로 쓰는 것</strong>이고(<code>sebul</code>·<code>gothic</code>),
-	          이 페이지가 다루는 그림 자소(<code>sprite</code>)는 <strong>확장 경로</strong>다. 자음 19 + 모음 21, 40칸만 그리면
+	          font-kku의 <strong>기본 경로는 자모를 CSS 획(원소)으로 긋는 것</strong>이고(<code>sebul</code>·<code>gothic</code> — 글꼴 파일도 기기 한글 글꼴도 필요 없다),
+	          이 페이지가 다루는 그림 자소(<code>sprite</code>)는 손으로 그린 그림을 쓰는 <strong>확장 경로</strong>다. 자음 19 + 모음 21, 40칸만 그리면
 	          한글 전체가 만들어지므로 글꼴 제작 도구 없이 웹·앱에서 바로 자기 손글씨를 글꼴처럼 쓸 수 있고,
 	          한글 글꼴이 깔려 있지 않은 기기에서도 웹 글꼴 없이 같은 모양으로 그려진다.
 	          손글씨·픽셀·스티커·컬러처럼 글꼴로는 표현할 수 없는 형태도 그대로 쓴다.
 	        </p>
 	        <p class="demo-copy">
-	          구현은 <code>profiles/sprite-example.css</code>가 한 장의 PNG에 있는 자음·모음 그림을
+	          구현은 <code>profiles/sprite-example.css</code>가 한 장의 자소판(<code>sprite-example.svg</code> — PNG도 된다)에 있는 자음·모음 그림을
 	          <code>data-sprite-jamo</code>와 <code>--fy-sprite-jamo-index</code> 기반으로 자소 자리에 꽂는 방식이다.
 	          예를 들어 <code>광</code>은 자소판에서 <code>ㄱ</code>, <code>ㅗ</code>, <code>ㅏ</code>, <code>ㅇ</code> 칸을 각각 가져온다.
 	          기본 40칸에 더해 <strong>선택 확장 행</strong>(종성 전용 형태, 통짜 겹받침)을 얹으면 품질을 더 끌어올릴 수 있다 —
 	          아래 <code>sprite-system</code>이 그 도달점을 보여주는 실측 추출 예시다.
+	        </p>
+	        <p class="demo-copy">
+	          자모를 벡터로 직접 그려 디자인으로 쓰려면 <a href="./font-studio.html">작업실</a>의 ‘직접 그려 만들기’에서 원형 8자(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)부터
+	          그린다 — 그리지 않은 자모는 조립식이 만들고, 기본 24·확장 40으로 늘린다. 이 페이지의 자소판(PNG·SVG 한 장)과는 다른 재료다.
 	        </p>
 	      </section>
 
@@ -146,7 +150,7 @@
 
       <section class="demo-columns">
         <article class="demo-panel">
-          <h2>sebul (기기 글꼴 기반)</h2>
+          <h2>sebul (CSS 획 기반)</h2>
           <div class="demo-stack">
             <div class="demo-sample">
               <span class="demo-label">제목</span>

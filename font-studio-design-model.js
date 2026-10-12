@@ -666,12 +666,12 @@
     return JSON.stringify(design, null, 2);
   }
 
-  /* 페이지용 코드 — registerDesign은 실험 API라 공개 판(npm 0.1.0)에는 아직 없다 */
+  /* 페이지용 코드 — registerDesign은 실험 API로 0.1.1부터 있다(npm 0.1.0에는 없다) */
   function pageSnippet(design) {
     var name = pageName(design);
     var json = pretty(design).split("\n").join("\n  ");
     return [
-      "<!-- font-kku 디자인(실험): FontKku.registerDesign은 npm 0.1.0에 아직 없다 — 저장소 판 font-kku.js와 쓴다.",
+      "<!-- font-kku 디자인(실험 API — font-kku.js 0.1.1부터, npm 0.1.0에는 없다): 런타임 스크립트 다음에 둔다.",
       "     디자인은 표준 잉크 상자를 밝힌 글꼴(sebul·gothic 등)이나 font 속성이 없는 바탕 요소에서 그려진다. -->",
       "<script>",
       "  FontKku.registerDesign(" + JSON.stringify(name) + ", " + json + ");",

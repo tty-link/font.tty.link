@@ -176,7 +176,7 @@
           <article class="fx-card" id="fx-draw" data-fx="draw" data-fx-fonts="sprite-system" data-fx-addons="motion" data-fx-jamo-sets="sprite-system" data-fx-replay>
             <header class="fx-card-head"><span class="fx-no" aria-hidden="true">8</span><h3>획순 그리기</h3></header>
             <p class="fx-how"><code>animate="draw"</code> · <code>jamo-set="sprite-system"</code></p>
-            <p class="fx-why"><strong>획 단위라서</strong> 벡터 자소를 자모보다 한 단계 더 쪼개 획순대로 한 획씩 긋습니다. ㅎ은 꼭지 → 가로 → 동그라미, ㅏ는 세로 → 점입니다. 기기 글꼴에서는 자모가 같은 차례로 나타납니다.</p>
+            <p class="fx-why"><strong>획 단위라서</strong> 벡터 자소를 자모보다 한 단계 더 쪼개 획순대로 한 획씩 긋습니다. ㅎ은 꼭지 → 가로 → 동그라미, ㅏ는 세로 → 점입니다. 벡터 자소를 걸지 않은 글꼴에서는 자모가 같은 차례로 나타납니다.</p>
             <div class="k-stage fx-stage" data-tone="paper" data-fx-stage></div>
             <template data-fx-html>
 <font-kku font="sprite-system" jamo-set="sprite-system" animate="draw" size="clamp(60px, 8vw, 104px)">한글 쓰기</font-kku>
@@ -263,7 +263,7 @@
       <section class="k-wrap fx-group" id="recipe" aria-labelledby="fx-recipe-title">
         <header class="fx-group-head">
           <h2 id="fx-recipe-title">페이지 CSS 조리법</h2>
-          <p>확장 없이 페이지 CSS 몇 줄로 만드는 꾸밈입니다. 자모는 <code>[part~="jamo"]</code>, 획 깊이(<code>stroke-depth="stroke"</code>)의 획은 <code>[part="hoek"]</code>와 획 종류·역할 속성으로 고릅니다.</p>
+          <p>확장 없이 페이지 CSS 몇 줄로 만드는 꾸밈입니다. 자모는 <code>[part~="jamo"]</code>, 획은 <code>[part="hoek"]</code>와 획 종류·역할 속성으로 고릅니다. 획은 벡터 자소에 획 깊이(<code>stroke-depth="stroke"</code>)를 걸 때 생기고, CSS로 획을 긋는 원소 재료(<code>sebul</code>·<code>gothic</code>·<code>malang</code>과 <code>font</code>를 적지 않은 <code>&lt;font-kku&gt;</code>)에는 처음부터 있어 같은 선택자와 색 CSS가 그대로 듣습니다.</p>
         </header>
         <div class="fx-grid">
           <article class="fx-card" id="fx-origin" data-fx="origin" data-fx-fonts="sprite-system" data-fx-jamo-sets="sprite-system">

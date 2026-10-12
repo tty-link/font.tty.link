@@ -1,6 +1,6 @@
 # 본보기 — 완성 HTML과 사례 템플릿
 
-목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
+목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
 
 ## 완성 HTML 한 장
 

@@ -43,15 +43,16 @@
             </span>
           </h1>
           <p class="k-lead">
-            폰꾸는 한글을 초성·중성·종성으로 나눠 다시 조립해 그립니다. 자모는 한글의 원리대로 획을 CSS로 그어
-            그려서 내려받을 글꼴 파일이 없고 어느 기기에서나 같은 모양이며, 네온·스티커·색동처럼 글꼴로는 어려운
-            제목도 스크립트 한 줄로 씁니다.
+            폰꾸는 한글을 초성·중성·종성으로 나눠 다시 조립해 그립니다. 기본 세벌은 세벌식 타자기처럼 같은 자모를
+            어느 글자에서나 같은 자리에 찍고, 획은 한글의 원리대로 CSS로 그어 내려받을 글꼴 파일이 없고 어느 기기에서나
+            같은 모양입니다. 네온·스티커·색동처럼 글꼴로는 어려운 제목도 스크립트 한 줄로 씁니다.
           </p>
           <div class="k-hero-actions">
             <a class="k-btn k-btn--primary" href="#web">바로 써 보기</a>
             <a class="k-btn" href="#problems">이럴 때 폰꾸</a>
             <a class="k-btn" href="./showcase.html">사례 보기</a>
             <a class="k-btn" href="./docs.html">문서</a>
+            <p class="k-note" style="flex-basis: 100%"><a href="#new">0.1.1에서 바뀐 것</a> — 기본 세벌 고정, CSS로 긋는 획, 더 또렷한 작은 글씨, 작업실 디자인 도구</p>
           </div>
         </div>
 
@@ -108,7 +109,7 @@
             <article class="k-pillar">
               <p class="k-pillar-figure"><strong data-meter-fontfiles>0</strong><small>개</small></p>
               <h3>받은 글꼴 파일</h3>
-              <p>이 페이지는 폰꾸 글꼴 <span data-meter-fontcount>16</span>종을 쓰지만 글꼴 파일(woff·ttf)은 받지 않습니다. 글꼴마다 받는 것은 자모 배치를 담은 CSS 한 장이고, 그 글꼴이 화면에 처음 나올 때 받습니다. 글자 모양은 기기 글꼴이나 작은 SVG 자소판에서 옵니다. <span data-meter-summary></span></p>
+              <p>이 페이지는 폰꾸 글꼴 <span data-meter-fontcount>16</span>종을 쓰지만 글꼴 파일(woff·ttf)은 받지 않습니다. 글꼴마다 받는 것은 자모 배치를 담은 CSS 한 장이고, 그 글꼴이 화면에 처음 나올 때 받습니다. 글자 모양은 CSS로 긋는 획, 기기 글꼴, 작은 SVG 그림에서 옵니다. <span data-meter-summary></span></p>
               <a class="k-prob-proof" href="#proof" data-proof="meter">계기판에서 실측값 보기</a>
             </article>
             <article class="k-pillar k-pillar--seed" data-pillar-mix>
@@ -182,14 +183,14 @@
               <span class="k-prob-tag" data-group="place">글꼴이 못 가는 곳</span>
               <h3>"웹폰트를 막는 곳에서 제목이 무너져요"</h3>
               <p class="k-prob-why">iOS 잠금 모드는 웹 글꼴을 표시하지 않을 수 있고, 폐쇄망·망분리 사내 시스템이나 외부 글꼴 주소를 막는 보안 정책에서는 글꼴 파일을 받지 못합니다.</p>
-              <p class="k-prob-fix">기기에 이미 있는 한글 글꼴을 재료로 조립하므로 받아야 할 글꼴 파일이 없습니다.</p>
+              <p class="k-prob-fix">기본 세벌·고딕·말랑은 획을 CSS로 긋고, 네온·스티커 같은 글꼴은 기기에 이미 있는 한글 글꼴을 재료로 씁니다. 받아야 할 글꼴 파일이 없습니다.</p>
               <a class="k-prob-proof" href="#proof" data-proof="block">막아 보기</a>
             </article>
             <article class="k-prob" data-roles="web shop edu">
               <span class="k-prob-tag" data-group="place">글꼴이 못 가는 곳</span>
               <h3>"한글 글꼴이 없는 기기라 □□□로 나와요"</h3>
               <p class="k-prob-why">해외 PC, 키오스크, 사이니지, 최소 설치 리눅스처럼 한글 글꼴이 없으면 브라우저는 한글을 그리지 못합니다.</p>
-              <p class="k-prob-fix">그림 자소 글꼴은 SVG 자소판 그림으로 그려 기기 글꼴이 필요 없습니다. 입력기 모듈로 한글 쓰기까지 됩니다.</p>
+              <p class="k-prob-fix">기본 세벌·고딕·말랑은 획을 CSS로 긋고, 그림 자소 글꼴은 SVG 그림으로 그려 기기 한글 글꼴이 필요 없습니다. 입력기 모듈로 한글 쓰기까지 됩니다.</p>
               <a class="k-prob-proof" href="#proof" data-proof="block">글꼴 없는 기기 흉내</a>
             </article>
             <article class="k-prob" data-roles="web" data-featured>
@@ -204,14 +205,14 @@
               <span class="k-prob-tag" data-group="weight">무게와 조합</span>
               <h3>"글꼴과 효과를 여럿 섞고 싶은데 웹폰트 수십 개는 무거워요"</h3>
               <p class="k-prob-why">한글 웹폰트는 굵기 하나만 해도 보통 수백 KB에서 수 MB입니다.</p>
-              <p class="k-prob-fix">글꼴마다 받는 것은 자모 배치를 담은 CSS 한 장이고, 글자 모양은 기기 글꼴이나 작은 SVG 자소판에서 옵니다. 꾸밈·움직임은 글꼴과 따로 고르는 축이라 고딕에 네온 꾸밈, 붓 글꼴에 금박 꾸밈처럼 섞어도 확장 CSS 한 장이 더해질 뿐입니다.</p>
+              <p class="k-prob-fix">글꼴마다 받는 것은 자모 배치를 담은 CSS 한 장이고, 글자 모양은 CSS로 긋는 획, 기기 글꼴, 작은 SVG 그림에서 옵니다. 꾸밈·움직임은 글꼴과 따로 고르는 축이라 고딕에 네온 꾸밈, 붓 글꼴에 금박 꾸밈처럼 섞어도 확장 CSS 한 장이 더해질 뿐입니다.</p>
               <a class="k-prob-proof" href="#proof" data-proof="meter">실측 계기판</a>
             </article>
             <article class="k-prob" data-roles="shop web">
               <span class="k-prob-tag" data-group="weight">무게와 조합</span>
               <h3>"예쁜 제목은 결국 이미지로 잘라 붙여요"</h3>
               <p class="k-prob-why">상세페이지·배너·카드뉴스의 이미지 글자는 검색·번역·화면 읽기가 안 되고, 문구 하나 고치려면 다시 그려야 합니다.</p>
-              <p class="k-prob-fix">꾸민 제목도 텍스트라 문구를 바로 고치고, 화면 읽기와 검색에는 원문이 그대로 남습니다.</p>
+              <p class="k-prob-fix">꾸민 제목도 텍스트라 문구를 바로 고치고, 화면 읽기·검색·복사에는 원문이 그대로 남습니다.</p>
               <a class="k-prob-proof" href="#proof" data-proof="text">고쳐 보기</a>
             </article>
             <article class="k-prob" data-roles="shop web">
@@ -256,8 +257,8 @@
               <span class="k-prob-tag" data-group="make">만들기·교육</span>
               <h3>"내 손글씨·브랜드 한글 글꼴은 11,172자라 엄두가 안 나요"</h3>
               <p class="k-prob-why">완성형 글꼴은 글자마다 따로 그려야 합니다.</p>
-              <p class="k-prob-fix">자음 19·모음 21칸만 그리면 11,172자가 되고, TTF로 내보내 보통 글꼴처럼 씁니다.</p>
-              <a class="k-prob-proof" href="./font-studio.html?font=sprite-example#studio-material">자소판 그리기</a>
+              <p class="k-prob-fix">원형 8자(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)만 그려도 나머지 자모는 획을 더하고 짝지어 조립됩니다. 자음 19·모음 21칸을 다 그린 자소판은 TTF로 내보내 보통 글꼴처럼 씁니다.</p>
+              <a class="k-prob-proof" href="#make">그림 세트 그리기</a>
             </article>
             <article class="k-prob" data-roles="edu">
               <span class="k-prob-tag" data-group="make">만들기·교육</span>
@@ -304,12 +305,13 @@
                 <figure class="k-vs-side">
                   <figcaption>폰꾸</figcaption>
                   <div class="k-stage" data-tone="pink"><font-kku font="sticker" size="clamp(34px, 5vw, 52px)" data-block-host>가을 음악회</font-kku></div>
-                  <p class="k-note" data-kku-status>기기 한글 글꼴을 재료로 조립해 그립니다</p>
+                  <p class="k-note" data-kku-status>스티커는 기기 한글 글꼴을 재료로 조립해 그립니다</p>
                 </figure>
               </div>
               <p class="k-note k-proof-note">
                 이 데모는 웹폰트 파일을 받지 않습니다. 왼쪽 '받았을 때'는 기기 글꼴의 굵은체로 흉내 낸 모습이고, '막혔을 때'는 받지 못한 <code>@font-face</code>가 실제로 기본 글꼴로 떨어진 모습입니다.
                 '한글 글꼴 없음'의 빈 네모는 한글을 그릴 글꼴이 없는 기기의 모습을 흉내 낸 것이고, 오른쪽은 실제로 그림 자소 글꼴(<code>crayon</code>, SVG 자소판)로 바꿔 그립니다.
+                스티커처럼 기기 글꼴을 재료로 쓰는 글꼴만 바꾸면 됩니다 — 기본 세벌·고딕·말랑은 획을 CSS로 그어 한글 글꼴 없이도 그대로 그려집니다.
                 이 기기에는 한글 글꼴이 <strong data-device-hangul>있습니다</strong>. 글꼴 없는 기기에서는 <a href="./sign.html">전광판</a>·<a href="./memo.html">메모장</a>이 저절로 그림 자소 글꼴로 바꿔 그립니다.
               </p>
             </div>
@@ -392,7 +394,7 @@
                 <div class="k-meter-cell"><span>런타임 <code>font-kku.js</code></span><strong data-meter-runtime>—</strong><em data-meter-gz="runtime"></em></div>
                 <div class="k-meter-cell"><span>기본 CSS <code>font-kku.css</code></span><strong data-meter-base>—</strong><em data-meter-gz="base"></em></div>
                 <div class="k-meter-cell"><span>글꼴 CSS <span data-meter-css-count>0</span>장</span><strong data-meter-css>—</strong><em data-meter-gz="css"></em></div>
-                <div class="k-meter-cell"><span>SVG 자소판 <span data-meter-svg-count>0</span>장</span><strong data-meter-svg>—</strong><em data-meter-gz="svg"></em></div>
+                <div class="k-meter-cell"><span>SVG 자소판·그림 세트 <span data-meter-svg-count>0</span>개</span><strong data-meter-svg>—</strong><em data-meter-gz="svg"></em></div>
                 <div class="k-meter-cell"><span>확장 <span data-meter-addons-count>0</span>개 (꾸밈·움직임·상호작용)</span><strong data-meter-addons>—</strong><em data-meter-gz="addons"></em></div>
                 <div class="k-meter-cell k-meter-cell--sum"><span>폰꾸가 받은 합계</span><strong data-meter-total>—</strong><em data-meter-raw></em></div>
                 <div class="k-meter-cell k-meter-cell--sum"><span>gzip으로 보냈다면</span><strong data-meter-gzip>—</strong><em>이 브라우저가 같은 파일을 직접 압축해 잰 크기</em></div>
@@ -468,15 +470,15 @@
                   <p class="k-note">화면 읽기·검색이 보는 글: <strong data-text-read>가을 신메뉴 출시</strong></p>
                 </figure>
               </div>
-              <p class="k-note k-proof-note">문구를 고치면 오른쪽은 바로 바뀌고, 꾸민 모양 아래에 원문이 텍스트로 남아 화면 읽기와 검색이 그 글을 씁니다.</p>
+              <p class="k-note k-proof-note">문구를 고치면 오른쪽은 바로 바뀝니다. 꾸민 모양 아래에 숨은 원문(<code>sr-source</code>)이 텍스트로 남아 화면 읽기는 그 글을 한 번 읽고, 검색도 그 글을 씁니다. 꾸민 제목을 골라 복사해도 원문만 복사됩니다.</p>
             </div>
           </div>
 
           <aside class="k-limits" aria-labelledby="limits-title">
             <h3 id="limits-title">폰꾸가 하지 않는 일</h3>
             <ul>
-              <li><strong>브라우저에서는 자바스크립트가 필요합니다.</strong> 자바스크립트가 없는 곳은 서버에서 <code>render_html</code>로 만든 정적 HTML을 씁니다.</li>
-              <li><strong>기기 글꼴 재료 글꼴은 기기마다 획이 조금 다릅니다.</strong> 어디서나 똑같아야 하면 그림 자소 글꼴을 씁니다.</li>
+              <li><strong>브라우저에서는 자바스크립트가 필요합니다.</strong> 자바스크립트가 없는 곳은 서버에서 <code>render_html</code>로 만든 정적 HTML을 씁니다. 기본 세벌은 정적 HTML도 브라우저와 같은 획으로 그립니다.</li>
+              <li><strong>네온·스티커처럼 기기 글꼴을 재료로 쓰는 글꼴은 기기마다 획이 조금 다릅니다.</strong> 어디서나 똑같아야 하면 획을 CSS로 긋는 기본 세벌·고딕·말랑이나 그림 자소 글꼴을 씁니다.</li>
               <li><strong>제목·강조용입니다.</strong> 본문 문단은 보통 글꼴로 둡니다.</li>
               <li><strong>이메일 본문과 옛한글은 대상이 아닙니다.</strong></li>
             </ul>
@@ -512,7 +514,7 @@
             <h2 id="web-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">스크립트 한 줄이면 됩니다</h2>
             <p class="k-lead">
               <code>data-fonts</code>에 쓸 글꼴을 적으면 런타임이 기본 CSS와 글꼴 CSS를 함께 불러옵니다.
-              기존 제목 태그에는 꾸밈 클래스를, 장식 문구에는 전용 태그를 씁니다.
+              기존 제목 태그에는 꾸밈 클래스를, 장식 문구에는 전용 태그를 씁니다. 글꼴을 밝히지 않으면 기본 세벌로 그립니다.
             </p>
           </header>
           <div class="k-split">
@@ -521,11 +523,11 @@
               <pre id="web-code"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js"
         data-fonts="sebul neon"&gt;&lt;/script&gt;
 
-&lt;h1 class="font-kku" data-font="sebul" data-size="48"&gt;오늘의 기록&lt;/h1&gt;
+&lt;h1 class="font-kku" data-size="48"&gt;오늘의 기록&lt;/h1&gt;
 &lt;font-kku font="neon" size="48"&gt;을지로 네온&lt;/font-kku&gt;</code></pre>
             </div>
             <div class="k-stack" aria-label="위 코드의 결과">
-              <div class="k-stage"><span class="font-kku" data-font="sebul" data-size="48">오늘의 기록</span></div>
+              <div class="k-stage"><span class="font-kku" data-size="48">오늘의 기록</span></div>
               <div class="k-stage" data-tone="dark"><font-kku font="neon" size="48">을지로 네온</font-kku></div>
             </div>
           </div>
@@ -534,6 +536,21 @@
             설치·속성·꾸미기는 <a href="./docs.html#start">문서</a>에 있습니다. npm으로는 <code>npm install @tty.link/font-kku</code>,
             CDN 없이 쓰려면 <code>font-kku.js</code>·<code>font-kku.css</code>·<code>profiles/</code>를 같은 폴더 구조로 복사해 씁니다.
           </p>
+
+          <aside class="k-limits" id="new" aria-labelledby="new-title">
+            <h3 id="new-title">0.1.1에서 바뀐 것</h3>
+            <ul>
+              <li><strong>글꼴을 밝히지 않으면 세벌 고정입니다.</strong> 세벌식 타자기처럼 초성·중성·받침을 역할마다 정해진 자리와 크기로 찍어, 같은 ㄱ은 가·고·과·각·곽 어디서나 같은 자리, 같은 크기입니다. 0.1.0처럼 모음·받침에 따라 자리가 바뀌는 배치를 원하면 <code>font="sebul"</code>을 밝힙니다.</li>
+              <li><strong>세벌·고딕·말랑은 획을 CSS로 긋습니다.</strong> 기기의 한글 글꼴을 쓰지 않아 한글 글꼴이 없는 기기에서도 보이고, 어느 기기에서나 같은 모양입니다. 기기 글꼴 글자로 그리려면 페이지 CSS에 <code>--fy-face: device</code>를 줍니다.</li>
+              <li><strong>작은 글씨가 또렷해졌습니다.</strong> CSS로 긋는 획에서 획이 촘촘한 ㄹ·ㅌ·겹받침은 조금 가늘게 그어 틈을 열고, ㅎ·ㅊ의 꼭지는 가로획과 떨어집니다.</li>
+              <li><strong>화면 읽기는 원문 한 번.</strong> 바탕 요소에 <code>aria-label</code>을 붙이지 않고 숨은 원문(<code>sr-source</code>)만 읽힙니다. 버튼·링크에 직접 단 <code>aria-label</code>은 그대로 둡니다. 골라 복사해도 원문만 복사됩니다.</li>
+              <li><strong>서버에서도 같은 획.</strong> 글꼴을 밝히지 않은 Python·Go·Rust·Ruby의 <code>render_html(text)</code>가 브라우저처럼 획을 그어, 자바스크립트 없이도 읽는 기기의 한글 글꼴과 상관없이 같은 모양입니다. 기기 글꼴 글자를 원하면 <code>face="device"</code>(<a href="./docs.html#text-renderers">문서</a>).</li>
+              <li><strong>그림 세트와 디자인(실험).</strong> <code>jamo-set</code>으로 기본 세벌·고딕에 필기·둥근·붓 그림 세트(<code>pilgi-box</code>·<code>dunggeun-box</code>·<code>butgeul-box</code>)를 겁니다. <code>registerJamo(이름, 칸, { frame: "box" })</code>로 원형 8자만 그려도 나머지 자모가 조립됩니다. <code>registerDesign</code>으로 세트·글꼴을 섞고, <code>layoutStability</code>로 세벌 고정이 지켜지는지 봅니다(<a href="./docs.html#design">문서</a>).</li>
+              <li><strong>작업실 디자인 도구.</strong> 세벌 고정 첫 화면, 원형 8자부터 그리는 그림 세트, 조립식 비교, 출처 보기, 글꼴 팔레트, 묶음 파일, 편집 기록(<a href="#make">작업실</a>).</li>
+              <li><strong>복사하는 주소는 압축본 <code>font-kku.min.js</code>입니다.</strong> 런타임이 CSS·글꼴도 압축본으로 받아 첫 화면 전송량이 줄었습니다.</li>
+            </ul>
+            <p class="k-note" style="margin-top: 0.6rem">npm에서 <code>^0.1.0</code>으로 받는 곳은 이 변화를 저절로 받고, 위 CDN 주소처럼 판을 적은 곳은 주소를 바꿀 때 받습니다. 예전 모양을 지키는 법은 <a href="./docs.html#start-version">문서 · 버전</a>에 있습니다.</p>
+          </aside>
         </div>
       </section>
 
@@ -546,7 +563,8 @@
             <h2 id="ai-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">설명서를 주고 폰꾸로 꾸며 줘</h2>
             <p class="k-lead">
               ChatGPT·Claude 같은 AI 대화창에 사용 설명서(<code>SKILL.md</code>) 링크와 함께 부탁하면,
-              AI가 만드는 HTML의 제목과 강조 문구를 폰꾸로 꾸미거나 브랜드에 맞는 나만의 꾸밈 글꼴을 만들어 줍니다.
+              AI가 만드는 HTML의 제목과 강조 문구를 폰꾸로 꾸미거나, 브랜드에 맞는 나만의 꾸밈 글꼴을 만들거나,
+              원형 8자만 그려 나머지를 조립하는 그림 세트를 만들어 줍니다.
             </p>
           </header>
 
@@ -554,6 +572,7 @@
             <button type="button" role="tab" id="ai-tab-doc" aria-controls="ai-panel" aria-selected="true" data-ai-mode="doc">문서·페이지 꾸미기</button>
             <button type="button" role="tab" id="ai-tab-font" aria-controls="ai-panel" aria-selected="false" data-ai-mode="font">나만의 글꼴 만들기</button>
             <button type="button" role="tab" id="ai-tab-sprite" aria-controls="ai-panel" aria-selected="false" data-ai-mode="sprite">그림 자소 글꼴 그리기</button>
+            <button type="button" role="tab" id="ai-tab-set" aria-controls="ai-panel" aria-selected="false" data-ai-mode="set">그림 세트 8자부터</button>
           </div>
 
           <div class="k-split" id="ai-panel" role="tabpanel" aria-labelledby="ai-tab-doc">
@@ -614,6 +633,22 @@
 &lt;g id="r1-ㅏ" transform="translate(0 100)"&gt;
   &lt;path d="M67 2 V86"/&gt;&lt;path d="M67 39 H85"/&gt;
 &lt;/g&gt;</pre>
+                </div>
+                <div class="k-mock k-mock-font" data-ai-result="set" hidden>
+                  <div class="k-mock-compare">
+                    <span>그림 세트 <code>dunggeun-box</code></span>
+                    <font-kku jamo-set="dunggeun-box" size="44">손글씨</font-kku>
+                    <span>그림 세트 <code>butgeul-box</code></span>
+                    <font-kku jamo-set="butgeul-box" size="44">손글씨</font-kku>
+                  </div>
+                  <pre class="k-mock-css">FontKku.registerJamo("my-hand", {
+  "ㅇ": { box: [10, 10, 90, 90],
+         shapes: [{ ellipse: [50, 50, 40, 40] }] },
+  "ㅡ": { box: [5, 45, 95, 55],
+         shapes: ["M5 50 C35 46 65 54 95 50"] }
+  // ㄱ ㄴ ㅁ ㅅ ㆍ ㅣ도 — 나머지 자모는 조립
+}, { frame: "box", cap: "round" });
+// &lt;font-kku jamo-set="my-hand"&gt;손글씨&lt;/font-kku&gt;</pre>
                 </div>
               </div>
               <figcaption class="k-note" data-ai-caption>설명서의 완성 예시를 그대로 그린 화면</figcaption>
@@ -783,12 +818,12 @@ big = "\n".join(render_text("배포 완료"))</code></pre>
             <article>
               <strong class="k-why-figure">규칙</strong>
               <h3>그림 대신 놓는 자리</h3>
-              <p>글꼴 CSS에는 자모를 어디에 얼마나 크게 놓을지만 들어 있습니다. 글자 모양은 CSS로 긋는 획, 직접 그린 SVG 자모, 기기의 한글 글꼴 가운데에서 고릅니다(<a href="./faces.html">재료와 깊이</a>).</p>
+              <p>기본 세벌은 세벌식 타자기처럼 초성·중성·받침을 역할마다 정해진 자리와 크기로 찍습니다(세벌 고정). 글꼴을 밝히면 그 글꼴 CSS가 모음·받침에 따라 자리를 정합니다. 글자 모양은 CSS로 긋는 획, 직접 그린 SVG 자모, 기기의 한글 글꼴 가운데에서 고릅니다(<a href="./faces.html">재료와 깊이</a>).</p>
             </article>
             <article>
-              <strong class="k-why-figure">40<small>칸</small></strong>
-              <h3>40칸이 11,172자로</h3>
-              <p>자음 19·모음 21칸만 그리면 모든 음절이 조립됩니다. <a href="./font-studio.html?font=sprite-example#studio-material">자소판 그리기</a>에서 그리거나, <a href="./docs.html#make-svg">SVG로 직접 — AI 에이전트에게 맡겨도 — 그립니다</a>.</p>
+              <strong class="k-why-figure">8<small>자</small></strong>
+              <h3>8자에서 11,172자로</h3>
+              <p>기본자 ㄱ ㄴ ㅁ ㅅ ㅇ과 ㆍ ㅡ ㅣ만 그려도 나머지 자모는 획을 더하고 짝지어 조립되고, 24·40자로 늘릴수록 그린 모양이 늘어납니다. <a href="#make">작업실</a>에서 그리거나, <a href="./docs.html#make-svg">SVG로 직접 — AI 에이전트에게 맡겨도 — 그립니다</a>.</p>
             </article>
             <article>
               <span class="k-why-figure"><font-kku font="saekdong" size="44">자소</font-kku></span>
@@ -798,7 +833,7 @@ big = "\n".join(render_text("배포 완료"))</code></pre>
             <article>
               <strong class="k-why-figure">5<small>개 언어</small></strong>
               <h3>같은 규칙, 어디서나</h3>
-              <p>JavaScript와 Python·Go·Rust·Ruby 구현이 한글 11,172자에서 같은 분해 결과를 냅니다.</p>
+              <p>JavaScript와 Python·Go·Rust·Ruby 구현이 한글 11,172자에서 같은 분해 결과를 내고, 서버에서 만든 정적 HTML도 기본 세벌을 브라우저와 같은 획으로 그립니다(<a href="./docs.html#text-renderers">다른 언어 렌더러</a>).</p>
             </article>
           </div>
         </div>
@@ -811,15 +846,24 @@ big = "\n".join(render_text("배포 완료"))</code></pre>
             <span class="k-num" aria-hidden="true">아홉</span>
             <span class="k-kicker">작업실</span>
             <h2 id="make-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">직접 다듬고 그리기</h2>
+            <p class="k-lead">설치 없이 브라우저에서 엽니다. 만든 디자인·그림·글꼴 CSS는 파일로 저장해 내 페이지에 붙입니다.</p>
           </header>
           <div class="k-make">
             <a class="k-make-card" href="./font-studio.html">
-              <font-kku font="sebul" size="34">글꼴 작업실</font-kku>
-              <span>기기 글꼴을 재료로 자소를 골라 자리·자모·문맥 값을 고치고 글꼴 CSS로 내보냅니다.</span>
+              <font-kku size="34">글꼴 작업실</font-kku>
+              <span>첫 화면은 세벌 고정 디자인입니다. 선·원, 직접 그린 그림, 기존 글꼴 가운데 무엇으로 그릴지 고르고, 조립식 비교·출처 보기·글꼴 팔레트로 다듬어 디자인 JSON이나 묶음 파일로 가져갑니다.</span>
+            </a>
+            <a class="k-make-card" href="./font-studio.html">
+              <font-kku jamo-set="pilgi-box" size="34">그림 세트 그리기</font-kku>
+              <span>디자인 칸의 '그리기 8 → 24 → 40'으로 원형 8자부터 24·40자까지 그립니다. 그리지 않은 자모는 조립된 모습을 보며 채우고, SVG를 가져오거나 AI 요청 글을 복사합니다.</span>
+            </a>
+            <a class="k-make-card" href="./font-studio.html?font=sebul">
+              <font-kku font="sebul" size="34">글꼴 다듬기</font-kku>
+              <span>글꼴을 열고 자소를 누르면 값이 어느 규칙에서 왔는지 보입니다. 자리·자모·문맥 범위로 고쳐 글꼴 CSS로 내보냅니다.</span>
             </a>
             <a class="k-make-card k-make-card--grid" href="./font-studio.html?font=sprite-example#studio-material">
               <font-kku font="sebul" size="34">자소판 그리기</font-kku>
-              <span>자모 40칸을 직접 그려 그림 자소 글꼴을 만들고 PNG와 연결 CSS를 내보냅니다.</span>
+              <span>자모 40칸을 직접 그려 그림 자소 글꼴을 만들고 PNG와 연결 CSS, 글꼴 파일(TTF)로 내보냅니다.</span>
             </a>
           </div>
         </div>
@@ -1008,9 +1052,14 @@ big = "\n".join(render_text("배포 완료"))</code></pre>
             { label: "회사 브랜드", file: "kku-brand.css", text: "브랜드 색 #0b5fff와 #00c2a8을 쓰는 단정한 나만의 폰꾸 꾸밈 글꼴을\nCSS 파일 하나로 만들어 줘. 제목·배너용이고, 미리보기 HTML도 함께." }
           ],
           sprite: [
-            { label: "붓글씨", file: "kku-brush.svg", text: "먹으로 쓴 붓글씨 느낌의 폰꾸 그림 자소 글꼴을 그려 줘.\n설명서 §5b대로 자모를 SVG 자소판 한 장에 그리고,\nsprite-system 위에 자소판만 바꿔 끼운 미리보기 HTML 한 장으로 보여 줘." },
-            { label: "크레용", file: "kku-crayon.svg", text: "아이가 크레용으로 쓴 듯한 둥글고 삐뚤빼뚤한 폰꾸 그림 자소 글꼴을 그려 줘.\n설명서 §5b대로 SVG 자소판 한 장에 그리고, 색은 자모마다 다른 크레용 색으로.\n미리보기 HTML 한 장으로 보여 줘." },
-            { label: "도트 간판", file: "kku-dot.svg", text: "가게 간판용 굵은 도트(픽셀) 폰꾸 그림 자소 글꼴을 그려 줘.\n설명서 §5b대로 칸마다 사각형 도트로 SVG 자소판 한 장에 그리고,\n어두운 바탕 미리보기 HTML 한 장으로 보여 줘." }
+            { label: "붓글씨", file: "kku-brush.svg", text: "먹으로 쓴 붓글씨 느낌의 폰꾸 그림 자소 글꼴을 그려 줘.\n설명서의 그림 자소 글꼴 주제대로 자모를 SVG 자소판 한 장에 그리고,\nsprite-system 위에 자소판만 바꿔 끼운 미리보기 HTML 한 장으로 보여 줘." },
+            { label: "크레용", file: "kku-crayon.svg", text: "아이가 크레용으로 쓴 듯한 둥글고 삐뚤빼뚤한 폰꾸 그림 자소 글꼴을 그려 줘.\n설명서의 그림 자소 글꼴 주제대로 SVG 자소판 한 장에 그리고, 색은 자모마다 다른 크레용 색으로.\n미리보기 HTML 한 장으로 보여 줘." },
+            { label: "도트 간판", file: "kku-dot.svg", text: "가게 간판용 굵은 도트(픽셀) 폰꾸 그림 자소 글꼴을 그려 줘.\n설명서의 그림 자소 글꼴 주제대로 칸마다 사각형 도트로 SVG 자소판 한 장에 그리고,\n어두운 바탕 미리보기 HTML 한 장으로 보여 줘." }
+          ],
+          set: [
+            { label: "내 손글씨", file: "my-hand.html", text: "내 손글씨 느낌의 폰꾸 그림 세트를 만들어 줘.\n원형 8자(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)만 SVG 경로로 그려 그림 세트로 등록하고,\n기본 세벌에 걸어 나머지 자모는 조립되게 해 줘. 미리보기 HTML 한 장으로." },
+            { label: "둥근 간판", file: "round-sign.html", text: "둥글고 굵은 간판용 폰꾸 그림 세트를 그려 줘.\n원형 8자만 SVG 경로로 그리고 나머지 자모는 조립에 맡겨 줘.\n'우리 동네 빵집'을 크게 보여 주는 미리보기 HTML 한 장으로." },
+            { label: "24자로", file: "brush-24.html", text: "붓으로 쓴 느낌의 폰꾸 그림 세트를 그려 줘.\n자음 14·모음 10, 24자를 SVG 경로로 그리고 쌍자음, ㅐ·ㅘ 같은 겹친 모음, 겹받침은 조립에 맡겨 줘.\n그린 자모와 조립된 자모가 함께 보이는 미리보기 HTML 한 장으로." }
           ]
         };
         var aiMode = "doc";
@@ -1031,7 +1080,8 @@ big = "\n".join(render_text("배포 완료"))</code></pre>
           caption.textContent = {
             doc: "설명서의 완성 예시를 그대로 그린 화면",
             font: "설명서의 꾸밈 글꼴 예시를 그대로 그린 화면",
-            sprite: "같은 형식으로 그린 기본 제공 자소판 둘 — 자소판만 바꿔 끼우면 배치는 그대로"
+            sprite: "같은 형식으로 그린 기본 제공 자소판 둘 — 자소판만 바꿔 끼우면 배치는 그대로",
+            set: "기본 세벌에 건 기본 제공 그림 세트 둘 — 세트만 바꿔 끼우면 세벌 고정 배치는 그대로"
           }[aiMode];
           Array.prototype.forEach.call(document.querySelectorAll("[data-ai-result]"), function (node) {
             node.hidden = node.getAttribute("data-ai-result") !== aiMode;

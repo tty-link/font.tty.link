@@ -136,6 +136,24 @@
   word-break: normal;
 }
 
+/* 첫 칸이 짧은 이름인 표 — 이름을 줄바꿈하지 않는다 */
+.d-nowrap-first td:first-child {
+  white-space: nowrap;
+}
+
+/* API 표 — 이름·형식 칸이 길어도 설명 칸이 눌리지 않게 폭을 나눈다 */
+.d-api th:nth-child(1) {
+  inline-size: 36%;
+}
+
+.d-api th:nth-child(2) {
+  inline-size: 22%;
+}
+
+.k-prose .d-api td:first-child code {
+  white-space: normal;
+}
+
 /* 표를 좁은 화면에서 가로로 밀 때 최소 폭 */
 .d-table-wide {
   min-inline-size: 640px;
@@ -152,6 +170,21 @@
 .k-prose .k-code--wrap pre {
   word-break: keep-all;
   overflow-wrap: anywhere;
+}
+
+/* 표 안 "실험" 꼬리표 — 이름 옆에 작게 */
+.d-tag {
+  display: inline-block;
+  margin-inline-start: 0.3rem;
+  padding: 0 0.45rem;
+  border: 1px solid var(--k-red);
+  border-radius: 999px;
+  color: var(--k-red);
+  font-size: 0.7rem;
+  font-weight: 750;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: 0.1em;
 }
 
 /* 코드 상자 안 출력(주석) 줄 */
@@ -295,7 +328,7 @@
 
 .d-sliders label {
   display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+  grid-template-columns: 9.6rem minmax(0, 1fr) auto;
   gap: 0.6rem;
 }
 
@@ -415,6 +448,11 @@
   min-width: 0;
   padding: 1.1rem 0.75rem 1rem;
   background: var(--k-tone, var(--k-paper));
+}
+
+/* 견본 글이 긴 칸 — 넓은 화면에서 두 칸씩 */
+.d-compose-grid--wide {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
 }
 
 .d-compose-grid[data-tone] > div {
@@ -697,12 +735,13 @@ a.d-card:hover {
 .paint [part~="jungseong"] { color: #1f4fd1; }
 .paint [part~="jongseong"] { color: #12965f; }
 
-/* #customize: 나만의 꾸밈 글꼴 — AI 설명서 §5의 kku-berry */
-.kku-berry { --fy-weight: 800; }
+/* #customize: 나만의 꾸밈 글꼴 — AI 설명서 custom-font.md의 kku-berry. 원소 획(기본)의 굵기는 --fy-element-width,
+ * 그림자는 글자 칸 filter(자모의 text-shadow는 원소 획에서 보이지 않는다). */
+.kku-berry { --fy-element-width: 0.13em; }
 .kku-berry :is([part~="choseong"], [part~="head"]) { color: #c2185b; }
 .kku-berry [part~="jungseong"] { color: #7b1fa2; }
 .kku-berry [part~="jongseong"] { color: #f06292; }
-.kku-berry [part~="jamo"] { text-shadow: 0.04em 0.04em 0 #ffd1e3; }
+.kku-berry [part="glyph"] { filter: drop-shadow(0.04em 0.04em 0 #ffd1e3); }
 
 /* #motion: 자소마다 다른 기울기 */
 .wobble [part~="jamo"] { --fy-rotate: calc((var(--fy-jamo-seed, 0.5) - 0.5) * 20deg); }

@@ -131,7 +131,7 @@
         ? "그림 자소 글꼴(crayon)로 바꿔 SVG 자소판으로 그립니다"
         : blocked
           ? "웹폰트가 막혀도 기기 글꼴을 재료로 그대로 그립니다"
-          : "기기 한글 글꼴을 재료로 조립해 그립니다";
+          : "스티커는 기기 한글 글꼴을 재료로 조립해 그립니다";
     }
     webSwitch.addEventListener("change", apply);
     hangulSwitch.addEventListener("change", apply);
@@ -424,7 +424,8 @@
       else if (/\/font-kku\.js$/.test(path)) groups.runtime.push(entry);
       else if (/\/font-kku\.css$/.test(path)) groups.base.push(entry);
       else if (/\/profiles\/[^/]+\.css$/.test(path)) groups.css.push(entry);
-      else if (/\/profiles\/[^/]+\.svg$/.test(path)) groups.svg.push(entry);
+      // SVG 자소판과 그림 세트 모듈(profiles/*.jamo.js — 자모 SVG를 담은 스크립트)은 함께 센다
+      else if (/\/profiles\/[^/]+\.(?:svg|jamo(?:\.min)?\.js)$/.test(path)) groups.svg.push(entry);
       else if (/\/font-kku-(?:looks|motion)(?:\.min)?\.css$|\/font-kku-fx(?:\.min)?\.js$/.test(path)) groups.addons.push(entry);
     });
     function sum(list) {
@@ -507,7 +508,7 @@
       ? "이 서버는 파일을 압축하지 않고 보냈습니다."
       : m.total.known ? "이 서버는 파일을 압축해 보냈습니다." : "");
     var summary = m.total.known
-      ? "지금까지 브라우저가 잰 폰꾸 전송량은 런타임·CSS·자소판·확장을 합쳐 " + totalText + (m.total.raw ? "(압축 없이 받음)" : "") + "입니다."
+      ? "지금까지 브라우저가 잰 폰꾸 전송량은 런타임·CSS·자소판·그림 세트·확장을 합쳐 " + totalText + (m.total.raw ? "(압축 없이 받음)" : "") + "입니다."
       : "";
     set("[data-meter-summary]", summary);
     if (!window.CompressionStream || !m.total.known) {
@@ -699,10 +700,12 @@
       imageText = text;
     }
 
+    /* 화면 읽기가 읽는 글은 숨은 원문 sr-source 하나다(ADR-003) — 바탕 요소에 aria-label은 없다. */
     function apply() {
       var text = (input.value || "").trim() || "가을 신메뉴 출시";
       FK.refresh(host, { text: text });
-      read.textContent = host.dataset.source || text;
+      var source = host.querySelector('[part="sr-source"]');
+      read.textContent = source ? source.textContent : text;
       note.textContent = text === imageText
         ? "이미지 속 글자는 고치려면 다시 그려야 합니다. 화면 읽기에는 대체 문구만 전해집니다."
         : "이미지는 아직 '" + imageText + "' 그대로입니다 — 고치려면 이미지를 다시 만들어야 합니다.";

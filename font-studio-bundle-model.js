@@ -773,7 +773,7 @@
       }
     });
     var lines = [
-      "<!-- font-kku 디자인 묶음(실험): 그림 세트 + 디자인. FontKku.registerDesign은 npm 0.1.0에 아직 없다 — 저장소 판 font-kku.js 뒤에 둔다.",
+      "<!-- font-kku 디자인 묶음(실험 API — font-kku.js 0.1.1부터, npm 0.1.0에는 없다): 그림 세트 + 디자인. 런타임 스크립트 다음에 둔다 — 기본 제공 그림 세트 줄은 파일을 직접 둔 경우이고, 한 줄 설치(data-fonts)로 실은 런타임은 그 세트를 스스로 받는다.",
       "     디자인은 표준 잉크 상자를 밝힌 글꼴(sebul·gothic 등)이나 font 속성이 없는 바탕 요소에서 그려진다. 글꼴 재료는 글꼴 파일을 싣지 않는다. -->"
     ];
     shipped.forEach(function (set) {

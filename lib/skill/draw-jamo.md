@@ -1,12 +1,12 @@
 # 그림 자소 글꼴 — 자모를 SVG로 직접 그리기
 
-목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
+목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
 
-기기 글꼴이 아니라 **직접 그린 자모 그림**으로 한글을 조립한다. 배치는 기본 제공 그림 자소 글꼴 `sprite-system`의 것을 그대로 쓰고 **그림만 바꾼다**. 붓·손글씨·둥근 느낌이면 먼저 기본 제공 `butgeul`(붓)·`pilgi`(필기)·`dunggeun`(둥근)을 써 본다 — 셋 다 `color`로 먹색이 바뀌고 꾸밈(`kku-look-*`)도 걸린다([compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md)). 직접 그리는 길은 둘이다.
+기기 글꼴이 아니라 **직접 그린 자모 그림**으로 한글을 조립한다. 배치는 기본 제공 그림 자소 글꼴 `sprite-system`의 것을 그대로 쓰고 **그림만 바꾼다**. 붓·손글씨·둥근 느낌이면 먼저 기본 제공 `butgeul`(붓)·`pilgi`(필기)·`dunggeun`(둥근)을 써 본다 — 셋 다 `color`로 먹색이 바뀌고 꾸밈(`kku-look-*`)도 걸린다([compose.md](https://font.tty.link/lib/skill/compose.md)). 직접 그리는 길은 셋이다.
 
 - **코드로 그리기(권장)** — 자모마다 SVG 경로를 `FontKku.registerJamo`로 등록한다. HTML 한 장 안에서 끝나고, 자모마다 색·굵기를 CSS로 바꿀 수 있고, 자리가 눌려도 획 굵기가 그대로다.
 - **SVG 자소판 파일** — 자모 전체를 SVG 한 장에 그려 `--fy-sprite-url`로 끼운다. 질감 필터(인주·분필 같은)를 쓰려면 이 길이다.
-- **세벌·고딕에 그림 세트 걸기(가장 적게 그린다)** — 기기 글꼴 배치(`sebul`·`gothic`)는 그대로 두고 자모 그림만 바꾼다. 원소 그림 3개, 기본자 8개, 자모 24자, 40자 가운데 원하는 만큼 그리면 나머지는 런타임이 조립한다 — 아래 「세벌·고딕에 그림 세트 걸기」.
+- **세벌·고딕에 그림 세트 걸기(가장 적게 그린다)** — 세벌 고정(글꼴을 비운 기본)·`sebul`·`gothic`의 배치는 그대로 두고 자모 그림만 바꾼다. 원소 그림 3개, 원형 8자, 자모 24자, 40자 가운데 원하는 만큼 그리면 나머지는 런타임이 조립한다 — 아래 「세벌·고딕에 그림 세트 걸기」. 브라우저에서 그리려면 글꼴 작업실(아래 「글꼴 작업실에서」).
 
 ## 칸 — 어디에 그리나
 
@@ -54,7 +54,7 @@
 
 ## 세벌·고딕에 그림 세트 걸기 — 적게 그리고 조립하기
 
-기기 글꼴 배치(`sebul`·`gothic`과 파생)에 **칸 계약 세트**(`frame: "box"`)를 `jamo-set`으로 걸면 자모를 그 그림으로 그린다. 자리는 글꼴 CSS가 정하므로 그림은 **글자 모양만** 담는다.
+세벌·고딕 계열(글꼴을 비운 세벌 고정, `sebul`·`gothic`과 파생)에 **칸 계약 세트**(`frame: "box"`)를 `jamo-set`으로 걸면 자모를 그 그림으로 그린다. 자리는 배치(세벌 고정 도장이나 글꼴 CSS)가 정하므로 그림은 **글자 모양만** 담는다.
 
 - 칸 값은 `{ box: [x0, y0, x1, y1], shapes: [...] }` — `box`는 그 그림의 **획 중심선이 닿는 범위**(칸 좌표 0–100)다. 런타임이 이 범위를 자모의 표준 자리에 맞춘다. 범위를 밝히지 않으면 칸 전체 `[0, 0, 100, 100]`이다.
 - 키: 호환 자모 `ㄱ`…`ㅣ`(문맥 변형 `ㄱ@cho` 세로 모음 옆 초성·`ㄱ@bar` 가로 모음 위 초성·`ㄱ@jong` 받침), 원소 그림 `@line`(획 하나 — 가로가 길이, 세로가 굵기)·`@dot`(짧은 획)·`@ring`(고리).
@@ -82,20 +82,23 @@
     "ㅇ":    { box: [10, 10, 90, 90], shapes: [{ ellipse: [50, 50, 40, 38] }] }
   }, { frame: "box", cap: "round", join: "round" });
 </script>
-<font-kku font="sebul" jamo-set="my-hand" size="64">한글 손글씨</font-kku>
+<font-kku jamo-set="my-hand" size="64">한글 손글씨</font-kku>   <!-- 세벌 고정 -->
+<font-kku font="sebul" jamo-set="my-hand" size="64">한글 손글씨</font-kku>   <!-- 세벌 문맥 -->
 ```
 
-- 기본 제공 세트: `pilgi-box`(필기)·`dunggeun-box`(둥근)·`butgeul-box`(붓) — `<font-kku font="sebul" jamo-set="butgeul-box">`. 스크립트 주소 옆 `profiles/<이름>.jamo.js`에서 받는다.
-- 같은 세트를 덜 그린 셈 치고 보기(미리보기): `FontKku.registerDesign("o8", FontKku.stagePreview("dunggeun-box", "origin8"))` 뒤 `--fy-design: o8`(단계 `full40`·`basic24`·`origin8`·`elements`). 직접 쓰려면 디자인 소스에 보이는 칸 `cells`를 준다. 세트가 단계마다 무엇을 그렸는지는 `FontKku.authoringProgress("dunggeun-box")`(ㆍ는 보조 원본으로 따로). 아래 디자인 절.
-- 그림 없이도 된다: `sebul`·`gothic`은 기본으로 획을 CSS 상자로 그린다(원소 재료 — 받을 파일 0, 어느 기기에서나 같은 모양). 굵기 `--fy-element-width`, 끝 `--fy-element-cap: round`. 기기 한글 글꼴로 그리려면 `--fy-face: device`.
+- 기본 제공 세트: `pilgi-box`(필기)·`dunggeun-box`(둥근)·`butgeul-box`(붓) — `<font-kku jamo-set="butgeul-box">`. 스크립트 주소 옆 `profiles/<이름>.jamo.js`에서 받는다.
+- 같은 세트를 덜 그린 셈 치고 보기(미리보기): `FontKku.registerDesign("o8", FontKku.stagePreview("dunggeun-box", "origin8"))` 뒤 `--fy-design: o8`(단계 `full40`·`basic24`·`origin8`·`elements`). 돌려받는 디자인에는 `layout`이 없어 문맥 배치로 그린다 — 세벌 고정으로 보려면 `{ ...FontKku.stagePreview("dunggeun-box", "origin8"), version: "1.2", layout: { profile: "sebul-fixed-v1", revision: "1" } }`를 등록한다. 직접 쓰려면 디자인 소스에 보이는 칸 `cells`를 준다. 세트가 단계마다 무엇을 그렸는지는 `FontKku.authoringProgress("dunggeun-box")`(ㆍ는 보조 원본으로 따로). 아래 디자인 절.
+- 그림 없이도 된다: 세벌 고정·`sebul`·`gothic`은 기본으로 획을 CSS 상자로 그린다(원소 재료 — 받을 파일 0, 어느 기기에서나 같은 모양). 굵기 `--fy-element-width`, 끝 `--fy-element-cap: round`. 기기 한글 글꼴로 그리려면 `--fy-face: device`.
 
-## 디자인 — 그림 세트를 섞고, 있는 그림도 조립하기 (실험)
+## 디자인 — 그림 세트·글꼴을 섞고, 있는 그림도 조립하기 (실험)
 
-자모마다 어느 그림 세트로 그리고, 그림이 있어도 조립할지를 디자인으로 정한다(한글 조립 디자인 ADR-025 — 아직 실험, 0.1.0 다음 판부터). 디자인은 JSON으로 등록하고 CSS가 이름만 고른다.
+자모마다 무엇으로 그리고(원소 획·그림 세트·글꼴), 그림이 있어도 조립할지, 어떤 배치로 찍을지를 디자인으로 정한다. 0.1.1부터 있는 **실험 API**다 — 이름과 형식이 바뀔 수 있으니 결과를 낼 때 "실험 기능"이라고 밝힌다. 디자인은 JSON으로 등록하고 CSS가 이름만 고른다(`--fy-design: <이름>`).
 
 ```html
 <script>
   FontKku.registerDesign("mix", {
+    version: "1.2",
+    layout: { profile: "sebul-fixed-v1", revision: "1" },   // 세벌 고정으로 찍는다
     mode: "svg",
     sources: { hand: { kind: "svg", assetSet: "pilgi-box" }, round: { kind: "svg", assetSet: "dunggeun-box" } },
     defaults: { source: "hand", method: "auto" },
@@ -107,16 +110,46 @@
     ]
   });
 </script>
-<font-kku font="sebul" style="--fy-design: mix" size="64">뿌리 깊은 나무</font-kku>
+<font-kku style="--fy-design: mix" size="64">뿌리 깊은 나무</font-kku>
 ```
 
+- `mode`와 소스: `"primitive"`(원소 획, 소스 `{ kind: "primitive" }`) · `"svg"`(그림 세트, `{ kind: "svg", assetSet: "pilgi-box" }` — 등록한 `frame: "box"` 세트 이름도 된다) · `"font"`(글꼴 팔레트, `{ kind: "font", family: "Nanum Myeongjo", weight: 700 }` — 페이지가 `@font-face`나 설치 글꼴로 미리 실어 둔다. 폰꾸는 글꼴 파일을 받지 않는다). 소스마다 이름을 붙이고 `defaults.source`(기본)·`roleSources`(`initial`·`medial`·`final`·`standalone` 역할마다)·규칙이 이름으로 고른다.
+- 배치: `version: "1.2"`와 `layout`을 적으면 그 배치로 찍는다 — `sebul-fixed-v1`(세벌 고정) 또는 `square-context-v1`(네모 문맥, 글꼴 CSS의 짜임별 자리). revision은 `FontKku.layoutProfiles["sebul-fixed-v1"].revision`(지금 `"1"`)이다. `layout`을 적지 않은 디자인은 글꼴을 비운 바탕 요소에서도 문맥 배치로 그린다.
+- 세벌 고정 디자인은 자모·역할로만 고른다. 짜임에 따른 규칙(`match.vowelLayout`·`match.hasFinal` — `DESIGN_FIXED_CONTEXT`), 합자 모음(ㅘ·ㅝ·ㅢ …)을 통째로 그리라는 `method: "direct"`(`DESIGN_FIXED_COMPOUND` — 합자 모음은 조각 둘로 찍는다), 자리마다 다른 변주(`DESIGN_FIXED_VARIATION`)는 등록이 거부된다.
 - `method`: `auto`(그림 → 조립 → 원소, 기본) · `direct`(그 그림만, 없으면 `fallback.sourceIds`의 같은 자모까지) · `compose`(그림이 있어도 `recipe`로 조립).
 - 조립식 id와 조각 이름은 `spec/jamo-recipes.json`: 쌍자음 `double-*`(left·right), 겹받침 `final-*`, 이중모음 `vowel-*`(left·right 또는 horizontal·vertical), 가획 `*-added`, 선 조립식 — `hieut-added-lines`(ㅎ = ㆍ + ㅡ + ㅇ, cap·bar·ring), `rieul-lines`(ㄹ을 ㅡ·ㅣ 다섯으로, h1·v1·h2·v2·h3), `bieup-lines`·`pieup-lines`(ㅂ·ㅍ을 ㅡ·ㅣ로, left·right·middle·bottom / top·left·right·bottom). 이 넷은 ㅎ·ㄹ·ㅂ·ㅍ의 기본인데 그림 세트·글꼴처럼 그릴 재료가 있을 때만 쓴다(원소 재료는 획 그대로). 대안은 규칙으로만 고른다 — `hieut-circle-o`(ㅎ = ㅗ 모양 윗부분 + ㅇ, top·ring), `bieup-raised`(ㅂ = ㅁ + 위로 늘인 ㅣㅣ, lower·leftExtension·rightExtension), `hieut-added`(ㅎ = ㆆ 그림 + 점 — 제자 계통, ㆆ을 그린 세트에서). 점(ㆍ)은 세트에 칸이 없으면 `@dot`으로 그린다.
-- 규칙은 `match: { jamo, role: "initial"|"medial"|"final", vowelLayout: "right"|"bottom"|"split-right", hasFinal }`로 좁힌다. 더 구체적인 규칙이 이기고, 같은 구체성으로 다르게 고르면 등록이 실패한다.
+- 규칙은 `match: { jamo, role: "initial"|"medial"|"final"|"standalone", vowelLayout: "right"|"bottom"|"split-right", hasFinal }`로 좁힌다. `vowelLayout`·`hasFinal`은 `role`과 함께 쓰고(없으면 `DESIGN_RULE_MATCH`) 세벌 고정 디자인에서는 쓰지 못한다. 더 구체적인 규칙이 이기고, 같은 구체성으로 다르게 고르면 등록이 실패한다.
 - 고른 결과는 `FontKku.traceOf(host)`(조각마다 소스·규칙·status), 미리 보기는 `FontKku.planJamo("ㅃ", { design: "mix" })`.
-- 등록 전에 검사: `FontKku.validateDesign(json)` → `{ ok, errors: [{ code, path, message }] }` — 틀린 곳을 모두 돌려주고 던지지 않는다(예: `DESIGN_SOURCE_UNKNOWN` `rules[0].apply.source`). `registerDesign`은 그 첫 오류를 던진다(`error.code`·`error.path`).
-- 고친 디자인을 같은 이름에 다시 걸기: `FontKku.registerDesign("mix", json, { replace: true })` — 그 이름을 쓰는 글자가 다시 그려진다. `replace` 없이 다른 내용을 같은 이름에 등록하면 `DESIGN_NAME_TAKEN`. 지우기는 `FontKku.unregisterDesign("mix")`.
+- 등록 전에 검사: `FontKku.validateDesign(json)` → `{ ok, errors: [{ code, path, message }] }` — 틀린 곳을 모두 돌려주고 던지지 않는다(예: `DESIGN_SOURCE_UNKNOWN` `defaults.source`). `registerDesign`은 그 첫 오류를 던진다(`error.code`·`error.path`). 디자인 JSON을 만들어 줄 때는 `validateDesign`의 `ok`를 먼저 본다.
+- 고친 디자인을 같은 이름에 다시 걸기: `FontKku.registerDesign("mix", json, { replace: true })` — 그 이름을 쓰는 글자가 다시 그려진다. `replace` 없이 다른 내용을 같은 이름에 등록하면 `DESIGN_NAME_TAKEN`. 지우기는 `FontKku.unregisterDesign("mix")`(그 이름을 쓰던 글자는 `DESIGN_NOT_REGISTERED`가 된다), 등록된 이름 목록은 `FontKku.designs()`.
+- 이름은 소문자·숫자·`-`만 쓰고 `-`로 시작하지 않는다(대문자는 소문자로 바뀐다 — `Mix`는 `mix`와 같은 이름). `legacy`·`none`과 CSS 전역 키워드(`inherit` 등)는 이름이 될 수 없다(`DESIGN_NAME_INVALID`).
 - `--fy-design: legacy`는 위에서 물려받은 디자인을 끊는다. 고르지 못하면 지금 설정으로 그리고 `data-fy-design-status`(= `FontKku.fontInfo(host).designStatus`)로 알린다: `DESIGN_NOT_REGISTERED`(등록하지 않은 이름 — 등록하면 다시 그린다), `DESIGN_TOKEN_INVALID`(이름 문법), `DESIGN_UNSUPPORTED_FONT`(디자인을 받지 않는 글꼴 — 그림 자소 글꼴 `pixel`·`sprite-*`·`butgeul`·`pilgi`·`dunggeun` 등과 표준 잉크 상자가 없는 글꼴. 디자인은 `sebul`·`gothic`·`malang`·꾸러미 글꼴이나 `font`를 밝히지 않은 `<font-kku>`에 건다).
+
+글꼴 팔레트 — 기본은 한 글꼴, 모음만 다른 글꼴로:
+
+```html
+<script>
+  FontKku.registerDesign("palette", {
+    version: "1.2",
+    layout: { profile: "sebul-fixed-v1", revision: "1" },
+    mode: "font",
+    sources: { A: { kind: "font", family: "Nanum Myeongjo" }, B: { kind: "font", family: "Pretendard", weight: 700 } },
+    defaults: { source: "A" },
+    roleSources: { medial: "B" }
+  });
+</script>
+<font-kku style="--fy-design: palette" size="64">뿌리 깊은 나무</font-kku>
+```
+
+## 글꼴 작업실에서 — 그리고, 섞고, 디자인 JSON 가져가기
+
+사람이 브라우저에서 직접 만들 때는 글꼴 작업실 `https://font.tty.link/font-studio.html`을 알려 준다. 첫 화면의 **디자인** 칸이 세벌 고정 기본 디자인으로 열린다.
+
+- 시작 선택지 셋: **선·원으로 만들기**(원소 획) · **직접 그려 만들기**(그림 세트 — 기본 제공 세트에서 시작하거나 **그리기 8 → 24 → 40**으로 원형 8자부터 칸 편집기에 그린다, SVG 가져오기와 AI에 줄 요청 글 복사가 있다) · **기존 글꼴로 만들기**(글꼴 팔레트 — 역할·자모마다 글꼴을 고르고 씨앗으로 섞는다).
+- 미리보기에서 자모를 고르면 조립식 후보를 나란히 비교하고(조립식·binding), 그 자모가 무엇으로 어디서 그려졌는지(출처) 답한다. 조합으로 그려진 자모는 "독립 SVG로" 떼어 고칠 수 있다.
+- 고급 — 배치(세벌 고정·네모 문맥)·문맥 규칙·디자인 JSON 편집. 편집 기록(되돌리기·다시)과 바꾸기 전 영향 확인이 있다.
+- 가져가기: **디자인 JSON 저장·복사**, **페이지용 코드 복사**(`registerDesign` + `--fy-design` 한 덩어리), **묶음**(`<이름>.fkk-bundle.json` — 디자인과 직접 그린 그림을 한 파일로, 그림 세트는 `.jamo.js`로도 내보낸다).
+- AI가 할 일: 사용자가 작업실에서 복사한 페이지용 코드나 디자인 JSON을 받으면 런타임 `<script>`(위 주소) 뒤에 넣고 `validateDesign`으로 검사한다. 직접 그린 세트(`studio-draw-…`)를 쓰는 디자인은 묶음 칸의 페이지용 코드(그림 세트 줄이 함께 든다)나 내보낸 `.jamo.js`를 함께 싣는다. 코드에 `profiles/<세트>.jamo.js` 줄이 있으면 기본 제공 세트다 — 런타임이 필요할 때 받으므로 지우거나, 남기려면 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/profiles/<세트>.jamo.js`로 바꾼다.
 
 ## 획 깊이 — 자모를 획으로
 
@@ -126,6 +159,7 @@
 - 획만 옮기려면 `--fy-hoek-dx`·`--fy-hoek-dy`(칸 0–100 단위)·`--fy-hoek-rotate`.
 - 획순대로 긋는 움직임은 `animate="draw"`(`data-addons="motion"`, 속성으로 주면 획 깊이도 저절로 켜진다), 획마다 흔들리는 변주는 `class="kku-vary-hoek"`.
 - 직접 등록한 세트는 칸 도형을 획순대로 그리고 `registerJamo(…, { hoek: true })`로 알려야 종류·역할이 붙는다(획순 정본: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/spec/strokes.json`).
+- 기본 원소 획(글꼴을 비운 세벌 고정, `sebul`·`gothic`)은 `stroke-depth` 없이도 획마다 `part="hoek"` 노드이고 같은 `data-hoek-role`·`data-hoek-kind`가 붙는다 — 아래 예의 가획 칠하기는 `<font-kku class="edu">ㄱㅋ ㄴㄷㅌ</font-kku>`에서도 된다. 다만 `draw`는 자모 단위로 나타난다.
 - 기기 글꼴·자소판은 쪼갤 수 없어 자모 단위로 그린다.
 
 ```html
@@ -175,4 +209,4 @@
 - 그린 칸이 없는 자모는 빈칸으로 보인다. 확인 문장 "닭을 밟고 흙을 긁다 · 괜찮아요 · 쳇바퀴 · 꽃잎 · 의자"를 크게(80px 이상) 그려 자모가 빠지거나 겹치지 않는지 본다.
 - 획 굵기 확인 문장 "두크 고구그 노누느 · 가고과 · 각간값닭"을 80px와 16px로 그려, 막대·기둥·받침이 한 굵기로 보이는지, 작게 써도 획이 끊기거나 속공간이 메워지지 않는지 본다.
 - 결과를 보여 줄 때는 그린 자모(코드나 SVG), 같은 문장을 `sprite-system` 그대로와 나란히 그린 미리보기 HTML을 함께 낸다.
-- 브라우저에서 칸을 그리며 만들려면 글꼴 작업실 `https://font.tty.link/font-studio.html?font=sprite-example#studio-material`을 쓴다.
+- 브라우저에서 그리며 만들려면 글꼴 작업실을 쓴다 — 세벌·고딕에 거는 그림 세트는 첫 화면 디자인 칸의 "그리기 8 → 24 → 40"(위 「글꼴 작업실에서」), 자소판(PNG·SVG 한 장)은 재료 탭 `https://font.tty.link/font-studio.html?font=sprite-example#studio-material`.

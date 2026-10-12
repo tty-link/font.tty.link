@@ -23,7 +23,7 @@
   var AXIS_IDS = ["font", "look", "vary", "motion", "interaction", "tone"];
   var DARK_TONES = ["dark", "board", "blueprint"];
   var FONT_GROUPS = [
-    { id: "system", name: "기기 글꼴", note: "기기에 깔린 한글 글꼴을 재료로 자모를 다시 짠다" },
+    { id: "system", name: "세벌·고딕 계열", note: "획을 CSS로 긋는다 — 한글 글꼴 없는 기기에서도 같은 모양" },
     { id: "sprite", name: "그림 자소", note: "직접 그린 자소판(SVG)으로 긋는다" },
     { id: "texture", name: "획 표현", note: "그림 자소 짜임에 획 재료만 바꿨다" },
     { id: "starter", name: "출발용", note: "내 자소판을 그려 넣는 뼈대" }
@@ -201,7 +201,7 @@
     return out;
   }
 
-  /* 가져가서 그대로 여는 HTML 한 장. shortcut이면 같은 모양을 내는 꾸러미 글꼴 한 장으로. */
+  /* 가져가서 그대로 여는 HTML 한 장. shortcut이면 같은 칠을 내는 꾸러미 글꼴 한 장으로(꾸러미는 기기 글꼴 재료 — ADR-024 §7). */
   function snippet(recipe, text, shortcut) {
     var words = esc(text || DEFAULT_TEXT);
     var tone = T.tones[recipe.tone] || T.tones.light;
@@ -339,7 +339,7 @@
       (themeSummary(theme) ? '<p class="ft-card-summary">' + esc(themeSummary(theme)) + "</p>" : "") +
       '<dl class="ft-badges">' + badges(recipe, s) + "</dl>" +
       (theme.use ? '<p class="ft-card-use">어울리는 곳 · ' + esc(theme.use) + "</p>" : "") +
-      (theme.shortcut ? '<p class="ft-card-short">글꼴 CSS 한 장으로도 같은 모양: <code>font="' + theme.shortcut + '"</code> ' +
+      (theme.shortcut ? '<p class="ft-card-short">꾸러미 글꼴 한 장으로도 같은 칠(획은 기기 한글 글꼴): <code>font="' + theme.shortcut + '"</code> ' +
         '<button type="button" class="ft-link-btn" data-theme-copy-short="' + id + '">그 코드 복사</button></p>' : "") +
       '<div class="ft-card-actions">' +
       '<button type="button" class="k-btn k-btn--small k-btn--primary" data-theme-open="' + id + '">조합기에서 열기</button>' +
@@ -447,7 +447,9 @@
       html += '<div class="ft-group"><p class="ft-group-name">' + group.name + " <small>" + group.note + "</small></p><div class=\"ft-opts\">" +
         ids.map(function (id) {
           var font = T.fonts[id];
-          return option("radio", "font", id, font.name, false, { sample: fontSample(id), title: font.structure + " · " + font.stroke });
+          // 세벌·고딕 계열의 획은 원소 재료가 기본이다(ADR-024)
+          var stroke = group.id === "system" ? "원소 (CSS 선·원)" : font.stroke;
+          return option("radio", "font", id, font.name, false, { sample: fontSample(id), title: font.structure + " · " + stroke });
         }).join("") + "</div></div>";
     });
     html += "</fieldset>";

@@ -44,16 +44,16 @@ window.FontKkuThemes = {
    "name": "세벌",
    "group": "system",
    "structure": "세벌식 탈네모 — 받침 유무에 따라 글줄이 흐른다",
-   "stroke": "기기 고딕",
+   "stroke": "원소 (CSS 선·원)",
    "tone": "light",
    "use": "기본 제목·포스터",
-   "desc": "받침 유무에 따라 글줄이 흐르는 탈네모꼴 세벌식. 기본 글꼴입니다."
+   "desc": "받침 유무에 따라 글줄이 흐르는 탈네모꼴 세벌식. 기본 글꼴입니다 — 이름을 밝히면 이 문맥 배치, 밝히지 않으면 세벌 고정으로 그립니다."
   },
   "gothic": {
    "name": "고딕",
    "group": "system",
    "structure": "네모꼴 — 음절 높이를 한 칸에 묶는다",
-   "stroke": "기기 고딕",
+   "stroke": "원소 (CSS 선·원)",
    "tone": "light",
    "use": "공지·배너·강조",
    "desc": "음절 높이를 네모꼴로 묶는 단정한 조합."
@@ -63,7 +63,7 @@ window.FontKkuThemes = {
    "group": "system",
    "base": "sebul",
    "structure": "세벌 짜임에 자리마다 다른 기울기",
-   "stroke": "기기 고딕",
+   "stroke": "원소 (CSS 선·원)",
    "tone": "light",
    "seed": true,
    "use": "카페·디저트·귀여운 공지",
