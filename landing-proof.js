@@ -326,7 +326,7 @@
       if (!seed) return;
       // 해석된 숫자를 그대로 적으면 같은 모양으로 고정된다
       host.setAttribute("seed", seed);
-      var text = host.getAttribute("aria-label") || host.dataset.source || "";
+      var text = host.dataset.source || "";
       code.textContent = '<font-kku font="' + font + '" seed="' + seed + '" jamo-seeds>' + text + "</font-kku>";
       codeBox.hidden = false;
       site.copyText(code.textContent, event.currentTarget);
@@ -702,7 +702,7 @@
     function apply() {
       var text = (input.value || "").trim() || "가을 신메뉴 출시";
       FK.refresh(host, { text: text });
-      read.textContent = host.getAttribute("aria-label") || text;
+      read.textContent = host.dataset.source || text;
       note.textContent = text === imageText
         ? "이미지 속 글자는 고치려면 다시 그려야 합니다. 화면 읽기에는 대체 문구만 전해집니다."
         : "이미지는 아직 '" + imageText + "' 그대로입니다 — 고치려면 이미지를 다시 만들어야 합니다.";

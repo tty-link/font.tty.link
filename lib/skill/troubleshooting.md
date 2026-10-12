@@ -1,20 +1,23 @@
 # 확인과 문제 해결
 
-목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
+목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
 
 | 보이는 것 | 까닭과 할 일 |
 |---|---|
-| 제목이 자모가 흩어진 채(ㄱㅏ ㅇ…)로 보인다 | CSS가 붙지 않았다. 글꼴 이름이 맞는지(콘솔에 "was not found" 경고), 스크립트 주소가 맞는지, `data-fonts`나 `data-addons`가 있는 한 줄 설치로 불렀는지 본다 — [setup.md](https://font.tty.link/lib/skill/setup.md) |
+| 안드로이드·윈도우에서만 자모 자리가 어긋나 보인다 | `sebul`·`gothic`은 기본으로 자모를 CSS 획(원소 재료)으로 그려 기기와 무관하다 — `FontKku.fontInfo(요소).face`가 `"element"`인지 본다. 기기 글꼴로 그리는 글(꾸러미 글꼴, `--fy-face: device`)은 런타임이 그 기기의 한글 글꼴을 재서 맞춘다: 페이지 CSS가 `--fy-ink-boxes: none`을 주지 않았는지, `face`가 `"device"`인지 본다. 캔버스 읽기를 막는 브라우저(지문 방지)에서는 맞추지 못한다 |
+| 원소 재료의 획이 너무 가늘거나 굵다 | 페이지 CSS `--fy-element-width`(바탕 요소 글자 크기 기준, sebul 기본 0.1em·gothic 0.072em). 굵기를 바꿔도 잉크는 같은 자리 안에 머문다. 끝은 `--fy-element-cap: round`·`butt` |
+| 원소 재료의 속 빈 꾸밈(네온·도면·외곽선)에 획이 겹친 안쪽 선이 보인다 | 원소 재료는 획마다 그려 겹친 자리의 테두리가 보인다(도면의 작도선처럼). 매끈한 속 빈 글자가 필요하면 그 글에 `--fy-face: device` |
+| 제목이 자모가 흩어진 채(ㄱㅏ ㅇ…)로 보인다 | CSS가 붙지 않았다. 글꼴 이름이 맞는지(콘솔에 "was not found" 경고), 스크립트 주소가 맞는지, `data-fonts`나 `data-addons`가 있는 한 줄 설치로 불렀는지 본다 — [setup.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/setup.md) |
 | 글자가 전혀 안 그려지고 원래 글만 보인다 | 런타임 스크립트를 받지 못했다. 주소 오타, 또는 외부 스크립트를 막는 화면(아래 "미리보기 화면") |
 | 글꼴 CSS를 받다 실패한다 | `font-kku:loaderror` 이벤트의 `detail: { kind, name, url, error }`로 원인을 보고 `FontKku.retryFont(host)`로 다시 받는다 |
 | `kku-look-*`·`kku-vary-*`가 안 먹는다 | 스크립트에 `data-addons="looks"`가 없다 |
 | 자모 움직임(`assemble`·`wave`·`flicker`…)이 안 움직인다 | `data-addons="motion"`이 없다. 또는 사용자의 '동작 줄이기' 설정이 켜져 있다(정상) |
-| `data-kku-fx`·`FontKkuFx`가 안 된다 | `data-addons="fx"`가 없거나, JS로 건 호출이 `load` 전에 돌았다 — [compose.md](https://font.tty.link/lib/skill/compose.md) |
+| `data-kku-fx`·`FontKkuFx`가 안 된다 | `data-addons="fx"`가 없거나, JS로 건 호출이 `load` 전에 돌았다 — [compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md) |
 | 자모가 어긋나거나 겹친다 | 페이지 CSS의 `span { … }` 같은 요소 이름 선택자, 바탕 요소에 직접 준 `font-size`·`line-height`, 자모 `--fy-top`·`--fy-left` 변경을 지운다 |
-| 글자가 네모(두부)로 보인다 | 기기에 한글 글꼴이 없다 — 그림 자소 글꼴로 바꾼다([no-hangul-device.md](https://font.tty.link/lib/skill/no-hangul-device.md)) |
-| 네온·분필·글리치가 거의 안 보인다 | 바탕이 밝다. 어두운 바탕(또는 어두운 띠) 위에 둔다 — [fonts.md](https://font.tty.link/lib/skill/fonts.md) |
-| 그림 자소 글꼴에서 일부 자모가 빈칸이다 | 그 칸을 그리지 않았다 — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md)의 확인 문장으로 본다 |
-| `crayon`·`pilgi`·`dunggeun`·`butgeul`·`jasu`만 안 보인다 | 런타임 파일을 직접 올린 서버가 `Access-Control-Allow-Origin` 헤더를 보내지 않는다(마스크 그림은 이 헤더가 있어야 쓴다) — [setup.md](https://font.tty.link/lib/skill/setup.md)의 "인터넷이 막힌 곳" |
+| 글자가 네모(두부)로 보인다 | 기기에 한글 글꼴이 없다 — 그림 자소 글꼴로 바꾼다([no-hangul-device.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/no-hangul-device.md)) |
+| 네온·분필·글리치가 거의 안 보인다 | 바탕이 밝다. 어두운 바탕(또는 어두운 띠) 위에 둔다 — [fonts.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/fonts.md) |
+| 그림 자소 글꼴에서 일부 자모가 빈칸이다 | 그 칸을 그리지 않았다 — [draw-jamo.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/draw-jamo.md)의 확인 문장으로 본다 |
+| `crayon`·`pilgi`·`dunggeun`·`butgeul`·`jasu`만 안 보인다 | 런타임 파일을 직접 올린 서버가 `Access-Control-Allow-Origin` 헤더를 보내지 않는다(마스크 그림은 이 헤더가 있어야 쓴다) — [setup.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/setup.md)의 "인터넷이 막힌 곳" |
 | 첫 화면 제목이 잠깐 비었다 나타난다 | `data-fonts`의 글꼴을 받는 동안(최대 3초) 조립 전 자모를 가려 둔다(정상) |
 
 ## 미리보기 화면에서 안 보일 때

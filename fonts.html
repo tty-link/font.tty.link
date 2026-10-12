@@ -247,6 +247,7 @@
         <span>폰꾸 font-kku · 코드는 MIT</span>
         <nav aria-label="바닥 링크">
           <a href="lib/README.md">README</a>
+          <a href="https://www.npmjs.com/package/@tty.link/font-kku">npm</a>
           <a href="lib/skill/SKILL.md">AI 설명서</a>
           <a href="lib/docs/GLOSSARY.md">용어집</a>
           <a href="./docs.html#dev-tools">개발 도구</a>
@@ -268,6 +269,7 @@
 
         var T = window.FontKkuThemes;
         var CDN = window.FontKkuSite.CDN;
+        var RUNTIME = window.FontKkuSite.RUNTIME;
 
         /* 글꼴 견본 — 첫째 축(글꼴)의 목록과 쓰임새·소개·권장 바탕·씨앗 반응·마스크 칠은 정본
          * (spec/themes.json → themes-data.js)의 fonts에서 온다. */
@@ -336,7 +338,7 @@
         }
 
         function snippet(font, text) {
-          return '<script src="' + CDN + 'font-kku.js" data-fonts="' + font.id + '"></' + 'script>\n' +
+          return '<script src="' + RUNTIME + '" data-fonts="' + font.id + '"></' + 'script>\n' +
             '<font-kku font="' + font.id + '" size="64"' + window.FontKkuLab.attrs(font) + ">" + text + "</font-kku>";
         }
 
@@ -482,6 +484,7 @@
         // 테마 갤러리와 조합기 — 여섯 축(ADR-017)
         window.FontKkuThemesPage.init({
           cdn: CDN,
+          runtime: RUNTIME,
           copyText: window.FontKkuSite.copyText
         });
 
@@ -490,6 +493,7 @@
           fonts: FONTS.concat(LEGACY),
           text: function () { return textInput.value.trim() || "다람쥐 헌 쳇바퀴"; },
           cdn: CDN,
+          runtime: RUNTIME,
           skillUrl: window.FontKkuSite.SKILL_URL,
           copyText: window.FontKkuSite.copyText
         });

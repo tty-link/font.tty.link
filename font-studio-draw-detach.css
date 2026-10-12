@@ -1,0 +1,70 @@
+/* 독립 SVG로 떼어 내기 (font-studio-draw-detach.js, 설계 v1.2 §13.3, PLAN-HANGUL-001 F6). 그리기 탭을 따르는 칸이다 — F 껍데기가
+ * [hidden]으로만 가린다(demo.css가 display: none !important). 단추·규칙 줄도 [hidden]으로만 숨긴다. */
+
+.studio-draw-detach-head {
+  display: grid;
+  gap: 2px;
+}
+
+.studio-draw-detach-title {
+  margin: 0;
+  font: 600 13px/1.3 var(--demo-sans);
+  color: var(--demo-ink);
+}
+
+.studio-draw-detach-hint,
+.studio-draw-detach-status,
+.studio-draw-detach-note {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--demo-muted);
+}
+
+.studio-draw-detach-status {
+  color: var(--demo-ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.studio-draw-detach-note[data-tone="warn"],
+.studio-draw-detach-note[data-tone="error"] {
+  color: var(--demo-seal);
+}
+
+.studio-draw-detach-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.studio-draw-detach-button {
+  font: 600 12px/1.2 var(--demo-sans);
+  padding: 6px 12px;
+  border: 1px solid var(--demo-accent);
+  border-radius: 999px;
+  background: var(--demo-accent-soft);
+  color: var(--demo-accent);
+  cursor: pointer;
+}
+
+.studio-draw-detach-button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.studio-draw-detach-button:focus-visible {
+  outline: 2px solid var(--demo-accent);
+  outline-offset: 2px;
+}
+
+.studio-draw-detach-rule {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-inline-size: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--demo-seal);
+  overflow-wrap: anywhere;
+}

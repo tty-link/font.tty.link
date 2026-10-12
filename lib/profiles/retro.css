@@ -20,6 +20,9 @@
     --fy-word-gap: 0px;
     --fy-line-gap: 0.15em;
     --fy-font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif;
+    --fy-font-ink-boxes: standard;
+    --fy-font-face: element;
+    --fy-font-element-width: 0.072em;
     --fy-font-weight: 400;
     --fy-content-y: 0em;
     --fy-content-size: 1em;
@@ -562,6 +565,7 @@
  * slot 외곽선을 쓰지 않아 이 값이 모든 자모에 닿는다. 밝은 바탕에서 쓴다. */
 @layer font-kku.font {
   :where([data-fy-font="retro"]) {
+    --fy-font-face: device; /* 글자 칠(외곽선·그림자)이 이 글꼴이라 기기 글꼴 재료로 그린다(ADR-024). 원소 재료로는 기반 글꼴 + kku-look-retro */
     --fy-font-stroke: 0.014em;
     color: #ffd166;
     -webkit-text-stroke-color: #073b4c;

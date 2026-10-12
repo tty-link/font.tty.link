@@ -56,6 +56,38 @@
 | 역할 | role | `data-fy-role`, `--fy-role-*` |
 | 묶음 | cluster | `part="…-cluster"` |
 | 자모 깊이 | jamo depth | `--fy-jamo-depth` |
+| 낱자 | standalone jamo (음절이 아닌 단독 호환 자모 `ㅋ`·`ㅘ`) | `part="content"` |
+
+## 한글 원리 렌더링과 조립 디자인
+
+ADR-024(재료 축·원소·뼈대)와 ADR-025(제안 — 디자인·조립식·정책)의 말이다. ADR-025 쪽 식별자는 구현 전 이름이다.
+
+| 한글 | 대신하는 말 | 식별자 |
+|---|---|---|
+| 재료 (축) | face | `data-fy-face`, 글꼴 `--fy-font-face`, 페이지 `--fy-face` |
+| 원소 재료 | element face, Primitive 3 | `element` — 획을 CSS 상자로 |
+| 그림 재료 | svg face, SVG Artwork | `svg` — 칸 계약 그림 세트(`registerJamo(…, { frame: "box" })`) |
+| 글꼴 글자 재료 | device face, Font Glyph (폰꾸 "글꼴"과 다르다 — 이쪽은 기기·웹 글꼴의 글자를 재료로 쓴다) | `device` |
+| 원소 | primitive, element (가로선·세로선·원, 점·사선은 파생) | `part="element"` |
+| 표준 잉크 상자 | standard ink box | `spec/jamo-ink-boxes.json` |
+| 뼈대 | skeleton | `spec/jamo-skeletons.json` |
+| 디자인 | design (팔레트·규칙·조립식 선택을 담은 구조 설정) | `FontKku.registerDesign`, `--fy-design`, `--fy-font-design` |
+| 디자인 검사 · 교체 | design validation (오류를 모두 코드·자리로) · replace | `FontKku.validateDesign`, `DESIGN_*` 오류 코드, `registerDesign(…, { replace: true })`, `unregisterDesign` |
+| 받지 않는 글꼴 | font that takes no design (그림 자소 재료, 표준 잉크 상자 없음) | `data-fy-design-status="DESIGN_UNSUPPORTED_FONT"` |
+| 원본 | source (직접 그린 그림, 글꼴의 글자, 원소) | 디자인 `sources` |
+| 조립식 | jamo recipe (테마의 조합법 `recipes`와 다르다) | `spec/jamo-recipes.json` |
+| 조각 | part, piece (조립식 안의 재료 하나 — ㅃ의 왼쪽 ㅂ) | 조립식 `parts[].id` |
+| 자동 · 직접 · 조합 | auto · direct · compose | 디자인 규칙 `method` |
+| 조립 계획 | assembly plan (`spec/render-plan.json`의 표시 계획과 다르다) | — |
+| 출처 기록 | trace, provenance | — |
+| 원형 8 · 기본 24 · 확장 40 | origin8 · basic24 · full40 — 그림 제작 안내(렌더링 모드가 아니다) | 디자인 `editor.authoringTarget` |
+| 글꼴 팔레트 | font palette (여러 글꼴을 역할·자모·조각별로) | 디자인 `sources`(글꼴 인스턴스) |
+| 배치 프로파일 | layout profile (ADR-026) | `spec/layout-profiles.json`, 디자인 `layout`, `data-fy-layout` |
+| 세벌 고정 | fixed-three, sebul fixed — 초성·중성·종성을 역할·자모마다 정해진 자리와 크기로 찍는 배치(타자기형 세벌). 글꼴을 밝히지 않은 바탕 요소의 기본 | `sebul-fixed-v1` |
+| 네모 문맥 | adaptive-square — 모음 짜임·받침 유무에 따라 자리를 바꾸는 배치(글꼴 CSS의 slot) | `square-context-v1` |
+| 역할 도장 | role stamp — 세벌 고정에서 역할·자모 하나의 자리·크기·굵기 | `data-fy-stamp`, `--fy-stamp-*` |
+| 밀도 굵기 계수 | density factor — 평행 획이 촘촘한 자모(ㄹ·ㅌ·ㅋ)와 꼭지 틈을 다 못 연 ㅎ·ㅊ의 원소·그림 획을 0.75–1배로 가늘게 하는 노드 값(ADR-024 §3) | `--fy-el-density`, `--fy-stamp-density` |
+| 꼭지 틈 | cap gap — ㅎ·ㅊ 꼭지(점 획)와 가로획 사이. 굵기 보정이 가로획 너머 획을 0.8배까지 눌러 굵기의 0.6배로 연다(ADR-024 §3) | `dotShifts`, 스모크 `element-cap-gap` |
 
 ## 쓰는 법
 

@@ -11,6 +11,8 @@ export default FontKku;
 export declare const version: API["version"];
 export declare const placementTable: API["placementTable"];
 export declare const placementTables: API["placementTables"];
+export declare const layoutProfiles: API["layoutProfiles"];
+export declare const layoutStability: API["layoutStability"];
 export declare const define: API["define"];
 export declare const bootstrap: API["bootstrap"];
 export declare const render: API["render"];
@@ -30,18 +32,44 @@ export declare const applyJamoSeeds: API["applyJamoSeeds"];
 export declare const hasHangulFont: API["hasHangulFont"];
 export declare const registerJamo: API["registerJamo"];
 export declare const jamoSets: API["jamoSets"];
+export declare const registerDesign: API["registerDesign"];
+export declare const validateDesign: API["validateDesign"];
+export declare const unregisterDesign: API["unregisterDesign"];
+export declare const designs: API["designs"];
+export declare const planJamo: API["planJamo"];
+export declare const traceOf: API["traceOf"];
+export declare const stagePreview: API["stagePreview"];
+export declare const authoringProgress: API["authoringProgress"];
 
 export type {
   API,
+  AuthoringProgress,
+  AuthoringStageProgress,
   CodaDepth,
   Config,
   DepthInput,
+  Design,
+  DesignApply,
+  DesignError,
+  DesignErrorCode,
+  DesignLock,
+  DesignRegistrationError,
+  DesignRule,
+  DesignSource,
+  DesignStatus,
+  DesignValidation,
   DisplayTriple,
   ExpressionMode,
   FontInfo,
   FontName,
   HangulFontProbeOptions,
+  JamoBoxCell,
   JamoCells,
+  JamoPlan,
+  JamoPlanItem,
+  JamoPlanOptions,
+  JamoTraceEntry,
+  HostTrace,
   JamoSetOptions,
   JamoShape,
   Glyph,
@@ -62,6 +90,7 @@ export type {
   PlacementTable,
   PlacementTables,
   PlainGlyph,
+  RegisterDesignOptions,
   RenderEvent,
   RenderEventDetail,
   RenderOptions,

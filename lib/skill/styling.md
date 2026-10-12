@@ -1,6 +1,6 @@
 # 페이지 CSS로 더 꾸미기 · 씨앗
 
-목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
+목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
 
 ## 자소 고르기 — `part`
 
@@ -30,7 +30,7 @@
 - 선택자는 바탕 요소의 클래스(`.title`)에서 시작한다. `span { … }`처럼 요소 이름만 쓰지 않는다.
 - 자모 위치(`--fy-top`, `--fy-left`)와 크기는 바꾸지 않는다 — 조립이 무너진다.
 - 네온(`neon`·`kku-look-neon`)의 빛번짐은 자모를 자른 뒤에 그리는 빛 칠이다. 빛 모양은 `--fy-glow`(drop-shadow 목록)로 바꾸고, `--fy-glow: none`이면 끈다. 자모 `text-shadow`는 글자와 함께 잘리므로 넓은 빛에 쓰지 않는다. 네온 자모 하나를 숨길 때는 `visibility` 대신 `opacity: 0`을 쓴다.
-- 색·외곽선·그림자·굵기 같은 재료 전체 표는 [custom-font.md](https://font.tty.link/lib/skill/custom-font.md).
+- 색·외곽선·그림자·굵기 같은 재료 전체 표는 [custom-font.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/custom-font.md).
 
 자소마다 무작위로 살짝 기울이기:
 
@@ -41,7 +41,7 @@
 </style>
 ```
 
-직접 기울일 때는 ±3° 이하로 둔다 — 자모가 이웃 자모에 쉽게 닿는다. 더 흔들려면 겹침을 검사한 변주 클래스(`kku-vary-tilt` 등, [compose.md](https://font.tty.link/lib/skill/compose.md))를 쓴다.
+직접 기울일 때는 ±3° 이하로 둔다 — 자모가 이웃 자모에 쉽게 닿는다. 더 흔들려면 겹침을 검사한 변주 클래스(`kku-vary-tilt` 등, [compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md))를 쓴다.
 
 ## 매번 다르게 · 언제나 같게 (씨앗)
 

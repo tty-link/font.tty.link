@@ -49,7 +49,7 @@
     var out = [
       "<!doctype html>",
       '<meta charset="utf-8">',
-      '<script src="' + site.CDN + 'font-kku.js" data-fonts="' + card.getAttribute("data-fx-fonts") + '"' +
+      '<script src="' + site.RUNTIME + '" data-fonts="' + card.getAttribute("data-fx-fonts") + '"' +
         (addons ? ' data-addons="' + addons + '"' : "") +
         (sets ? ' data-jamo-sets="' + sets + '"' : "") + "></" + "script>"
     ];

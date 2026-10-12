@@ -41,7 +41,7 @@ font-kku의 한글 자소 분해 + 그리기를 Python, Go, Rust, Ruby 같은 �
 
 ## Current Verification State
 
-공식 현재 상태는 루트 [TESTING.md](../../TESTING.md)의 `npm run verify`로 재현한다. 이
+공식 현재 상태는 루트 [TESTING.md](../../TESTING.md)의 `npm run verify:release`로 재현한다. 이
 명령은 언어별 테스트, 정적 HTML 일치 검사, 생성물·패키지 소비자 검증을 한 번에 실행하며
 성공한 로컬 검증과 원격 CI 상태를 구분한다. 개별 구현만 좁혀 확인할 때는 다음을 쓴다.
 
@@ -52,7 +52,7 @@ font-kku의 한글 자소 분해 + 그리기를 Python, Go, Rust, Ruby 같은 �
 - 정적 허용오차 단위 테스트: `. .venv/bin/activate && python -m pytest tests/test_static_html_parity.py -q`
 - 정적 HTML 일치 검사: `. .venv/bin/activate && python tests/static_html_parity.py`
 
-과거 `soft.css` 걸림돌은 TRK-030에서 해소됐다. `render_html`은 계층·배치/의미 정보·줄/단어/글자/자소/그림 자소 인덱스·접근성·정본 바탕 요소 계약을 출력한다. `tests/static_html_parity.py`는 식별 계층, computed style과 실제 위치·크기를 비교한다. 버전은 4개 패키지 모두 0.4.0이고 CI에는 언어별 job, spec 어긋남 검사, 문서 링크 검사와 격리 패키지 스모크 검사가 구성돼 있다.
+과거 `soft.css` 걸림돌은 TRK-030에서 해소됐다. `render_html`은 계층·배치/의미 정보·줄/단어/글자/자소/그림 자소 인덱스·접근성·정본 바탕 요소 계약을 출력한다. `tests/static_html_parity.py`는 식별 계층, computed style과 실제 위치·크기를 비교한다. 버전은 npm 패키지와 4개 패키지가 한 버전을 함께 쓰고(ADR-022) CI에는 언어별 job, spec 어긋남 검사, 문서 링크 검사와 격리 패키지 스모크 검사가 구성돼 있다.
 
 다른 언어 구현용 spec 사본(자모·배치·덮어쓰기·그림 자소·깊이·글꼴 메타·Unicode 표)은 손으로 복사하지 않고 `node scripts/generate_sidecar_tables.js --write`로 생성한다. Python/Go/Rust는 같은 표 기반 UAX #29 grapheme 규칙을 공유하고, 표는 기준 엔진의 `Intl.Segmenter`에서 측정한다(`spec/tables.json` `unicode`).
 

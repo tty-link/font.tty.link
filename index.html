@@ -9,7 +9,7 @@
     <meta property="og:title" content="폰꾸 — 글꼴 파일 없이, 한 줄로 꾸미는 한글" />
     <meta property="og:description" content="웹 제목 꾸미기, AI로 문서 꾸미기와 나만의 한글 글꼴, 봇·터미널의 한글 강조까지. 자음 19·모음 21로 한글 11,172자를 그립니다." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="lib/docs/images/font-library.png" />
+    <meta property="og:image" content="https://font.tty.link/lib/docs/images/font-library.png" />
     <meta name="theme-color" content="#ffffff" />
     <!-- 이 페이지도 한 줄 설치로 런타임과 글꼴 CSS, 움직임 확장을 불러온다. 히어로 타자가 곧바로
          FontKkuFx를 부르므로 상호작용 확장은 차례를 지키는 script로 따로 붙인다 -->
@@ -43,8 +43,9 @@
             </span>
           </h1>
           <p class="k-lead">
-            폰꾸는 한글을 초성·중성·종성으로 나눠 다시 조립해 그립니다. 기기에 있는 한글 글꼴이 재료라
-            내려받을 글꼴 파일이 없고, 네온·스티커·색동처럼 글꼴로는 어려운 제목도 스크립트 한 줄로 씁니다.
+            폰꾸는 한글을 초성·중성·종성으로 나눠 다시 조립해 그립니다. 자모는 한글의 원리대로 획을 CSS로 그어
+            그려서 내려받을 글꼴 파일이 없고 어느 기기에서나 같은 모양이며, 네온·스티커·색동처럼 글꼴로는 어려운
+            제목도 스크립트 한 줄로 씁니다.
           </p>
           <div class="k-hero-actions">
             <a class="k-btn k-btn--primary" href="#web">바로 써 보기</a>
@@ -56,16 +57,16 @@
 
         <div class="k-specimen">
           <div class="k-specimen-stage k-manuscript" data-hero-stage>
-            <font-kku id="hero-render" font="sebul" size="120">한글</font-kku>
+            <font-kku id="hero-render" size="120">한글</font-kku>
           </div>
           <form class="k-specimen-try" data-hero-try>
             <input class="k-input" name="text" type="text" maxlength="16" value="한글" autocomplete="off"
               aria-label="미리볼 문장 입력" placeholder="아무 문장이나 입력해 보세요" />
             <div class="k-chips" role="group" aria-label="미리보기 글꼴·꾸밈 선택">
-              <button type="button" data-hero-font="sebul" aria-pressed="true">세벌</button>
+              <button type="button" data-hero-font="" aria-pressed="true">세벌</button>
               <button type="button" data-hero-font="gothic" aria-pressed="false">고딕</button>
-              <button type="button" data-hero-font="sebul" data-hero-look="neon" data-hero-tone="dark" aria-pressed="false">네온</button>
-              <button type="button" data-hero-font="sebul" data-hero-look="sticker" data-hero-tone="pink" aria-pressed="false">스티커</button>
+              <button type="button" data-hero-font="" data-hero-look="neon" data-hero-tone="dark" aria-pressed="false">네온</button>
+              <button type="button" data-hero-font="" data-hero-look="sticker" data-hero-tone="pink" aria-pressed="false">스티커</button>
               <button type="button" data-hero-font="gothic" data-hero-look="retro" aria-pressed="false">레트로</button>
               <button type="button" data-hero-font="gothic" data-hero-look="saekdong" aria-pressed="false">색동</button>
               <button type="button" data-hero-font="malang" aria-pressed="false">말랑</button>
@@ -517,7 +518,7 @@
           <div class="k-split">
             <div class="k-code">
               <div class="k-code-bar"><span>index.html</span><button type="button" data-copy="#web-code">복사</button></div>
-              <pre id="web-code"><code>&lt;script src="https://font.tty.link/lib/font-kku.js"
+              <pre id="web-code"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js"
         data-fonts="sebul neon"&gt;&lt;/script&gt;
 
 &lt;h1 class="font-kku" data-font="sebul" data-size="48"&gt;오늘의 기록&lt;/h1&gt;
@@ -530,8 +531,8 @@
           </div>
           <p class="k-note k-after">
             스크립트를 넣을 수 있는 블로그 스킨·테마, React·Vue 같은 프레임워크에서도 같은 태그를 씁니다.
-            설치·속성·꾸미기는 <a href="./docs.html#start">문서</a>에 있습니다. npm 공개 전에는 저장소의
-            <code>font-kku.js</code>·<code>font-kku.css</code>·<code>profiles/</code>를 같은 폴더 구조로 복사해 씁니다.
+            설치·속성·꾸미기는 <a href="./docs.html#start">문서</a>에 있습니다. npm으로는 <code>npm install @tty.link/font-kku</code>,
+            CDN 없이 쓰려면 <code>font-kku.js</code>·<code>font-kku.css</code>·<code>profiles/</code>를 같은 폴더 구조로 복사해 씁니다.
           </p>
         </div>
       </section>
@@ -645,11 +646,11 @@
             <div class="k-stack">
               <div class="k-code">
                 <div class="k-code-bar"><span>터미널</span><button type="button" data-copy="#bot-cli">복사</button></div>
-                <pre id="bot-cli"><code>npx font-kku-text "배포 완료"</code></pre>
+                <pre id="bot-cli"><code>npx -p @tty.link/font-kku font-kku-text "배포 완료"</code></pre>
               </div>
               <div class="k-code">
                 <div class="k-code-bar"><span>Node 봇</span><button type="button" data-copy="#bot-node">복사</button></div>
-                <pre id="bot-node"><code>const { renderText } = require("font-kku");
+                <pre id="bot-node"><code>const { renderText } = require("@tty.link/font-kku");
 const big = renderText("배포 완료").join("\n");
 await say("```\n" + big + "\n```");</code></pre>
               </div>
@@ -782,7 +783,7 @@ big = "\n".join(render_text("배포 완료"))</code></pre>
             <article>
               <strong class="k-why-figure">규칙</strong>
               <h3>그림 대신 놓는 자리</h3>
-              <p>글꼴 CSS에는 자모를 어디에 얼마나 크게 놓을지만 들어 있습니다. 글자 모양은 기기에 있는 한글 글꼴이나 SVG 자소판에서 가져옵니다.</p>
+              <p>글꼴 CSS에는 자모를 어디에 얼마나 크게 놓을지만 들어 있습니다. 글자 모양은 CSS로 긋는 획, 직접 그린 SVG 자모, 기기의 한글 글꼴 가운데에서 고릅니다(<a href="./faces.html">재료와 깊이</a>).</p>
             </article>
             <article>
               <strong class="k-why-figure">40<small>칸</small></strong>
@@ -830,6 +831,7 @@ big = "\n".join(render_text("배포 완료"))</code></pre>
         <span>폰꾸 font-kku · 코드는 MIT <span data-footer-version hidden></span></span>
         <nav aria-label="바닥 링크">
           <a href="lib/README.md">README</a>
+          <a href="https://www.npmjs.com/package/@tty.link/font-kku">npm</a>
           <a href="lib/skill/SKILL.md">AI 설명서</a>
           <a href="lib/docs/GLOSSARY.md">용어집</a>
           <a href="./docs.html#dev-tools">개발 도구</a>
@@ -901,7 +903,13 @@ big = "\n".join(render_text("배포 완료"))</code></pre>
         var fontButtons = heroTry.querySelectorAll("[data-hero-font]");
         Array.prototype.forEach.call(fontButtons, function (button) {
           button.addEventListener("click", function () {
-            heroHost.setAttribute("font", button.getAttribute("data-hero-font"));
+            /* 빈 값은 기본 글꼴 — 글꼴을 밝히지 않아 기본 배치(세벌 고정, ADR-026)로 그린다 */
+            var font = button.getAttribute("data-hero-font");
+            if (font) {
+              heroHost.setAttribute("font", font);
+            } else {
+              heroHost.removeAttribute("font");
+            }
             /* 칠만 다른 글꼴(네온·금박 …)은 이미 받은 세벌·고딕에 꾸밈 클래스로 — CSS를 더 받지 않는다 */
             var look = button.getAttribute("data-hero-look");
             heroHost.className = look ? "kku-look-" + look : "";

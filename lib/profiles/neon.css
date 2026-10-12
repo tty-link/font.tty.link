@@ -21,6 +21,9 @@
     --fy-word-gap: 0px;
     --fy-line-gap: 0.12em;
     --fy-font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif;
+    --fy-font-ink-boxes: standard;
+    --fy-font-face: element;
+    --fy-font-element-width: 0.1em;
     --fy-font-weight: 700;
     --fy-font-stroke: 0.014em;
     --fy-content-y: 0em;
@@ -398,6 +401,7 @@
  * 비한글 글자는 host의 칠(채운 분홍 + text-shadow 빛번짐)을 상속한다. */
 @layer font-kku.font {
   :where([data-fy-font="neon"]) {
+    --fy-font-face: device; /* 글자 칠(외곽선·그림자)이 이 글꼴이라 기기 글꼴 재료로 그린다(ADR-024). 원소 재료로는 기반 글꼴 + kku-look-neon */
     color: #ffc2f1;
     text-shadow: 0 0 0.04em #fff, 0 0 0.12em #ff4fd8, 0 0 0.3em #ff2fb0, 0 0 0.6em #b0007a;
     --fy-font-glow: drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.12em color-mix(in srgb, currentColor 80%, transparent)) drop-shadow(0 0 0.25em color-mix(in srgb, currentColor 55%, transparent));

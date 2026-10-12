@@ -52,7 +52,7 @@ declare namespace FontKkuFx {
     observe?: Element;
     /** true를 돌려주는 동안 다음 걸음을 미룬다(data-kku-paused·숨은 탭·화면 밖과 함께) */
     paused?: () => boolean;
-    /** 새 문장을 고를 때마다 — aria-label을 바꾸기 좋은 자리 */
+    /** 새 문장을 고를 때마다 — 제목 요소의 aria-label처럼 페이지가 맡은 이름을 바꾸기 좋은 자리 */
     onPhrase?: (index: number, phrase: string) => void;
   }
 

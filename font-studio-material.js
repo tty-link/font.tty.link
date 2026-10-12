@@ -1062,7 +1062,7 @@
 
   // ── Wiring ─────────────────────────────────────────────────────────────
 
-  Studio.on("load", function (options) {
+  function onStudioLoad(options) {
     var css = Studio.css();
     var material = options && options.material;
     activate(css, material && material.sheet ? material : null).then(function () {
@@ -1078,7 +1078,19 @@
       }
       reveal();
     });
-  });
+  }
+
+  Studio.on("load", onStudioLoad);
+  /* 처음 글꼴은 이 스크립트보다 먼저 도착할 수 있다(캐시가 빠른 정적 서버에서 앞 스크립트가 받은 CSS가 이 파일을
+   * 받는 사이에 적용된다) — 이미 실린 글꼴이 있으면 그 불러오기를 같은 옵션(초안의 자소판 등)으로 지금 받고, 초안이면
+   * 자소판이 든 상태로 다시 저장한다(놓친 사이에 자소판 없이 저장됐을 수 있다). */
+  if (Studio.css()) {
+    var missed = Studio.lastLoadOptions() || {};
+    onStudioLoad(missed);
+    if (missed.material) {
+      Studio.draftSoon();
+    }
+  }
 
   /* Every CSS change (edits, undo/redo) re-renders: keep the quality select
    * on what the font declares. */

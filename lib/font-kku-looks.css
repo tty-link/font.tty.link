@@ -27,32 +27,38 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-neon:not([data-fy-material])) {
+  :where(.kku-look-neon:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #ffc2f1;
     text-shadow: 0 0 0.04em #fff, 0 0 0.12em #ff4fd8, 0 0 0.3em #ff2fb0, 0 0 0.6em #b0007a;
     --fy-font-glow: drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.12em color-mix(in srgb, currentColor 80%, transparent)) drop-shadow(0 0 0.25em color-mix(in srgb, currentColor 55%, transparent));
   }
-  :where(.kku-look-neon:not([data-fy-material])) [part~="jamo"] {
+  :where(.kku-look-neon:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     color: #ff4fd8;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke-color: #ff6fdf;
     text-shadow: 0 0 0.04em #fff;
   }
-  :where(.kku-look-neon:not([data-fy-material])) [part~="jungseong"] {
+  :where(.kku-look-neon:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: #3fd8ff;
     -webkit-text-stroke-color: #6ff4ff;
   }
-  :where(.kku-look-neon[data-fy-material]) {
+  :where(.kku-look-neon:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #ffc2f1;
   }
-  :where(.kku-look-neon[data-fy-material]) [part~="jamo"] {
+  :where(.kku-look-neon:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     color: #ff6fdf;
   }
-  :where(.kku-look-neon[data-fy-material]) [part~="jungseong"] {
+  :where(.kku-look-neon:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: #6ff4ff;
   }
-  :where(.kku-look-neon[data-fy-material]) [part="glyph"] {
+  :where(.kku-look-neon:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(0 0 0.05em #ff4fd8) drop-shadow(0 0 0.16em #ff2fb0);
+  }
+  :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) {
+    --fy-font-element-outline: 0.03em;
+  }
+  :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
+    --fy-font-element-fill: transparent;
   }
 
   /* 꾸밈 sticker — 스티커: 자모마다 흰 테두리와 뜬 그림자 — 오려 붙인 다꾸 스티커. 원본: profiles/sticker.css 꾸밈 구간. */
@@ -71,50 +77,50 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-sticker:not([data-fy-material])) {
+  :where(.kku-look-sticker:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #ff4f81;
     text-shadow: 0.05em 0 #fff, -0.05em 0 #fff, 0 0.05em #fff, 0 -0.05em #fff, 0.035em 0.035em #fff, -0.035em 0.035em #fff, 0.035em -0.035em #fff, -0.035em -0.035em #fff, 0.04em 0.07em 0.02em rgb(60 20 40 / 35%);
   }
-  :where(.kku-look-sticker:not([data-fy-material])) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
+  :where(.kku-look-sticker:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
     color: #ff4f81;
   }
-  :where(.kku-look-sticker:not([data-fy-material])) [part~="jungseong"] {
+  :where(.kku-look-sticker:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: #2f80ed;
   }
-  :where(.kku-look-sticker:not([data-fy-material])) [part~="jongseong"] {
+  :where(.kku-look-sticker:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
     color: #16b37e;
   }
-  :where(.kku-look-sticker:not([data-fy-material])[data-fy-jamo-seeds="true"]) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
+  :where(.kku-look-sticker:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])[data-fy-jamo-seeds="true"]) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
     color: hsl(calc(343deg + (var(--fy-jamo-seed, 0.5) - 0.5) * 60deg) 100% 65%);
   }
-  :where(.kku-look-sticker:not([data-fy-material])[data-fy-jamo-seeds="true"]) [part~="jungseong"] {
+  :where(.kku-look-sticker:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])[data-fy-jamo-seeds="true"]) [part~="jungseong"] {
     color: hsl(calc(215deg + (var(--fy-jamo-seed, 0.5) - 0.5) * 60deg) 84% 56%);
   }
-  :where(.kku-look-sticker:not([data-fy-material])[data-fy-jamo-seeds="true"]) [part~="jongseong"] {
+  :where(.kku-look-sticker:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])[data-fy-jamo-seeds="true"]) [part~="jongseong"] {
     color: hsl(calc(160deg + (var(--fy-jamo-seed, 0.5) - 0.5) * 60deg) 78% 39%);
   }
-  :where(.kku-look-sticker[data-fy-material]) {
+  :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #ff4f81;
   }
-  :where(.kku-look-sticker[data-fy-material]) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
+  :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
     color: #ff4f81;
   }
-  :where(.kku-look-sticker[data-fy-material]) [part~="jungseong"] {
+  :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: #2f80ed;
   }
-  :where(.kku-look-sticker[data-fy-material]) [part~="jongseong"] {
+  :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
     color: #16b37e;
   }
-  :where(.kku-look-sticker[data-fy-material][data-fy-jamo-seeds="true"]) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
+  :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])[data-fy-jamo-seeds="true"]) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
     color: hsl(calc(343deg + (var(--fy-jamo-seed, 0.5) - 0.5) * 60deg) 100% 65%);
   }
-  :where(.kku-look-sticker[data-fy-material][data-fy-jamo-seeds="true"]) [part~="jungseong"] {
+  :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])[data-fy-jamo-seeds="true"]) [part~="jungseong"] {
     color: hsl(calc(215deg + (var(--fy-jamo-seed, 0.5) - 0.5) * 60deg) 84% 56%);
   }
-  :where(.kku-look-sticker[data-fy-material][data-fy-jamo-seeds="true"]) [part~="jongseong"] {
+  :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])[data-fy-jamo-seeds="true"]) [part~="jongseong"] {
     color: hsl(calc(160deg + (var(--fy-jamo-seed, 0.5) - 0.5) * 60deg) 78% 39%);
   }
-  :where(.kku-look-sticker[data-fy-material]) [part="glyph"] {
+  :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(0.035em 0 0 #fff) drop-shadow(-0.035em 0 0 #fff) drop-shadow(0 0.035em 0 #fff) drop-shadow(0 -0.035em 0 #fff) drop-shadow(0.03em 0.05em 0.02em rgb(60 20 40 / 35%));
   }
 
@@ -134,34 +140,34 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-geumbak:not([data-fy-material])) {
+  :where(.kku-look-geumbak:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #f0c75e;
     -webkit-text-stroke-color: #7a4f0f;
     paint-order: stroke fill;
     text-shadow: 0 -0.014em 0 #fff6cf, 0 0.018em 0 #b07a22, 0 0.036em 0 #6b4510, 0 0.06em 0.05em rgb(15 8 0 / 0.5);
   }
-  :where(.kku-look-geumbak:not([data-fy-material])) :is([part~="choseong"], [part~="head"]) {
+  :where(.kku-look-geumbak:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="head"]) {
     color: #f7d77e;
   }
-  :where(.kku-look-geumbak:not([data-fy-material])) [part~="jungseong"] {
+  :where(.kku-look-geumbak:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: #e3ad3a;
   }
-  :where(.kku-look-geumbak:not([data-fy-material])) [part~="jongseong"] {
+  :where(.kku-look-geumbak:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
     color: #eba45c;
   }
-  :where(.kku-look-geumbak[data-fy-material]) {
+  :where(.kku-look-geumbak:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #f0c75e;
   }
-  :where(.kku-look-geumbak[data-fy-material]) :is([part~="choseong"], [part~="head"]) {
+  :where(.kku-look-geumbak:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="head"]) {
     color: #f7d77e;
   }
-  :where(.kku-look-geumbak[data-fy-material]) [part~="jungseong"] {
+  :where(.kku-look-geumbak:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: #e3ad3a;
   }
-  :where(.kku-look-geumbak[data-fy-material]) [part~="jongseong"] {
+  :where(.kku-look-geumbak:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
     color: #eba45c;
   }
-  :where(.kku-look-geumbak[data-fy-material]) [part="glyph"] {
+  :where(.kku-look-geumbak:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(0 -0.012em 0 #fff6cf) drop-shadow(0 0.03em 0 #6b4510) drop-shadow(0 0.05em 0.04em rgb(15 8 0 / 50%));
   }
 
@@ -181,23 +187,23 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-glitch:not([data-fy-material])) {
+  :where(.kku-look-glitch:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #f4f4f6;
     text-shadow: -0.03em 0 0 rgb(0 236 255 / 0.85), 0.03em 0 0 rgb(255 0 170 / 0.85);
   }
-  :where(.kku-look-glitch:not([data-fy-material])) :is([part~="choseong"], [part~="head"]) {
+  :where(.kku-look-glitch:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="head"]) {
     text-shadow: calc(-0.04em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 0 rgb(0 236 255 / 0.9), calc(0.03em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 0 rgb(255 0 170 / 0.9);
   }
-  :where(.kku-look-glitch:not([data-fy-material])) [part~="jungseong"] {
+  :where(.kku-look-glitch:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     text-shadow: 0 calc(-0.035em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 rgb(0 236 255 / 0.9), 0 calc(0.03em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 rgb(255 0 170 / 0.9);
   }
-  :where(.kku-look-glitch:not([data-fy-material])) [part~="jongseong"] {
+  :where(.kku-look-glitch:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
     text-shadow: calc(0.035em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) -0.025em 0 rgb(0 236 255 / 0.9), calc(-0.03em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0.025em 0 rgb(255 0 170 / 0.9);
   }
-  :where(.kku-look-glitch[data-fy-material]) {
+  :where(.kku-look-glitch:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #f4f4f6;
   }
-  :where(.kku-look-glitch[data-fy-material]) [part="glyph"] {
+  :where(.kku-look-glitch:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(-0.03em 0 0 rgb(0 236 255 / 85%)) drop-shadow(0.03em 0 0 rgb(255 0 170 / 85%));
   }
 
@@ -217,17 +223,17 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-retro:not([data-fy-material])) {
+  :where(.kku-look-retro:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     --fy-font-stroke: 0.014em;
     color: #ffd166;
     -webkit-text-stroke-color: #073b4c;
     paint-order: stroke fill;
     text-shadow: 0.02em 0.02em 0 #ef476f, 0.04em 0.04em 0 #ef476f, 0.06em 0.06em 0 #ef476f, 0.08em 0.08em 0 #073b4c, 0.1em 0.1em 0 #073b4c;
   }
-  :where(.kku-look-retro[data-fy-material]) {
+  :where(.kku-look-retro:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #ffd166;
   }
-  :where(.kku-look-retro[data-fy-material]) [part="glyph"] {
+  :where(.kku-look-retro:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(0.014em 0 0 #073b4c) drop-shadow(-0.014em 0 0 #073b4c) drop-shadow(0 0.014em 0 #073b4c) drop-shadow(0 -0.014em 0 #073b4c) drop-shadow(0.03em 0.03em 0 #ef476f) drop-shadow(0.03em 0.03em 0 #073b4c);
   }
 
@@ -247,40 +253,40 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-saekdong:not([data-fy-material])) {
+  :where(.kku-look-saekdong:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #26232b;
   }
-  :where(.kku-look-saekdong:not([data-fy-material])) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
+  :where(.kku-look-saekdong:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
     color: #d62839;
   }
-  :where(.kku-look-saekdong:not([data-fy-material])) :is([data-fy-role="jung-main"], [data-fy-role="jung-base"]) {
+  :where(.kku-look-saekdong:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([data-fy-role="jung-main"], [data-fy-role="jung-base"]) {
     color: #1f4fd1;
   }
-  :where(.kku-look-saekdong:not([data-fy-material])) [data-fy-role="jung-tail"] {
+  :where(.kku-look-saekdong:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-role="jung-tail"] {
     color: #f2a007;
   }
-  :where(.kku-look-saekdong:not([data-fy-material])) :is([data-fy-role="jong-main"], [data-fy-role="jong-left"]) {
+  :where(.kku-look-saekdong:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([data-fy-role="jong-main"], [data-fy-role="jong-left"]) {
     color: #12965f;
   }
-  :where(.kku-look-saekdong:not([data-fy-material])) [data-fy-role="jong-right"] {
+  :where(.kku-look-saekdong:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-role="jong-right"] {
     color: #e0569b;
   }
-  :where(.kku-look-saekdong[data-fy-material]) {
+  :where(.kku-look-saekdong:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #26232b;
   }
-  :where(.kku-look-saekdong[data-fy-material]) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
+  :where(.kku-look-saekdong:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([data-fy-role="choseong"], [data-fy-role="head"]) {
     color: #d62839;
   }
-  :where(.kku-look-saekdong[data-fy-material]) :is([data-fy-role="jung-main"], [data-fy-role="jung-base"]) {
+  :where(.kku-look-saekdong:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([data-fy-role="jung-main"], [data-fy-role="jung-base"]) {
     color: #1f4fd1;
   }
-  :where(.kku-look-saekdong[data-fy-material]) [data-fy-role="jung-tail"] {
+  :where(.kku-look-saekdong:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-role="jung-tail"] {
     color: #f2a007;
   }
-  :where(.kku-look-saekdong[data-fy-material]) :is([data-fy-role="jong-main"], [data-fy-role="jong-left"]) {
+  :where(.kku-look-saekdong:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([data-fy-role="jong-main"], [data-fy-role="jong-left"]) {
     color: #12965f;
   }
-  :where(.kku-look-saekdong[data-fy-material]) [data-fy-role="jong-right"] {
+  :where(.kku-look-saekdong:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-role="jong-right"] {
     color: #e0569b;
   }
 
@@ -300,27 +306,27 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-riso:not([data-fy-material])) {
+  :where(.kku-look-riso:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #ff48b0;
   }
-  :where(.kku-look-riso:not([data-fy-material])) [part~="jamo"] {
+  :where(.kku-look-riso:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     color: rgb(255 72 176 / 0.88);
     text-shadow: 0.024em -0.018em 0 rgb(0 120 191 / 0.42);
   }
-  :where(.kku-look-riso:not([data-fy-material])) [part~="jungseong"] {
+  :where(.kku-look-riso:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: rgb(0 120 191 / 0.86);
     text-shadow: -0.024em 0.018em 0 rgb(255 72 176 / 0.48);
   }
-  :where(.kku-look-riso[data-fy-material]) {
+  :where(.kku-look-riso:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #ff48b0;
   }
-  :where(.kku-look-riso[data-fy-material]) [part~="jamo"] {
+  :where(.kku-look-riso:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     color: rgb(255 72 176 / 0.88);
   }
-  :where(.kku-look-riso[data-fy-material]) [part~="jungseong"] {
+  :where(.kku-look-riso:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: rgb(0 120 191 / 0.86);
   }
-  :where(.kku-look-riso[data-fy-material]) [part="glyph"] {
+  :where(.kku-look-riso:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(0.024em -0.018em 0 rgb(0 120 191 / 42%));
   }
 
@@ -340,34 +346,46 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-blueprint:not([data-fy-material])) {
+  :where(.kku-look-blueprint:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     --fy-font-stroke: 0.018em;
     color: #f2f8ff;
     -webkit-text-stroke-color: #f2f8ff;
   }
-  :where(.kku-look-blueprint:not([data-fy-material])) [part~="jamo"] {
+  :where(.kku-look-blueprint:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     -webkit-text-fill-color: rgb(242 248 255 / 0.2);
     -webkit-text-stroke-color: #f2f8ff;
   }
-  :where(.kku-look-blueprint:not([data-fy-material])) [part~="jungseong"] {
+  :where(.kku-look-blueprint:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     -webkit-text-fill-color: rgb(125 211 252 / 0.22);
     -webkit-text-stroke-color: #7dd3fc;
   }
-  :where(.kku-look-blueprint:not([data-fy-material])) [part~="jongseong"] {
+  :where(.kku-look-blueprint:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
     -webkit-text-fill-color: rgb(255 214 102 / 0.22);
     -webkit-text-stroke-color: #ffd666;
   }
-  :where(.kku-look-blueprint[data-fy-material]) {
+  :where(.kku-look-blueprint:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #f2f8ff;
   }
-  :where(.kku-look-blueprint[data-fy-material]) [part~="jamo"] {
+  :where(.kku-look-blueprint:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     color: #f2f8ff;
   }
-  :where(.kku-look-blueprint[data-fy-material]) [part~="jungseong"] {
+  :where(.kku-look-blueprint:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: #7dd3fc;
   }
-  :where(.kku-look-blueprint[data-fy-material]) [part~="jongseong"] {
+  :where(.kku-look-blueprint:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
     color: #ffd666;
+  }
+  :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) {
+    --fy-font-element-outline: 0.018em;
+  }
+  :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
+    --fy-font-element-fill: rgb(242 248 255 / 0.2);
+  }
+  :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
+    --fy-font-element-fill: rgb(125 211 252 / 0.22);
+  }
+  :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
+    --fy-font-element-fill: rgb(255 214 102 / 0.22);
   }
 
   /* 꾸밈 outline — 외곽선: 고른 굵기의 선으로 속을 비운 글자 — 속은 글자색이 옅게 비친다. 원본: spec/themes.json paint. */
@@ -388,18 +406,24 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-outline:not([data-fy-material])) {
+  :where(.kku-look-outline:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #1d1b26;
   }
-  :where(.kku-look-outline:not([data-fy-material])) [part~="jamo"] {
+  :where(.kku-look-outline:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     -webkit-text-fill-color: rgb(29 27 38 / 7%);
   }
   :where(.kku-look-outline) [part="content"] {
     -webkit-text-stroke-width: var(--kku-look-stroke);
     -webkit-text-fill-color: rgb(29 27 38 / 7%);
   }
-  :where(.kku-look-outline[data-fy-material]) {
+  :where(.kku-look-outline:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #1d1b26;
+  }
+  :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) {
+    --fy-font-element-outline: 0.04em;
+  }
+  :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
+    --fy-font-element-fill: rgb(29 27 38 / 7%);
   }
 
   /* 꾸밈 pastel — 파스텔: 초성 분홍 · 중성 하늘 · 받침 연두의 부드러운 색과 옅은 그림자. 원본: spec/themes.json paint. */
@@ -418,32 +442,32 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-pastel:not([data-fy-material])) {
+  :where(.kku-look-pastel:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #8a7fd8;
     text-shadow: 0.035em 0.035em 0 rgb(80 60 120 / 14%);
   }
-  :where(.kku-look-pastel:not([data-fy-material])) :is([part~="choseong"], [part~="head"]) {
+  :where(.kku-look-pastel:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="head"]) {
     color: #f37ea1;
   }
-  :where(.kku-look-pastel:not([data-fy-material])) [part~="jungseong"] {
+  :where(.kku-look-pastel:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: #5fb2ec;
   }
-  :where(.kku-look-pastel:not([data-fy-material])) [part~="jongseong"] {
+  :where(.kku-look-pastel:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
     color: #62c48b;
   }
-  :where(.kku-look-pastel[data-fy-material]) {
+  :where(.kku-look-pastel:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #8a7fd8;
   }
-  :where(.kku-look-pastel[data-fy-material]) :is([part~="choseong"], [part~="head"]) {
+  :where(.kku-look-pastel:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="head"]) {
     color: #f37ea1;
   }
-  :where(.kku-look-pastel[data-fy-material]) [part~="jungseong"] {
+  :where(.kku-look-pastel:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
     color: #5fb2ec;
   }
-  :where(.kku-look-pastel[data-fy-material]) [part~="jongseong"] {
+  :where(.kku-look-pastel:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
     color: #62c48b;
   }
-  :where(.kku-look-pastel[data-fy-material]) [part="glyph"] {
+  :where(.kku-look-pastel:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(0.035em 0.035em 0 rgb(80 60 120 / 14%));
   }
 
@@ -463,14 +487,14 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-shadow:not([data-fy-material])) {
+  :where(.kku-look-shadow:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #2b2540;
     text-shadow: 0.03em 0.03em 0 #b9b2cf, 0.06em 0.06em 0 #8f87ab;
   }
-  :where(.kku-look-shadow[data-fy-material]) {
+  :where(.kku-look-shadow:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #2b2540;
   }
-  :where(.kku-look-shadow[data-fy-material]) [part="glyph"] {
+  :where(.kku-look-shadow:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(0.03em 0.03em 0 #b9b2cf) drop-shadow(0.03em 0.03em 0 #8f87ab);
   }
 
@@ -490,10 +514,10 @@
     text-shadow: inherit;
     paint-order: inherit;
   }
-  :where(.kku-look-inju:not([data-fy-material])) {
+  :where(.kku-look-inju:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #c41e28;
   }
-  :where(.kku-look-inju[data-fy-material]) {
+  :where(.kku-look-inju:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #c41e28;
   }
 

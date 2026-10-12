@@ -34,6 +34,11 @@
       "html": true,
       "text": true,
       "customFonts": "CSS profile with runtime metadata",
+      "layouts": {
+        "default": "sebul-fixed-v1",
+        "profiles": "spec/layout-profiles.json",
+        "appliesTo": "hosts that name no font (font/profile/data-font missing or empty) unless --fy-design is legacy; a registered 1.2 design selects its own layout"
+      },
       "interactionEffects": true
     },
     "python": {
@@ -46,6 +51,13 @@
         "gothic"
       ],
       "customFonts": "per-call FontDefinition with trusted CSS and explicit metadata",
+      "layouts": {
+        "default": "sebul-fixed-v1",
+        "appliesTo": "calls that name no font (missing or empty) and pass no FontDefinition; any named font, including sebul, default and whitespace-only names, keeps its context layout",
+        "depth": "the fixed profile depth wins; depth arguments are still validated",
+        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the stamped jamo nodes and standalone compatibility jamo; the device option keeps device glyph text at the role stamps; named fonts and FontDefinition always draw device glyph text and reject element",
+        "faceOption": "face=None|\"\"|\"element\"|\"device\""
+      },
       "interactionEffects": false
     },
     "go": {
@@ -58,6 +70,13 @@
         "gothic"
       ],
       "customFonts": "per-call FontDefinition with trusted CSS and explicit metadata",
+      "layouts": {
+        "default": "sebul-fixed-v1",
+        "appliesTo": "calls that name no font (missing or empty) and pass no FontDefinition; any named font, including sebul, default and whitespace-only names, keeps its context layout",
+        "depth": "the fixed profile depth wins; depth arguments are still validated",
+        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the stamped jamo nodes and standalone compatibility jamo; the device option keeps device glyph text at the role stamps; named fonts and FontDefinition always draw device glyph text and reject element",
+        "faceOption": "WithFace(\"\"|\"element\"|\"device\")"
+      },
       "interactionEffects": false
     },
     "rust": {
@@ -70,6 +89,13 @@
         "gothic"
       ],
       "customFonts": "per-call FontDefinition with trusted CSS and explicit metadata",
+      "layouts": {
+        "default": "sebul-fixed-v1",
+        "appliesTo": "calls that name no font (missing or empty) and pass no FontDefinition; any named font, including sebul, default and whitespace-only names, keeps its context layout",
+        "depth": "the fixed profile depth wins; depth arguments are still validated",
+        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the stamped jamo nodes and standalone compatibility jamo; the device option keeps device glyph text at the role stamps; named fonts and FontDefinition always draw device glyph text and reject element",
+        "faceOption": "HtmlOptions.face \"\"|\"element\"|\"device\""
+      },
       "interactionEffects": false
     },
     "ruby": {
@@ -82,6 +108,13 @@
         "gothic"
       ],
       "customFonts": "per-call FontDefinition with trusted CSS and explicit metadata",
+      "layouts": {
+        "default": "sebul-fixed-v1",
+        "appliesTo": "calls that name no font (missing or empty) and pass no FontDefinition; any named font, including sebul, default and whitespace-only names, keeps its context layout",
+        "depth": "the fixed profile depth wins; depth arguments are still validated",
+        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the stamped jamo nodes and standalone compatibility jamo; the device option keeps device glyph text at the role stamps; named fonts and FontDefinition always draw device glyph text and reject element",
+        "faceOption": "face: nil|\"\"|\"element\"|\"device\""
+      },
       "interactionEffects": false
     }
   },

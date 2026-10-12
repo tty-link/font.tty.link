@@ -32,11 +32,26 @@ declare namespace FontKku {
     /**
      * 필요할 때 받기(ADR-019)의 기준 주소 — `profiles/<font>.css`·`profiles/<set>.jamo.js`가 그 아래에 있다.
      * 한 줄 설치(`<script src=".../font-kku.js" data-fonts=…>`)는 스크립트 주소에서 스스로 정한다.
-     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/font-kku@0.4.0/").
+     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/").
      */
     fontBase?: string;
     /** false면 아직 받지 않은 글꼴·자소 세트를 스스로 받지 않는다(기본 true). */
     autoload?: boolean;
+  }
+
+  type LayoutStamp = readonly [number, number, number, number, number, "initial" | "medial" | "final", number, number, number];
+
+  interface LayoutProfile {
+    readonly revision: string;
+    readonly model: "fixed-three" | "adaptive-square";
+    /** 디자인 규칙 match가 쓸 수 있는 필드. 세벌 고정은 jamo·role뿐 */
+    readonly match: readonly string[];
+    /** 자리마다 달라지는 변주(display.variationScope: occurrence)를 받는지 */
+    readonly occurrence: boolean;
+    readonly cell?: { readonly width: number; readonly height: number; readonly gap: number };
+    readonly depth?: { readonly vowel: "split"; readonly coda: "whole" };
+    readonly draw?: { readonly initial?: "cho" | "bar" };
+    readonly stamps?: Readonly<Record<string, LayoutStamp | readonly [LayoutStamp, LayoutStamp]>>;
   }
 
   interface FontInfo {
@@ -47,6 +62,22 @@ declare namespace FontKku {
     /** font CSS가 선언한 `--fy-contract` */
     contract: number | null;
     material: "system" | "sprite" | "bundled" | string;
+    /**
+     * 재료(ADR-024). 글꼴이 표준 잉크 상자(`--fy-font-ink-boxes: standard`)를 밝혀 자모를 그 상자에 그리면
+     * `"element"`(원소를 CSS 상자로 — sebul·gothic·malang 기본), `"device"`(기기 한글 글꼴을 맞춰, ADR-023 — 꾸러미 글꼴
+     * 기본이고 페이지 `--fy-face: device`로 고른다) 또는 `"svg"`(칸 계약 그림 세트 `jamo-set`). 아니면(그림 자소 재료,
+     * 페이지 `--fy-ink-boxes: none`) null.
+     */
+    face: "element" | "device" | "svg" | null;
+    /** 적용된 디자인 이름(ADR-025, `--fy-design`·`--fy-font-design`). 없거나 고르지 못했으면 null */
+    design: string | null;
+    /** 디자인을 고르지 못한 까닭(`data-fy-design-status`와 같다). 없으면 null */
+    designStatus: DesignStatus | null;
+    /**
+     * 배치 프로파일(ADR-026). 글꼴을 밝히지 않은 바탕 요소는 기본 세벌 고정(`sebul-fixed-v1`), 1.2 디자인은 자기 `layout`을 쓴다.
+     * 글꼴을 밝힌 바탕 요소·배치를 적지 않은 이전 디자인·`--fy-design: legacy`는 지금 배치라 null.
+     */
+    layout: { profile: string; revision: string; model: "fixed-three" | "adaptive-square" } | null;
     /** 요청한 font의 CSS가 host에 도달했는지 (`id === font`) */
     loaded: boolean;
   }
@@ -226,8 +257,18 @@ declare namespace FontKku {
     | { d: string; fill?: boolean }
     | { ellipse: [number, number, number, number]; fill?: boolean };
 
-  /** 칸 키 `r<행>-<호환 자모>`(예: `r0-ㄱ`, `r2-ㅇ`, `r3-ㄺ`) → 도형 하나나 목록. */
-  type JamoCells = Record<string, JamoShape | readonly JamoShape[]>;
+  /** 칸 계약(`frame: "box"`) 세트의 한 칸: 그림 범위(획 중심선이 닿는 상자, 칸 좌표)와 도형. */
+  interface JamoBoxCell {
+    box: [number, number, number, number];
+    shapes: readonly JamoShape[];
+  }
+
+  /**
+   * 그림 자소 배치 세트: 칸 키 `r<행>-<호환 자모>`(예: `r0-ㄱ`, `r2-ㅇ`, `r3-ㄺ`) → 도형 하나나 목록.
+   * 칸 계약 세트(`frame: "box"`, ADR-024): 키는 호환 자모(문맥 변형 `ㄱ@cho`·`ㄱ@bar`·`ㄱ@jong`)나 원소 그림
+   * `@line`·`@dot`·`@ring` → 도형(목록) 또는 `{ box, shapes }`.
+   */
+  type JamoCells = Record<string, JamoShape | readonly JamoShape[] | JamoBoxCell>;
 
   interface JamoSetOptions {
     /** 획 굵기(칸 100 기준, 기본 7.2). 채운 도형만 쓰면 0. */
@@ -236,6 +277,222 @@ declare namespace FontKku {
     join?: "miter" | "round" | "bevel";
     /** 칸마다 도형을 spec/strokes.json 획순대로 그렸다 — 획 깊이에서 획마다 이름을 붙인다(ADR-018). */
     hoek?: boolean;
+    /**
+     * `"box"`면 칸 계약 세트(ADR-024): 기기 글꼴 재료(sebul·gothic과 파생)에 `jamo-set`으로 걸어 자모를 이 그림으로
+     * 그린다. 그림이 없는 자모는 짝·가획 조상·천지인·원소 그림·원형 그림(ㅡ·ㆍ·ㅇ)·CSS 상자로 조립한다(일부만 그린 셈 치기는 디자인 소스의 `cells`).
+     */
+    frame?: "sprite" | "box";
+    /** 칸 계약 세트의 기본 그림 범위(칸마다 `box`를 밝히지 않을 때). 기본 [0, 0, 100, 100]. */
+    box?: [number, number, number, number];
+  }
+
+  /**
+   * 바탕 요소가 고른 디자인을 쓰지 못한 까닭(ADR-025 §2, `data-fy-design-status`). 셋 다 지금 설정으로 그린다.
+   * - `DESIGN_TOKEN_INVALID`: `--fy-design` 값이 이름 문법이 아니다(소문자·숫자·`-`, `legacy`·CSS 전역 키워드 아님)
+   * - `DESIGN_NOT_REGISTERED`: 등록되지 않은 이름 — 등록되는 순간 다시 그린다
+   * - `DESIGN_UNSUPPORTED_FONT`: 이 글꼴은 디자인을 받지 않는다 — 그림 자소 재료(`--fy-material: sprite`)이거나 표준 잉크 상자
+   *   (`--fy-font-ink-boxes`)를 밝히지 않았거나 페이지가 `--fy-ink-boxes: none`으로 껐다. 등록해도 바뀌지 않는다
+   */
+  type DesignStatus = "DESIGN_TOKEN_INVALID" | "DESIGN_NOT_REGISTERED" | "DESIGN_UNSUPPORTED_FONT";
+
+  /**
+   * 디자인 검증 오류 코드(ADR-025 §2). `validateDesign`이 모으고 `registerDesign`이 첫 오류를 던진다 — 규칙은 한 벌이다.
+   * 세벌 고정(`sebul-fixed-v1`) 거부는 `DESIGN_FIXED_*`(문맥 규칙·통짜 합자 모음·자리마다 변주).
+   */
+  type DesignErrorCode =
+    | "DESIGN_NOT_OBJECT"
+    | "DESIGN_VERSION_INVALID"
+    | "DESIGN_MODE_INVALID"
+    | "DESIGN_LAYOUT_MISSING"
+    | "DESIGN_LAYOUT_UNKNOWN"
+    | "DESIGN_LAYOUT_REVISION"
+    | "DESIGN_FIXED_VARIATION"
+    | "DESIGN_FIXED_CONTEXT"
+    | "DESIGN_FIXED_COMPOUND"
+    | "DESIGN_SOURCES_EMPTY"
+    | "DESIGN_SOURCE_INVALID"
+    | "DESIGN_SOURCE_KIND"
+    | "DESIGN_SOURCE_UNKNOWN"
+    | "DESIGN_METHOD_INVALID"
+    | "DESIGN_ROLE_INVALID"
+    | "DESIGN_RULE_INVALID"
+    | "DESIGN_RULE_ID"
+    | "DESIGN_RULE_MATCH"
+    | "DESIGN_RULE_EMPTY"
+    | "DESIGN_RULE_CONFLICT"
+    | "DESIGN_APPLY_INVALID"
+    | "DESIGN_RECIPE_INVALID"
+    | "DESIGN_BINDING_INVALID"
+    | "DESIGN_FALLBACK_INVALID";
+
+  interface DesignError {
+    code: DesignErrorCode;
+    /** 디자인 JSON 안의 자리(`rules[0].match.hasFinal`·`sources.art.assetSet`, 맨 위는 빈 문자열) */
+    path: string;
+    /** 영어 설명 — 자리를 앞에 적는다. registerDesign이 던지는 오류 글은 `font-kku: design "<name>" ` + message */
+    message: string;
+  }
+
+  interface DesignValidation {
+    ok: boolean;
+    /** registerDesign이 보는 차례 — `errors[0]`이 registerDesign이 던질 오류다 */
+    errors: DesignError[];
+  }
+
+  /** registerDesign이 던지는 오류: 검증 오류(`DesignErrorCode`), 이름 문법 `DESIGN_NAME_INVALID`, 같은 이름 다른 내용 `DESIGN_NAME_TAKEN` */
+  interface DesignRegistrationError extends TypeError {
+    code: DesignErrorCode | "DESIGN_NAME_INVALID" | "DESIGN_NAME_TAKEN";
+    path: string;
+  }
+
+  interface RegisterDesignOptions {
+    /** 같은 이름에 다른 내용이 있으면 바꾼다(기본 false — 오류 `DESIGN_NAME_TAKEN`). 그 이름을 고른 바탕 요소가 다시 그린다 */
+    replace?: boolean;
+  }
+
+  /** 디자인의 원소(primitive)·그림(svg, 등록한 칸 계약 세트)·글꼴 글자(font) 소스(ADR-025). 모드와 같은 종류만 둔다. */
+  type DesignSource =
+    | { kind: "primitive"; builtin?: string }
+    | {
+        kind: "svg";
+        assetSet: string;
+        revision?: string;
+        /** 보이는 자모 칸(미리보기 — 원형 8·기본 24만 그린 셈 치기). 원소 그림(@…)은 늘 보인다. 없으면 모두 */
+        cells?: string[];
+      }
+    | { kind: "font"; family: string; weight?: number; style?: string; stretch?: string; sourceMode?: string };
+
+  /** 규칙·조각 binding의 적용값. method·recipe·bindings는 한 묶음(더 구체적인 쪽이 통째로 이긴다), source는 따로 고른다. */
+  interface DesignApply {
+    source?: string;
+    method?: "auto" | "direct" | "compose";
+    /** spec/jamo-recipes.json의 조립식 id. compose면 꼭 준다 */
+    recipe?: string;
+    /** 조립식 조각 id → 그 조각의 적용값 */
+    bindings?: Record<string, DesignApply>;
+    /** direct일 때 같은 자모를 찾아볼 대체 소스 */
+    fallbackSources?: string[];
+  }
+
+  interface DesignRule {
+    id: string;
+    match: {
+      /** 현대 호환 자모(51자) */
+      jamo: string;
+      role?: "initial" | "medial" | "final" | "standalone";
+      /** right·bottom·split-right(설계 v1.0의 vertical·horizontal·mixed도 받는다). role과 함께만 */
+      vowelLayout?: "right" | "bottom" | "split-right" | "vertical" | "horizontal" | "mixed";
+      hasFinal?: boolean;
+    };
+    apply: DesignApply;
+  }
+
+  /** 작업실 잠금(설계 v1.2 §13.6): 자동 섞기 같은 일괄 바꾸기가 건드리지 않는 자모·역할·조각. role이 없으면 모든 역할, part가 없으면 자모 전체 */
+  interface DesignLock {
+    /** 현대 호환 자모 한 글자 */
+    jamo: string;
+    role?: "initial" | "medial" | "final" | "standalone";
+    /** 조립식 조각 id(spec/jamo-recipes.json) */
+    part?: string;
+  }
+
+  /** 디자인(ADR-025 §2): 팔레트·규칙·조립식 선택. `registerDesign`으로 등록하고 CSS `--fy-design`으로 고른다. */
+  interface Design {
+    version?: string;
+    id?: string;
+    title?: string;
+    mode: "primitive" | "svg" | "font";
+    sources: Record<string, DesignSource>;
+    defaults: { source: string; method?: "auto" | "direct" };
+    roleSources?: Partial<Record<"initial" | "medial" | "final" | "standalone", string>>;
+    rules?: DesignRule[];
+    fallback?: {
+      sourceIds?: string[];
+      /** auto의 마지막·direct 실패 때 원소로 그릴지(기본 true) */
+      allowPrimitive?: boolean;
+      /** 지정한 조합의 재료가 없을 때(기본 error) */
+      onComposeFailure?: "error" | "direct" | "primitive";
+      unverifiedFont?: "allow-with-warning" | "reject";
+    };
+    /** 작업실 정보(제작 안내 origin8·basic24·full40, 잠금) — 그리기에는 쓰지 않는다 */
+    editor?: { authoringTarget?: "origin8" | "basic24" | "full40"; locks?: DesignLock[] };
+    display?: { detail?: "jamo" | "parts" | "stroke"; seed?: string; variationScope?: "jamo" | "occurrence" };
+  }
+
+  interface JamoPlanOptions {
+    /** 등록한 디자인 이름 */
+    design?: string;
+    /** 디자인 없을 때의 칸 계약 그림 세트 */
+    set?: string;
+    role?: "initial" | "medial" | "final" | "standalone";
+    context?: "cho" | "bar" | "jong" | "";
+    layout?: "right" | "bottom" | "split-right";
+    hasFinal?: boolean;
+    /** 디자인 없을 때 보이는 자모 칸(미리보기). 없으면 모두 */
+    cells?: string[];
+  }
+
+  interface JamoPlanItem {
+    /** 조립식 조각 경로(맨 위 자모면 빈 배열) */
+    path: string[];
+    source: string;
+    method: "auto" | "direct" | "compose";
+    recipe: string | null;
+    /** 쓴 그림 칸 키. 원소로 긋는 획이면 null */
+    drawing: string | null;
+    /** 이 항목이 맡은 자모 획 번호(0부터) */
+    strokes: number[];
+    kind: string | null;
+    /** 원소로 긋는 획을 그리는 그림 칸 키 — 원소 그림(@line·@dot·@ring)이 먼저, 그 종류가 없으면 보이는 원형 그림(ㅡ·ㆍ·ㅇ).
+     * 그림 항목이거나 그릴 그림이 없으면(CSS 상자) null */
+    alias: string | null;
+  }
+
+  interface JamoTraceEntry {
+    path: string[];
+    jamo: string;
+    role: string | null;
+    source: string;
+    method: "auto" | "direct" | "compose";
+    recipe: string | null;
+    /** 이 요청에 걸린 규칙 id(조각 binding은 "binding") */
+    rules: string[];
+    result: "direct" | "composed" | "strokes" | "primitive" | "none";
+    status: "ok" | "pending" | "degraded" | "error";
+    diagnostic: string | null;
+    effectiveSource?: string;
+  }
+
+  interface JamoPlan {
+    jamo: string;
+    design: string | null;
+    items: JamoPlanItem[];
+    trace: JamoTraceEntry[];
+  }
+
+  interface HostTrace {
+    face: "element" | "device" | "svg" | null;
+    design: string | null;
+    designStatus: DesignStatus | null;
+    nodes: { jamo: string | null; role: string | null; pos: string | null; requests: JamoTraceEntry[] }[];
+  }
+
+  interface AuthoringStageProgress {
+    stage: "origin8" | "basic24" | "full40";
+    /** 그 단계의 현대 자모 수(보조 원본 ㆍ 제외) */
+    total: number;
+    have: string[];
+    missing: string[];
+    /** 그 단계 목록 밖에 그린 자모(예: 원형 8 단계에서 이미 그린 ㄹ — 지우지 않는다) */
+    extra: string[];
+  }
+
+  interface AuthoringProgress {
+    stages: AuthoringStageProgress[];
+    /** 보조 원본 ㆍ — 원소 그림 @dot은 직접 그린 것으로 세지 않는다 */
+    helper: { jamo: string; drawn: boolean };
+    /** 아직 남은 첫 단계(다 그렸으면 null) */
+    next: "origin8" | "basic24" | "full40" | null;
   }
 
   interface HangulFontProbeOptions {
@@ -251,6 +508,17 @@ declare namespace FontKku {
     /** atomic 표. 기존 이름 호환용. */
     readonly placementTable: PlacementTable;
     readonly placementTables: PlacementTables;
+    /**
+     * 배치 프로파일 표(ADR-026, spec/layout-profiles.json에서 생성, 얼린 사본). 세벌 고정은 `stamps`에 조합용 자모마다 역할 도장
+     * `[left %, top %, 글자 크기 em, scale-x, scale-y, 역할, font-weight, text-stroke em, 밀도 굵기 계수 0.75–1]`(합자 모음은 조각 도장 둘)을
+     * 둔다. 밀도 굵기 계수는 원소·그림 재료의 획 굵기에 곱한다(ADR-024 §3).
+     */
+    readonly layoutProfiles: Readonly<Record<string, LayoutProfile>>;
+    /**
+     * 세벌 고정이 그려진 결과에서도 지켜지는가(설계 v1.2 L22) — 같은 역할·자모 노드의 계산된 자리·크기·변환이 모두 같으면 stable true.
+     * 페이지 CSS가 문맥 선택자로 자모를 옮기면 false와 어긋난 열쇠(drifted). 세벌 고정이 아니면 stable null.
+     */
+    layoutStability(host: HTMLElement): { layout: string | null; stable: boolean | null; keys: number; nodes: number; drifted: string[] };
     define(): void;
     bootstrap(root?: ParentNode): HTMLElement[];
     /**
@@ -318,6 +586,37 @@ declare namespace FontKku {
     registerJamo(name: string, cells: JamoCells, options?: JamoSetOptions): { name: string; cells: number };
     /** 등록된 벡터 자소 세트 이름 */
     jamoSets(): string[];
+    /**
+     * 디자인을 등록한다(ADR-025 §2). CSS `--fy-design: <name>`(글꼴은 `--fy-font-design`)을 고른 바탕 요소가 그
+     * 디자인의 소스·규칙·조립식으로 그린다. 등록본은 검증한 뒤 고정한다 — 검증에 걸리면 첫 오류를 던진다
+     * (`DesignRegistrationError`, `validateDesign(design).errors[0]`과 같은 code·path). 같은 이름·같은 내용은 그대로 통과하고,
+     * 같은 이름·다른 내용은 `{ replace: true }`일 때만 바꾼다(아니면 `DESIGN_NAME_TAKEN`). 등록·교체하면 그 이름을 고른
+     * 바탕 요소가 다시 그린다.
+     */
+    registerDesign(name: string, design: Design, options?: RegisterDesignOptions): { name: string; revision: string };
+    /**
+     * 디자인 JSON을 registerDesign과 같은 규칙으로 검사해 오류를 모두 돌려준다(던지지 않고 등록하지 않는다, ADR-025 §2).
+     * 이름 문법·같은 이름 충돌은 등록의 일이라 보지 않는다.
+     */
+    validateDesign(design: unknown): DesignValidation;
+    /**
+     * 디자인 등록을 지운다. 그 이름을 고른 바탕 요소는 다시 그려 `DESIGN_NOT_REGISTERED`가 되고, 같은 이름을 다시 등록하면
+     * 다시 그린다. 지운 것이 있으면 true. 이름 문법이 틀리면 `DESIGN_NAME_INVALID`를 던진다.
+     */
+    unregisterDesign(name: string): boolean;
+    /** 등록된 디자인 이름(등록한 차례). 부를 때마다 새 배열이고, `unregisterDesign`으로 지운 이름은 빠진다(ADR-025 §2) */
+    designs(): string[];
+    /** 자모 하나의 조립 계획과 출처 기록(ADR-025, 실험). 화면에 그리지 않는다. */
+    planJamo(jamo: string, options?: JamoPlanOptions): JamoPlan;
+    /** 그린 바탕 요소의 자모 노드마다 조립 기록(ADR-025, 실험). 원소·그림 재료만 기록이 있다. 그리지 않은 요소는 null */
+    traceOf(host: Element): HostTrace | null;
+    /**
+     * 그림 세트를 덜 그린 셈 치는 미리보기 디자인 JSON(ADR-025 §7, 등록하지 않는다). `registerDesign(name, stagePreview(set, "origin8"))`.
+     * 보이는 칸(`cells`)만 줄이고 규칙은 없다 — 그림이 없는 ㅎ은 기본 조립식 ㆍ + ㅡ + ㅇ, ㄹ·ㅂ·ㅍ은 ㅡ·ㅣ 선으로 만들어 그 단계까지 그린 실제 세트와 같다.
+     */
+    stagePreview(set: string, stage: "full40" | "basic24" | "origin8" | "elements"): Design;
+    /** 그림 세트가 원형 8 → 기본 24 → 확장 40 단계마다 그린 자모·남은 자모·단계 밖에 그린 자모(ADR-025 §7) */
+    authoringProgress(target: string | string[]): AuthoringProgress;
   }
 }
 

@@ -310,7 +310,7 @@ window.FontKku.render(hero, {
 - `target`이 `<font-kku>`면 전용 태그 방식으로 처리한다.
 - 일반 요소면 클래스 방식처럼 처리한다.
 - 내부 자식 노드는 관리용 루트 DOM으로 교체된다.
-- 원문은 시각적으로 숨긴 `part="sr-source"` 노드(스크린리더·복사용)와 `aria-label`/`data-source`로 유지되고, 관리 루트에는 `aria-hidden="true"`가 붙는다.
+- 원문은 시각적으로 숨긴 `part="sr-source"` 노드(스크린리더·복사용)와 `data-source`로 유지되고(바탕 요소에 `aria-label`은 쓰지 않는다), 관리 루트에는 `aria-hidden="true"`가 붙는다.
 
 ### `refresh(target, options)`
 
@@ -382,7 +382,7 @@ window.FontKku.upgradeAll(modal);
 - `define()`: `customElements.define("font-kku", ...)`. 문서가 아직 파싱 중일 때(`<head>`에서) 부르면, 파서가 만드는 `<font-kku>`는 텍스트가 들어온 뒤(`DOMContentLoaded`) 그려진다.
 - `bootstrap(root)`: `define()` 후 `upgradeAll(root || document)`
 
-일반 `<script src="font-kku.js">`와 ESM `import "font-kku"`를 한 페이지에서 함께 써도 런타임 인스턴스는 하나다(나중에 로드된 쪽이 기존 `window.FontKku`를 쓴다).
+일반 `<script src="font-kku.js">`와 ESM `import "@tty.link/font-kku"`를 한 페이지에서 함께 써도 런타임 인스턴스는 하나다(나중에 로드된 쪽이 기존 `window.FontKku`를 쓴다).
 
 ### `refreshAll(root)` / `loadFont(href, { root })` / `fontInfo(host)`
 

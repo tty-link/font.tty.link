@@ -68,6 +68,9 @@
     --fy-word-gap: 0px; /* 단어 wrapper 추가 간격은 없음 */
     --fy-line-gap: 0.12em; /* 종성 descender와 다음 줄 사이 여유 */
     --fy-font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif; /* 외부 요청 없는 플랫폼 한글 폰트 stack */
+    --fy-font-ink-boxes: standard; /* 배치가 전제한 자모 잉크 상자(spec/jamo-ink-boxes.json). 런타임이 어느 기기의 글꼴이든 자모를 이 상자에 맞춰 그린다(ADR-023) */
+    --fy-font-face: element; /* 자모를 원소(획)로 그린다 — 기기 글꼴과 무관하게 같은 모양(ADR-024). 페이지 --fy-face: device면 기기 한글 글꼴을 표준 상자에 맞춰 그린다(ADR-023) */
+    --fy-font-element-width: 0.1em; /* 원소 재료(ADR-024)의 획 굵기, 글자 크기 기준 — 기기 글꼴과 비슷한 무게 */
     --fy-font-weight: 700; /* 축소된 자모 획 두께 보상 */
     --fy-font-stroke: 0.014em; /* 획 굵기 보상 — 시스템 자모를 slot별로 축소하면 native 음절 획보다
                                  얇아지므로 Bold(700) + 가는 외곽선으로 기준 굵기에 정합시킨다. */

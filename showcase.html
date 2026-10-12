@@ -83,7 +83,7 @@
               <div class="k-code">
                 <div class="k-code-bar"><span>슬랙 봇 (Bolt for JavaScript)</span><button type="button" data-copy="#case-slack">복사</button></div>
                 <pre id="case-slack"><code>const { App } = require("@slack/bolt");
-const { renderText } = require("font-kku");
+const { renderText } = require("@tty.link/font-kku");
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -102,11 +102,11 @@ app.start(3000);</code></pre>
               <div class="k-code">
                 <div class="k-code-bar"><span>GitHub Actions 로그</span><button type="button" data-copy="#case-actions">복사</button></div>
                 <pre id="case-actions"><code>- name: 배포 완료 배너
-  run: npx font-kku-text "배포 완료"</code></pre>
+  run: npx -p @tty.link/font-kku font-kku-text "배포 완료"</code></pre>
               </div>
               <div class="k-code">
                 <div class="k-code-bar"><span>터미널 배너 (셸)</span><button type="button" data-copy="#case-shell">복사</button></div>
-                <pre id="case-shell"><code>echo "빌드 성공" | npx font-kku-text</code></pre>
+                <pre id="case-shell"><code>echo "빌드 성공" | npx -p @tty.link/font-kku font-kku-text</code></pre>
               </div>
             </div>
           </div>
@@ -119,6 +119,7 @@ app.start(3000);</code></pre>
         <span>폰꾸 font-kku · 코드는 MIT</span>
         <nav aria-label="바닥 링크">
           <a href="lib/README.md">README</a>
+          <a href="https://www.npmjs.com/package/@tty.link/font-kku">npm</a>
           <a href="lib/skill/SKILL.md">AI 설명서</a>
           <a href="lib/docs/GLOSSARY.md">용어집</a>
           <a href="./docs.html#dev-tools">개발 도구</a>

@@ -105,7 +105,7 @@ window.FontKku.refresh(target, options?)
 window.FontKku.refreshAll(root?)
 window.FontKku.loadFont(href, { root }?)  // Promise<HTMLElement[]>
 window.FontKku.retryFont(host)     // HTMLElement | null, 현재 주소의 자동 로딩 재시도
-window.FontKku.fontInfo(host)      // { font, id, contract, material, loaded } | null
+window.FontKku.fontInfo(host)      // { font, id, contract, material, face, design, designStatus, layout, loaded } | null
 window.FontKku.upgrade(target)
 window.FontKku.upgradeAll(root?)
 window.FontKku.decomposeGlyph(char)
@@ -116,6 +116,9 @@ window.FontKku.hashSeed(value)
 window.FontKku.applyJamoSeeds(target, options?)
 window.FontKku.registerJamo(name, cells, options?)
 window.FontKku.jamoSets()
+window.FontKku.registerDesign(name, design, { replace }?)  // 실험(ADR-025) — 첫 검사 오류를 code·path와 함께 던진다
+window.FontKku.validateDesign(design)                      // { ok, errors: [{ code, path, message }] } — 던지지 않고 등록하지 않는다
+window.FontKku.unregisterDesign(name)                      // boolean — 그 이름을 고른 바탕 요소는 DESIGN_NOT_REGISTERED로 다시 그린다
 window.FontKku.placementTable
 window.FontKku.version
 ```
@@ -133,11 +136,13 @@ document.addEventListener("font-kku:render", (event) => {
 });
 ```
 
-- `reason`: `render`(`FontKku.render`) · `refresh`(`FontKku.refresh`) · `upgrade`(`upgrade`/`upgradeAll`/`bootstrap`의 첫 그리기) · `connect`(전용 태그 연결, 분리 상태 그리기의 연결 시 해석, 이동 뒤 재확인) · `attribute`(옵션 속성 변경) · `mutation`(원문 변경) · `restyle`(늦게 도착한 글꼴 CSS, `refreshAll`, `loadFont`)
+- `reason`: `render`(`FontKku.render`) · `refresh`(`FontKku.refresh`) · `upgrade`(`upgrade`/`upgradeAll`/`bootstrap`의 첫 그리기) · `connect`(전용 태그 연결, 분리 상태 그리기의 연결 시 해석, 이동 뒤 재확인) · `attribute`(옵션 속성 변경) · `mutation`(원문 변경) · `restyle`(늦게 도착한 글꼴 CSS, `refreshAll`, `loadFont`, display: none 안에서 그려진 원소·SVG 바탕 요소가 보여 굵기·머리 음절을 다시 맞춤)
 - `font`: 그리기에 쓰인 정규화된 글꼴 이름, `source`: 원문
 - `resolved`: `false`면 바탕 요소가 분리된 상태에서 그려져 글꼴 스타일을 아직 해석하지 못했다(연결 시 해석되고, 결과가 다르면 `connect` 그리기가 한 번 더 온다).
 - 글꼴 id/contract처럼 DOM을 바꾸지 않는 메타데이터만 바뀐 재해석은 그리기가 아니므로 이벤트가 없다(`fontInfo()`만 갱신).
 - 여러 바탕 요소를 한 번에 그리면 일괄 처리(batch)의 모든 쓰기가 끝난 뒤 바탕 요소 순서대로 발생한다. 리스너에서 바탕 요소 속성을 바꾸면 그 변경은 다음 자동 다시 그리기가 된다.
+- 일괄 처리의 차례: 관리 트리를 모두 넣은 뒤(`commitRenderJob`) 머리 음절 2층 재귀(`fitHeadSyllables` — 원소·SVG 재료의 음절 깊이 머리를 그 글꼴의 받침 없는 음절을 재서 옮긴다, ADR-024 §2) → 원소 굵기 보정(`balanceElementStrokes` — slot 배율 되돌림과 밀도 굵기 계수 `--fy-el-density`, ㅎ·ㅊ 꼭지 틈 열기, ADR-024 §3) → 벡터 칠(`paintVectorJamo`) → 이벤트. 앞의 둘은 일괄 처리마다 배치 계산(layout)을 한 번 강제한다. 머리 재귀는 재는 동안 관리 root 안에 숨은 시험 음절(`data-fy-probe`)을 넣었다 같은 동기 구간에 빼고, 그 삽입·삭제 기록은 바탕 요소의 `MutationObserver`에서 걷어 낸다(그 앞에 쌓인 기록은 마이크로태스크로 그대로 넘긴다). 스타일만 바뀐 재해석(`refreshAll`·클래스 변경)도 다시 그리지 않은 바탕 요소에 이 둘을 다시 한다 — 글꼴 CSS를 고치면 같은 노드가 따라온다.
+- 그려지지 않은 바탕 요소(첫 음절 상자에 화면 상자가 없다 — display: none 안)는 변환을 읽을 수 없어 굵기 보정·머리 재귀를 미루고 첫 음절 상자를 `ResizeObserver`로 지켜본다. 상자가 생기면 둘을 다시 하고 `restyle`을 낸다. `ResizeObserver`가 없으면 예전처럼 기준 굵기·뼈대 쌓기 머리로 남는다.
 
 목적은 다음과 같다.
 
@@ -257,7 +262,7 @@ document.addEventListener("font-kku:render", (event) => {
 - 원문 텍스트는 보존한다. ([ADR-003](../ADR/ADR-003-accessibility-contract.md))
 - 관리 root(`part="root"`, `data-fy-root="true"`)에는 `aria-hidden="true"`를 부여해 분해 자소 DOM을 보조기기에서 숨긴다.
 - root의 형제 `part="sr-source"`(`data-fy-sr="true"`) 노드가 원문 텍스트를 담아 스크린리더 낭독/복사의 1차 대상이 된다 (시각적으로만 숨김).
-- `aria-label`과 `data-source`는 호환용으로 계속 기록한다. 비표준 `role="text"`는 사용하지 않는다.
+- `data-source`는 원문 기록으로 남는다. 바탕 요소에 `aria-label`·`role`은 쓰지 않는다(ADR-003 보강, 2026-10-12) — 작성자가 붙인 것은 그대로 두고, 정적 렌더러 0.1.0이 붙인 호환 라벨은 넘겨받을 때 지운다.
 - 상태 없는 관리 DOM(복제, 외부 주입)의 원문 복구는 `data-source` → `sr-source` → `textContent` 순으로 대체한다. observer 콜백은 상태를 전달받아 외부 변경(mutation)에도 원문이 오염되지 않는다.
 - 클래스 방식에서도 바탕 요소 원문 의미를 유지해야 한다.
 
@@ -360,17 +365,21 @@ document.addEventListener("font-kku:render", (event) => {
   - `profiles/sprite-example.svg`
   - `profiles/sprite-system.css`
   - `profiles/sprite-system.svg`
-- 루트 `package.json`(`font-kku` 0.4.0, `bin/font-kku-text.js`, 조건부
+- 루트 `package.json`(`@tty.link/font-kku`, 버전 규칙은 ADR-022, `bin/font-kku-text.js`, 조건부
   package export, TypeScript 선언, CSS/글꼴(profiles)/spec subpath 등록)과
   `LICENSE`(MIT)가 있다. CommonJS `require()`와 빌드 없는 ESM 진입점
   `font-kku.mjs`(default + named export)를 실제 tarball 사용처에서 검증한다. 저장소 파일을 직접 로드하는 빌드 없는 배포도 계속
-  유지하며 레지스트리 게시는 아직 하지 않았다.
+  유지한다. npm에는 `@tty.link/font-kku`로 게시한다(ADR-022).
 - 기계가 읽는 계약인 `spec/css-variables.json`, `tables.json`,
   `test-cases.json`, `html-cases.json`은 npm package subpath로 공개한다. 내부 자산
   복제용 `spec/asset-mappings.json`은 배포 계약이 아니다.
 - 배포 CSS는 원격 글꼴을 참조하지 않는다. `sebul`과 `gothic`은 플랫폼 한글 글꼴
   목록(font stack)을 쓰고 그림 자소 글꼴의 SVG 자소판(직접 그린 그림, ADR-011)은 패키지에 포함한다. 역사적 J해바라기
   비교 스크립트와 라이선스 경계는 `THIRD_PARTY_NOTICES.md`를 따른다.
+- 기기 글꼴 재료의 배치는 자모마다 정해진 표준 잉크 상자(`spec/jamo-ink-boxes.json`)를 전제로 한다. 자모는 그
+  상자에 재료(ADR-024)로 그린다 — `element`(sebul·gothic·malang 기본): 원소(획)를 CSS 상자로, 기기 글꼴과 무관하게
+  같은 모양. `device`(칠만 다른 꾸러미 기본, 페이지 `--fy-face: device`): 자모마다 캔버스 화소로 그 기기 글꼴의 잉크
+  상자를 재서 표준 상자로 옮기고 글자를 `::before`로 그린다(ADR-023). `svg`: 칸 계약 그림 세트(`jamo-set`)와 렌더링 깊이.
 - 프레임워크 어댑터는 코어 안정화 후 추가
 
 ## 브라우저 런타임 범위 밖

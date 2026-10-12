@@ -1,6 +1,6 @@
 # 나만의 꾸밈 글꼴 만들기
 
-목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
+목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
 
 글꼴의 자모 배치는 교정이 필요하므로 새로 만들지 않는다. **기반 글꼴(`sebul` 또는 `gothic`) 위에 꾸밈 CSS를 얹어** 클래스 하나로 다시 쓰는 "나만의 글꼴"을 만든다. 파일 하나(`my-font.css`)로 저장해 여러 페이지에서 쓴다. 브라우저에서 고르며 만들어 보려면 `https://font.tty.link/fonts.html`의 글꼴 견본에서 **꾸미기**를 누른다(같은 형식의 CSS를 복사·내려받는다).
 
@@ -14,14 +14,14 @@
 ```
 
 ```html
-<script src="https://font.tty.link/lib/font-kku.js" data-fonts="sebul"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul"></script>
 <link rel="stylesheet" href="./my-font.css" />
 <font-kku font="sebul" class="kku-berry" size="56">딸기 우유</font-kku>
 ```
 
 ## 재료
 
-모두 페이지 CSS다. 자소 노드 `[part~="jamo"]`나 역할별 `part`([styling.md](https://font.tty.link/lib/skill/styling.md))에 준다.
+모두 페이지 CSS다. 자소 노드 `[part~="jamo"]`나 역할별 `part`([styling.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/styling.md))에 준다.
 
 | 하고 싶은 것 | 쓰는 것 |
 |---|---|
@@ -31,7 +31,7 @@
 | 속 빈 글자(네온) | `-webkit-text-fill-color: transparent` + 외곽선 + 관 속 흰 심 `text-shadow: 0 0 0.04em #fff` + 빛번짐은 바탕 요소에 `--fy-glow: drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.15em currentColor)`(빛 색은 자모 `color`) |
 | 스티커 테두리 | 8방향 흰 `text-shadow` (`0.05em 0 #fff, -0.05em 0 #fff, 0 0.05em #fff, …`) |
 | 입체 그림자 | 같은 방향으로 겹친 `text-shadow` (`0.02em 0.02em 0 색, 0.04em 0.04em 0 색, …`) |
-| 손맛 흔들림 | `seed` + `jamo-seeds` 속성 + 변주 클래스 `class="kku-vary-tilt kku-vary-bob"`(꾸밈 확장 `data-addons="looks"`, 겹침 검사를 거친 폭). 굵기·너비·색조·농담은 `kku-vary-weight`·`kku-vary-width`·`kku-vary-hue`·`kku-vary-ink` — [compose.md](https://font.tty.link/lib/skill/compose.md) |
+| 손맛 흔들림 | `seed` + `jamo-seeds` 속성 + 변주 클래스 `class="kku-vary-tilt kku-vary-bob"`(꾸밈 확장 `data-addons="looks"`, 겹침 검사를 거친 폭). 굵기·너비·색조·농담은 `kku-vary-weight`·`kku-vary-width`·`kku-vary-hue`·`kku-vary-ink` — [compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md) |
 | 움직임 | `animate` 속성 — compose.md |
 
 ## 지킬 것

@@ -1,0 +1,604 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:font-kku:design:1",
+  "title": "font-kku Design — 한글 조립 디자인 설정(ADR-025)",
+  "description": "FontKku.registerDesign(name, design)에 넘기는 디자인 JSON의 모양. 편집기·도구용 보조 스키마이고, 정본 검증은 런타임 registerDesign이다(소스·조립식·조각 참조, 같은 구체성 규칙 충돌) — FontKku.validateDesign이 같은 규칙으로 오류를 모두 코드·자리와 함께 돌려준다. 설계 v1.1 스키마(docs/PLAN/ponkku-final-design-v1.1/spec/design.schema.json)에서 저장소 대조 정정을 넣었다: version·id·rules·fallback은 생략할 수 있고, 짜임은 right·bottom·split-right(v1.0 이름도 받는다). 설계 v1.2(docs/PLAN/ponkku-final-design-v1.2/)의 layout(배치 프로파일·revision)을 더했다 — version 1.2는 layout이 필수다(ADR-026).",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "enum": [
+        "1.0",
+        "1.1",
+        "1.2"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "primitive",
+        "svg",
+        "font"
+      ]
+    },
+    "layout": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "profile",
+        "revision"
+      ],
+      "additionalProperties": false,
+      "description": "등록된 배치 프로파일(spec/layout-profiles.json)과 그 revision(ADR-026). 모델·문맥 허용성은 프로파일 한 곳에 있고 여기 되풀이하지 않는다. 1.2 디자인은 반드시 적는다. 적지 않은 1.0·1.1 디자인은 지금 배치(legacy)로 그린다."
+    },
+    "sources": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "method": {
+          "enum": [
+            "auto",
+            "direct"
+          ]
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "roleSources": {
+      "type": "object",
+      "properties": {
+        "initial": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "medial": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "final": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "standalone": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+          },
+          "match": {
+            "$ref": "#/$defs/match"
+          },
+          "apply": {
+            "$ref": "#/$defs/apply"
+          }
+        },
+        "required": [
+          "id",
+          "match",
+          "apply"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "properties": {
+        "sourceIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+          },
+          "uniqueItems": true
+        },
+        "allowPrimitive": {
+          "type": "boolean"
+        },
+        "onComposeFailure": {
+          "enum": [
+            "error",
+            "direct",
+            "primitive"
+          ]
+        },
+        "unverifiedFont": {
+          "enum": [
+            "allow-with-warning",
+            "reject"
+          ]
+        }
+      },
+      "required": [
+        "sourceIds",
+        "allowPrimitive",
+        "onComposeFailure",
+        "unverifiedFont"
+      ],
+      "additionalProperties": false
+    },
+    "editor": {
+      "type": "object",
+      "properties": {
+        "authoringTarget": {
+          "enum": [
+            "origin8",
+            "basic24",
+            "full40"
+          ]
+        },
+        "locks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "jamo": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1
+              },
+              "role": {
+                "enum": [
+                  "initial",
+                  "medial",
+                  "final",
+                  "standalone"
+                ]
+              },
+              "part": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "jamo"
+            ],
+            "additionalProperties": false
+          },
+          "uniqueItems": true,
+          "description": "작업실 잠금(설계 v1.2 §13.6) — 자동 섞기 같은 일괄 바꾸기가 건드리지 않는 자모·역할·조각. role이 없으면 모든 역할, part가 없으면 자모 전체. 그리기에는 쓰지 않는다(revision만 바뀐다)"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "display": {
+      "type": "object",
+      "properties": {
+        "detail": {
+          "enum": [
+            "jamo",
+            "parts",
+            "stroke"
+          ]
+        },
+        "seed": {
+          "type": "string"
+        },
+        "variationScope": {
+          "enum": [
+            "jamo",
+            "occurrence"
+          ]
+        }
+      },
+      "required": [
+        "detail"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "mode",
+    "sources",
+    "defaults"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "source": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "primitive",
+            "svg",
+            "font"
+          ]
+        },
+        "builtin": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assetSet": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "style": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stretch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceMode": {
+          "enum": [
+            "existing",
+            "local",
+            "explicit-resource"
+          ]
+        },
+        "variationSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "cells": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "uniqueItems": true,
+          "description": "svg 소스에서 보이는 자모 칸(미리보기). 원소 그림(@…)은 늘 보인다"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "primitive"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "family"
+                  ]
+                },
+                {
+                  "required": [
+                    "assetSet"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "svg"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "assetSet"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "family"
+                  ]
+                },
+                {
+                  "required": [
+                    "builtin"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "font"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "family"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "assetSet"
+                  ]
+                },
+                {
+                  "required": [
+                    "builtin"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "binding": {
+      "$ref": "#/$defs/apply"
+    },
+    "match": {
+      "type": "object",
+      "properties": {
+        "jamo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "role": {
+          "enum": [
+            "initial",
+            "medial",
+            "final",
+            "standalone"
+          ]
+        },
+        "vowelLayout": {
+          "enum": [
+            "right",
+            "bottom",
+            "split-right",
+            "vertical",
+            "horizontal",
+            "mixed"
+          ]
+        },
+        "hasFinal": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "jamo"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "anyOf": [
+              {
+                "required": [
+                  "vowelLayout"
+                ]
+              },
+              {
+                "required": [
+                  "hasFinal"
+                ]
+              }
+            ]
+          },
+          "then": {
+            "required": [
+              "role"
+            ]
+          }
+        }
+      ]
+    },
+    "apply": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "method": {
+          "enum": [
+            "auto",
+            "direct",
+            "compose"
+          ]
+        },
+        "recipe": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bindings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/binding"
+          }
+        },
+        "fallbackSources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+          },
+          "uniqueItems": true
+        },
+        "fit": {
+          "enum": [
+            "preserve-aspect",
+            "allow-anisotropic"
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "minProperties": 1,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "method"
+            ],
+            "properties": {
+              "method": {
+                "const": "compose"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "recipe"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "recipe"
+            ]
+          },
+          "then": {
+            "required": [
+              "method"
+            ],
+            "properties": {
+              "method": {
+                "enum": [
+                  "auto",
+                  "compose"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "bindings"
+            ]
+          },
+          "then": {
+            "required": [
+              "recipe"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "method"
+            ],
+            "properties": {
+              "method": {
+                "const": "direct"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "recipe"
+                  ]
+                },
+                {
+                  "required": [
+                    "bindings"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "version": {
+            "const": "1.2"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "then": {
+        "required": [
+          "layout"
+        ]
+      }
+    }
+  ]
+}

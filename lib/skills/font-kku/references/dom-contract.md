@@ -65,9 +65,18 @@
 - `data-fy-sprite-paint="mask"` — sprite font의 바탕 요소에 `--fy-sprite-paint: mask`가 걸렸을 때(ADR-014). 부분 벡터 세트에서는 누락 칸의 자소판 마스크에 적용된다. 코어 마스크 규칙의 게이트다
 - `data-fy-material="vector"`, `data-fy-jamo-set="<name>"` — sprite font에 `jamo-set`이 걸리고 그 자모 세트가 등록돼 있을 때(ADR-013). 실제 SVG가 있는 노드에만 `data-fy-vector-cell`이 붙고 벡터 규칙이 적용된다. 없는 칸은 기반 자소판을 유지한다. 등록된 칸의 노드마다 `<svg part="vector" data-cell="r<행>-<자모>" viewBox="0 0 100 100" aria-hidden="true">`가 붙는다
 - `data-fy-glow="filter"` — 기기 글꼴 바탕 요소에 빛 칠(`--fy-font-glow`/페이지 `--fy-glow`, `none`이 아닌 drop-shadow 목록)이 걸렸을 때([ADR-021](../../../docs/ADR/ADR-021-glow-paint.md)). 코어가 자모 글자를 `::before`로 그리고 slot clip을 거기에 옮기며, 자모 노드는 글자를 숨기고 `filter`로 빛만 그린다. `::before`는 `--fy-ink-visibility`(기본 visible)를 따르므로, 이때 자모 하나를 숨기려면 `opacity`를 쓴다
+- `data-fy-face="element|device|svg"` — 세벌·고딕 계열(기기 글꼴 재료) 바탕 요소의 글꼴이 표준 잉크 상자(`--fy-font-ink-boxes: standard`, 페이지 `--fy-ink-boxes`)를 밝혔을 때 자모를 무엇으로 그리는지([ADR-024](../../../docs/ADR/ADR-024-hangul-principle-rendering.md)). 글꼴 `--fy-font-face`(sebul·gothic·malang은 `element`, 칠만 다른 꾸러미는 `device`), 페이지 `--fy-face`가 이긴다. `fontInfo(host).face`도 같은 값이다. 어느 값이든 자모 노드는 표준 전진폭 `--fy-face-width`를 갖고 노드 자기 글자는 `text-indent`로 밀어 둔다. 아래 표현은 모두 `spec/html-cases.json` 직렬화 밖의 런타임 표현층이다(생성기가 `[part="hoek"]` 아래를 건너뛴다). 네 언어 정적 렌더러는 글꼴을 밝히지 않은 호출에서 `element` 표면(host 값, 도장 노드의 `--fy-face-width`와 획, 낱자)을 런타임 문자열 그대로 낸다 — [ADR-027](../../../docs/ADR/ADR-027-static-element-face.md), 정답 `spec/element-layer.json`, `face="device"`면 뺀다.
+  - `element`(원소, 기본): 자모 노드 안에 획마다 `<span part="hoek">`(획 깊이와 같은 `data-hoek*`), 마디마다 `<span part="element" data-element="line|ring">`(inline `--fy-el-*`). slot clip은 획 묶음이 받는다. 굵기 `--fy-element-width`·끝 `--fy-element-cap`(`round|butt`면 바탕 요소에 `data-fy-element-cap`)·속 빈 칠 `--fy-element-outline`·`--fy-element-fill`.
+  - `device`(기기 글꼴, ADR-023): 자모 노드마다 `--fy-face-glyph`·`--fy-face-size`·`--fy-face-x`·`--fy-face-y`·`--fy-face-scale-x`·`--fy-face-scale-y`가 inline으로 붙고 코어가 글자를 `::before`로 그린다. 캔버스를 읽을 수 없으면 값이 없고 조합용 자모를 그대로 그린다.
+  - `svg`(그림 세트): 바탕 요소의 `jamo-set`이 칸 계약 세트(`frame: "box"`)일 때. 획 묶음에 쓴 그림 키 `data-hoek-drawing`과 그림 상자 `<span part="element" data-element="box">`, 원소 그림을 쓴 마디에는 `data-element-drawing`이 붙고 그 안에 `<svg part="vector">`가 든다(원소 그림 `@line`·`@dot`·`@ring`, 그 종류가 없으면 세트의 원형 그림 `ㅡ`·`ㆍ`·`ㅇ` — 없으면 속성 없는 CSS 상자). 일부만 그린 셈 치기(미리보기)는 디자인 소스의 `cells`다(ADR-025 — 깊이 고정 변수는 공개 전에 없앴다).
+  - 머리 음절(ADR-024 §2): `element`·`svg`에서 `syllable` 깊이의 head 노드는 획 묶음이 둘이고 각 `[part="hoek"]`에 `data-fy-head-part="initial|medial"`(안쪽 초성·모음)이 붙는다. 런타임이 그린 뒤 그 글꼴의 받침 없는 음절(고·구·그)의 초성 t·중성 m 자리를 재서 두 묶음을 그 비례로 옮긴다(`--fy-el-*`) — 재는 동안 관리 root 안에 `data-fy-probe` 음절을 잠깐 넣었다 뺀다(같은 동기 구간, 남지 않는다). 스타일만 바뀐 재해석(`restyle`)에서도 다시 잰다. `spec/html-cases.json` 직렬화 밖이다.
+  - 그려지지 않은 바탕 요소(display: none 안)는 굵기 보정·머리 맞춤을 미뤘다가(ResizeObserver) 보이면 다시 하고 `font-kku:render`(`restyle`)를 낸다.
+  - 낱자(ADR-025 §6): `element`·`svg`에서 음절이 아닌 호환 자모 글자(`part="content"`, ㄱ–ㅣ)에도 런타임이 `data-fy-standalone="<자모>"`를 찍고 자모 노드처럼 획 묶음을 넣는다(표준 상자 `spec/jamo-ink-boxes.json`의 낱자 51, 뼈대는 곧은 꼴 — 받침 꼴, ㄸ·ㅃ·ㅉ는 가로 모음 위 꼴). 글자는 `text-indent`로 밀어 둔다. `spec/html-cases.json` 직렬화에는 들지 않는다
+  - 글꼴 팔레트(ADR-025 §9): 글꼴 글자 재료(`device`)에 글꼴 디자인(`mode: "font"`)이 걸리면 자모 노드마다 고른 글꼴을 inline `font-family`(·`font-weight`·`font-style`)로 두고, 한 노드를 조각마다 다른 글꼴이나 조립식으로 그리면 노드에 `data-fy-leaves`를 찍고 조각마다 `<span part="leaf" data-leaf-source="<소스>" data-leaf-path="<조각 경로>">낱자</span>`(inline `--fy-leaf-size`·`--fy-leaf-x`·`--fy-leaf-y`·`--fy-leaf-scale-x`·`--fy-leaf-scale-y`, 노드 `::before`와 같은 맞춤)를 넣는다. 그 노드는 `::before`를 그리지 않는다
+- `data-fy-layout="<profile>"`, `data-fy-layout-model="fixed-three|adaptive-square"` — 배치 프로파일([ADR-026](../../../docs/ADR/ADR-026-sebul-fixed-layout.md)). 글꼴을 밝히지 않은 바탕 요소는 기본 `sebul-fixed-v1`(세벌 고정), 1.2 디자인은 자기 `layout`. 글꼴을 밝힌 바탕 요소·배치를 적지 않은 이전 디자인·`--fy-design: legacy`는 지금 배치라 두 속성이 없다. 세벌 고정이면 해석된 자모 깊이가 `split`/`whole`이고(합자 모음은 고정 조각, 겹받침은 통짜, 머리 음절 없음), 자모 노드에 역할 도장이 붙는다(§7). 네 언어 정적 렌더러(`render_html`)도 글꼴을 밝히지 않은 호출(font 없음·빈 문자열, `FontDefinition` 없음)에 같은 표면을 쓴다 — host `font` 속성 없음, 두 속성은 `data-fy-coda-depth` 바로 뒤, 도장은 런타임 문자열 그대로, 그 뒤 `data-fy-face="element"`와 원소 획(ADR-027). `spec/html-cases.json`(1.9)의 `implicitFont` 사례가 이 표면과 도장 열쇠 74개를 정합 계약으로 고정한다(원소 층은 `spec/element-layer.json`)([언어 공통 렌더 계약](../../../docs/ARCHITECTURE/renderer-contracts.md#기본-배치세벌-고정))
+- `data-fy-design="<name>"`, `data-fy-design-status` — 디자인([ADR-025](../../../docs/ADR/ADR-025-hangul-composition-design.md), 실험). 글꼴 `--fy-font-design`·페이지 `--fy-design`이 `FontKku.registerDesign`으로 등록한 이름을 고르면 `data-fy-design`이 붙고 재료(`data-fy-face`)·그림 세트·직접/조합 규칙을 그 디자인이 정한다(`jamo-set`·`--fy-face`는 구조 선택에 쓰지 않는다). 고르지 못하면 지금 설정으로 그리고 `data-fy-design-status`에 까닭을 남긴다 — `DESIGN_TOKEN_INVALID`(이름 문법), `DESIGN_NOT_REGISTERED`(미등록·`unregisterDesign`으로 지움 — 등록되는 순간 다시 그린다), `DESIGN_UNSUPPORTED_FONT`(이 글꼴은 디자인을 받지 않는다 — 그림 자소 재료이거나 표준 잉크 상자 `--fy-font-ink-boxes`를 밝히지 않았거나 페이지가 `--fy-ink-boxes: none`으로 껐다. 이름 문법이 틀리면 `DESIGN_TOKEN_INVALID`가 먼저, 등록해도 바뀌지 않는다). `fontInfo(host).designStatus`·`traceOf(host).designStatus`도 같은 값이다. 디자인을 `registerDesign(name, json, { replace: true })`로 바꾸면 그 이름을 고른 바탕 요소가 다시 그린다. `legacy`는 물려받은 선택을 끊는다. 자모 노드 DOM은 같은 꼴(`part="hoek"`·`part="element"`)이고, 어느 조각을 어느 소스·규칙으로 그렸는지는 DOM이 아니라 `FontKku.traceOf(host)`가 돌려준다
 - `data-fy-stroke-depth="stroke|jamo"` — 획 깊이를 요청했을 때만(§3.4). 벡터 자소면 `stroke`, 획으로 쪼갤 수 없는 재료(기기 글꼴·자소판)면 `jamo`로 되돌린 것을 알린다
 - `data-source`
-- `aria-label`
 - `--fy-size`
 - `--fy-space-width`, `--fy-word-gap` (`spacing` 설정 시)
 - `--fy-seed` (`seed` 설정 시)
@@ -77,8 +86,9 @@ decorator의 `data-font`/`data-profile`/`data-size`/`data-spacing`/`data-wrap-un
 접근성 메모:
 
 - 관리 root(`part="root"`, `data-fy-root="true"`)에는 `aria-hidden="true"`가 붙어 분해 자소 DOM이 보조기기에서 숨겨진다.
-- root의 형제 `part="sr-source"`(`data-fy-sr="true"`) 노드가 원문 텍스트를 담는 1차 스크린리더/복사 표면이다 (시각적으로만 숨김).
-- `aria-label` / `data-source`는 호환 표면으로 계속 기록된다. 비표준 `role="text"`는 더 이상 설정하지 않는다.
+- root의 형제 `part="sr-source"`(`data-fy-sr="true"`) 노드가 원문 텍스트를 담는 1차 스크린리더/복사 표면이다 (시각적으로만 숨김). 관리 root(`part="root"`)는 `user-select: none`이라 바탕 요소를 골라 복사하면 원문만 나온다 — 자모로 쪼갠 노드 글자가 섞이지 않는다(ADR-025 §12). 대신 선택 강조가 그림 위에 보이지 않는다.
+- 런타임과 정적 렌더러는 바탕 요소에 `aria-label`도 `role`도 쓰지 않는다(ADR-003 보강, 2026-10-12). 버튼·링크·제목의 이름은 sr-source 텍스트에서 계산되고, 작성자가 붙인 `aria-label`·`role`은 그대로 둔다. 정적 렌더러 0.1.0·예전 런타임이 붙인 호환 라벨(`aria-label` = `data-source`, `role` 없음)은 넘겨받을 때 지운다. `data-source`는 원문 기록으로 남는다(보조 기술은 읽지 않는다).
+- sr-source는 `white-space: pre`라 줄바꿈·연속 공백·탭이 복사와 읽기에 그대로 남는다.
 - state 없는 관리 DOM(clone 등)의 원문 복구는 `data-source` → `sr-source` → `textContent` 순으로 폴백한다.
 - SEO/검색 보장은 별도 주장으로 확대하지 않는다.
 
@@ -132,7 +142,7 @@ decorator의 `data-font`/`data-profile`/`data-size`/`data-spacing`/`data-wrap-un
 
 - **topology 계약은 depth와 무관하다.** `data-layout-key` 9키, `data-jung-layout`, `data-jong-layout`, `data-fy-layout-bucket`, semantic frame이 모든 depth 조합에서 동일하다. 달라지는 것은 자모 노드 개수와 `data-fy-pos` 값뿐이다.
 - 합자가 한 노드가 되면 `jungseong-cluster` / `jongseong-cluster` wrapper는 생성되지 않는다 (cluster 대상 CSS는 깨지지 않고 미사용이 된다).
-- `syllable`의 head 노드는 `part="jamo head"` / `data-jamo-role="head"` / `data-fy-role="head"`이고 `data-jamo`에 **완성형 음절**이 들어간다. 완성형이라 자모 선택자가 없으므로 **base 모음을 `data-jamo-base`(conjoining)로 함께 노출**한다 — CSS가 ㅜ계/ㅗ계 head를 분기하는 표면이다(예: `[data-fy-pos="hs"][data-jamo-base="ᅮ"]`). 자모 테이블에 없는 값이므로 `data-jamo-index`와 sprite 매핑은 붙지 않는다 — 즉 **sprite trail은 syllable의 split 음절을 그릴 수 없다**(시트는 자모 단위다). 나머지 음절은 composite와 같으므로 sprite로 그려진다.
+- `syllable`의 head 노드는 `part="jamo head"` / `data-jamo-role="head"` / `data-fy-role="head"`이고 `data-jamo`에 **완성형 음절**이 들어간다. 원소·SVG 재료에서 head 안의 초성·모음 배치는 그 글꼴의 받침 없는 음절(`t`·`m` 자리)을 따른다(`data-fy-head-part`, 위 재료 절) — 기기 글꼴 재료는 완성형 글자 그대로다. 완성형이라 자모 선택자가 없으므로 **base 모음을 `data-jamo-base`(conjoining)로 함께 노출**한다 — CSS가 ㅜ계/ㅗ계 head를 분기하는 표면이다(예: `[data-fy-pos="hs"][data-jamo-base="ᅮ"]`). 자모 테이블에 없는 값이므로 `data-jamo-index`와 sprite 매핑은 붙지 않는다 — 즉 **sprite trail은 syllable의 split 음절을 그릴 수 없다**(시트는 자모 단위다). 나머지 음절은 composite와 같으므로 sprite로 그려진다.
 - 논리 정보는 `glyph.jamo`(소스 자모 3벌)에 그대로 남고, depth는 `glyph.display`만 바꾼다. 원문 복구·접근성 표면(`sr-source`, `data-source`)은 depth와 무관하다.
 - 런타임은 `getComputedStyle(host)`로 세 변수를 읽으므로 프로필이 선언하거나 사용자가 인스턴스 단위로 덮어쓸 수 있다. 알 수 없는 값은 각 축의 기본값(`split`)으로 정규화된다. **주의: MutationObserver는 `data-*` 속성만 관찰하므로 depth 변수를 바꾼 뒤에는 `FontKku.refresh(host)`를 호출해야 반영된다** (expression-mode와 같은 특성).
 - head 옆의 tail 노드는 단일 중성이어도 `part="jamo jungseong jungseong-tail"` / `data-fy-role="jung-tail"`을 유지한다 — role-tier 폰트의 tail 스타일이 depth와 무관하게 같은 표면을 쓴다.
@@ -280,6 +290,7 @@ glyph는 NFC 뒤의 extended grapheme cluster 하나다. 한 코드포인트짜�
 | host | `data-fy-host` | host mode |
 | host | `data-fy-expression` | font CSS가 계산한 표현 방식(디자인 축) |
 | host | `data-fy-vowel-depth`, `data-fy-coda-depth` | font CSS가 계산한 자모 분해 깊이의 독립 두 축 |
+| host | `data-fy-layout`, `data-fy-layout-model` | 배치 프로파일(ADR-026) — 글꼴을 밝히지 않은 바탕 요소(기본 `sebul-fixed-v1`)와 1.2 디자인. 정적 렌더러도 글꼴을 밝히지 않은 호출에 쓴다(html-cases 1.9) |
 | host | `data-fy-font`, `data-fy-profile`, `data-fy-size`, `data-fy-spacing`, `data-fy-wrap-unit`, `data-fy-animate`, `data-fy-seed` | canonical 정규화 옵션 상태 |
 | host | `data-fy-material`, `data-fy-sprite-kinds` | font CSS가 선언한 재료와 시트에 칸이 있는 자모 종류(비-`system` font만) |
 | decorator host | `data-font`, `data-profile`, `data-size`, `data-spacing`, `data-wrap-unit`, `data-animate`, `data-seed` | authored 지속 입력(런타임이 보존) |
@@ -290,6 +301,8 @@ glyph는 NFC 뒤의 extended grapheme cluster 하나다. 한 코드포인트짜�
 | glyph | `data-fy-layout-bucket` | 큰 구조 버킷 |
 | glyph/body/cluster/jamo | `data-fy-axis`, `data-fy-open`, `data-fy-jong-count` | semantic frame |
 | jamo | `data-jamo` | 실제 conjoining jamo 값 |
+| jamo | `data-fy-stamp="initial\|medial\|final"`, 인라인 `--fy-stamp-left/top/size/scale-x/scale-y/weight/stroke` | 세벌 고정(ADR-026)의 역할 도장 — 역할·자모마다 한 값(합자 모음 조각은 그 합자 모음의 조각 도장). 코어 CSS가 slot 값을 여기서 받고 글꼴 CSS의 slot·역할·자모·문맥 보정과 자르기를 끈다. `data-fy-pos`는 정보로 남는다. 정적 렌더러도 같은 문자열을 쓴다(html-cases 1.9, 순서는 색인 변수 뒤) |
+| jamo | `data-fy-draw="cho\|bar"` | 세벌 고정 초성의 그림 문맥(원소·그림 재료의 초성 꼴) — 모음 짜임 대신 프로파일이 정한다 |
 | jamo/cluster | `data-jamo-role` | `choseong`, `jungseong`, `jongseong`, `jungseong-cluster`, `jongseong-cluster` |
 | jamo | `data-fy-role` | `choseong`, `jung-main`, `jung-base`, `jung-tail`, `jong-main`, `jong-left`, `jong-right` |
 | jamo | `data-fy-pos` | placement token |
@@ -459,7 +472,7 @@ font CSS가 하지 않는 것: 코어 소유 속성(`margin`, `inset`, `transfor
 - `FontKku.refresh(target, options)`
 - `FontKku.refreshAll(root)` — font 메타데이터·depth·expression mode를 다시 해석해 구조가 바뀐 host만 attribute를 다시 읽어 재렌더, id/contract만 바뀌면 상태만 갱신. shadow root 안 host 포함 (stylesheet `load`는 자동 처리)
 - `FontKku.loadFont(href, { root }?)` — stylesheet `<link>`를 삽입(같은 URL이면 재사용)하고 load 뒤 `refreshAll`. 대기·성공 중에는 같은 Promise, 실패하면 link를 지우고 reject(재호출 시 재시도). `Promise<HTMLElement[]>`
-- 이벤트 `font-kku:render` — 모든 렌더(자동 재렌더 포함) 뒤 host에서 발생(bubbles, composed). `detail = { reason, font, source, resolved }`, reason은 `render | refresh | upgrade | connect | attribute | mutation | restyle`
+- 이벤트 `font-kku:render` — 모든 렌더(자동 재렌더 포함) 뒤 host에서 발생(bubbles, composed). `detail = { reason, font, source, resolved }`, reason은 `render | refresh | upgrade | connect | attribute | mutation | restyle` — 숨은 채 그려진 원소·SVG 바탕 요소가 보여 굵기·머리를 다시 맞추면 `restyle`
 - opt-in `jamo-seeds`(decorator `data-jamo-seeds`, JS `jamoSeeds`) — 렌더마다 host seed를 반영한 `--fy-jamo-seed`를 자모 노드에 다시 건다. 켜면 host에 `data-fy-jamo-seeds="true"`가 찍힌다(기본 DOM 계약 불변, 사이드카 미지원)
 - `FontKku.fontInfo(host)` — 직전 렌더의 `{ font, id, contract, material, loaded }`, 렌더 전이면 `null`
 - `FontKku.upgrade(target)`

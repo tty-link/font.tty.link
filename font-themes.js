@@ -209,7 +209,7 @@
     var lines = [
       "<!doctype html>",
       '<meta charset="utf-8">',
-      '<script src="' + config.cdn + 'font-kku.js" data-fonts="' + esc(fonts) + '"' +
+      '<script src="' + config.runtime + '" data-fonts="' + esc(fonts) + '"' +
         (!shortcut && recipe.addons.length ? ' data-addons="' + recipe.addons.join(" ") + '"' : "") + "></" + "script>"
     ];
     if (recipe.tone && recipe.tone !== "light") {
@@ -804,6 +804,7 @@
     if (!T) return;
     config = {
       cdn: options.cdn,
+      runtime: options.runtime || options.cdn + "font-kku.js",
       copyText: options.copyText
     };
     // 고정 머리 높이(좁은 화면에서는 메뉴가 둘째 줄로 내려간다) — 조합기 견본이 그 아래에 붙는다

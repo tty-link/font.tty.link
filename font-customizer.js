@@ -312,7 +312,7 @@
     return "<!doctype html>\n<html lang=\"ko\">\n<head>\n  <meta charset=\"utf-8\" />\n" +
       "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
       "  <title>" + escapeHtml(s.n) + " — 폰꾸 나만의 글꼴</title>\n" +
-      "  <script src=\"" + config.cdn + "font-kku.js\" data-fonts=\"" + s.f + "\"></" + "script>\n" +
+      "  <script src=\"" + config.runtime + "\" data-fonts=\"" + s.f + "\"></" + "script>\n" +
       "  <style>\n    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: " + bg + "; }\n" +
       css.trim().split("\n").map(function (line) { return "    " + line; }).join("\n") +
       "\n  </style>\n</head>\n<body>\n  " + usageTag(s).replace("<font-kku", "<font-kku size=\"" + size + "\"") + "\n</body>\n</html>\n";
@@ -941,6 +941,7 @@
       fonts: options.fonts,
       text: options.text || function () { return ""; },
       cdn: options.cdn,
+      runtime: options.runtime || options.cdn + "font-kku.js",
       skillUrl: options.skillUrl,
       copyText: options.copyText
     };

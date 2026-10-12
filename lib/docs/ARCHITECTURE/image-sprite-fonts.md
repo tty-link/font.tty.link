@@ -255,7 +255,7 @@ python3 scripts/build_sprite.py \
 
 ## 접근성
 
-- 원문 텍스트는 바탕 요소의 `aria-label` + `data-source`에 보존되므로 스크린리더가 그대로 읽는다.
+- 원문 텍스트는 화면에 숨긴 `part="sr-source"` 노드와 `data-source`에 보존되므로 스크린리더가 그대로 읽는다.
 - 이미지를 불러오지 못했을 때 기본 텍스트가 드러나도록 `color: transparent`를 권장한다(`font-size: 0`은 복사·붙여넣기 호환성이 떨어짐).
 - `prefers-contrast: more` 미디어 쿼리에서는 그림 자소 대신 CSS 변수 글꼴로 되돌리는 분기를 권장한다.
 

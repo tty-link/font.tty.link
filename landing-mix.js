@@ -56,7 +56,7 @@
     });
     var addons = (state.look ? ["looks"] : []).concat(state.motion && T.motions[state.motion].source === "motion" ? ["motion"] : []);
     code.textContent =
-      '<script src="…/font-kku.js" data-fonts="' + state.font + '"' + (addons.length ? ' data-addons="' + addons.join(" ") + '"' : "") + "></" + "script>\n" +
+      '<script src="…/font-kku.min.js" data-fonts="' + state.font + '"' + (addons.length ? ' data-addons="' + addons.join(" ") + '"' : "") + "></" + "script>\n" +
       '<font-kku font="' + state.font + '"' + (state.look ? ' class="kku-look-' + state.look + '"' : "") +
       (state.motion ? ' animate="' + state.motion + '"' : "") + ">고르고 섞기</font-kku>";
   }

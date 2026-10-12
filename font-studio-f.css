@@ -1,0 +1,44 @@
+/* 작업실 디자인 도구 탭 껍데기(font-studio-f-shell.js, PLAN-HANGUL-001 F0). 탭 줄은 붙인 칸이 있을 때만 보이고, 칸 안의
+ * 모양은 각 묶음의 CSS(font-studio-<묶음>.css)가 맡는다. 숨기기는 [hidden](demo.css가 display: none !important)만 쓴다. */
+
+.studio-f-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-block-start: 10px;
+  border-block-start: 1px solid var(--demo-border);
+}
+
+.studio-f-tab {
+  font: 12px/1.2 var(--demo-sans);
+  padding: 6px 12px;
+  border: 1px solid var(--demo-border-strong);
+  border-radius: 999px;
+  background: var(--demo-surface);
+  color: var(--demo-ink-soft);
+  cursor: pointer;
+}
+
+.studio-f-tab[aria-selected="true"] {
+  border-color: var(--demo-accent);
+  color: var(--demo-accent);
+  background: var(--demo-accent-soft);
+}
+
+.studio-f-tab:focus-visible {
+  outline: 2px solid var(--demo-accent);
+  outline-offset: 2px;
+}
+
+.studio-f-panel {
+  display: grid;
+  gap: 10px;
+  min-inline-size: 0;
+}
+
+.studio-design-main > .studio-f-panel {
+  padding: 12px;
+  border: 1px solid var(--demo-border);
+  border-radius: var(--demo-radius);
+  background: var(--demo-surface);
+}

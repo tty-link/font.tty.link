@@ -20,6 +20,9 @@
     --fy-word-gap: 0px;
     --fy-line-gap: 0.15em;
     --fy-font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif;
+    --fy-font-ink-boxes: standard;
+    --fy-font-face: element;
+    --fy-font-element-width: 0.072em;
     --fy-font-weight: 400;
     --fy-content-y: 0em;
     --fy-content-size: 1em;
@@ -562,6 +565,7 @@
  * 한글 교육 자료에도 쓴다. */
 @layer font-kku.font {
   :where([data-fy-font="saekdong"]) {
+    --fy-font-face: device; /* 글자 칠(외곽선·그림자)이 이 글꼴이라 기기 글꼴 재료로 그린다(ADR-024). 원소 재료로는 기반 글꼴 + kku-look-saekdong */
     color: #26232b;
   }
   :where([data-fy-font="saekdong"]) :is([data-fy-role="choseong"], [data-fy-role="head"]) { color: #d62839; }

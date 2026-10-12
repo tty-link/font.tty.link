@@ -1,25 +1,26 @@
 # 붙이기 — 스크립트 한 줄과 속성
 
-목차: [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)
+목차: [SKILL.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/SKILL.md)
 
 ## 스크립트 한 줄
 
 `<head>`나 `<body>` 끝에 넣는다. `data-fonts`에 첫 화면에 보이는 글꼴 이름을 공백으로 나열하면 런타임이 기본 CSS와 그 글꼴 CSS를 처음부터 불러온다. 나열하지 않은 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다(필요할 때 받기).
 
 ```html
-<script src="https://font.tty.link/lib/font-kku.js" data-fonts="neon sticker"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="neon sticker"></script>
 ```
 
 | 스크립트 속성 | 하는 일 |
 |---|---|
 | `data-fonts` | 처음부터 받을 글꼴(공백·쉼표로 나눔). 첫 화면 제목 글꼴은 여기에 적는다 — 받는 동안 잠깐(최대 3초) 가려진다. 비우면 기본 CSS만 붙인다 |
 | `data-addons` | 확장: `looks`(꾸밈 `kku-look-*`·변주 `kku-vary-*`), `motion`(자모 움직임), `fx`(타자·흩어지기·자석·섞기). 예: `data-addons="looks motion fx"` |
-| `data-jamo-sets` | 벡터 자소 세트를 처음부터 받는다(예: `sprite-system`) — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md) |
+| `data-jamo-sets` | 벡터 자소 세트를 처음부터 받는다(예: `sprite-system`) — [draw-jamo.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/draw-jamo.md) |
 | `data-autoload="false"` | 필요할 때 받기를 끈다. 이때는 쓰는 글꼴을 모두 `data-fonts`에 적는다 |
 
 - `data-fonts`에 없는 글꼴도 쓸 수 있다 — 화면에 나올 때 받는다.
-- 꾸러미 글꼴(`neon` 등) 여러 개 대신 `font="sebul" class="kku-look-neon"`처럼 꾸밈 클래스를 쓰면 CSS를 덜 받는다([compose.md](https://font.tty.link/lib/skill/compose.md)).
+- 꾸러미 글꼴(`neon` 등) 여러 개 대신 `font="sebul" class="kku-look-neon"`처럼 꾸밈 클래스를 쓰면 CSS를 덜 받는다([compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md)).
 - 런타임은 스크립트 주소를 기준으로 CSS와 글꼴 파일을 받는다. 스크립트 주소를 고치거나 런타임 내용을 페이지에 복사해 넣지 않는다.
+- 주소의 `font-kku.min.js`는 jsDelivr가 즉석으로 만든 압축본이다 — 런타임이 CSS·글꼴·확장도 `.min` 압축본으로 받는다. 소스를 읽거나 오류를 따라갈 때만 `.min`을 뺀 `font-kku.js`를 쓴다.
 
 ## 두 가지 쓰는 법
 
@@ -41,14 +42,14 @@
 
 | 전용 태그 | 클래스 방식 | 기본값 | 값 |
 |---|---|---|---|
-| `font` | `data-font` | `sebul` | 글꼴 이름 — [fonts.md](https://font.tty.link/lib/skill/fonts.md) |
+| `font` | `data-font` | `sebul` | 글꼴 이름 — [fonts.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/fonts.md) |
 | `size` | `data-size` | `24px` | px 숫자(`48`) 또는 CSS 길이(`3rem`, `clamp(36px, 8vw, 72px)`) |
 | `spacing` | `data-spacing` | 없음 | 띄어쓰기 폭과 낱말 사이 간격(CSS 길이) |
 | `wrap-unit` | `data-wrap-unit` | `word` | 줄바꿈 단위: `word` 낱말 · `glyph` 글자 · `line` 줄 |
-| `animate` | `data-animate` | 없음 | 움직임 이름 — [compose.md](https://font.tty.link/lib/skill/compose.md) |
-| `seed` | `data-seed` | 없음 | 씨앗: `auto`(그릴 때마다 새로) 또는 고정 글(`"가을축제"`) — [styling.md](https://font.tty.link/lib/skill/styling.md) |
+| `animate` | `data-animate` | 없음 | 움직임 이름 — [compose.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/compose.md) |
+| `seed` | `data-seed` | 없음 | 씨앗: `auto`(그릴 때마다 새로) 또는 고정 글(`"가을축제"`) — [styling.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/styling.md) |
 | `jamo-seeds` | `data-jamo-seeds` | 꺼짐 | 붙이면 자모마다 씨앗을 나눠 준다(값 없이 `jamo-seeds`) |
-| `jamo-set` | `data-jamo-set` | 없음 | 그림 자소 글꼴을 자모별 SVG(벡터 자소)로 그린다 — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md) |
+| `jamo-set` | `data-jamo-set` | 없음 | 그림 자소 글꼴을 자모별 SVG(벡터 자소)로 그린다 — [draw-jamo.md](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/skills/font-kku-use/draw-jamo.md) |
 | `stroke-depth` | `data-stroke-depth` | 없음 | `stroke`면 벡터 자소를 획 단위로 쪼갠다 — draw-jamo.md |
 
 상호작용은 속성 `data-kku-fx`(두 방식 모두 같은 이름)로 건다 — compose.md.
@@ -65,14 +66,31 @@
 
 ## 번들러·ESM에서
 
-`<script>` 한 줄 대신 모듈로 불러오면 런타임이 글꼴 CSS의 자리를 모른다. 먼저 자리를 알려 준다.
+npm 프로젝트에서는 패키지를 설치하고 바탕 CSS와 쓰는 글꼴 CSS를 직접 import한다. 스크립트 태그가 없으므로 `data-fonts`·`data-addons`는 쓰지 않는다.
+
+```bash
+npm install @tty.link/font-kku
+```
 
 ```js
-globalThis.FontKkuConfig = { fontBase: "https://font.tty.link/lib/" };
+import FontKku from "@tty.link/font-kku";
+import "@tty.link/font-kku/font-kku.css";
+import "@tty.link/font-kku/profiles/neon.css";
+import "@tty.link/font-kku/font-kku-looks.css";   // 꾸밈·변주 클래스를 쓸 때
+import "@tty.link/font-kku/font-kku-motion.css";  // 자모 움직임을 쓸 때
+import FontKkuFx from "@tty.link/font-kku/fx";     // 상호작용을 쓸 때
+```
+
+`<font-kku>` 전용 태그는 언제 넣어도 저절로 그려진다. 프레임워크가 `class="font-kku"` 요소를 나중에 넣으면 `FontKku.upgrade(요소)`로 그린다.
+
+import하지 않은 글꼴을 필요할 때 받게 하려면 런타임에 글꼴 파일의 자리를 알려 준다.
+
+```js
+globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/" };
 ```
 
 ## 인터넷이 막힌 곳
 
-런타임 주소 대신 파일(`font-kku.js`, `font-kku.css`, `profiles/`, 쓰는 확장 파일)을 같은 폴더 구조로 복사해 `src="./font-kku.js"`로 쓴다.
+런타임 주소 대신 파일(`font-kku.js`, `font-kku.css`, `profiles/`, 쓰는 확장 파일)을 같은 폴더 구조로 복사해 `src="./font-kku.js"`로 쓴다. 파일은 npm 패키지에 그대로 들어 있다 — `npm pack @tty.link/font-kku`로 받은 묶음의 `package/` 폴더나 `node_modules/@tty.link/font-kku/`에서 복사한다.
 
 파일을 페이지와 다른 주소(도메인·포트)에 올려 쓰면 그 서버가 `Access-Control-Allow-Origin` 헤더를 보내야 한다. `crayon`·`pilgi`·`dunggeun`·`butgeul`·`jasu`는 자소판 그림을 CSS 마스크로 칠하는데, 브라우저는 다른 주소의 마스크 그림을 이 헤더 없이는 쓰지 않는다.

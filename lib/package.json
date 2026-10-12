@@ -1,12 +1,9 @@
 {
-  "name": "font-kku",
-  "version": "0.4.0",
+  "name": "@tty.link/font-kku",
+  "version": "0.1.1",
   "description": "Browser library for decomposing Korean Hangul syllables into jamo and rendering them as stylable, repositionable glyph parts",
   "license": "MIT",
-  "homepage": "https://github.com/tty-link/font-kku#readme",
-  "bugs": {
-    "url": "https://github.com/tty-link/font-kku/issues"
-  },
+  "homepage": "https://font.tty.link/",
   "main": "./font-kku.js",
   "types": "./font-kku.d.ts",
   "style": "./font-kku.css",
@@ -100,7 +97,15 @@
     "./spec/render-plan.json": "./spec/render-plan.json",
     "./spec/fonts.json": "./spec/fonts.json",
     "./spec/html-cases.json": "./spec/html-cases.json",
+    "./spec/element-layer.json": "./spec/element-layer.json",
     "./spec/sprite-layout.json": "./spec/sprite-layout.json",
+    "./spec/strokes.json": "./spec/strokes.json",
+    "./spec/jamo-ink-boxes.json": "./spec/jamo-ink-boxes.json",
+    "./spec/jamo-skeletons.json": "./spec/jamo-skeletons.json",
+    "./spec/jamo-recipes.json": "./spec/jamo-recipes.json",
+    "./spec/design.schema.json": "./spec/design.schema.json",
+    "./spec/resolver-cases.json": "./spec/resolver-cases.json",
+    "./spec/authoring-stages.json": "./spec/authoring-stages.json",
     "./spec/tables.json": "./spec/tables.json",
     "./spec/test-cases.json": "./spec/test-cases.json",
     "./spec/themes.json": "./spec/themes.json",
@@ -111,7 +116,7 @@
     "node": ">=18"
   },
   "bin": {
-    "font-kku-text": "./bin/font-kku-text.js"
+    "font-kku-text": "bin/font-kku-text.js"
   },
   "files": [
     "font-kku.js",
@@ -141,8 +146,15 @@
     "spec/capabilities.json",
     "spec/render-plan.json",
     "spec/html-cases.json",
+    "spec/element-layer.json",
     "spec/sprite-layout.json",
     "spec/strokes.json",
+    "spec/jamo-ink-boxes.json",
+    "spec/jamo-skeletons.json",
+    "spec/jamo-recipes.json",
+    "spec/design.schema.json",
+    "spec/resolver-cases.json",
+    "spec/authoring-stages.json",
     "spec/tables.json",
     "spec/test-cases.json",
     "spec/themes.json",
@@ -151,14 +163,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test tests/font_kku.test.js tests/spec_parity.test.js tests/asset_sync.test.js tests/font_lint.test.js tests/font_studio_model.test.js tests/font_kku_ime.test.js tests/font_kku_export.test.js tests/font_kku_fx.test.js",
+    "test": "node --test tests/font_kku.test.js tests/spec_parity.test.js tests/asset_sync.test.js tests/font_lint.test.js tests/font_studio_model.test.js tests/font_studio_design.test.js tests/font_studio_f.test.js tests/font_kku_ime.test.js tests/font_kku_export.test.js tests/font_kku_fx.test.js tests/resolver_cases.test.js tests/layout_cases.test.js tests/element_table.test.js tests/element_boundary.test.js",
     "test:docs": "node scripts/check_markdown_links.js && node scripts/check_document_contracts.js",
     "verify": ".venv/bin/python scripts/verify.py",
+    "verify:release": ".venv/bin/python scripts/verify.py --release",
     "verify:fast": "python3 scripts/verify.py --fast"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tty-link/font-kku.git"
   },
   "publishConfig": {
     "access": "public"

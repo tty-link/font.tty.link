@@ -74,6 +74,9 @@
   var fontSheet = new CSSStyleSheet();
   var documentSheet = new CSSStyleSheet();
   var overlays = [];
+  /* 같은 글꼴 시트를 받는 다른 미리보기 root(디자인 비교 칸 등): { root, chrome } — 재료 덮어쓰기는 [data-studio-host]만
+   * 겨누므로 거기서는 아무것도 바꾸지 않는다 */
+  var previewRoots = [];
   document.adoptedStyleSheets = document.adoptedStyleSheets.concat([documentSheet]);
 
   function coreStylesheetHref() {
@@ -85,6 +88,16 @@
 
   function adoptPreviewSheets() {
     shadow.adoptedStyleSheets = [chromeSheet, fontSheet].concat(overlays);
+    previewRoots.forEach(function (entry) {
+      entry.root.adoptedStyleSheets = entry.chrome.concat([fontSheet]).concat(overlays);
+    });
+  }
+
+  function addPreviewRoot(root, chrome) {
+    if (!previewRoots.some(function (entry) { return entry.root === root; })) {
+      previewRoots.push({ root: root, chrome: chrome || [] });
+    }
+    adoptPreviewSheets();
   }
 
   var state = {
@@ -491,7 +504,8 @@
     var loaded = loadFontText(project.font.css, {
       baseUrl: project.font.baseUrl,
       previewText: project.preview && project.preview.text,
-      material: project.material && project.material.sheet ? project.material : null
+      material: project.material && project.material.sheet ? project.material : null,
+      design: project.design || null
     });
     if (!loaded) {
       return false;
@@ -521,8 +535,16 @@
   /* Replace the edited font with `css` as a fresh document. `extra` carries
    * what the source brought along (project material, preview text, the file
    * handle it came from). Parses first; nothing changes when that fails. */
+  /* 불러오기 차례 — 처음 글꼴을 받는 중에 다른 글꼴을 고르거나(예제 열기·불러오기) 파일·초안을 열면 늦게 끝난 앞 주소
+   * 요청이 그 글꼴을 덮어쓰지 않게, 가장 나중에 시작한 불러오기만 적용한다. lastLoad는 마지막으로 실은 불러오기의 옵션 —
+   * 늦게 붙는 모듈(재료)이 놓친 불러오기를 같은 옵션(초안의 자소판 등)으로 따라잡는다. */
+  var loadTicket = 0;
+  var lastLoad = null;
+
   function loadFontText(css, extra) {
     var options = extra || {};
+    /* 어느 길로 싣든(주소·파일·프로젝트·초안) 그보다 먼저 시작해 아직 받는 중인 주소 불러오기는 버린다 */
+    loadTicket += 1;
     if (typeof css !== "string") {
       message("CSS 텍스트가 아닙니다.", "error");
       return false;
@@ -539,17 +561,25 @@
     if (!setCss(css, { fresh: true })) {
       return false;
     }
+    lastLoad = options;
     emit("load", options);
     return true;
   }
 
   function loadFromUrl(url, label) {
     var absolute = new URL(url, document.baseURI).href;
+    var ticket = ++loadTicket;
     return Promise.all([readUrl(absolute), coreReady]).then(function (results) {
+      if (ticket !== loadTicket) {
+        return;
+      }
       if (loadFontText(results[0], { baseUrl: new URL(".", absolute).href })) {
         message((label || absolute) + "를 불러왔습니다." + parseSummary(), loadTone());
       }
     }, function () {
+      if (ticket !== loadTicket) {
+        return;
+      }
       message("브라우저가 " + absolute + " 읽기를 막았습니다. 'CSS 파일 열기'로 파일을 고르거나 정적 서버로 여세요.", "warn");
     });
   }
@@ -579,7 +609,8 @@
       if (loadFontText(project.font.css, {
         baseUrl: project.font.baseUrl,
         previewText: project.preview && project.preview.text,
-        material: project.material || null
+        material: project.material || null,
+        design: project.design || null
       })) {
         message(file.name + " 프로젝트를 열었습니다." + parseSummary(), loadTone());
       }
@@ -716,12 +747,87 @@
     return where + " · " + plan.variable + " — " + verb;
   }
 
+  // ── 세벌 고정 배치 (ADR-026) ───────────────────────────────────────────
+  /* 디자인이 세벌 고정(fixed-three)을 고르면 런타임이 자모 노드에 역할 도장(--fy-stamp-*)을 적고, 코어 CSS가 그 도장으로
+   * 글꼴 CSS의 자리(slot)·역할·자모·문맥 값을 덮는다(font-kku.css). 그 노드를 편집하면 원문은 바뀌어도 화면은 그대로다 —
+   * 편집을 받지 않고 까닭과 "네모 문맥으로 / 디자인 끄고 글꼴 CSS로"를 보인다. */
+  var STAMP_PROPERTIES = ["left", "top", "size", "scale-x", "scale-y", "weight", "stroke", "density"];
+  var STAMP_ROLE_LABELS = { initial: "초성", medial: "중성", final: "종성" };
+  /* 세벌 고정에서 프로파일·도장이 정해 꺼지는 바탕 요소 변수(글자 칸, 깊이, 합자·겹받침 묶음 변환) */
+  var FIXED_INERT = /^--fy-(glyph-(width|height|gap)|font-(jamo|vowel|coda)-depth|(jung|jong)-cluster-)/;
+
+  function fixedLayout() {
+    return host.dataset.fyLayoutModel === "fixed-three";
+  }
+
+  function stamped(node) {
+    return Boolean(node) && fixedLayout() && node.hasAttribute("data-fy-stamp");
+  }
+
+  function layoutLabel() {
+    var profile = host.dataset.fyLayout || "";
+    var info = FontKku.layoutProfiles && FontKku.layoutProfiles[profile];
+    return profile + (info ? "@" + info.revision : "");
+  }
+
+  function fixedNotice() {
+    return "세벌 고정(" + layoutLabel() + ")에서는 역할 도장이 자리·크기를 정해 글꼴 CSS의 자리·자모·문맥 값이 꺼집니다";
+  }
+
+  function refuseFixed() {
+    message("⚠ " + fixedNotice() + " — 편집하지 않았습니다. 고치려면 '네모 문맥으로' 또는 '디자인 끄고 글꼴 CSS로'를 고르세요.", "warn");
+    root.dataset.editEffect = "fixed-layout";
+  }
+
+  function renderFixedTarget(panel) {
+    panel.hidden = false;
+    root.dataset.targetState = "fixed";
+    var warning = document.createElement("p");
+    warning.className = "studio-target-warning";
+    warning.dataset.studioTargetWarning = "fixed-layout";
+    warning.textContent = "⚠ " + fixedNotice();
+    panel.appendChild(warning);
+    var choices = document.createElement("div");
+    choices.className = "studio-target-choices";
+    [["studioDesignSquare", "네모 문맥으로"], ["studioDesignOff", "디자인 끄고 글꼴 CSS로"]].forEach(function (pair) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.dataset[pair[0]] = "";
+      button.textContent = pair[1];
+      choices.appendChild(button);
+    });
+    panel.appendChild(choices);
+  }
+
+  function stampRows(node, tbody) {
+    STAMP_PROPERTIES.forEach(function (property) {
+      var row = document.createElement("tr");
+      row.dataset.property = "stamp-" + property;
+      var name = document.createElement("th");
+      name.textContent = LABELS[property] || property;
+      var value = document.createElement("td");
+      value.className = "studio-stamp-value";
+      value.textContent = node.style.getPropertyValue("--fy-stamp-" + property).trim() || "-";
+      var source = document.createElement("td");
+      source.className = "studio-source-cell";
+      source.textContent = "--fy-stamp-" + property + " · 배치 " + layoutLabel() + " 역할 도장(읽기 전용)";
+      row.appendChild(name);
+      row.appendChild(value);
+      row.appendChild(source);
+      tbody.appendChild(row);
+    });
+  }
+
   function renderTarget(node, resolver) {
     var panel = $("[data-studio-target]");
     panel.textContent = "";
     root.dataset.targetState = "";
     if (!node) {
       panel.hidden = true;
+      return;
+    }
+    if (stamped(node)) {
+      renderFixedTarget(panel);
       return;
     }
     var plans = ["left", "top"].map(function (property) { return planFor(property, resolver); }).filter(Boolean);
@@ -813,15 +919,26 @@
     var glyph = node.closest('[part="glyph"]');
     var pos = node.getAttribute("data-fy-pos");
     var jamo = node.getAttribute("data-jamo");
-    scopeField.disabled = false;
+    var fixed = stamped(node);
+    scopeField.disabled = fixed;
     selection.textContent = "";
     var title = document.createElement("strong");
     title.textContent = (glyph.dataset.source || "") + " · " + node.textContent;
     var meta = document.createElement("span");
     meta.textContent = "자리 " + pos + " · 역할 " + node.getAttribute("data-fy-role") + " · 깊이 " +
-      host.dataset.fyVowelDepth + "/" + host.dataset.fyCodaDepth;
+      host.dataset.fyVowelDepth + "/" + host.dataset.fyCodaDepth +
+      (fixed ? " · 배치 세벌 고정 · 도장 " + (STAMP_ROLE_LABELS[node.getAttribute("data-fy-stamp")] || node.getAttribute("data-fy-stamp")) : "");
     selection.appendChild(title);
     selection.appendChild(meta);
+    if (fixed) {
+      root.dataset.mismatches = "0";
+      stampRows(node, tbody);
+      renderTarget(node, null);
+      var note = document.createElement("li");
+      note.textContent = "세벌 고정 — 이 자소의 자리·크기·굵기는 역할 도장이 정합니다. 글꼴 CSS의 자리·자모·문맥 규칙은 꺼져 있습니다.";
+      rulesList.appendChild(note);
+      return;
+    }
 
     var family = Model.slotFamily(pos);
     var familyRadio = root.querySelector('input[name="scope"][value="family"]');
@@ -1074,14 +1191,24 @@
       return;
     }
     body.textContent = "";
+    var fixed = fixedLayout();
     GLOBAL_GROUPS.forEach(function (group) {
       var fieldset = document.createElement("fieldset");
       var legend = document.createElement("legend");
-      legend.textContent = group.label;
+      var inert = fixed ? group.names.filter(function (name) { return FIXED_INERT.test(name); }) : [];
+      legend.textContent = group.label + (inert.length ? " — 세벌 고정: " + (inert.length === group.names.length
+        ? "배치 프로파일이 정해 꺼짐" : "글자 칸·깊이는 배치 프로파일이 정함") : "");
+      if (inert.length === group.names.length) {
+        fieldset.dataset.inert = "fixed-layout";
+      }
       fieldset.appendChild(legend);
       group.names.forEach(function (name) {
         var winner = hostDeclaration(name);
         var label = document.createElement("label");
+        if (inert.indexOf(name) >= 0) {
+          label.dataset.inert = "fixed-layout";
+          label.title = "세벌 고정(" + layoutLabel() + ")에서는 배치 프로파일이 이 값을 정합니다 — 고쳐도 화면이 바뀌지 않습니다";
+        }
         var caption = document.createElement("span");
         caption.textContent = name.replace(/^--fy-/, "") + (winner ? " · L" + winner.line : "");
         var input = document.createElement("input");
@@ -1159,6 +1286,10 @@
     if (!node) {
       return;
     }
+    if (stamped(node)) {
+      refuseFixed();
+      return;
+    }
     var plan = planFor(property, resolverFor(node));
     if (!plan) {
       return;
@@ -1193,6 +1324,10 @@
   function nudge(dxPct, dyPct) {
     var node = selectedNode();
     if (!node) {
+      return false;
+    }
+    if (stamped(node)) {
+      refuseFixed();
       return false;
     }
     var text = state.css;
@@ -1273,6 +1408,22 @@
     var rect = node.getBoundingClientRect();
     if (style.backgroundImage && style.backgroundImage !== "none") {
       return { x0: rect.left, x1: rect.right, y0: rect.top, y1: rect.bottom };
+    }
+    /* 원소 재료(ADR-024)는 획이 CSS 상자다 — 글자 측정 대신 그린 획 상자를 합친다(세벌 고정의 좁은 글자 칸에서 글자 측정
+     * 근사가 이웃과 겹쳐 보이던 것) */
+    var strokes = node.querySelectorAll('[part="element"]');
+    if (strokes.length) {
+      var box = null;
+      Array.prototype.forEach.call(strokes, function (stroke) {
+        var part = stroke.getBoundingClientRect();
+        if (part.width || part.height) {
+          box = box ? { x0: Math.min(box.x0, part.left), x1: Math.max(box.x1, part.right), y0: Math.min(box.y0, part.top), y1: Math.max(box.y1, part.bottom) }
+            : { x0: part.left, x1: part.right, y0: part.top, y1: part.bottom };
+        }
+      });
+      if (box) {
+        return box;
+      }
     }
     measureContext.font = style.fontWeight + " " + style.fontSize + " " + style.fontFamily;
     var metrics = measureContext.measureText(node.textContent);
@@ -1479,7 +1630,8 @@
         var overlapY = Math.min(ink.y1, next.y1) - Math.max(ink.y0, next.y0);
         if (overlapX > 1 && overlapY > 1) {
           findings.push({ kind: "collision", glyph: index, text: glyph.dataset.source + nextGlyph.dataset.source +
-            " — 이웃 음절과 잉크 상자가 " + Math.round(overlapX) + "px 겹침" });
+            " — 이웃 음절과 잉크 상자가 " + Math.round(overlapX) + "px 겹침" + (fixedLayout()
+              ? " (세벌 고정 글자 칸은 이웃과 겹치게 짜여 있어 글자 측정 근사일 수 있음 — 판정은 겹침 감사 --layout fixed)" : "") });
         }
       }
     });
@@ -1550,6 +1702,10 @@
     }
     preview.focus({ preventScroll: true });
     select(node);
+    if (stamped(node)) {
+      event.preventDefault();
+      return; // 도장 노드는 끌어 옮기지 않는다 — 살펴보기가 까닭을 보인다
+    }
     var glyph = node.closest('[part="glyph"]').getBoundingClientRect();
     drag = { x: event.clientX, y: event.clientY, width: glyph.width, height: glyph.height, moved: false };
     history.begin(state.css);
@@ -1918,7 +2074,9 @@
       return new Promise(function (resolve) {
         (function poll() {
           var material = window.FontStudio.material;
-          if (doc && state.coreLoaded && root.dataset.checksReady === "true" && !(material && material.busy && material.busy())) {
+          var design = window.FontStudio.design;
+          if (doc && state.coreLoaded && root.dataset.checksReady === "true" && !(material && material.busy && material.busy()) &&
+              !(design && design.busy && design.busy())) {
             resolve(true);
           } else {
             setTimeout(poll, 16);
@@ -1934,6 +2092,7 @@
     projectSnapshot: projectSnapshot,
     /* 확장 모듈용: 이벤트 구독, 폰트 교체·편집, 알림, 미리보기 시트, 현재 host */
     on: function (name, listener) { hooks[name].push(listener); },
+    lastLoadOptions: function () { return lastLoad; },
     loadFontText: loadFontText,
     setCss: function (text, note) { return commit(text, note); },
     setHostVariables: setHostVariables,
@@ -1956,6 +2115,11 @@
     forgetImage: forgetImage,
     cachedImages: function () { return Object.keys(imageCache); },
     rerender: renderPreview,
+    /* 같은 글꼴 시트를 받는 미리보기 root 더하기(디자인 비교 칸) — chrome은 글꼴 시트 앞에 붙는 그 root 전용 시트 */
+    addPreviewRoot: addPreviewRoot,
+    coreHref: function () { return coreLink.href; },
+    /* 미리보기 바탕 요소의 배치 모델(fixed-three · adaptive-square), 배치 프로파일을 쓰지 않으면 null */
+    layoutModel: function () { return host.dataset.fyLayoutModel || null; },
     shadowRoot: shadow,
     host: host
   };

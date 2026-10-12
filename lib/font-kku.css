@@ -33,6 +33,10 @@
 @property --fy-sprite-url { syntax: "<url> | none"; inherits: true; initial-value: none; }
 @property --fy-sprite-url-2x { syntax: "<url> | none"; inherits: true; initial-value: none; }
 @property --fy-sprite-url-3x { syntax: "<url> | none"; inherits: true; initial-value: none; }
+/* 원소 재료(ADR-024)의 획 굵기 — 바탕 요소에서 길이로 굳혀(글자 크기 기준) 물려준다. slot마다 글자 크기가
+ * 달라도 한 음절 안의 획이 같은 굵기다. */
+@property --fy-el-w { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --fy-el-o { syntax: "<length>"; inherits: true; initial-value: 0px; }
 
 /* Autoload (ADR-019): while the runtime fetches the font CSS this host asked
  * for, the not-yet-placed jamo stay hidden (layout kept). The runtime removes
@@ -57,18 +61,24 @@
 
 :where(font-kku, .font-kku)[data-fy-upgraded="true"] [part="root"] {
   display: inline;
+  /* 복사하면 원문이 나오게(ADR-025 §12): 그림 쪽 글자(자모로 쪼갠 노드 글자)는 고르지 않는다 — 고르면 원문과 함께
+   * "갑ᆺ" 같은 조각 글자가 줄바꿈과 섞여 복사됐다. 선택·복사는 아래 sr-source(원문)가 맡는다. 선택 강조는 보이지 않는다. */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-/* Visually hidden source-text mirror for screen readers.
- * The managed [part="root"] tree is aria-hidden; this node carries the
- * original text for assistive tech without affecting layout. */
+/* Visually hidden source-text mirror for screen readers — the only
+ * accessible text of a host (ADR-003): the managed [part="root"] tree is
+ * aria-hidden and the runtime writes no aria-label. white-space: pre keeps
+ * line breaks, tabs and space runs, so copying a host gives the source
+ * exactly (nowrap collapsed them) and screen readers pause at line breaks. */
 :where(font-kku, .font-kku)[data-fy-upgraded="true"] [part="sr-source"] {
   position: absolute;
   width: 1px;
   height: 1px;
   overflow: hidden;
   clip-path: inset(50%);
-  white-space: nowrap;
+  white-space: pre;
 }
 
 :where(font-kku, .font-kku) [part="line"] {
@@ -271,6 +281,236 @@
   background-clip: inherit;
 }
 
+/* 기기 글꼴 맞춤(ADR-023) — 글꼴이 표준 잉크 상자(--fy-font-ink-boxes: standard)를 밝히면 런타임이 바탕
+ * 요소에 data-fy-face="device"를 찍고, 자모 노드마다 그 기기 글꼴의 잉크를 표준 상자로 옮기는 값(--fy-face-*)을
+ * 적는다 — 어느 기기의 한글 글꼴이든(Apple SD·Noto Sans CJK·One UI Sans·맑은 고딕) 같은 자리다. 글자는 ::before가 낱자(호환 자모)로 그리고, 노드는
+ * 기준 글꼴의 전진폭(--fy-face-width)을 가져 slot clip(퍼센트 inset)이 맞춘 뒤의 글자를 자른다. 노드 자기
+ * 글자는 visibility가 아니라 text-indent로 시작 쪽 화면 밖에 둔다 — ::before가 조상의 visibility(숨은
+ * 자리 잡기 문장, 글꼴 받는 동안의 root)를 그대로 따르도록. 시작 쪽 넘침은 스크롤 영역을 늘리지 않는다.
+ * 빛 칠과 겹치면 숨김·clip은 빛 칠대로다. 값이 없는 노드(기준 표에 없는 글자)는 자기 글자를 그대로 그린다. */
+:where(font-kku, .font-kku)[data-fy-face="device"]:not([data-fy-material]) [part~="jamo"] {
+  text-indent: -9999em;
+  inline-size: var(--fy-face-width, auto);
+}
+/* 빛 칠 노드는 이미 자기 글자를 숨긴다 — 밀어낸 글자까지 filter 영역에 넣지 않는다 */
+:where(font-kku, .font-kku)[data-fy-face="device"][data-fy-glow]:not([data-fy-material]) [part~="jamo"] {
+  text-indent: 0;
+}
+:where(font-kku, .font-kku)[data-fy-face="device"]:not([data-fy-material]) [part~="jamo"]::before {
+  content: var(--fy-face-glyph, attr(data-jamo));
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  text-indent: 0;
+  font-size: var(--fy-face-size, 1em);
+  white-space: nowrap;
+  transform-origin: top left;
+  transform:
+    translate(var(--fy-face-x, 0em), var(--fy-face-y, 0em))
+    scale(var(--fy-face-scale-x, 1), var(--fy-face-scale-y, 1));
+  background-image: inherit;
+  -webkit-background-clip: inherit;
+  background-clip: inherit;
+}
+
+/* 글꼴 팔레트(ADR-025 §9): 디자인이 자모를 조각마다 다른 글꼴·조립식으로 그리면 런타임이 노드 안에 조각마다 잎([part="leaf"])을
+ * 두고 그 글꼴의 낱자를 조각 자리에 맞춘다(--fy-leaf-*, 노드 ::before와 같은 셈). 그 노드는 ::before를 그리지 않는다. */
+:where(font-kku, .font-kku)[data-fy-face="device"]:not([data-fy-material]) [part~="jamo"][data-fy-leaves]::before {
+  content: none;
+}
+:where(font-kku, .font-kku)[data-fy-face="device"]:not([data-fy-material]) [part~="jamo"] > [part="leaf"] {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  text-indent: 0;
+  line-height: 1;
+  font-size: var(--fy-leaf-size, 1em);
+  white-space: nowrap;
+  transform-origin: top left;
+  transform:
+    translate(var(--fy-leaf-x, 0em), var(--fy-leaf-y, 0em))
+    scale(var(--fy-leaf-scale-x, 1), var(--fy-leaf-scale-y, 1));
+}
+
+/* 원소 재료(ADR-024) — data-fy-face="element"면 자모를 글꼴 없이 원소(획)로 그린다. 런타임이 자모 노드 안에
+ * 획마다 [part="hoek"], 마디마다 [part="element"](data-element="line"|"ring")를 두고 표준 잉크 상자 좌표를
+ * 적는다(--fy-el-*). 노드 자기 글자는 밀어 두고, slot clip은 노드 상자와 같은 획 묶음이 받는다 — 빛 칠의
+ * filter가 노드에 걸려도 자른 선에서 빛이 끊기지 않는다. 굵기 --fy-element-width(페이지)·--fy-font-element-width
+ * (글꼴, 바탕 요소의 글자 크기 em — 한 음절의 획이 같은 굵기), 끝 --fy-element-cap·--fy-font-element-cap(square·round·butt). 칠은 글자 색(currentColor)이고
+ * 속 빈 획은 --fy-element-outline·--fy-font-element-outline(외곽선 굵기 — 글자 외곽선처럼 테두리에 반씩 걸친다)과
+ * --fy-element-fill·--fy-font-element-fill(속 칠)이다. 꾸밈의 속 빈 칠(네온·도면·외곽선)이 이 둘로 옮겨진다. 획마다 따로 그려
+ * 겹친 자리에 안쪽 선이 보인다(도면의 작도선처럼).
+ * 런타임이 slot 배율에 맞춰 획마다 굵기를 되돌린다(--fy-el-k 굵기 방향, --fy-el-kd 길이 방향). 획이 촘촘한 자모(ㄹ·ㅌ·ㅋ…)는
+ * 노드의 밀도 굵기 계수 --fy-el-density(0.75–1, 기본 1 — 옛 배치는 런타임이 노드마다, 세벌 고정은 도장이 정한다)를 굵기와 끝 늘이기에 곱한다. */
+/* 낱자(ADR-025 §6): 음절이 아닌 호환 자모 글자(part="content")도 런타임이 data-fy-standalone을 찍고 자모 노드처럼 획을 넣는다 —
+ * 한글 글꼴이 없는 기기에서도 ㅋㅋ가 보인다. 글자 상자는 표준 전진폭, 획 묶음의 기준 상자다(transform이 이미 담는다). */
+:where(font-kku, .font-kku)[data-fy-face="element"]:not([data-fy-material]) :is([part~="jamo"], [part="content"][data-fy-standalone]) {
+  text-indent: -9999em;
+  inline-size: var(--fy-face-width, auto);
+  clip-path: none;
+  visibility: inherit;
+}
+:where(font-kku, .font-kku)[data-fy-face="element"] {
+  --fy-el-w: var(--fy-element-width, var(--fy-font-element-width, 0.1em));
+  --fy-el-o: var(--fy-element-outline, var(--fy-font-element-outline, 0px));
+}
+:where(font-kku, .font-kku)[data-fy-face="element"]:not([data-fy-material]) [part~="jamo"]::before {
+  content: none;
+}
+:where(font-kku, .font-kku)[data-fy-face="element"]:not([data-fy-material]) :is([part~="jamo"], [part="content"][data-fy-standalone]) > [part="hoek"] {
+  position: absolute;
+  inset: 0;
+  text-indent: 0;
+  clip-path: var(--fy-clip, var(--fy-slot-clip, var(--fy-role-clip, none)));
+}
+:where(font-kku, .font-kku)[data-fy-face="element"] [part="element"][data-element="line"] {
+  --fy-el-t: calc(var(--fy-el-w) * var(--fy-el-k, 1) * var(--fy-el-density, 1));
+  --fy-el-d: calc(var(--fy-el-w) * var(--fy-el-kd, 1) * var(--fy-el-density, 1));
+  position: absolute;
+  inset-inline-start: var(--fy-el-x);
+  inset-block-start: var(--fy-el-y);
+  inline-size: calc(var(--fy-el-len) + (var(--fy-el-s) + var(--fy-el-e)) * var(--fy-el-d));
+  block-size: var(--fy-el-t);
+  background: var(--fy-element-fill, var(--fy-font-element-fill, currentColor));
+  box-shadow: inset 0 0 0 calc(var(--fy-el-o) / 2) currentColor, 0 0 0 calc(var(--fy-el-o) / 2) currentColor;
+  transform-origin: 0 0;
+  rotate: var(--fy-el-angle);
+  transform: translate(calc(-1 * var(--fy-el-s) * var(--fy-el-d)), calc(-0.5 * var(--fy-el-t)));
+}
+:where(font-kku, .font-kku)[data-fy-face="element"][data-fy-element-cap="round"] [part="element"][data-element="line"] {
+  border-radius: calc(var(--fy-el-t) / 2);
+}
+:where(font-kku, .font-kku)[data-fy-face="element"][data-fy-element-cap="butt"] [part="element"][data-element="line"] {
+  --fy-el-s: 0;
+  --fy-el-e: 0;
+}
+:where(font-kku, .font-kku)[data-fy-face="element"] [part="element"][data-element="ring"] {
+  --fy-el-tx: calc(var(--fy-el-w) * var(--fy-el-kx, 1) * var(--fy-el-density, 1));
+  --fy-el-ty: calc(var(--fy-el-w) * var(--fy-el-ky, 1) * var(--fy-el-density, 1));
+  position: absolute;
+  box-sizing: border-box;
+  inset-inline-start: calc(var(--fy-el-cx) - var(--fy-el-rx) - var(--fy-el-tx) / 2);
+  inset-block-start: calc(var(--fy-el-cy) - var(--fy-el-ry) - var(--fy-el-ty) / 2);
+  inline-size: calc(2 * var(--fy-el-rx) + var(--fy-el-tx));
+  block-size: calc(2 * var(--fy-el-ry) + var(--fy-el-ty));
+  border-style: solid;
+  border-color: var(--fy-element-fill, var(--fy-font-element-fill, currentColor));
+  border-inline-width: var(--fy-el-tx);
+  border-block-width: var(--fy-el-ty);
+  border-radius: 50%;
+  outline: calc(var(--fy-el-o) / 2) solid currentColor;
+  outline-offset: calc(var(--fy-el-o) / -2);
+  box-shadow: 0 0 0 calc(var(--fy-el-o) / 2) currentColor, inset 0 0 0 calc(var(--fy-el-o) / 2) currentColor;
+}
+/* SVG 재료(ADR-024) — 칸 계약 그림 세트(jamo-set)를 원소 재료와 같은 자리에 놓는다. 자모·조상 그림은 그 획들의
+ * 상자([data-element="box"]), 원소 그림(@line·@dot·@ring)은 마디·원 자리에 들어가고(그 종류가 없으면 세트의 원형 그림 ㅡ·ㆍ·ㅇ —
+ * ADR-025 §7), 그림이 없는 획은 CSS 상자다.
+ * 획 굵기는 원소 재료와 같은 --fy-el-w, 칠은 글자 색이다. 그림 획은 non-scaling-stroke지만 브라우저는 HTML 조상의 변환
+ * (자모 노드의 slot·도장 배율)을 빼지 않으므로, 그림 <svg>를 런타임이 잰 노드 배율의 역수(--fy-el-kd 길이·가로,
+ * --fy-el-k 굵기·세로, 고리는 --fy-el-kx·--fy-el-ky)로 되돌리고 상자는 그만큼 키운다 — 화면의 그림 범위(칠)는 그대로
+ * 자리를 따라 늘고, 획만 화면에서 --fy-el-w다(겹받침 통짜 도장 1.6배에 굵어져 뭉개지던 것). 밀도 굵기 계수 --fy-el-density는
+ * 원소 재료처럼 그림 획 굵기(stroke-width)에도 곱한다 — 칠 그림(붓 세트)이 든 노드는 런타임이 1로 둔다. */
+:where(font-kku, .font-kku)[data-fy-face="svg"]:not([data-fy-material]) :is([part~="jamo"], [part="content"][data-fy-standalone]) {
+  text-indent: -9999em;
+  inline-size: var(--fy-face-width, auto);
+  clip-path: none;
+  visibility: inherit;
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] {
+  --fy-el-w: var(--fy-element-width, var(--fy-font-element-width, 0.1em));
+  --fy-el-o: var(--fy-element-outline, var(--fy-font-element-outline, 0px));
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"]:not([data-fy-material]) [part~="jamo"]::before {
+  content: none;
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"]:not([data-fy-material]) :is([part~="jamo"], [part="content"][data-fy-standalone]) > [part="hoek"] {
+  position: absolute;
+  inset: 0;
+  text-indent: 0;
+  clip-path: var(--fy-clip, var(--fy-slot-clip, var(--fy-role-clip, none)));
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element="line"] {
+  --fy-el-t: calc(var(--fy-el-w) * var(--fy-el-k, 1) * var(--fy-el-density, 1));
+  --fy-el-d: calc(var(--fy-el-w) * var(--fy-el-kd, 1) * var(--fy-el-density, 1));
+  position: absolute;
+  inset-inline-start: var(--fy-el-x);
+  inset-block-start: var(--fy-el-y);
+  inline-size: calc(var(--fy-el-len) + (var(--fy-el-s) + var(--fy-el-e)) * var(--fy-el-d));
+  block-size: var(--fy-el-t);
+  background: var(--fy-element-fill, var(--fy-font-element-fill, currentColor));
+  box-shadow: inset 0 0 0 calc(var(--fy-el-o) / 2) currentColor, 0 0 0 calc(var(--fy-el-o) / 2) currentColor;
+  transform-origin: 0 0;
+  rotate: var(--fy-el-angle);
+  transform: translate(calc(-1 * var(--fy-el-s) * var(--fy-el-d)), calc(-0.5 * var(--fy-el-t)));
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element="ring"] {
+  --fy-el-tx: calc(var(--fy-el-w) * var(--fy-el-kx, 1) * var(--fy-el-density, 1));
+  --fy-el-ty: calc(var(--fy-el-w) * var(--fy-el-ky, 1) * var(--fy-el-density, 1));
+  position: absolute;
+  box-sizing: border-box;
+  inset-inline-start: calc(var(--fy-el-cx) - var(--fy-el-rx) - var(--fy-el-tx) / 2);
+  inset-block-start: calc(var(--fy-el-cy) - var(--fy-el-ry) - var(--fy-el-ty) / 2);
+  inline-size: calc(2 * var(--fy-el-rx) + var(--fy-el-tx));
+  block-size: calc(2 * var(--fy-el-ry) + var(--fy-el-ty));
+  border-style: solid;
+  border-color: var(--fy-element-fill, var(--fy-font-element-fill, currentColor));
+  border-inline-width: var(--fy-el-tx);
+  border-block-width: var(--fy-el-ty);
+  border-radius: 50%;
+  outline: calc(var(--fy-el-o) / 2) solid currentColor;
+  outline-offset: calc(var(--fy-el-o) / -2);
+  box-shadow: 0 0 0 calc(var(--fy-el-o) / 2) currentColor, inset 0 0 0 calc(var(--fy-el-o) / 2) currentColor;
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element="box"] {
+  position: absolute;
+  inset-inline-start: var(--fy-el-x);
+  inset-block-start: var(--fy-el-y);
+  inline-size: var(--fy-el-bw);
+  block-size: var(--fy-el-bh);
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element-drawing] {
+  background: none;
+  border-width: 0;
+  outline: none;
+  box-shadow: none;
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"] > [part="vector"] {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: calc(var(--fy-el-w) * var(--fy-el-density, 1));
+  transform-origin: 0 0;
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element="box"] > [part="vector"] {
+  transform: scale(var(--fy-el-kd, 1), var(--fy-el-k, 1));
+  inline-size: calc(100% / var(--fy-el-kd, 1));
+  block-size: calc(100% / var(--fy-el-k, 1));
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element="line"] > [part="vector"] {
+  inset-inline-start: calc(var(--fy-el-s) * var(--fy-el-d));
+  transform: scale(var(--fy-el-kd, 1), var(--fy-el-k, 1));
+  inline-size: calc(var(--fy-el-len) / var(--fy-el-kd, 1));
+  block-size: calc(100% / var(--fy-el-k, 1));
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element="ring"] > [part="vector"] {
+  /* 테두리 없는(위) 바깥 상자에서 굵기의 절반씩 들여 중심선 상자를 채운다 — 테두리 안쪽 기준이면 버린 테두리만큼 커졌다 */
+  inset: calc(var(--fy-el-ty) / 2) auto auto calc(var(--fy-el-tx) / 2);
+  transform: scale(var(--fy-el-kx, 1), var(--fy-el-ky, 1));
+  inline-size: calc((100% - var(--fy-el-tx)) / var(--fy-el-kx, 1));
+  block-size: calc((100% - var(--fy-el-ty)) / var(--fy-el-ky, 1));
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"] > [part="vector"] > * {
+  vector-effect: non-scaling-stroke;
+}
+:where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"] > [part="vector"] > [data-fill] {
+  fill: currentColor;
+  stroke: none;
+}
+
 /* BEGIN GENERATED CSS CONTRACT: dispatch */
 /* Source: spec/css-variables.json. Regenerate with: node scripts/check_css_contract.js --write */
 :where(font-kku, .font-kku) [data-fy-pos="t"] { --fy-slot-top: var(--fy-t-top, var(--fy-tc-top, var(--fy-role-top, 0%))); --fy-slot-left: var(--fy-t-left, var(--fy-tc-left, var(--fy-role-left, 8%))); --fy-slot-font-size: var(--fy-t-size, var(--fy-tc-size, var(--fy-role-font-size, 0.68em))); --fy-slot-scale-x: var(--fy-t-scale-x, var(--fy-tc-scale-x, var(--fy-role-scale-x, 1))); --fy-slot-scale-y: var(--fy-t-scale-y, var(--fy-tc-scale-y, var(--fy-role-scale-y, 1))); --fy-slot-rotate: var(--fy-t-rotate, var(--fy-tc-rotate, var(--fy-role-rotate))); --fy-slot-weight: var(--fy-t-weight, var(--fy-tc-weight, var(--fy-role-weight))); --fy-slot-stroke: var(--fy-t-stroke, var(--fy-tc-stroke, var(--fy-role-stroke))); --fy-slot-clip: var(--fy-t-clip, var(--fy-tc-clip, var(--fy-role-clip))); --fy-slot-dilate: var(--fy-t-dilate, var(--fy-tc-dilate, var(--fy-role-dilate))); }
@@ -329,6 +569,49 @@
     rotate(var(--fy-ctx-rotate, 0deg))
     rotate(var(--fy-rotate, 0deg));
 }
+
+/* 세벌 고정(ADR-026, 설계 v1.2 §10) — 배치 프로파일이 fixed-three이면 런타임이 자모 노드에 역할 도장(--fy-stamp-*, 역할·자모마다
+ * 한 값)을 적고 data-fy-stamp(initial·medial·final)로 표시한다. 자리·크기·굵기는 그 도장 하나로 정하고, 글꼴 CSS의 자리(slot)·
+ * 역할·자모·문맥 보정과 자르기(clip)는 끈다 — 그 값들은 이웃 모음·받침(data-fy-pos, :has())에 따라 달라져 같은 자모가 음절마다
+ * 다른 자리에 찍히게 한다.
+ * 페이지 변수(--fy-top·--fy-left·--fy-scale-x 같은)는 그대로 받는다. 글자 칸은 아래 생성 구간이 프로파일마다 정한다.
+ * 원소·그림 재료의 밀도 굵기 계수(--fy-el-density)도 도장 값이다 — 칠 그림이 든 노드는 런타임이 인라인 1로 덮는다. */
+:where(font-kku, .font-kku)[data-fy-layout-model="fixed-three"] [data-fy-stamp] {
+  --fy-slot-top: var(--fy-stamp-top);
+  --fy-slot-left: var(--fy-stamp-left);
+  --fy-slot-font-size: var(--fy-stamp-size);
+  --fy-slot-scale-x: var(--fy-stamp-scale-x);
+  --fy-slot-scale-y: var(--fy-stamp-scale-y);
+  --fy-slot-rotate: 0deg;
+  --fy-slot-weight: var(--fy-stamp-weight);
+  --fy-slot-stroke: var(--fy-stamp-stroke);
+  --fy-el-density: var(--fy-stamp-density);
+  --fy-slot-clip: initial;
+  --fy-slot-dilate: initial;
+  --fy-role-weight: initial;
+  --fy-role-stroke: initial;
+  --fy-role-clip: initial;
+  --fy-role-dilate: initial;
+  --fy-jamo-dx: 0%;
+  --fy-jamo-dy: 0%;
+  --fy-jamo-scale-x: 1;
+  --fy-jamo-scale-y: 1;
+  --fy-jamo-rotate: 0deg;
+  --fy-ctx-dx: 0%;
+  --fy-ctx-dy: 0%;
+  --fy-ctx-scale-x: 1;
+  --fy-ctx-scale-y: 1;
+  --fy-ctx-rotate: 0deg;
+}
+
+/* 합자 모음 조각은 묶음(cluster) 안에 있다 — 조각 도장이 글자 몸통 기준이므로 글꼴 CSS의 묶음 변환도 끈다 */
+:where(font-kku, .font-kku)[data-fy-layout-model="fixed-three"] [part~="cluster"] {
+  transform: none;
+}
+
+/* BEGIN GENERATED layouts: scripts/build_layout_profiles.js from spec/layout-profiles.json — do not edit by hand. */
+:where(font-kku, .font-kku):where([data-fy-layout="sebul-fixed-v1"]) { --fy-glyph-width: 0.96em; --fy-glyph-height: 1.17em; --fy-glyph-gap: -0.095em; }
+/* END GENERATED layouts */
 
 /* Non-Hangul glyphs keep the syllable box height so the text baseline keeps
  * running with the Hangul, but they take their own advance width: a comma must

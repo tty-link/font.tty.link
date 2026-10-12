@@ -21,6 +21,9 @@
     --fy-word-gap: 0px;
     --fy-line-gap: 0.12em;
     --fy-font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif;
+    --fy-font-ink-boxes: standard;
+    --fy-font-face: element;
+    --fy-font-element-width: 0.1em;
     --fy-font-weight: 700;
     --fy-font-stroke: 0.014em;
     --fy-content-y: 0em;
@@ -398,6 +401,7 @@
  * 않고, 완성형 head는 밀면 뒤 모음에 닿아 밀지 않는다). jamo-seeds를 켠 바탕 요소에만 걸리고, 씨앗이 없으면 (0.5 − 0.5) = 0이라 아래 기본값 그대로다. */
 @layer font-kku.font {
   :where([data-fy-font="glitch"]) {
+    --fy-font-face: device; /* 글자 칠(외곽선·그림자)이 이 글꼴이라 기기 글꼴 재료로 그린다(ADR-024). 원소 재료로는 기반 글꼴 + kku-look-glitch */
     color: #f4f4f6;
     text-shadow: -0.03em 0 0 rgb(0 236 255 / 0.85), 0.03em 0 0 rgb(255 0 170 / 0.85);
   }
