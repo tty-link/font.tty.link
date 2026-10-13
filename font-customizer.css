@@ -198,6 +198,11 @@ html.kku-open {
   display: none;
 }
 
+/* 바탕 칠 안내의 --fy-sprite-paint: mask가 이름 가운데서 꺾이지 않게 */
+.kku-ink-note code {
+  white-space: nowrap;
+}
+
 /* ── 변주(씨앗) ── */
 .kku-switch {
   display: flex;

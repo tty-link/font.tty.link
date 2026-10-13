@@ -1002,6 +1002,17 @@
       "declaredBy": "page"
     },
     {
+      "name": "--fy-selection",
+      "status": "stable",
+      "kind": "author",
+      "type": "color",
+      "default": "rgb(from Highlight r g b / min(alpha, 0.6))",
+      "surfaces": ["base-css"],
+      "level": "page",
+      "scope": "page",
+      "declaredBy": "page"
+    },
+    {
       "name": "--fy-font-element-outline",
       "status": "stable",
       "kind": "author",
@@ -1018,6 +1029,17 @@
       "kind": "author",
       "type": "length",
       "default": "0px",
+      "surfaces": ["base-css"],
+      "level": "page",
+      "scope": "page",
+      "declaredBy": "page"
+    },
+    {
+      "name": "--fy-element-weight",
+      "status": "stable",
+      "kind": "author",
+      "type": "number",
+      "default": "1",
       "surfaces": ["base-css"],
       "level": "page",
       "scope": "page",

@@ -1,5 +1,12 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — 발표 표지와 목차. 글꼴: saekdong gothic. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — 발표 표지와 목차 (글꼴 saekdong · gothic)
+  고쳐 쓰기
+  - 글: 제목·부제·발표자·목차는 본문 글을 바꿉니다. 짜임 그림(.anatomy)은 세 칸과 figcaption을 함께 바꿉니다.
+  - 크기: 슬라이드 안 글자는 cqw(슬라이드 폭에 대한 비율)로 함께 줄고 늡니다.
+  - 색: 맨 위 :root의 변수를 바꿉니다. --red·--blue·--yellow·--green·--pink는 색동 띠와 짜임 그림, --paper는 슬라이드 바탕입니다.
+  - 글꼴: data-font="saekdong"·data-font="gothic"의 글꼴 이름을 바꿉니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 data-font="sebul" data-jamo-set="my-hand"로 씁니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />

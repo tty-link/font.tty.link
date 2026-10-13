@@ -1,0 +1,755 @@
+/* 사례 페이지(site/showcase.html)만 쓰는 꾸밈 — 머리의 세 갈래, 쓰임 고르기와 카드, 고쳐 쓰기, 새로 만들기.
+ * 공용 부품(.k-btn·.k-chips·.k-code·.k-section …)은 site.css에 있다. 사례 카드의 바탕 규칙(.k-showcase*)도 site.css에
+ * 있고 여기서 덮는다. 바탕 요소(폰꾸 글자)를 담는 곳에는 자손 결합자로 span을 고르지 않는다 — 런타임 노드까지 잡는다. */
+
+/* ── 머리: 셈 줄과 세 갈래 ─────────────────────────────── */
+.sc-head {
+  padding-block-end: 0.5rem;
+}
+
+/* 머리의 세 갈래 바로 아래에서 시작한다 — 구획 기본 위 여백(최대 7rem)은 너무 멀다 */
+.sc-cases {
+  padding-block-start: clamp(3rem, 6vw, 4.5rem);
+}
+
+.sc-count {
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.sc-count a {
+  color: inherit;
+  text-decoration-color: var(--k-line);
+  text-decoration-thickness: 2px;
+}
+
+.sc-count a:hover {
+  color: var(--k-blue);
+  text-decoration-color: currentColor;
+}
+
+.sc-ways {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-block-start: 0.75rem;
+}
+
+.sc-way {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  align-content: start;
+  gap: 0.45rem;
+  padding: 1.1rem 1.2rem 1rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: 4px;
+  background: var(--k-paper);
+  box-shadow: 5px 5px 0 var(--k-ink);
+  color: var(--k-ink);
+  text-decoration: none;
+  transition: transform 160ms var(--k-ease), box-shadow 160ms var(--k-ease);
+}
+
+.sc-way:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--k-red);
+}
+
+.sc-way:focus-visible {
+  outline: 3px solid var(--k-yellow);
+  outline-offset: 3px;
+}
+
+.sc-way-num {
+  justify-self: start;
+  padding: 0.05rem 0.5rem;
+  border: 1.5px solid var(--k-red);
+  color: var(--k-red);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.sc-way strong {
+  font-size: 1.2rem;
+  line-height: 1.35;
+}
+
+.sc-way > span:not(.sc-way-num):not(.sc-way-go) {
+  color: var(--k-ink-2);
+  font-size: 0.93rem;
+  line-height: 1.65;
+}
+
+.sc-way-go {
+  margin-block-start: 0.25rem;
+  color: var(--k-blue);
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+
+/* ── 하나: 사례 모음 ─────────────────────────────────── */
+.sc-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.25rem;
+  margin-block-end: 0.9rem;
+}
+
+.sc-cdn-note {
+  max-inline-size: 62rem;
+  margin: 0 0 1.75rem;
+  font-size: 0.86rem;
+}
+
+.sc-cdn-note code {
+  overflow-wrap: anywhere;
+}
+
+.sc-cdn-note a {
+  white-space: nowrap;
+}
+
+.sc-filter .k-chips button {
+  font-size: 0.92rem;
+}
+
+.sc-n {
+  margin-inline-start: 0.15rem;
+  color: var(--k-muted);
+  font-weight: 500;
+}
+
+.sc-filter .k-chips button[aria-pressed="true"] .sc-n {
+  color: rgb(255 255 255 / 72%);
+}
+
+.sc-grid {
+  padding-block: 0 2rem;
+}
+
+/* #case-<이름>으로 오면 카드가 붙박이 머리말(넓은 화면 한 줄 65px) 밑에 숨지 않게 */
+.sc-card {
+  scroll-margin-top: 80px;
+}
+
+.sc-card .k-case-frame:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--k-red);
+}
+
+/* 휴대폰용 사례는 화면 폭을 줄여(400% → 200%) 카드를 채운다 */
+.k-case-frame[data-preview="phone"] iframe {
+  inline-size: 200%;
+  block-size: 200%;
+  transform: scale(0.5);
+}
+
+.sc-card .k-showcase-body {
+  gap: 0.5rem;
+}
+
+.k-showcase-body .sc-kind {
+  margin: 0;
+  color: var(--k-red);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.sc-card .k-showcase-body h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.k-showcase-body .sc-badge {
+  justify-self: start;
+  padding: 0.05rem 0.6rem;
+  border: 1.5px solid var(--k-red);
+  border-radius: 999px;
+  color: var(--k-red);
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.sc-tags .sc-fixed a {
+  color: var(--k-ink-2);
+  font-weight: 650;
+}
+
+.sc-tags .sc-feature {
+  border-style: dashed;
+  border-color: #cfc7b8;
+  color: var(--k-ink-2);
+}
+
+.sc-actions {
+  margin-top: 0.2rem;
+}
+
+.sc-actions--more {
+  margin-top: 0;
+}
+
+.sc-made {
+  margin-top: 0.3rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--k-line);
+  border-radius: var(--k-radius-sm);
+  background: var(--k-paper-2);
+}
+
+.sc-made summary {
+  color: var(--k-ink);
+  font-size: 0.9rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.sc-made[open] {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.sc-made-prompt {
+  margin: 0;
+  max-block-size: 16rem;
+  padding: 0.7rem 0.8rem;
+  overflow-y: auto;
+  border-radius: 6px;
+  background: var(--k-code-bg);
+  color: var(--k-code-ink);
+  font-family: var(--k-mono);
+  font-size: 0.8rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+.sc-made .k-btn {
+  justify-self: start;
+}
+
+.sc-cases-note {
+  max-inline-size: 62rem;
+}
+
+/* ── 공용: 고르기 칸 ───────────────────────────────────── */
+.sc-field {
+  display: grid;
+  gap: 0.35rem;
+  min-inline-size: 0;
+}
+
+.sc-fieldset {
+  display: grid;
+  gap: 0.55rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sc-label {
+  padding: 0;
+  color: var(--k-ink);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.sc-hint {
+  color: var(--k-muted);
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.sc-select {
+  max-inline-size: 100%;
+  min-block-size: 2.6rem;
+  padding: 0 2.2rem 0 0.9rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: var(--k-radius-sm);
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.sc-select:focus-visible,
+.sc-radios input:is([type="radio"], [type="checkbox"]):focus-visible,
+.sc-seed input:focus-visible,
+.sc-inline-btn:focus-visible {
+  outline: 3px solid var(--k-yellow);
+  outline-offset: 2px;
+}
+
+.sc-radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+}
+
+.sc-radios--stack {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.sc-radios label,
+.sc-seed label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--k-ink-2);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.sc-radios input:is([type="radio"], [type="checkbox"]),
+.sc-seed input {
+  flex: none;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  margin: 0;
+  accent-color: var(--k-red);
+}
+
+.sc-font-chips code {
+  padding: 0;
+  background: none;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.sc-text {
+  inline-size: 100%;
+  max-inline-size: 28rem;
+  border-radius: var(--k-radius-sm);
+}
+
+.sc-inline-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--k-blue);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.sc-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding-inline-start: 1.2rem;
+  color: var(--k-ink-2);
+}
+
+.sc-list.k-after {
+  margin-block-start: 2.25rem;
+}
+
+.sc-sub {
+  margin: 0 0 1.1rem;
+  color: var(--k-ink);
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+
+/* ── 둘: 고쳐 쓰기 ─────────────────────────────────────── */
+.sc-remix {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  grid-template-areas:
+    "view controls"
+    "view diff";
+  grid-template-rows: auto 1fr;
+  gap: 1.5rem 1.75rem;
+  align-items: start;
+}
+
+.sc-remix-controls {
+  grid-area: controls;
+  display: grid;
+  gap: 1.1rem;
+  min-inline-size: 0;
+}
+
+.sc-remix-controls .sc-select {
+  inline-size: 100%;
+}
+
+.sc-about {
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.sc-draw-link {
+  color: var(--k-blue);
+  font-size: 0.95rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.sc-draw-link:hover {
+  text-decoration: underline;
+}
+
+.sc-seed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.sc-remix-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+/* 바꿀 곳이 없거나 아직 만드는 중이면 복사·내려받기를 막는다 — 막힌 것이 보이게 */
+.sc-remix-actions .k-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sc-remix-view {
+  grid-area: view;
+  display: grid;
+  gap: 0.6rem;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.sc-remix-frame {
+  position: relative;
+  min-block-size: 18rem;
+  overflow: hidden;
+  border: 1.5px solid var(--k-ink);
+  border-radius: 4px;
+  background: #ebe6dc;
+  box-shadow: 6px 6px 0 var(--k-ink);
+}
+
+.sc-remix-frame[data-mode="phone"] {
+  display: flex;
+  justify-content: center;
+  background-image: repeating-linear-gradient(45deg, rgb(20 20 20 / 4%) 0 1px, transparent 1px 10px);
+}
+
+.sc-remix-iframe {
+  display: block;
+  border: 0;
+  background: var(--k-paper);
+  transform-origin: 0 0;
+}
+
+.sc-remix-frame[data-mode="narrow"] .sc-remix-iframe {
+  block-size: 70vh;
+  min-block-size: 26rem;
+}
+
+/* 틀을 만들기 전에도 같은 높이를 잡아 둔다 — 늦게 서는 미리보기가 아래 구획을 밀지 않게(넓은 틀은 showcase.js가 잡는다) */
+.sc-remix-frame[data-mode="narrow"] {
+  min-block-size: max(26rem, 70vh);
+}
+
+.sc-remix:not([data-started]) .sc-diff pre {
+  min-block-size: 26rem;
+}
+
+[data-remix-fonts-note][data-empty] strong {
+  color: var(--k-red);
+}
+
+.sc-remix-wait {
+  padding: 1.25rem;
+}
+
+.sc-diff {
+  grid-area: diff;
+}
+
+.sc-diff pre {
+  max-block-size: 26rem;
+  overflow-y: auto;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.sc-diff pre code > span {
+  display: block;
+  padding-inline: 4em 0.4em;
+  text-indent: -4em;
+}
+
+.sc-diff-ins {
+  background: rgb(18 150 95 / 22%);
+}
+
+.sc-diff-del {
+  background: rgb(214 40 57 / 20%);
+  color: #f3c6ca;
+}
+
+.sc-diff-n {
+  display: inline-block;
+  inline-size: 2.8em;
+  color: var(--k-code-muted);
+  text-indent: 0;
+  user-select: none;
+}
+
+.sc-diff-op {
+  display: inline-block;
+  inline-size: 1.2em;
+  text-indent: 0;
+  user-select: none;
+}
+
+.sc-diff-gap {
+  color: var(--k-code-muted);
+}
+
+.sc-remix-off {
+  padding: 1rem 1.2rem;
+  border-inline-start: 3px solid var(--k-yellow);
+  background: #fffaeb;
+}
+
+/* ── 셋: 새로 만들기 ─────────────────────────────────────── */
+.sc-ask {
+  margin-block-end: 1.25rem;
+}
+
+.sc-builder {
+  display: grid;
+  gap: 1.4rem;
+  min-inline-size: 0;
+}
+
+.sc-builder .k-chips button {
+  font-size: 0.88rem;
+}
+
+.sc-inline {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem !important;
+}
+
+.sc-inline > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* 느낌 칸은 '새 글꼴도 그려서' 아래에 들여 놓는다 — .sc-radios label의 inline-flex를 덮는다 */
+.sc-radios .sc-feel {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 28rem);
+  justify-content: start;
+  align-items: center;
+  gap: 0.6rem;
+  margin-inline-start: 1.45rem;
+}
+
+.sc-feel .sc-text {
+  max-inline-size: none;
+}
+
+.sc-proof {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.9rem 1.1rem;
+  border-inline-start: 3px solid var(--k-red);
+  background: var(--k-paper-2);
+}
+
+.sc-proof > p {
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.sc-proof-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sc-proof-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 0.9rem;
+}
+
+.sc-proof-name {
+  display: grid;
+  gap: 0.1rem;
+  min-inline-size: 0;
+}
+
+.sc-proof-name a {
+  font-weight: 750;
+}
+
+.sc-proof-meta {
+  color: var(--k-muted);
+  font-size: 0.8rem;
+}
+
+.sc-proof-status:empty {
+  display: none;
+}
+
+.sc-like {
+  margin-block: 0 3.5rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--k-line);
+  border-radius: var(--k-radius-sm);
+  background: var(--k-paper-2);
+}
+
+.sc-like summary {
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.sc-like-body {
+  display: grid;
+  gap: 0.75rem;
+  margin-block-start: 0.9rem;
+}
+
+.sc-like-body .sc-field {
+  justify-self: start;
+  max-inline-size: 100%;
+}
+
+.sc-like pre {
+  max-block-size: 20rem;
+  overflow-y: auto;
+}
+
+.sc-start {
+  margin-block-end: 2rem;
+}
+
+.sc-start-result {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.sc-start-stage {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.75rem;
+  min-block-size: 11rem;
+  padding: 1.5rem;
+  /* 그린 세트의 잉크는 글자 상자 위쪽에 몰린다 — 기운 자모 노드가 문서 높이를 늘리지 않게 자른다 */
+  overflow: clip;
+}
+
+.sc-start-stage > p {
+  margin: 0;
+  color: var(--k-ink-2);
+}
+
+.sc-evidence {
+  padding: 0.9rem 1.1rem;
+  border-inline-start: 3px solid var(--k-red);
+  background: var(--k-paper-2);
+}
+
+/* 요청 글은 줄글이라 낱말 가운데서 끊지 않는다(긴 주소만 넘칠 때 끊긴다) */
+[data-builder-out],
+.sc-like pre,
+.sc-made-prompt,
+.sc-diff pre {
+  word-break: keep-all;
+}
+
+/* ── 좁은 화면 ────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .sc-remix {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "controls"
+      "view"
+      "diff";
+    grid-template-rows: auto;
+  }
+}
+
+@media (max-width: 860px) {
+  .sc-ways {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .sc-way {
+    grid-template-rows: none;
+    box-shadow: 4px 4px 0 var(--k-ink);
+  }
+}
+
+@media (max-width: 720px) {
+  /* 좁은 화면의 머리말은 두세 줄(390px에서 131px)이다 — #case-<이름> 카드가 그 밑에 숨지 않게 */
+  .sc-card {
+    scroll-margin-top: 145px;
+  }
+
+  /* 좁은 화면의 세 갈래는 번호와 이름을 한 줄에 — 세로로 쌓인 띠가 첫 화면을 다 차지하지 않게 */
+  .sc-way {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.35rem 0.6rem;
+    padding: 0.9rem 1rem;
+  }
+
+  .sc-way > span:not(.sc-way-num),
+  .sc-way-go {
+    grid-column: 1 / -1;
+  }
+
+  .sc-way strong {
+    font-size: 1.1rem;
+  }
+
+  .sc-remix-frame {
+    box-shadow: 4px 4px 0 var(--k-ink);
+  }
+
+  .sc-radios .sc-feel {
+    grid-template-columns: max-content minmax(0, 1fr);
+    justify-content: stretch;
+    margin-inline-start: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-way {
+    transition: none;
+  }
+
+  .sc-way:hover,
+  .sc-card .k-case-frame:hover {
+    transform: none;
+  }
+}

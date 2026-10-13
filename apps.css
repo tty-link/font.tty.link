@@ -660,7 +660,9 @@
   justify-content: flex-start;
   padding-inline: 1rem;
   border: 1px solid var(--k-line);
-  background: #fffdf6 linear-gradient(transparent calc(100% - 1px), rgba(31, 79, 209, 0.14) calc(100% - 1px)) 0 0 / 100% 36px;
+  /* 줄 간격 52px을 17px 내려 깐다 — 줄이 16·68px에 와서 가운데 놓인 '오늘 할 일'(잉크 약 25–65px)이 68px 줄 위에 앉는다.
+   * 36px 간격은 어디에 두어도 30px 글자의 잉크(약 40px)를 가로질렀다 */
+  background: #fffdf6 linear-gradient(transparent calc(100% - 1px), rgba(31, 79, 209, 0.14) calc(100% - 1px)) 0 17px / 100% 52px;
 }
 
 @media (max-width: 720px) {

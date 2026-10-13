@@ -9,7 +9,7 @@
 포스터, 제목, 배너, 짧은 강조 문구처럼 조형성과 상호작용이 중요한 글에 잘 맞습니다. 글자마다 관리 DOM을 만들기 때문에 일반 웹 글꼴이나 장문 본문 렌더러를 대신하지는 않습니다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul neon"></script>
 <font-kku font="neon" size="64">을지로 네온</font-kku>
 ```
 
@@ -18,25 +18,23 @@
 글꼴 하나에 꾸밈·변주·움직임·상호작용을 클래스와 속성으로 얹어 **조합**할 수도 있습니다. 네온 칠은 세벌에도, 고딕에도, 도트 그림 자소에도 같은 클래스로 걸립니다([조합 — 여섯 축과 테마](#조합--여섯-축과-테마)).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
 <font-kku font="gothic" class="kku-look-neon" animate="flicker" size="64">을지로 네온</font-kku>
 ```
 
 ### 이럴 때 폰꾸
 
-글꼴 파일은 글자 **그림**을 담고, 폰꾸는 글자를 그리는 **규칙**을 담습니다. 그래서 받을 글꼴 파일이 없고(0개), 11,172자가 모두 같은 모양이며, **같은 글자도 매번 다르게 — 같은 씨앗이면 언제나 똑같이** 그립니다.
+폰꾸는 **한글 글꼴을 직접 만드는 도구**입니다. ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ 여덟 칸만 그리면 — 직접 그리든 AI에게 맡기든 — 나머지 자모와 한글 11,172자를 한글 원리대로 조립합니다. 보통 한글 글꼴은 2,350~11,172자를 한 자씩 그리고, 조합형도 자모 변형 약 344벌을 그립니다.
 
 | 이런 문제가 있다면 | 폰꾸는 |
 |---|---|
-| 손글씨 느낌인데 '하하하하'가 도장 찍은 듯 똑같다 · 들어올 때마다 새 표정의 제목을 보여 주고 싶다 · 사람마다 다르지만 다시 열어도 같은 모양이었으면 | 자모마다 씨앗값으로 변주합니다. `seed="auto"`면 매번 새로, `seed="민지"`면 그 이름만의 모양을 언제나 똑같이([씨앗 반응 글꼴](docs/ADR/ADR-016-seed-aware-fonts.md)) |
-| 웹폰트를 막는 곳(iOS 잠금 모드·폐쇄망·엄격한 보안 정책)에서 제목이 무너진다 · 한글 글꼴이 없는 기기라 □□□로 나온다 | 기본 재료가 한글 원리대로 CSS로 긋는 획이라 받을 글꼴 파일도, 기기의 한글 글꼴도 필요 없습니다. 그림 자소 글꼴도 기기 글꼴 없이 그립니다 |
-| 서브셋 웹폰트(완성형 2,350자)라 닉네임의 '뷁', 이름의 '믜'만 글꼴이 달라진다 | 조합해서 그려 11,172자 모두 같은 모양입니다 |
-| 글꼴·효과를 여럿 섞고 싶은데 한글 웹폰트 수십 개는 무겁다 · 예쁜 제목은 결국 이미지로 잘라 붙인다 | 글꼴 하나에 꾸밈·움직임을 클래스로 조합합니다 — 꾸밈 12종이 든 확장 한 장이 gzip 약 5KB. 꾸민 제목도 텍스트라 바로 고치고 화면 읽기·검색에 원문이 남습니다 |
-| AI가 만든 문서의 한글이 밋밋하고 매번 다르다 · 웹폰트 주소를 매번 알려 주기 힘들다 | 설명서 링크 하나 + 글꼴 이름. 같은 이름(과 씨앗)은 언제나 같은 모양입니다 |
-| 터미널·CI 로그·봇 알림, 마크다운·AI 응답을 순수 텍스트로 낼 때 한글 제목이 묻힌다 | 2줄 평문으로 크게 풀어 씁니다(CLI·Node·Python·Go·Rust·Ruby) |
-| 내 손글씨·브랜드 한글 글꼴은 11,172자라 엄두가 안 난다 | 원형 8자(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)만 그려도 나머지를 조립하고, 40칸이면 11,172자를 다 그립니다. TTF·WOFF로도 내보냅니다 |
+| 우리 가게만의 한글 글꼴을 갖고 싶은데 한글은 수천 자를 그려야 한다 · 꾸밈이 강한 무료 글꼴은 뷁·쳌 같은 글자가 빠진다 | 원형 8칸을 그리면 11,172자를 조립합니다(더 다듬으려면 24칸·40칸). 브라우저 작업실에서 그리고, 디자인 JSON·묶음 파일로 저장해 스크립트 한 줄과 `jamo-set`으로 씁니다 |
+| AI에게 '우리만의 한글 글꼴'을 부탁하면 있는 글꼴을 골라 준다 | [설명서](https://font.tty.link/lib/skill/SKILL.md) 링크와 느낌만 주면 AI가 8칸을 SVG 경로(칸 자료 1KB 안팎)로 그려 HTML 한 장으로 돌려줍니다 — 그 답이 그대로 11,172자 글꼴입니다 |
+| 'ㄱ만 좀 더 둥글게'라는 말에 글꼴을 다시 뽑아 올려야 한다 | 칸 하나를 다시 그으면 그 자모가 든 글자(ㄱ이면 3,444자)가 그 자리에서 함께 바뀝니다 |
+| 손글씨 느낌인데 '하하하하'가 도장 찍은 듯 똑같다 | 자모마다 씨앗값으로 기울기·잉크·색이 따로 흔들립니다. `seed="auto"`면 매번 새로, `seed="민지"`면 그 이름만의 모양을 언제나 똑같이([씨앗 반응 글꼴](docs/ADR/ADR-016-seed-aware-fonts.md)) |
+| 사용자가 입력한 문장의 받침만 떨어뜨리고 싶은데 고정 문구 애니메이션밖에 안 된다 | 어떤 문장이든 초성·중성·받침이 각자 노드라 따로 칠하고 따로 움직입니다(`animate="drop"`, `part` 선택자). 화면 읽기와 복사에는 원문이 남습니다 |
 
-문제 18가지와 증명 데모·정직한 경계(JS 필요, 제목·강조용, 이메일 본문·옛한글 대상 아님)는 [해결하는 문제와 쓰임](docs/PRD/problems-and-use-cases.md)과 소개 페이지의 '이럴 때 폰꾸'에 있습니다.
+맞지 않는 곳도 있습니다. 고정된 제목 하나만 꾸미려면 웹폰트(부분 집합)가 더 가볍고, 제목·강조용이라 본문에는 쓰지 않으며, 브라우저에서는 JS가 필요합니다. 글꼴 파일(TTF·WOFF)은 지금 40칸 자소판과 벡터 세트에서만 나옵니다. 문제·증명·경계와 뺀 주장은 [해결하는 문제와 쓰임](docs/PRD/problems-and-use-cases.md)과 [소개 페이지](https://font.tty.link/)에 있습니다.
 
 ### 자소를 무엇으로 그리는가 — 재료
 
@@ -72,7 +70,7 @@
 
 ### 한 줄 설치
 
-`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/" }`로 자리를 알려 줍니다.
+`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/" }`로 자리를 알려 줍니다.
 
 공개 페이지에는 jsDelivr의 `font-kku.min.js`를 씁니다. jsDelivr는 `.min`을 붙인 주소에 원본에서 즉석으로 만든 압축본(소스 맵 포함)을 보내고, 런타임은 그 이름을 보고 CSS·글꼴·확장·자소 모듈도 `.min` 압축본으로 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md) §2). 소스를 읽거나 오류를 따라갈 때는 `.min`을 뺀 `font-kku.js`를 씁니다(CSS·확장도 원본으로 받습니다). unpkg는 압축본을 만들지 않으므로 unpkg에서는 `font-kku.js`를 씁니다. 즉석 압축본에는 SRI(`integrity`)를 걸지 않습니다.
 
@@ -81,7 +79,7 @@
 <script src="./font-kku.js" data-fonts="sebul neon"></script>
 
 <!-- jsDelivr의 npm 패키지 주소 — .min이면 CSS·글꼴·확장도 .min으로 (unpkg는 .min 없이 font-kku.js) -->
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul neon"></script>
 ```
 
 `data-addons`를 더하면 같은 자리의 확장도 함께 붙습니다([조합](#조합--여섯-축과-테마)). `data-fonts` 없이 `data-addons`만 써도 됩니다.
@@ -110,6 +108,14 @@ ES module(`font-kku.mjs`)과 번들러 경로에는 스크립트 태그가 없�
 - **접근성:** 런타임과 정적 렌더러가 바탕 요소에 `aria-label`을 쓰지 않습니다. 원문은 sr-source 하나로 읽히고, 직접 단 `aria-label`·`role`은 그대로 둡니다([접근성](#움직임-변주-접근성)). 원문을 코드에서 읽으려면 `data-source`.
 - **새로:** 그림 세트(`jamo-set="pilgi-box"`·`dunggeun-box`·`butgeul-box`), 디자인 API(실험), `FontKku.layoutStability`·`layoutProfiles`, 복사 주소 기본값 `font-kku.min.js`.
 
+### 0.1.1에서 올릴 때
+
+0.1.2도 기존 페이지의 출력이 바뀌는 패치입니다. 전체 목록은 [CHANGELOG.md](CHANGELOG.md)의 0.1.2입니다.
+
+- **기본 배치:** 세벌 고정 배치를 다시 지었습니다(revision 2). 받침이 초성·모음 바로 밑에 붙고 세로 모음이 길어지며, 잉크가 글자 칸 안에 들어 줄끼리 겹치지 않습니다. 되돌리는 옵션은 없고, 0.1.1 모양이 꼭 필요하면 CDN 주소를 `@0.1.1`에 둡니다. 저장한 디자인의 `layout.revision: "1"`은 그대로 받아 새 도장으로 그리고 경고 `DESIGN_LAYOUT_REVISION_ACCEPTED`를 남깁니다.
+- **꾸밈:** 원소 획 위의 네온·외곽선·도면·스티커가 획마다 상자 대신 글자 윤곽 하나로 그려집니다. 기기 글꼴 글자 위의 꾸밈은 페이지 CSS `--fy-face: device`.
+- **고르기·복사:** 그린 글자를 끌면 자모 단위로 골라지고(`--fy-selection`), 복사하면 고른 범위의 원문이 완성형 한글로 들어갑니다. 새 API `FontKku.sourceRange(host, range)`.
+
 ### npm / 번들러
 
 루트 패키지는 CommonJS `require()`, 빌드 없는 ESM 진입점(`font-kku.mjs`, default와
@@ -117,7 +123,7 @@ named export), TypeScript 선언, CSS·글꼴·spec 서브패스 export를 제�
 
 ```bash
 npm install @tty.link/font-kku
-# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.1.tgz
+# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.2.tgz
 ```
 
 ```js
@@ -148,7 +154,7 @@ CDN 없이 파일을 직접 제공하려면 npm 패키지의 파일을 프로젝
 
 ```bash
 npm pack @tty.link/font-kku
-tar -xzf tty.link-font-kku-0.1.1.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
+tar -xzf tty.link-font-kku-0.1.2.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
 ```
 
 한 줄 설치 대신 CSS를 직접 연결하려면 `font-kku.js`, base CSS, 사용할 글꼴 CSS를 같은 폴더 구조로 둡니다.
@@ -248,7 +254,8 @@ attribute와 `data-*`는 지속 옵션입니다. `FontKku.render()`나 `refresh(
 **기본 배치는 세벌 고정입니다**([ADR-026](docs/ADR/ADR-026-sebul-fixed-layout.md)). 글꼴을 밝히지 않은 `<font-kku>`는 세벌 타자기처럼
 초성·중성·종성을 역할마다 정해진 자리와 크기로 찍습니다. 같은 초성 ㄱ은 가·고·과·각·곽 어디서나 같은 도장이고, 받침 자리는 늘 비워 둡니다.
 ㅘ는 ㅗ 조각과 ㅏ 조각으로 찍습니다. `font="sebul"`처럼 글꼴을 밝히면 그 글꼴의 문맥 배치(모음·받침에 따라 자리가 바뀌는 탈네모꼴)로 그립니다.
-배치는 디자인으로도 고릅니다. `registerDesign`에 `version: "1.2"`와 `layout: { profile: "sebul-fixed-v1" | "square-context-v1", revision: "1" }`를 줍니다.
+배치는 디자인으로도 고릅니다. `registerDesign`에 `version: "1.2"`와 `layout: { profile: "sebul-fixed-v1", revision: "2" }`(세벌 고정) 또는
+`{ profile: "square-context-v1", revision: "1" }`(네모 문맥)를 줍니다. 0.1.1까지의 세벌 고정 revision `"1"`을 적은 디자인도 받아 지금 도장으로 그리고 진단을 남깁니다.
 
 | 이름 | 재료 | 용도 |
 | --- | --- | --- |
@@ -441,10 +448,10 @@ Python, Go, Rust, Ruby 구현은 JavaScript 코어를 감싼 것이 아니라 `s
 
 공개 사이트는 [https://font.tty.link/](https://font.tty.link/)입니다. 저장소에서는 `site/index.html`을 정적 서버로 엽니다(`python3 -m http.server 8000` → `http://127.0.0.1:8000/site/index.html`). 공개 메뉴는 여섯입니다.
 
-- [소개](https://font.tty.link/): **같은 글자도 매번 다르게** — 이 페이지가 한 번 받은 스크립트·CSS만으로 '하' 다섯 개를 글꼴·꾸밈·변주·움직임이 저마다 다르게 섞는 카드('씨앗만'으로 바꾸면 한 조합에서 씨앗만 다르다). **이럴 때 폰꾸** — 역할별로 거르는 문제 카드 18장과 증명 데모 7종(글꼴이 막힐 때·매번 다른 글꼴·빈 글자 검사·글꼴 파일 계기판·마크다운 → 텍스트·AI로 세 번·이미지 대신 텍스트), 대표 쓰임 셋(웹·AI 에이전트·봇/터미널)과 바로 따라 하는 코드·프롬프트
-- [사례](https://font.tty.link/showcase.html): 포스터·블로그·발표 표지·메뉴판·학습지·게임 공지·상장·청첩장·네온 간판·예능 자막·RPG 대화창·그림일기·개발자 밋업 포스터·공방 클래스 완성 템플릿(`site/examples/`) — 열어 보기, HTML 복사·내려받기(런타임 주소는 jsDelivr로 바뀜), 같은 결과를 내는 AI 프롬프트
+- [소개](https://font.tty.link/): **8칸만 그리면, 세상에 없던 한글 글꼴** — AI가 그린 8칸이 획순대로 그어지고 그 8칸으로 문장이 조립되는 데모(칸을 눌러 직접 그으면 그 자모가 든 글자가 모두 바뀌고 바뀐 글자 수를 센다), 만들어야 하는 양 비교·자모 지도·11,172자 모두 그려 보기, AI에게 맡기는 프롬프트와 실제로 받은 답(고치지 않음), 자모마다 다른 씨앗 변주, 아무 문장이나 자모 단위로 칠하고 움직이기, 내 페이지에 쓰는 코드, 한계와 무게
+- [사례](https://font.tty.link/showcase.html): 포스터·블로그·발표 표지·메뉴판·학습지·게임 공지·상장·청첩장·네온 간판·예능 자막·RPG 대화창·그림일기·개발자 밋업 포스터·공방 클래스, 요청 글 하나로 AI에게 받은 집들이 쪽지·빵집 칠판(고치지 않은 첫 답) 완성 페이지(`site/examples/`) — 그대로 쓰기(열어 보기, HTML 복사·내려받기, 런타임 주소는 jsDelivr로 바뀜), 고쳐 쓰기(글씨를 AI가 그린 8칸이나 내가 그린 8칸으로 갈아 끼운 HTML), 새로 만들기(AI에게 줄 요청 글 만들기, 사례마다 템플릿을 고쳐 달라는 요청 글)
   - 웹 앱: [전광판](https://font.tty.link/sign.html)·[메모장](https://font.tty.link/memo.html) — 한글 글꼴·입력기 없는 기기에서 영문 자판으로 두벌식·세벌식 한글을 쓴다
-- [글꼴](https://font.tty.link/fonts.html): 여섯 축(글꼴·꾸밈·변주·움직임·상호작용·바탕)으로 나눈 **테마 갤러리**(테마 35가지, 조합 배지와 코드 복사)와 축을 하나씩 고르는 **조합기**, 글꼴 축의 견본과 문장·크기·바탕 시험대, 글꼴별 **꾸미기**(그 글꼴을 바탕으로 색·외곽선·그림자·변주·움직임을 바꿔 나만의 꾸밈 글꼴 CSS로 가져가기), **폰꾸로 만드는 글꼴**(꾸미기·뽑기·씨앗 변주·자소판 그리기·SVG/AI·글꼴 파일 내보내기·CSS 고치기·벡터 자소 세트)
+- [글꼴](https://font.tty.link/fonts.html): 여섯 축(글꼴·꾸밈·변주·움직임·상호작용·바탕)으로 나눈 **테마 갤러리**(축을 섞은 테마 21가지, 꾸밈 하나·글꼴 하나만 고른 14가지는 접어 둠, 조합 배지와 코드 복사)와 축을 하나씩 고르는 **조합기**, 글꼴 견본(기본 제공 12종, AI가 그린 8칸 그림 세트 3종, 출발용 뼈대)과 문장·크기·바탕·씨앗 시험대, 글꼴별 **꾸미기**(색·외곽선·그림자·변주·움직임을 얹어 꾸밈 CSS로 가져가기), **내 글꼴 만들기**(8칸 그리기·AI에게 맡기기·작업실·씨앗 변주·꾸미기·글꼴 뽑기·자소판 40칸과 TTF)
 - [움직임](https://font.tty.link/effects.html): 자모 단위 움직임(조립·받침 톡·물결·깜빡임·색 순환·반짝·스크롤 조립과 코어 글자 움직임)과 상호작용(두벌식 타자·흩어졌다 모이기·커서 자석·씨앗 섞기) — 카드마다 `data-addons`로 붙이는 짧은 코드
 - [문서](https://font.tty.link/docs.html): 설치, 바탕 요소와 속성, 줄바꿈, 꾸미기(CSS), 움직임·변주, 평문·봇, AI와 쓰기, 글꼴 만들기, API·CSS 레퍼런스
 - [작업실](https://font.tty.link/font-studio.html): 첫 화면의 **디자인** 칸 — 세벌 고정 기본 디자인에서 선·원/직접 그린 그림/기존 글꼴로 시작하고, 그리기 8 → 24 → 40(칸 편집기·SVG 가져오기), 조립식·binding 비교, 출처, 글꼴 팔레트, 편집 기록과 영향 확인, 디자인 JSON·페이지용 코드·묶음 파일([실험](#디자인-api-실험)). 그 밖에 글꼴 CSS 편집과 [자소판 그리기](https://font.tty.link/font-studio.html?font=sprite-example#studio-material)(재료 탭)

@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="alternate" type="text/markdown" href="lib/skill/SKILL.md" title="AI 에이전트용 사용 설명서 (SKILL.md)" />
     <title>사례 — 폰꾸 font-kku</title>
-    <meta name="description" content="폰꾸로 꾸민 청첩장·네온 간판·RPG 대화창·예능 자막·그림일기·해커톤 포스터·공방 클래스·포스터·블로그·발표 표지·메뉴판·학습지·게임 공지·상장 템플릿과 봇·터미널 예제. 열어 보고, HTML을 복사하거나 내려받고, 같은 결과를 내는 AI 프롬프트를 가져갑니다." />
+    <meta name="description" content="폰꾸로 꾸민 청첩장·간판·게임 화면·학습지 같은 사례 페이지. 그대로 가져가 글만 바꾸거나, 내가 그린 8칸으로 글씨를 갈아 고쳐 쓰거나, AI에게 줄 요청 글과 시작 코드로 새로 만듭니다." />
     <script src="lib/font-kku.js" data-fonts="sebul"></script>
+    <script src="./landing-ai-sets.js"></script>
     <link rel="stylesheet" href="./site.css" />
     <link rel="stylesheet" href="./apps.css" />
+    <link rel="stylesheet" href="./showcase.css" />
   </head>
 
   <body>
@@ -23,29 +25,256 @@
     </header>
 
     <main>
-      <section class="k-wrap k-page-head" aria-labelledby="cases-title">
-        <h1 id="cases-title" class="font-kku k-h1 k-mark" data-font="sebul" data-size="clamp(44px, 7vw, 88px)">가져다 쓰는 사례</h1>
+      <section class="k-wrap k-page-head sc-head" aria-labelledby="showcase-title">
+        <h1 id="showcase-title" class="font-kku k-h1 k-mark" data-font="sebul" data-size="clamp(44px, 7vw, 88px)">청첩장에서 게임까지</h1>
         <p class="k-lead">
-          완성된 HTML 템플릿입니다. 열어 보고, <strong>HTML 복사</strong>나 <strong>내려받기</strong>로 가져가 글만 바꾸면 됩니다.
-          가져간 HTML은 런타임 주소가 jsDelivr의 정확한 판 압축본(<code>@tty.link/font-kku@0.1.1/font-kku.min.js</code>)으로 바뀌어 있습니다.
-          사례의 글자는 모두 글꼴 이름을 밝혀 그렸고, 이름 없이 더한 <code>&lt;font-kku&gt;</code>는 기본 배치인 <a href="./fonts.html#layout">세벌 고정</a>으로 그립니다.
-          같은 결과를 AI에게 맡기려면 <strong>AI 프롬프트</strong>를 복사하세요.
+          청첩장·간판·게임 화면·학습지처럼 폰꾸로 꾸민 페이지를 모았습니다.
+          마음에 드는 것을 그대로 가져가도 되고, 글씨를 내가 그린 8칸으로 갈아 고쳐 써도 되고, 요청 글 하나로 새 페이지를 만들어도 됩니다.
         </p>
+        <p class="sc-count" data-showcase-count hidden></p>
+        <nav class="sc-ways" aria-label="쓰는 길">
+          <a class="sc-way" href="#cases">
+            <span class="sc-way-num" aria-hidden="true">하나</span>
+            <strong>그대로 쓰기</strong>
+            <span>마음에 드는 사례의 HTML 한 장을 복사하거나 내려받아 글만 바꿉니다. 내 서버에 올려도 그대로 열립니다.</span>
+            <span class="sc-way-go">사례 고르기 ↓</span>
+          </a>
+          <a class="sc-way" href="#remix">
+            <span class="sc-way-num" aria-hidden="true">둘</span>
+            <strong>고쳐 쓰기</strong>
+            <span>폰꾸 글씨를 AI가 그린 8칸이나 내가 그린 8칸으로 갈아 끼웁니다. 등록 코드와 획 굵기 규칙, 글꼴 속성만 바뀌고, 페이지 CSS로 자모마다 준 움직임은 그대로 남습니다.</span>
+            <span class="sc-way-go">고쳐 보기 ↓</span>
+          </a>
+          <a class="sc-way" href="#new">
+            <span class="sc-way-num" aria-hidden="true">셋</span>
+            <strong>새로 만들기</strong>
+            <span>만들 페이지와 글씨를 고르면 AI에게 줄 요청 글이 나옵니다. 직접 짜려면 스크립트 한 줄과 8칸에서 시작합니다.</span>
+            <span class="sc-way-go">요청 글 만들기 ↓</span>
+          </a>
+        </nav>
       </section>
 
-      <section class="k-wrap k-showcase" aria-label="템플릿" data-showcase>
-        <p class="k-note">사례를 불러오는 중…</p>
+      <!-- 하나: 사례 모음 — 카드마다 그대로 가져가기·고쳐 보기·AI에게 고쳐 달라기 -->
+      <section class="k-section sc-cases" id="cases" aria-labelledby="cases-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">하나</span>
+            <span class="k-kicker">사례 모음</span>
+            <h2 id="cases-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">쓰임마다 골라 보기</h2>
+            <p class="k-lead">
+              초대장·간판·학습지·게임 화면·방송 자막·발표 표지처럼 쓰임이 저마다 다른 페이지입니다. 쓰임으로 골라 열어 보세요.
+              카드마다 <strong>그대로 가져가기</strong>(HTML 복사·내려받기), <strong>고쳐 보기</strong>, <strong>AI에게 고쳐 달라기</strong>가 있습니다.
+            </p>
+          </header>
+          <div class="sc-filter" data-showcase-filter hidden>
+            <div class="k-chips" role="group" aria-label="쓰임으로 고르기" data-showcase-kinds></div>
+            <p class="k-note" data-showcase-shown aria-live="polite"></p>
+          </div>
+          <p class="k-note sc-cdn-note">
+            가져가는 HTML은 런타임 주소가 jsDelivr의 정확한 판 압축본(<code>@tty.link/font-kku@0.1.2/font-kku.min.js</code>)으로 바뀌어 있어 내 서버에 올려도 그대로 열립니다.
+            카드에 붙은 <a href="./fonts.html#layout">세벌 고정</a> 표는 글꼴 이름을 비워 기본 배치로 그린 글자입니다.
+          </p>
+          <div class="k-showcase sc-grid" aria-label="사례" data-showcase>
+            <p class="k-note">사례를 불러오는 중…</p>
+          </div>
+          <p class="k-note sc-cases-note">
+            <strong>AI에게 고쳐 달라기</strong>는 설명서 주소와 그 사례의 주소가 든 요청 글을 복사합니다. 바꿀 것만 적어 대화창에 붙여 넣으세요.
+            링크를 열지 못하는 AI에게는 <strong>HTML 복사</strong>로 받은 글을 함께 붙여 넣습니다.
+          </p>
+        </div>
       </section>
 
-      <section class="k-section" id="apps" aria-labelledby="apps-title">
+      <!-- 둘: 고쳐 쓰기 -->
+      <section class="k-section k-section--tint" id="remix" aria-labelledby="remix-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">둘</span>
+            <span class="k-kicker">고쳐 쓰기</span>
+            <h2 id="remix-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">글씨를 갈아 끼우면</h2>
+            <p class="k-lead">
+              사례 하나를 골라 폰꾸 글씨를 8칸 그림 세트로 갈아 끼워 보세요. 미리보기와 복사하는 HTML은 같은 글에서 나오고, 바뀐 줄은 따로 보입니다.
+              글과 색은 받은 HTML에서 그대로 고치면 됩니다.
+            </p>
+          </header>
+
+          <p class="k-note sc-remix-off" data-remix-off hidden>
+            고쳐 쓰기는 사례 HTML을 읽어 와야 해서 <code>file://</code> 주소에서는 막힙니다. 저장소 뿌리에서 <code>python3 -m http.server</code>처럼 정적 서버로 열어 보세요.
+          </p>
+          <div class="sc-remix" data-remix>
+            <form class="sc-remix-controls" data-remix-form>
+              <label class="sc-field">
+                <span class="sc-label">사례</span>
+                <select class="sc-select" name="template" data-remix-template></select>
+              </label>
+              <fieldset class="sc-fieldset">
+                <legend class="sc-label">글씨</legend>
+                <div class="sc-radios" data-remix-sets>
+                  <label><input type="radio" name="set" value="" /> 원래 글꼴</label>
+                  <label><input type="radio" name="set" value="claude-marker-1" checked /> 마커 — Claude 답</label>
+                  <label><input type="radio" name="set" value="claude-pen-1" /> 가는 펜 — Claude 답</label>
+                  <label><input type="radio" name="set" value="claude-balloon-2" /> 풍선 — Claude 둘째 답</label>
+                  <label data-remix-draft hidden><input type="radio" name="set" value="draft" /> 내가 그린 8칸</label>
+                  <a class="sc-draw-link" href="./index.html#maker-draw" data-remix-draw-link>8칸 그리러 가기 → 소개</a>
+                </div>
+                <p class="k-note sc-about" data-remix-about aria-live="polite"></p>
+              </fieldset>
+              <fieldset class="sc-fieldset" data-remix-fonts-box>
+                <legend class="sc-label">바꿀 글꼴</legend>
+                <div class="k-chips sc-font-chips" role="group" aria-label="바꿀 글꼴" data-remix-fonts></div>
+                <p class="k-note sc-about" data-remix-fonts-note aria-live="polite"></p>
+              </fieldset>
+              <div class="sc-seed">
+                <label><input type="checkbox" name="seed" data-remix-seed /> 볼 때마다 다르게 (씨앗)</label>
+                <button type="button" class="k-btn k-btn--small" data-remix-reroll disabled>다시 그리기</button>
+              </div>
+              <div class="sc-remix-actions">
+                <button type="button" class="k-btn k-btn--small k-btn--primary" data-remix-copy disabled>고친 HTML 복사</button>
+                <button type="button" class="k-btn k-btn--small" data-remix-download disabled>내려받기</button>
+                <a class="k-btn k-btn--small" href="./examples/cafe-menu.html" target="_blank" rel="noopener" data-remix-open>원본 열기</a>
+              </div>
+            </form>
+
+            <figure class="sc-remix-view">
+              <div class="sc-remix-frame" data-remix-frame>
+                <p class="k-note sc-remix-wait" data-remix-wait>미리보기는 이 구획이 화면에 가까워지면 만듭니다.</p>
+              </div>
+              <figcaption class="k-note" data-remix-caption>미리보기</figcaption>
+            </figure>
+
+            <div class="k-code k-code--wrap sc-diff">
+              <div class="k-code-bar"><span data-remix-diff-title>바뀐 줄</span></div>
+              <pre data-remix-diff><code>사례를 고르면 바뀐 줄이 여기에 보입니다.</code></pre>
+            </div>
+          </div>
+
+          <ul class="sc-list k-after">
+            <li><strong>글꼴이 가진 꾸밈은 글꼴과 함께 바뀝니다</strong> — 네온의 빛, 금박의 금빛, 분필 가루가 그렇습니다. 페이지 CSS로 자모마다 준 색과 움직임(네온 간판의 받침 ㅂ 깜빡임 같은)은 그대로 남습니다.</li>
+            <li><strong>8칸 세트는 아직 글꼴 파일(TTF·WOFF)이 되지 않습니다</strong> — 웹 페이지와 작업실 파일로 씁니다.</li>
+            <li><strong>칸을 더 다듬으려면</strong> — 소개의 <a href="./index.html#maker-draw">8칸 만들기</a>에서 그리고, <a href="./font-studio.html#draw">글꼴 작업실의 8칸 그리기</a>에서 이어 그립니다. 소개에서 그린 칸은 이 브라우저에 남아 위의 '내가 그린 8칸'으로 고를 수 있습니다.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 셋: 새로 만들기 -->
+      <section class="k-section" id="new" aria-labelledby="new-title">
+        <div class="k-wrap">
+          <header class="k-section-head">
+            <span class="k-num" aria-hidden="true">셋</span>
+            <span class="k-kicker">새로 만들기</span>
+            <h2 id="new-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">새 페이지 만들기</h2>
+            <p class="k-lead">
+              AI에게 맡기려면 아래에서 고른 대로 요청 글을 만들어 복사합니다. 요청 글에 설명서 주소가 들어 있어 AI가 폰꾸 붙이는 법을 읽고 씁니다.
+              직접 짜려면 스크립트 한 줄과 8칸에서 시작합니다.
+            </p>
+          </header>
+
+          <h3 class="sc-sub" id="ask-title">AI에게 맡기기 — 요청 글 만들기</h3>
+          <div class="k-split sc-ask">
+            <form class="sc-builder" data-builder aria-labelledby="ask-title">
+              <fieldset class="sc-fieldset">
+                <legend class="sc-label">무엇을</legend>
+                <div class="k-chips" role="group" aria-label="만들 페이지" data-builder-what>
+                  <button type="button" aria-pressed="true" data-what="청첩장·초대장">청첩장·초대장</button>
+                  <button type="button" aria-pressed="false" data-what="가게 안내·메뉴판">가게 안내·메뉴판</button>
+                  <button type="button" aria-pressed="false" data-what="행사 포스터">행사 포스터</button>
+                  <button type="button" aria-pressed="false" data-what="학습지·상장">학습지·상장</button>
+                  <button type="button" aria-pressed="false" data-what="게임 화면">게임 화면</button>
+                  <button type="button" aria-pressed="false" data-what="방송 자막">방송 자막</button>
+                  <button type="button" aria-pressed="false" data-what="블로그 글">블로그 글</button>
+                </div>
+                <label class="sc-field">
+                  <span class="sc-hint">직접 적기</span>
+                  <input class="k-input sc-text" type="text" name="what" maxlength="60" autocomplete="off" placeholder="예: 동네 빵집의 오늘의 빵 안내판" />
+                </label>
+              </fieldset>
+              <fieldset class="sc-fieldset">
+                <legend class="sc-label">글씨</legend>
+                <div class="sc-radios sc-radios--stack">
+                  <label><input type="radio" name="font" value="auto" checked /> 어울리는 기본 글꼴로</label>
+                  <label class="sc-inline"><span><input type="radio" name="font" value="pick" /> 이 글꼴로</span>
+                    <select class="sc-select" name="fontId" aria-label="쓸 글꼴" data-builder-fonts></select></label>
+                  <label><input type="radio" name="font" value="draw" /> 새 글꼴도 그려서</label>
+                  <label class="sc-field sc-feel">
+                    <span class="sc-hint">느낌</span>
+                    <input class="k-input sc-text" type="text" name="feel" maxlength="60" autocomplete="off" data-builder-feel />
+                  </label>
+                </div>
+              </fieldset>
+              <fieldset class="sc-fieldset">
+                <legend class="sc-label">더하기</legend>
+                <div class="sc-radios sc-radios--stack">
+                  <label><input type="checkbox" name="seed" /> 같은 글자도 볼 때마다 조금씩 다르게 (씨앗)</label>
+                  <label><input type="checkbox" name="assemble" /> 제목이 화면에 들어올 때 자모가 모이게</label>
+                  <label><input type="checkbox" name="input" /> 입력하면 그 자리에서 다시 그리게</label>
+                </div>
+              </fieldset>
+            </form>
+            <div class="k-stack">
+              <div class="k-code k-code--wrap">
+                <div class="k-code-bar"><span>AI에게 줄 요청 글</span><button type="button" data-copy="#new-prompt">요청 글 복사</button></div>
+                <pre id="new-prompt" data-builder-out></pre>
+              </div>
+              <p class="k-note">
+                ChatGPT·Claude 같은 대화창에 붙여 넣습니다. 답은 AI마다 다르니, 받은 HTML을 열어 보고 말로 더 고쳐 달라고 하세요.
+                링크를 열지 못하는 AI에게는 <button type="button" class="sc-inline-btn" data-copy-skill>AI 설명서 전체 복사</button>로 설명서를 통째로 먼저 붙여 넣습니다.
+              </p>
+              <div class="sc-proof" data-builder-made hidden>
+                <p data-builder-made-lead></p>
+                <ul class="sc-proof-list" data-builder-made-list></ul>
+                <p class="k-note sc-proof-status" data-builder-made-status aria-live="polite"></p>
+              </div>
+            </div>
+          </div>
+
+          <details class="sc-like" data-like hidden>
+            <summary>이 사례처럼 — 사례 페이지를 글로 적은 요청에서 시작하기</summary>
+            <div class="sc-like-body">
+              <label class="sc-field">
+                <span class="sc-label">사례</span>
+                <select class="sc-select" data-like-template></select>
+              </label>
+              <p class="k-note" data-like-about></p>
+              <div class="k-code k-code--wrap">
+                <div class="k-code-bar"><span data-like-title>이 페이지를 글로 적은 요청</span><button type="button" data-copy="#like-prompt">복사</button></div>
+                <pre id="like-prompt" data-like-out></pre>
+              </div>
+            </div>
+          </details>
+
+          <h3 class="sc-sub" id="start-title">직접 짜기 — 빈 페이지에서</h3>
+          <div class="k-split sc-start">
+            <div class="k-code">
+              <div class="k-code-bar"><span>index.html</span><button type="button" data-copy="#start-code">복사</button></div>
+              <pre id="start-code"><code data-start-code></code></pre>
+            </div>
+            <div class="k-stack">
+              <figure class="sc-start-result" aria-label="코드의 결과">
+                <div class="k-stage sc-start-stage">
+                  <font-kku font="sebul" jamo-set="claude-marker-1" size="56" style="--fy-element-width: 0.13em" data-start-host>오늘의 기록</font-kku>
+                  <p>본문은 폰꾸 없이 페이지 글꼴로 씁니다.</p>
+                </div>
+                <figcaption class="k-note" data-start-about>이 코드를 이 페이지에서 그대로 그린 결과입니다.</figcaption>
+              </figure>
+              <ul class="sc-list">
+                <li><strong>칸을 직접 그리려면</strong> — 소개의 <a href="./index.html#maker-draw">8칸 만들기</a>. 그린 칸은 이 브라우저에 남아 위의 고쳐 쓰기에서도 고를 수 있습니다.</li>
+                <li><strong>더 다듬으려면</strong> — <a href="./font-studio.html#draw">글꼴 작업실의 8칸 그리기</a>.</li>
+                <li><strong>속성과 꾸미기</strong> — <a href="./docs.html#start">문서</a>와 <a href="./fonts.html">글꼴</a>.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="k-note sc-evidence" data-evidence></p>
+        </div>
+      </section>
+
+      <section class="k-section k-section--tint" id="apps" aria-labelledby="apps-title">
         <div class="k-wrap">
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true">앱</span>
-            <span class="k-kicker">웹 앱 · 한글 글꼴·입력기 없이</span>
+            <span class="k-kicker">웹 앱</span>
             <h2 id="apps-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">영문 자판으로 쓰는 한글</h2>
             <p class="k-lead">
-              한글 입력기도 한글 글꼴도 없는 기기에서 영문 자판으로 두벌식·세벌식 한글을 칩니다. 조합은 입력기 모듈
-              <code>font-kku-ime.js</code>가, 그리기는 그림 자소 글꼴이 맡아 기기 글꼴 없이 한글이 보입니다.
+              영문 자판으로 두벌식·세벌식 한글을 쳐서 띄우는 전광판과 메모장입니다. 조합은 입력기 모듈 <code>font-kku-ime.js</code>가,
+              그리기는 그림 자소 글꼴이 맡아 기기에 한글 글꼴이 없어도 보입니다.
             </p>
           </header>
           <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute">
@@ -68,21 +297,24 @@
         </div>
       </section>
 
-      <section class="k-section k-section--tint" id="bot" aria-labelledby="bot-title">
+      <section class="k-section" id="bot" aria-labelledby="bot-title">
         <div class="k-wrap">
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true">봇</span>
             <span class="k-kicker">봇·터미널</span>
-            <h2 id="bot-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">알림과 로그를 크게</h2>
-            <p class="k-lead">HTML이 아닌 곳에서는 한글을 2줄 평문으로 풀어 강조합니다. 슬랙·디스코드는 코드 블록으로 감싸야 줄이 맞습니다.</p>
+            <h2 id="bot-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">터미널 배너와 봇</h2>
+            <p class="k-lead">
+              figlet 같은 배너 도구에는 한글 글꼴이 없습니다. 폰꾸는 같은 분해 규칙으로 한글을 두 줄 평문으로 풀어 써서 터미널 배너·빌드 로그·봇 메시지에 넣습니다.
+              글자가 커지는 것이 아니라 풀어 쓰는 것이고, 슬랙·디스코드는 코드 블록으로 감싸야 줄이 맞습니다.
+            </p>
           </header>
           <div class="k-split">
             <div class="k-terminal">
               <div class="k-terminal-bar"><span>#배포-알림 · 슬랙 미리보기</span></div>
-              <pre data-bot-preview role="img" aria-label="배포 완료를 2줄로 풀어 쓴 슬랙 메시지"></pre>
+              <pre data-bot-preview role="img" aria-label="배포 완료를 두 줄로 풀어 쓴 슬랙 메시지"></pre>
             </div>
             <div class="k-stack">
-              <div class="k-code">
+              <div class="k-code" data-bot-example>
                 <div class="k-code-bar"><span>슬랙 봇 (Bolt for JavaScript)</span><button type="button" data-copy="#case-slack">복사</button></div>
                 <pre id="case-slack"><code>const { App } = require("@slack/bolt");
 const { renderText } = require("@tty.link/font-kku");
@@ -92,21 +324,21 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
-// /big 배포 완료  →  한글을 2줄로 크게
-app.command("/big", async ({ command, ack, respond }) =&gt; {
+// /banner 배포 완료  →  한글을 두 줄로 풀어 쓴 배너
+app.command("/banner", async ({ command, ack, respond }) =&gt; {
   await ack();
-  const big = renderText(command.text || "배포 완료").join("\n");
-  await respond("```\n" + big + "\n```");
+  const banner = renderText(command.text || "배포 완료").join("\n");
+  await respond("```\n" + banner + "\n```");
 });
 
 app.start(3000);</code></pre>
               </div>
-              <div class="k-code">
+              <div class="k-code" data-bot-example>
                 <div class="k-code-bar"><span>GitHub Actions 로그</span><button type="button" data-copy="#case-actions">복사</button></div>
                 <pre id="case-actions"><code>- name: 배포 완료 배너
   run: npx -p @tty.link/font-kku font-kku-text "배포 완료"</code></pre>
               </div>
-              <div class="k-code">
+              <div class="k-code" data-bot-example>
                 <div class="k-code-bar"><span>터미널 배너 (셸)</span><button type="button" data-copy="#case-shell">복사</button></div>
                 <pre id="case-shell"><code>echo "빌드 성공" | npx -p @tty.link/font-kku font-kku-text</code></pre>
               </div>
@@ -131,52 +363,8 @@ app.start(3000);</code></pre>
 
     <script src="./demo.js"></script>
     <script src="./kk.js"></script>
-    <script>
-      (function () {
-        "use strict";
-        window.FontKkuDemo.renderNav("showcase");
-        var site = window.FontKkuSite;
-
-        var preview = document.querySelector("[data-bot-preview]");
-        preview.textContent = "배포봇  오후 3:02\n" + window.FontKku.renderText("배포 완료").join("\n");
-
-        function escapeHtml(value) {
-          return String(value).replace(/[&<>"]/g, function (ch) {
-            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch];
-          });
-        }
-
-        var mount = document.querySelector("[data-showcase]");
-
-        function card(item) {
-          var href = "./examples/" + item.file;
-          var prompt = "이 설명서를 읽고 따라 해 줘: " + site.SKILL_URL + "\n\n" + item.prompt;
-          return '<article class="k-showcase-card" data-case="' + escapeHtml(item.file) + '">' +
-            '<a class="k-case-frame" href="' + href + '" target="_blank" rel="noopener" aria-label="' + escapeHtml(item.title) + ' 새 창에서 열기">' +
-            '<iframe src="' + href + '" title="' + escapeHtml(item.title) + ' 미리보기" loading="lazy" tabindex="-1" aria-hidden="true"></iframe></a>' +
-            '<div class="k-showcase-body">' +
-            "<h2>" + escapeHtml(item.title) + "</h2>" +
-            "<p>" + escapeHtml(item.summary) + "</p>" +
-            '<ul class="k-fontrow-tags">' + (item.fonts || []).map(function (font) {
-              return '<li><a href="./fonts.html#' + escapeHtml(font) + '"><code>' + escapeHtml(font) + "</code></a></li>";
-            }).join("") + "</ul>" +
-            '<div class="k-showcase-actions">' +
-            '<a class="k-btn k-btn--small k-btn--primary" href="' + href + '" target="_blank" rel="noopener">열어 보기</a>' +
-            '<button type="button" class="k-btn k-btn--small" data-template="' + href + '">HTML 복사</button>' +
-            '<button type="button" class="k-btn k-btn--small" data-template="' + href + '" data-template-download>내려받기</button>' +
-            '<button type="button" class="k-btn k-btn--small" data-copy-text="' + escapeHtml(prompt) + '">AI 프롬프트</button>' +
-            "</div></div></article>";
-        }
-
-        fetch("./examples/index.json").then(function (response) {
-          if (!response.ok) throw new Error(String(response.status));
-          return response.json();
-        }).then(function (data) {
-          mount.innerHTML = (data.examples || []).map(card).join("");
-        }).catch(function () {
-          mount.innerHTML = '<p class="k-note">사례 목록(<code>examples/index.json</code>)을 불러오지 못했습니다. 정적 서버로 열었는지 확인하세요.</p>';
-        });
-      })();
-    </script>
+    <script src="./themes-data.js"></script>
+    <script src="./showcase-remix.js"></script>
+    <script src="./showcase.js"></script>
   </body>
 </html>

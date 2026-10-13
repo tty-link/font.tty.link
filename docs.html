@@ -68,12 +68,12 @@
 
     <div class="k-prose">
       <header class="d-intro">
-        <span class="k-kicker">폰꾸 font-kku · 버전 <span data-fk-version>0.1.1</span></span>
+        <span class="k-kicker">폰꾸 font-kku · 버전 <span data-fk-version>0.1.2</span></span>
         <h1 class="font-kku k-h1 k-mark" data-font="sebul" data-size="clamp(40px, 6vw, 64px)">문서</h1>
         <p class="k-lead">
           폰꾸는 한글 음절을 초성·중성·종성으로 나눠 다시 조립해 그리는 브라우저 런타임입니다. 이 문서는 스크립트 한 줄로
           붙이는 법부터 글꼴·배치·재료 고르기, 페이지 CSS로 꾸미기, 움직임, 평문 모드, 글꼴 만들기, JavaScript API까지 한 페이지에
-          모았습니다. 이 페이지의 제목도 모두 폰꾸로 그렸습니다. 0.1.0에서 올라왔다면 <a href="#start-version">0.1.1에서 바뀐 것</a>부터 봅니다.
+          모았습니다. 이 페이지의 제목도 모두 폰꾸로 그렸습니다. 앞 판에서 올라왔다면 <a href="#start-version">판마다 바뀐 것</a>부터 봅니다.
         </p>
         <ul class="d-quick">
           <li><a href="#start"><span>1</span>한 줄로 붙이기</a></li>
@@ -100,7 +100,7 @@
         </p>
         <div class="k-code k-code--wrap">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-oneline">복사</button></div>
-          <pre id="c-oneline"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul neon"&gt;&lt;/script&gt;
+          <pre id="c-oneline"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul neon"&gt;&lt;/script&gt;
 
 &lt;font-kku font="neon" size="64"&gt;을지로 네온&lt;/font-kku&gt;</code></pre>
         </div>
@@ -114,7 +114,7 @@
           <li>칠만 다른 글꼴(네온·금박 …)은 <code>font="sebul" class="kku-look-neon"</code>처럼 꾸밈 클래스로 쓰면 CSS를 덜 받습니다.</li>
           <li>주소의 <code>font-kku.min.js</code>는 jsDelivr가 원본에서 즉석으로 만든 압축본(소스 맵 포함)입니다. 런타임은 그 이름을 보고 CSS·글꼴·확장도 <code>.min</code> 압축본으로 받습니다. 소스를 읽거나 오류를 따라갈 때는 <code>.min</code>을 뺀 <code>font-kku.js</code>를 씁니다. unpkg는 압축본을 만들지 않으므로 <code>font-kku.js</code>를 쓰고, 즉석 압축본에는 SRI(<code>integrity</code>)를 걸지 않습니다.</li>
           <li>CSS가 도착할 때까지(늦어도 3초) 조립 전 자소가 보이지 않게 가려 둡니다.</li>
-          <li>파일 이름이 없는 CDN 짧은 주소(<code>https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1</code>)도 패키지 폴더로 보고 같은 방식으로 풉니다.</li>
+          <li>파일 이름이 없는 CDN 짧은 주소(<code>https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2</code>)도 패키지 폴더로 보고 같은 방식으로 풉니다.</li>
           <li><code>data-addons="looks motion fx"</code>를 더하면 조합 확장(꾸밈 <code>kku-look-*</code>·변주 <code>kku-vary-*</code>, 자모 움직임, 상호작용)도 함께 붙습니다 — <a href="#compose-addons">확장 붙이기</a>.</li>
         </ul>
         <div class="k-callout">
@@ -137,7 +137,7 @@
 
 # 저장소 checkout에서 시험할 때: tarball을 만들어 설치
 npm pack
-npm install /path/to/tty.link-font-kku-0.1.1.tgz</code></pre>
+npm install /path/to/tty.link-font-kku-0.1.2.tgz</code></pre>
         </div>
         <p>
           번들러에는 스크립트 태그가 없으므로 한 줄 설치(<code>data-fonts</code>)가 동작하지 않습니다. 바탕 CSS와 글꼴 CSS를 직접
@@ -212,13 +212,13 @@ FontKku.renderText("안녕하세요").forEach((line) =&gt; console.log(line));</
         <h3 id="start-version">버전 — 0.1.x는 작게 올립니다</h3>
         <p>
           폰꾸는 0.1.x 동안 페이지 모양이 바뀌는 변경도 패치(0.1.0 → 0.1.1)로 올립니다. 그래서 이 문서의 CDN 주소는 범위(<code>@0.1</code>)가
-          아닌 정확한 판(<code>@<span data-fk-version>0.1.1</span></code>)으로 적습니다 — 모양은 주소를 직접 올릴 때만 바뀝니다. npm은 <code>^0.1.0</code>으로 받으면 다음 0.1.x를 저절로 받으므로, 모양을 묶어 두려면 정확한 판으로 설치합니다.
+          아닌 정확한 판(<code>@<span data-fk-version>0.1.2</span></code>)으로 적습니다 — 모양은 주소를 직접 올릴 때만 바뀝니다. npm은 <code>^0.1.0</code>으로 받으면 다음 0.1.x를 저절로 받으므로, 모양을 묶어 두려면 정확한 판으로 설치합니다.
         </p>
         <div class="k-code k-code--wrap">
           <div class="k-code-bar"><span>터미널</span><button type="button" data-copy="#c-exact">복사</button></div>
-          <pre id="c-exact"><code>npm install --save-exact @tty.link/font-kku@0.1.1</code></pre>
+          <pre id="c-exact"><code>npm install --save-exact @tty.link/font-kku@0.1.2</code></pre>
         </div>
-        <p>0.1.0에서 올라올 때 보이는 차이와 예전 모양을 지키는 법입니다.</p>
+        <p>판을 올릴 때 보이는 차이와 예전 모양을 지키는 법입니다(0.1.0 → 0.1.1, 0.1.1 → 0.1.2).</p>
         <div class="k-table-scroll">
           <table class="k-table d-table-wide">
             <thead><tr><th>0.1.1에서 바뀐 것</th><th>예전처럼 그리려면</th></tr></thead>
@@ -233,8 +233,19 @@ FontKku.renderText("안녕하세요").forEach((line) =&gt; console.log(line));</
             </tbody>
           </table>
         </div>
+        <div class="k-table-scroll">
+          <table class="k-table d-table-wide">
+            <thead><tr><th>0.1.2에서 바뀐 것</th><th>예전처럼 그리려면</th></tr></thead>
+            <tbody>
+              <tr><td>세벌 고정 배치를 다시 지었습니다(revision 2). 받침이 초성·모음 바로 밑에 붙고 세로 모음이 길어져 음절이 한 덩어리로 읽힙니다. 잉크가 글자 칸 안에 들어 여러 줄에서 줄끼리 겹치지 않습니다.</td><td data-label="예전처럼">되돌리는 옵션은 없습니다. 0.1.1에서 저장한 디자인(<code>layout.revision: "1"</code>)은 그대로 등록되고 새 도장으로 그리며, <code>DESIGN_LAYOUT_REVISION_ACCEPTED</code> 경고를 남깁니다.</td></tr>
+              <tr><td>원소 획 위의 꾸밈(네온·외곽선·도면·스티커)이 획마다 따로 그린 상자 대신 글자 윤곽 하나로 그려집니다. 네온은 초성·받침과 모음을 다른 빛으로 칠합니다.</td><td data-label="예전처럼">기기 글꼴 글자 위의 꾸밈은 페이지 CSS <code>--fy-face: device</code>.</td></tr>
+              <tr><td>그린 글자를 마우스로 끌면 자모 단위로 골라지고(강조 색 <code>--fy-selection</code>), 복사하면 고른 범위의 원문이 완성된 한글로 들어갑니다. 두 번 누르면 낱말, 세 번 누르면 문단입니다.</td><td data-label="예전처럼">정적 HTML은 전처럼 원문만 복사됩니다. 페이지가 <code>user-select: none</code>을 준 곳은 고르지 않습니다(<a href="#a11y">접근성</a>).</td></tr>
+              <tr><td>그린 세트를 쓰는 바탕 요소에서 움직임 속성만 바꾸면 획이 검게 칠해지던 것을 고쳤습니다.</td><td data-label="예전처럼">—</td></tr>
+            </tbody>
+          </table>
+        </div>
         <p>
-          새 API(배치 확인 <code>layoutStability</code>, 디자인 검사·교체·지우기)는 <a href="#api">JavaScript API</a>, 버전 규칙의 근거는
+          새 API(배치 확인 <code>layoutStability</code>, 원문 범위 <code>sourceRange</code>, 디자인 검사·교체·지우기)는 <a href="#api">JavaScript API</a>, 버전 규칙의 근거는
           <a href="lib/docs/ADR/ADR-022-npm-name-and-versioning.md">ADR-022</a>, 전체 기록은 저장소의 <code>CHANGELOG.md</code>에 있습니다.
         </p>
       </section>
@@ -656,7 +667,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
         </p>
         <div class="k-code">
           <div class="k-code-bar"><span>CSS · kku-berry.css</span><button type="button" data-copy="#c-berry">복사</button></div>
-          <pre id="c-berry"><code>/* 나만의 글꼴: 딸기 — 기반 sebul. 쓰는 법: &lt;font-kku font="sebul" class="kku-berry"&gt;…&lt;/font-kku&gt; */
+          <pre id="c-berry"><code>/* 나만의 꾸밈 글꼴: 딸기 — 기반 sebul. 쓰는 법: &lt;font-kku font="sebul" class="kku-berry"&gt;…&lt;/font-kku&gt; */
 .kku-berry { --fy-element-width: 0.13em; }
 .kku-berry :is([part~="choseong"], [part~="head"]) { color: #c2185b; }
 .kku-berry [part~="jungseong"] { color: #7b1fa2; }
@@ -672,7 +683,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
             </div>
             <div class="k-stage">
               <font-kku font="sebul" size="48" class="kku-berry">딸기 공방</font-kku>
-              <span class="d-label">나만의 글꼴 kku-berry</span>
+              <span class="d-label">나만의 꾸밈 글꼴 kku-berry</span>
             </div>
           </div>
         </div>
@@ -728,7 +739,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
         </p>
         <div class="k-code k-code--wrap">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-addons">복사</button></div>
-          <pre id="c-addons"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul gothic chalk" data-addons="looks motion fx"&gt;&lt;/script&gt;
+          <pre id="c-addons"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul gothic chalk" data-addons="looks motion fx"&gt;&lt;/script&gt;
 
 &lt;!-- 고장 난 네온: 세벌 + 네온 꾸밈 + 깜빡임 (어두운 바탕) --&gt;
 &lt;font-kku font="sebul" class="kku-look-neon" animate="flicker"&gt;을지로 네온&lt;/font-kku&gt;
@@ -1135,7 +1146,7 @@ FontKku.refresh(host, { seed: "poster-v1" });</code></pre>
         <h2 class="font-kku k-h2" data-font="sebul" data-size="clamp(28px, 3.4vw, 38px)">평문 모드와 봇</h2>
         <p>
           브라우저 CSS 없이 한글을 <strong>2줄 평문</strong>으로 풀어 씁니다. 초성·중성을 윗줄에, 받침과 가로모음을 아랫줄에
-          둡니다. 메신저 알림, 배포 로그, 터미널 배너에서 한글을 크게 강조할 때 씁니다. 글꼴·크기·색·움직임은 적용되지 않고,
+          둡니다. 글자가 커지는 것이 아니라 풀어 쓰는 것이고, 한글 글꼴이 없는 배너 도구 대신 메신저 알림, 배포 로그, 터미널 배너에 넣습니다. 글꼴·크기·색·움직임은 적용되지 않고,
           브라우저에서 그리는 것과 같은 분해 결과를 씁니다.
         </p>
         <div class="k-terminal" data-text-demo>
@@ -1285,7 +1296,7 @@ render_html("광화문", mode="fragment")  # &lt;font-kku&gt; 요소만 (기본�
         </p>
         <div class="k-code">
           <div class="k-code-bar"><span>HTML — 글꼴 없는 기기면 원소 획으로</span><button type="button" data-copy="#c-nofont">복사</button></div>
-          <pre id="c-nofont"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul neon"&gt;&lt;/script&gt;
+          <pre id="c-nofont"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul neon"&gt;&lt;/script&gt;
 &lt;script&gt;
   // 런타임 바로 뒤, 바탕 요소를 그리기 전에
   if (FontKku.hasHangulFont() === false) {
@@ -1321,7 +1332,7 @@ render_html("광화문", mode="fragment")  # &lt;font-kku&gt; 요소만 (기본�
         </div>
         <div class="k-code">
           <div class="k-code-bar"><span>JavaScript</span><button type="button" data-copy="#c-ime">복사</button></div>
-          <pre id="c-ime"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku-ime.js"&gt;&lt;/script&gt;
+          <pre id="c-ime"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku-ime.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   FontKkuIme.convert("dkssudgktpdy");                // "안녕하세요"
   FontKkuIme.convert("jfsheamfncj4", "sebeol-final"); // "안녕하세요"
@@ -1363,7 +1374,7 @@ render_html("광화문", mode="fragment")  # &lt;font-kku&gt; 요소만 (기본�
         <p>
           폰꾸에는 AI가 읽는 사용 설명서 <a href="lib/skill/SKILL.md"><code>skills/font-kku-use/SKILL.md</code></a>가
           있습니다(npm 패키지에 포함). ChatGPT·Claude 같은 AI에게 이 설명서 링크와 함께 부탁하면 AI가 만드는 HTML의 제목과 강조
-          문구를 폰꾸로 꾸미고, 브랜드에 맞는 나만의 꾸밈 글꼴을 만들고, 봇·터미널 출력을 크게 풀어 줍니다.
+          문구를 폰꾸로 꾸미고, 브랜드에 맞는 나만의 꾸밈 글꼴을 만들고, 봇·터미널 출력에 한글을 두 줄 평문으로 풀어 씁니다.
         </p>
         <ol class="k-steps">
           <li><strong>복사해서 붙여 넣기</strong>아래 프롬프트를 AI 대화창에 붙여 넣고 만들 내용만 바꿉니다.</li>
@@ -1491,7 +1502,7 @@ cp -R skills/font-kku-use ~/.claude/skills/</code></pre>
         <ul>
           <li><strong>코드로 그리기(권장)</strong> — 자모마다 SVG 경로를 <code>FontKku.registerJamo</code>로 등록하고 <code>jamo-set</code>으로 씁니다(벡터 자소). HTML 한 장 안에서 끝나고, 자모마다 색·굵기를 CSS로 바꾸며, 자리가 눌려도 획 굵기가 그대로입니다.</li>
           <li><strong>SVG 자소판 파일</strong> — 자모 전체를 SVG 한 장(21열 × 6행)에 그려 <code>--fy-sprite-url</code>로 끼웁니다. 인주·분필 같은 질감 필터를 쓰려면 이 길입니다.</li>
-          <li><strong>세벌·고딕 계열의 그림 세트</strong> — <code>registerJamo(name, cells, { frame: "box" })</code>로 등록해 <code>jamo-set</code>으로 겁니다. 칸 키는 호환 자모(<code>ㄱ</code>, 문맥 꼴 <code>ㄱ@cho</code>·<code>ㄱ@bar</code>·<code>ㄱ@jong</code>)와 원소 그림 <code>@line</code>·<code>@dot</code>·<code>@ring</code>이고, 자리는 배치가 정하므로 그림은 글자 모양만 담습니다(<code>box</code>가 그림 범위). 원형 8자(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)만 그려도 나머지를 조립합니다 — 단계와 예제는 <a href="lib/skill/draw-jamo.md">AI 설명서의 자모 그리기</a>, 손으로는 <a href="#make-studio">글꼴 작업실</a>의 그리기에서 합니다.</li>
+          <li><strong>세벌·고딕 계열의 그림 세트</strong> — <code>registerJamo(name, cells, { frame: "box" })</code>로 등록해 <code>jamo-set</code>으로 겁니다. 칸 키는 호환 자모(<code>ㄱ</code>, 문맥 꼴 <code>ㄱ@cho</code>·<code>ㄱ@bar</code>·<code>ㄱ@jong</code>)와 원소 그림 <code>@line</code>·<code>@dot</code>·<code>@ring</code>이고, 자리는 배치가 정하므로 그림은 글자 모양만 담습니다(<code>box</code>가 그림 범위). 8칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ, ㆍ는 ㅏ·ㅗ의 짧은 획)만 그려도 나머지 자모와 11,172자를 조립합니다 — 단계와 예제는 <a href="lib/skill/draw-jamo.md">AI 설명서의 자모 그리기</a>, 손으로는 <a href="#make-studio">글꼴 작업실</a>의 그리기에서 합니다.</li>
         </ul>
         <p>아래는 그림 자소 글꼴(<code>sprite-system</code> 짜임)의 칸 규칙입니다.</p>
         <ul>
@@ -1502,7 +1513,7 @@ cp -R skills/font-kku-use ~/.claude/skills/</code></pre>
         </ul>
         <div class="k-code">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-register-jamo">복사</button></div>
-          <pre id="c-register-jamo"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sprite-system"&gt;&lt;/script&gt;
+          <pre id="c-register-jamo"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sprite-system"&gt;&lt;/script&gt;
 &lt;script&gt;
   FontKku.registerJamo("brush", {
     "r0-ㄱ": "M5 12 H45 V28 Q45 54 11 65",        // 획 중심선(칸 0–100)
@@ -1531,7 +1542,8 @@ cp -R skills/font-kku-use ~/.claude/skills/</code></pre>
         <p>
           그림 자소 글꼴과 벡터 자소는 보통 글꼴 파일(TTF·WOFF)로 내보낼 수 있습니다. 폰꾸가 조립한 자리와 칸 그림으로
           한글 11,172자를 브라우저에서 몇 초 만에 만들고, 손으로 그린 PNG 자소판도 외곽선을 따서 같은 길로 갑니다.
-          런타임 없이 워드·디자인 도구·다른 사이트에서 씁니다.
+          런타임 없이 워드·디자인 도구·다른 사이트에서 씁니다. 다만 칸 계약(<code>frame: "box"</code>)으로 등록한 그림 세트(8칸 세트와 AI 답)는
+          아직 글꼴 파일로 내보내지 못합니다.
         </p>
         <ul>
           <li><a href="./fonts.html#pixel">글꼴 시험대</a>의 그림 자소 글꼴마다 "글꼴 파일 받기 (TTF)"가 있습니다.</li>
@@ -1541,8 +1553,8 @@ cp -R skills/font-kku-use ~/.claude/skills/</code></pre>
         </ul>
         <div class="k-code">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-font-file">복사</button></div>
-          <pre id="c-font-file"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sprite-system"&gt;&lt;/script&gt;
-&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku-export.js"&gt;&lt;/script&gt;
+          <pre id="c-font-file"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sprite-system"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku-export.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   const { ttf, woff, report } = await FontKkuExport.exportFont({
     font: "sprite-system",          // 그림 자소 배치 글꼴
@@ -1619,7 +1631,7 @@ npm test</code></pre>
         </p>
         <div class="k-code">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-design">복사</button></div>
-          <pre id="c-design"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul"&gt;&lt;/script&gt;
+          <pre id="c-design"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul"&gt;&lt;/script&gt;
 &lt;script&gt;
   FontKku.registerDesign("hand", {
     version: "1.2",
@@ -1748,7 +1760,7 @@ FontKku.designs();                <span class="d-out">// 등록된 이름들</sp
               <tr><td><code>hasHangulFont(options?)</code></td><td data-label="돌려줌" class="d-sig"><code>boolean | null</code></td><td data-label="하는 일">기기 글꼴이 한글을 그릴 수 있는지(<a href="#nofont">글꼴·입력기 없는 기기</a>). 판단할 수 없으면 <code>null</code>.</td></tr>
               <tr><td><code>placementTables</code></td><td data-label="돌려줌" class="d-sig"><code>Record&lt;JamoDepth, PlacementTable&gt;</code></td><td data-label="하는 일">자모 깊이(<code>atomic</code>·<code>composite</code>·<code>syllable</code>)별 배치 표(짜임 키 9가지). 동결된 사본.</td></tr>
               <tr><td><code>placementTable</code></td><td data-label="돌려줌" class="d-sig"><code>PlacementTable</code></td><td data-label="하는 일"><code>atomic</code> 배치 표. 예전 이름 호환용.</td></tr>
-              <tr><td><code>version</code></td><td data-label="돌려줌" class="d-sig"><code>string</code></td><td data-label="하는 일">런타임 버전 (지금 <code>"<span data-fk-version>0.1.1</span>"</code>).</td></tr>
+              <tr><td><code>version</code></td><td data-label="돌려줌" class="d-sig"><code>string</code></td><td data-label="하는 일">런타임 버전 (지금 <code>"<span data-fk-version>0.1.2</span>"</code>).</td></tr>
             </tbody>
           </table>
         </div>
@@ -2120,7 +2132,7 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
         <ul>
           <li>런타임은 분해한 자소 DOM(<code>part="root"</code>)에 <code>aria-hidden="true"</code>를 달고, 그 형제 <code>part="sr-source"</code> 노드에 원문을 둡니다. 이 노드가 스크린리더와 복사가 읽는 1차 표면이며 화면에서는 숨겨집니다.</li>
           <li>바탕 요소에는 <code>aria-label</code>도 <code>role</code>도 쓰지 않습니다. 버튼·링크·제목의 이름은 sr-source 원문에서 계산되고, 직접 붙인 <code>aria-label</code>(예: <code>&lt;button class="font-kku" aria-label="대화 상자 닫기"&gt;</code>)은 그대로 둡니다. <code>data-source</code>에는 원문을 기록합니다.</li>
-          <li>원문의 줄바꿈·연속 공백·탭은 sr-source에 그대로 남아 복사와 읽기에 쓰입니다. 그린 쪽은 선택되지 않아(<code>user-select: none</code>) 바탕 요소를 골라 복사하면 원문만 나옵니다 — 자모로 쪼갠 조각이 섞이지 않는 대신 그림 위에 선택 강조가 보이지 않습니다.</li>
+          <li>원문의 줄바꿈·연속 공백·탭은 sr-source에 그대로 남아 복사와 읽기에 쓰입니다. 그린 글자는 마우스로 끌면 자모 단위로 골라지고(글자 칸·자모에 강조, 색은 <code>--fy-selection</code>), 복사하면 고른 범위의 원문이 완성된 한글로 들어갑니다 — 음절 일부만 골라도 그 음절 통째로, 자모 조각은 섞이지 않습니다. 두 번 누르면 낱말, 세 번 누르면 문단을 고릅니다. 원문 범위는 <code>FontKku.sourceRange(요소, 범위)</code>로도 읽습니다. 스크립트 없이 저장한 정적 HTML은 그림을 고를 수 없고 원문만 복사됩니다.</li>
           <li>0.1.0 런타임이나 정적 렌더러가 그린 트리를 넘겨받으면, 그때 붙인 호환 라벨(<code>aria-label</code> = 원문, <code>role</code> 없음)을 지웁니다. 글을 바꾼 뒤에도 옛 글이 읽히지 않게 하려는 것이고, 원문과 다른 라벨이나 <code>role</code>이 있으면 작성자 것이라 둡니다.</li>
           <li>제목처럼 의미가 있는 글은 클래스 방식으로 써서 <code>&lt;h1&gt;</code>·<code>&lt;h2&gt;</code> 같은 의미 태그를 유지합니다. 이 문서의 제목도 모두 <code>&lt;h2 class="font-kku"&gt;</code>입니다.</li>
         </ul>
@@ -2208,13 +2220,17 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
           </div>
         </details>
         <details class="d-faq">
-          <summary>0.1.1로 올렸더니 제목 모양이 달라졌어요.</summary>
+          <summary>0.1.1·0.1.2로 올렸더니 제목 모양이 달라졌어요.</summary>
           <div>
             <p>
-              글꼴 속성을 쓰지 않은 바탕 요소가 세벌 고정 배치로 바뀌었고(<a href="#fonts-layout">배치</a>), <code>sebul</code>·<code>gothic</code>·<code>malang</code>은 자모를
+              0.1.0에서 0.1.1로 올렸다면 글꼴 속성을 쓰지 않은 바탕 요소가 세벌 고정 배치로 바뀌었고(<a href="#fonts-layout">배치</a>), <code>sebul</code>·<code>gothic</code>·<code>malang</code>은 자모를
               기기 한글 글꼴 대신 CSS 획으로 긋습니다(<a href="#fonts-material">재료</a>). 예전 배치는 <code>font="sebul"</code>(클래스 방식은 <code>data-font="sebul"</code>)을
               밝히면 돌아오고, 예전 획 모양과 <code>text-shadow</code>·<code>--fy-weight</code>까지는 거기에 페이지 CSS <code>--fy-face: device</code>를 더합니다(기기 글꼴 글자를 표준 자리에 맞추는 보정 같은 작은 차이는 남습니다). 서버에서 <code>render_html</code>로 만든
               글도 같고, 그쪽은 <code>font="sebul"</code>이나 <code>face="device"</code>로 고릅니다(<a href="#start-version">0.1.1에서 바뀐 것</a>).
+            </p>
+            <p>
+              0.1.1에서 0.1.2로 올렸을 때 글꼴을 밝히지 않은 제목의 받침이 음절에 붙고 세로 모음이 길어진 것은 세벌 고정 배치를 다시 지은
+              것(revision 2)이라 되돌리는 옵션이 없습니다. 0.1.1 모양이 꼭 필요하면 CDN 주소를 <code>@0.1.1</code>에 둡니다(<a href="#start-version">0.1.2에서 바뀐 것</a>).
             </p>
           </div>
         </details>

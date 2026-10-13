@@ -40,6 +40,7 @@ export declare const planJamo: API["planJamo"];
 export declare const traceOf: API["traceOf"];
 export declare const stagePreview: API["stagePreview"];
 export declare const authoringProgress: API["authoringProgress"];
+export declare const sourceRange: API["sourceRange"];
 
 export type {
   API,
@@ -97,6 +98,7 @@ export type {
   RenderReason,
   Seed,
   SourceJamo,
+  SourceRange,
   SpaceSegment,
   TextModel,
   Topology,

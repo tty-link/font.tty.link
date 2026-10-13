@@ -1,10 +1,17 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — 공방 원데이 클래스. 글꼴: jasu riso. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — 공방 원데이 클래스 (글꼴 jasu · riso)
+  고쳐 쓰기
+  - 글: 공방 이름·일정·참가비는 본문 글을 바꿉니다. 수틀의 처음 이름은 #hoop-text와 #hoop-input의 value를 함께 바꿉니다.
+  - 실 색: 실 단추의 data-filter가 자소판 색을 돌리는 CSS filter이고, --c가 단추 색입니다.
+  - 색: 맨 위 :root의 변수를 바꿉니다. --thread는 실과 강조, --linen은 천, --wood는 수틀 색입니다.
+  - 글꼴: font="jasu"·font="riso"의 글꼴 이름을 바꿉니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 font="sebul" jamo-set="my-hand"로 씁니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>실과 바늘 공방 — 한글 이름 수놓기 원데이 클래스</title>
+  <title>실과 바늘 공방 — 한글 이름 자수 원데이 클래스</title>
   <script src="../lib/font-kku.js" data-fonts="jasu riso"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -266,9 +273,9 @@
       <section class="hero">
         <div>
           <p class="kicker">원데이 클래스 · 3시간</p>
-          <h1 aria-label="한글 이름 수놓기">
+          <h1 aria-label="한글 이름 자수">
             <font-kku font="jasu" size="clamp(54px, 10vw, 104px)" wrap-unit="word">한글 이름</font-kku>
-            <font-kku font="jasu" size="clamp(54px, 10vw, 104px)" wrap-unit="word">수놓기</font-kku>
+            <font-kku font="jasu" size="clamp(54px, 10vw, 104px)" wrap-unit="word">자수</font-kku>
           </h1>
           <p class="lead">내 이름이나 좋아하는 낱말을 리넨 천에 한 땀씩 수놓아 <b>작은 수틀 액자</b>로 가져가요. 바늘을 처음 잡아도 괜찮아요.</p>
         </div>
@@ -290,7 +297,7 @@
               </span>
               <span></span>
             </label>
-            <p class="hoop-note">자수 글꼴의 자소판은 실땀을 SVG로 그린 그림이라, 240px까지 키워도 땀의 빛과 그림자가 뭉개지지 않아요. 실 색을 바꿔도 땀의 결은 그대로예요.</p>
+            <p class="hoop-note">글자가 많으면 수틀에 들어가게 크기를 줄여요. 실 색을 바꿔도 땀의 빛과 그림자는 그대로예요.</p>
           </div>
         </div>
       </section>
@@ -393,19 +400,37 @@
   <script>
     (function () {
       "use strict";
+      var hoop = document.getElementById("hoop");
       var hoopText = document.getElementById("hoop-text");
       var input = document.getElementById("hoop-input");
       var size = document.getElementById("hoop-size");
       var sizeOut = document.getElementById("hoop-size-out");
+      var SIZE_MAX = Number(size.max);
+      var wanted = Number(size.value);
+
+      // 수틀은 동그라미라 글줄의 네 모서리가 원 안에 들어가야 한다. 글자 n개가 한 줄이면
+      // 글줄은 (n × 크기) × 크기 상자이므로, 원 지름 D에서 크기 ≤ D / √(n² + 1)이다.
+      // 슬라이더 끝은 늘 '수틀에 들어가는 가장 큰 크기'이고, 고른 크기(wanted)는 기억해 둔다.
+      function fit() {
+        var n = Math.max(1, Array.from(input.value.trim() || "이름").length);
+        var room = Math.floor(hoop.clientWidth * 0.94 / Math.sqrt(n * n + 1));
+        size.max = String(Math.max(Number(size.min), Math.min(SIZE_MAX, room)));
+        size.value = String(Math.min(wanted, room));
+        hoopText.setAttribute("size", size.value);
+        sizeOut.value = size.value + "px";
+      }
 
       input.addEventListener("input", function () {
         FontKku.refresh(hoopText, { text: input.value.trim() || "이름" });
+        fit();
       });
       // 크기는 바탕 요소의 size 속성 — 자소판이 SVG라 다시 그려도 땀이 선명하다
       size.addEventListener("input", function () {
-        hoopText.setAttribute("size", size.value);
-        sizeOut.value = size.value + "px";
+        wanted = Number(size.value);
+        fit();
       });
+      if ("ResizeObserver" in window) new ResizeObserver(fit).observe(hoop);
+      fit();
       // 실 색: 페이지 전용 --fy-sprite-filter로 자소판 색만 돌린다(땀의 빛·그림자는 그대로)
       var threads = document.querySelectorAll(".threads button");
       threads.forEach(function (button) {

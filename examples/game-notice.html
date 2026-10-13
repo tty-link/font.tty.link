@@ -1,5 +1,12 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — 게임 공지. 글꼴: pixel retro. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — 게임 공지 (글꼴 pixel · retro)
+  고쳐 쓰기
+  - 글: 공지 제목·기간·참여 방법·보상은 본문 글을 바꿉니다.
+  - 보상 아이콘: canvas의 data-icon(coin·potion·leaf·gem·chest·acorn)으로 고릅니다. 새 아이콘은 스크립트 ICONS에 8×8 도트 그림을 더합니다.
+  - 색: 맨 위 :root의 변수를 바꿉니다. --sky는 하늘, --ink는 테두리, --red는 말머리와 참여 단추, --gold는 7일차 강조 색입니다.
+  - 글꼴: font="retro"(class="font-kku" 태그는 data-font="pixel")의 글꼴 이름을 바꿉니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 font="sebul" jamo-set="my-hand"(class="font-kku" 태그는 data-font="sebul" data-jamo-set="my-hand")로 씁니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -150,9 +157,10 @@
     .steps { margin: 0; padding-left: 1.4em; font-size: 15px; line-height: 1.9; }
 
     /* 출석 보상 */
+    /* 1~6일차는 세 칸씩 두 줄(좁으면 두 칸씩), 7일차는 한 줄 다 */
     .rewards {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
       margin: 0;
       padding: 0;

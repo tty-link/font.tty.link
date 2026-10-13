@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>오늘의 빵 — 동네빵집 밀과 오븐</title>
+  <meta name="description" content="동네빵집 밀과 오븐의 오늘 나온 빵 안내판" />
+  <style>
+    /*
+      폰꾸 규칙에 맞춘 CSS
+      - 요소 이름만 쓴 선택자(span 등)와 전체 선택자(*)를 쓰지 않는다 — 런타임이 만든 자소 노드도 span이다.
+      - 폰꾸 바탕 요소(.board-title, .note-accent, #slate-text)에는 font-size·line-height를 주지 않는다. 크기는 data-size/size로.
+      - 이 페이지 CSS에는 자체 애니메이션·트랜지션이 없다. 움직임은 폰꾸 제목의 자모 조립 하나뿐이다.
+    */
+    :root {
+      --kraft: #efe1c6;
+      --kraft-deep: #e3d0ad;
+      --wood: #8b5a2b;
+      --wood-dark: #5e3b1a;
+      --board: #22382d;
+      --board-light: #2b4639;
+      --chalk-text: #f1ead8;
+      --chalk-dim: #cfc8b3;
+      --butter: #f2c14e;
+      --paper: #fff5d9;
+      --ink: #3a2a1c;
+      --brick: #8c2f1c;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--kraft);
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.35), transparent 40%),
+        radial-gradient(circle at 85% 95%, rgba(140, 90, 43, 0.12), transparent 45%);
+      color: var(--ink);
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .page {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 12px 40px;
+    }
+
+    /* 칠판 — 분필(chalk) 글꼴의 바탕 조건: 어두운 녹색 */
+    .board {
+      box-sizing: border-box;
+      position: relative;
+      margin: 0 0 20px;
+      padding: 22px 18px 26px;
+      background-color: var(--board);
+      background-image:
+        radial-gradient(ellipse at 25% 15%, rgba(255, 255, 255, 0.07), transparent 55%),
+        radial-gradient(ellipse at 80% 85%, rgba(255, 255, 255, 0.05), transparent 50%);
+      border: 10px solid var(--wood);
+      border-radius: 14px;
+      box-shadow:
+        inset 0 0 0 2px var(--wood-dark),
+        inset 0 0 40px rgba(0, 0, 0, 0.35),
+        0 10px 24px rgba(60, 35, 10, 0.25);
+      color: var(--chalk-text);
+    }
+
+    .board-head {
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: var(--chalk-dim);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      letter-spacing: 0.06em;
+      overflow-wrap: anywhere;
+    }
+
+    /* 폰꾸 제목: 여백·정렬만 준다 */
+    .board-title {
+      margin: 6px 0 4px;
+    }
+
+    .chalk-rule {
+      width: 70%;
+      height: 2px;
+      margin: 14px auto 20px;
+      border: 0;
+      background: repeating-linear-gradient(90deg, rgba(241, 234, 216, 0.55) 0 14px, transparent 14px 22px);
+    }
+
+    /* 종이 쪽지 — 필기(pilgi) 글꼴의 바탕 조건: 밝은 바탕 */
+    .note {
+      box-sizing: border-box;
+      position: relative;
+      width: fit-content;
+      max-width: calc(100% - 16px);
+      margin: 4px auto 24px;
+      padding: 18px 18px 12px;
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 4px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      transform: rotate(-1.5deg);
+      text-align: center;
+    }
+
+    .note-pin {
+      position: absolute;
+      top: -7px;
+      left: 50%;
+      width: 14px;
+      height: 14px;
+      margin-left: -7px;
+      border-radius: 50%;
+      background: #c0392b;
+      box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.25), 0 2px 3px rgba(0, 0, 0, 0.35);
+    }
+
+    .note-line {
+      margin: 0;
+    }
+
+    /* 필기 글꼴은 color가 그대로 먹색이 된다 */
+    .note-accent {
+      color: var(--brick);
+    }
+
+    .note-sub {
+      margin: 6px 0 0;
+      color: #6b5440;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      margin: 0 0 6px;
+      color: var(--butter);
+      font-size: 1.1rem;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+    }
+
+    .section-help {
+      margin: 0 0 12px;
+      color: var(--chalk-dim);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    /* 빵 목록 — 본문이므로 폰꾸 없이 페이지 글꼴 */
+    .bread-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .bread {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2px 12px;
+      padding: 12px 0;
+      border-bottom: 1px dashed rgba(241, 234, 216, 0.3);
+    }
+
+    .bread:last-child {
+      border-bottom: 0;
+    }
+
+    .bread-main {
+      min-width: 0;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .bread-name {
+      font-size: 1.08rem;
+      font-weight: 700;
+    }
+
+    .bread-price {
+      align-self: start;
+      color: var(--butter);
+      font-weight: 700;
+      line-height: 1.5;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .bread-desc {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: var(--chalk-dim);
+      font-size: 0.92rem;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1.6;
+      vertical-align: 2px;
+      white-space: nowrap;
+    }
+
+    .tag-fresh {
+      background: var(--butter);
+      color: #3a2a00;
+    }
+
+    .tag-few {
+      border: 1px solid var(--butter);
+      color: var(--butter);
+    }
+
+    .tag-out {
+      background: rgba(241, 234, 216, 0.2);
+      color: var(--chalk-text);
+    }
+
+    .is-soldout .bread-name,
+    .is-soldout .bread-price {
+      opacity: 0.55;
+      text-decoration: line-through;
+    }
+
+    /* 손님 칠판 */
+    .slate {
+      box-sizing: border-box;
+      min-height: clamp(84px, 22vw, 116px);
+      margin: 0 0 14px;
+      padding: 14px 10px;
+      border-radius: 10px;
+      background: var(--board-light);
+      box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.35);
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .slate-label {
+      display: block;
+      margin: 0 0 6px;
+      color: var(--chalk-text);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .slate-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .slate-input {
+      box-sizing: border-box;
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid var(--wood);
+      border-radius: 10px;
+      background: #fffaf0;
+      color: var(--ink);
+      font: inherit;
+      font-size: 16px; /* 휴대폰에서 입력할 때 화면이 확대되지 않게 */
+    }
+
+    .slate-input:focus-visible {
+      outline: 3px solid var(--butter);
+      outline-offset: 2px;
+    }
+
+    .slate-clear {
+      box-sizing: border-box;
+      flex: none;
+      padding: 10px 14px;
+      border: 2px solid var(--butter);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--butter);
+      font: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .slate-clear:focus-visible {
+      outline: 3px solid var(--chalk-text);
+      outline-offset: 2px;
+    }
+
+    .slate-count {
+      margin: 6px 0 0;
+      color: var(--chalk-dim);
+      font-size: 0.8rem;
+      text-align: right;
+    }
+
+    /* 가게 안내 — 크래프트지 바탕, 페이지 글꼴 */
+    .info {
+      box-sizing: border-box;
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: var(--kraft-deep);
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .info-title {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+
+    .info-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .info-key {
+      display: inline-block;
+      min-width: 5.5em;
+      font-weight: 700;
+    }
+
+    @media (min-width: 600px) {
+      .page {
+        padding: 36px 24px 56px;
+      }
+
+      .board {
+        padding: 30px 32px 34px;
+        border-width: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main>
+      <section class="board" aria-labelledby="board-title">
+        <header class="board-head">
+          <p class="eyebrow">동네빵집 밀과 오븐 · <time id="today">오늘</time></p>
+          <h1 id="board-title" class="font-kku board-title" data-font="chalk" data-size="clamp(40px, 12vw, 80px)" data-animate="assemble">오늘의 빵</h1>
+        </header>
+
+        <hr class="chalk-rule" />
+
+        <div class="note">
+          <span class="note-pin" aria-hidden="true"></span>
+          <p class="note-line"><font-kku class="note-accent" font="pilgi" size="clamp(24px, 6.8vw, 34px)">갓 구운 소금빵 나왔어요</font-kku></p>
+          <p class="note-sub">오후 3시에 한 판 더 구워요</p>
+        </div>
+
+        <h2 class="section-title">오늘 나온 빵</h2>
+        <ul class="bread-list">
+          <li class="bread">
+            <div class="bread-main"><span class="bread-name">소금빵</span><span class="tag tag-fresh">방금 나옴</span></div>
+            <span class="bread-price">3,000원</span>
+            <p class="bread-desc">버터 한 조각을 말아 구운 겉바속촉 빵. 바닥에 굵은 소금을 톡톡.</p>
+          </li>
+          <li class="bread">
+            <div class="bread-main"><span class="bread-name">우유식빵</span></div>
+            <span class="bread-price">5,500원</span>
+            <p class="bread-desc">우유로만 반죽해 결이 곱고 촉촉해요. 반 개도 썰어 드려요.</p>
+          </li>
+          <li class="bread">
+            <div class="bread-main"><span class="bread-name">단팥빵</span><span class="tag tag-few">몇 개 안 남음</span></div>
+            <span class="bread-price">2,800원</span>
+            <p class="bread-desc">국산 팥을 가게에서 직접 쑤어 넉넉히 넣었어요.</p>
+          </li>
+          <li class="bread">
+            <div class="bread-main"><span class="bread-name">무화과 깜빠뉴</span></div>
+            <span class="bread-price">7,000원</span>
+            <p class="bread-desc">천연 발효종으로 하루 꼬박 숙성한 시골빵에 말린 무화과를 듬뿍.</p>
+          </li>
+          <li class="bread">
+            <div class="bread-main"><span class="bread-name">크림치즈 베이글</span></div>
+            <span class="bread-price">4,000원</span>
+            <p class="bread-desc">쫄깃한 플레인 베이글에 꿀 크림치즈를 두툼하게 발랐어요.</p>
+          </li>
+          <li class="bread is-soldout">
+            <div class="bread-main"><span class="bread-name">옥수수 소보로</span><span class="tag tag-out">다 팔렸어요</span></div>
+            <span class="bread-price">3,200원</span>
+            <p class="bread-desc">내일 아침 7시에 다시 구워요.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="board" aria-labelledby="slate-heading">
+        <h2 id="slate-heading" class="section-title">손님 칠판</h2>
+        <p class="section-help">빵집에 남기고 싶은 한마디를 아래 칸에 써 보세요. 쓰는 그 자리에서 분필 글씨로 다시 그려져요. (20자까지)</p>
+
+        <!-- 입력칸 글을 그대로 비추는 장식이라 화면 낭독기에서는 숨긴다(입력칸이 같은 글을 읽어 준다) -->
+        <div class="slate" aria-hidden="true">
+          <font-kku id="slate-text" font="chalk" size="clamp(28px, 8vw, 44px)" wrap-unit="glyph">맛있게 드세요</font-kku>
+        </div>
+
+        <label class="slate-label" for="slate-input">한마디</label>
+        <div class="slate-row">
+          <input id="slate-input" class="slate-input" type="text" maxlength="20" placeholder="예: 소금빵 두 개 남겨 주세요" autocomplete="off" enterkeyhint="done" aria-describedby="slate-count" />
+          <button id="slate-clear" class="slate-clear" type="button">지우기</button>
+        </div>
+        <p id="slate-count" class="slate-count">0 / 20자</p>
+      </section>
+    </main>
+
+    <footer class="info">
+      <h2 class="info-title">가게 안내</h2>
+      <ul class="info-list">
+        <li><span class="info-key">여는 시간</span>아침 7시 ~ 저녁 8시 (월요일 쉬어요)</li>
+        <li><span class="info-key">빵 나오는 때</span>아침 7시 · 낮 12시 · 오후 3시</li>
+        <li><span class="info-key">찾아오는 길</span>시장 골목 들어와서 두 번째 파란 차양</li>
+      </ul>
+    </footer>
+  </div>
+
+  <script>
+    // 움직임 줄이기 설정이면 제목의 자모 조립을 처음부터 빼 둔다.
+    // (폰꾸 런타임도 이 설정에서 움직임을 저절로 끄지만, 런타임이 읽기 전에 속성을 지워 확실히 한다.)
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.querySelectorAll("[data-animate]").forEach(function (el) {
+        el.removeAttribute("data-animate");
+      });
+    }
+  </script>
+
+  <!-- 폰꾸 런타임: 첫 화면 글꼴 chalk·pilgi, 자모 움직임(assemble)용 확장 motion -->
+  <script src="../lib/font-kku.js" data-fonts="chalk pilgi" data-addons="motion"></script>
+
+  <script>
+    (function () {
+      // 오늘 날짜 (본문 글자, 폰꾸 아님)
+      var today = document.getElementById("today");
+      var now = new Date();
+      var pad = function (n) { return String(n).padStart(2, "0"); };
+      today.dateTime = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+      try {
+        today.textContent = now.toLocaleDateString("ko-KR", { month: "long", day: "numeric", weekday: "long" });
+      } catch (e) {
+        today.textContent = (now.getMonth() + 1) + "월 " + now.getDate() + "일";
+      }
+
+      // 손님 칠판: 입력칸 글을 그 자리에서 분필 글씨로 다시 그린다.
+      // 바탕 요소의 textContent에 새 글을 넣으면 런타임이 다시 그린다(setup.md 동적 변경).
+      var input = document.getElementById("slate-input");
+      var slate = document.getElementById("slate-text");
+      var clear = document.getElementById("slate-clear");
+      var count = document.getElementById("slate-count");
+      var DEFAULT_TEXT = "맛있게 드세요";
+      var MAX = 20;
+      var lastText = DEFAULT_TEXT;
+      var frame = 0;
+
+      function draw() {
+        frame = 0;
+        // 앞뒤 공백·겹친 공백은 줄바꿈이 되지 않게 정리한다.
+        var text = input.value.replace(/\s+/g, " ").trim().slice(0, MAX);
+        count.textContent = input.value.length + " / " + MAX + "자";
+        if (!text) text = DEFAULT_TEXT;
+        if (text === lastText) return;
+        lastText = text;
+        slate.textContent = text;
+      }
+
+      function schedule() {
+        if (!frame) frame = window.requestAnimationFrame(draw);
+      }
+
+      input.addEventListener("input", schedule);
+      // 한글 조합이 끝날 때도 한 번 더 맞춘다.
+      input.addEventListener("compositionend", schedule);
+
+      clear.addEventListener("click", function () {
+        input.value = "";
+        schedule();
+        input.focus();
+      });
+    })();
+  </script>
+</body>
+</html>

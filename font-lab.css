@@ -1,5 +1,6 @@
-/* 글꼴 페이지의 랜덤 글꼴과 만드는 기능(font-lab.js) — 시험대 변주 도구, 씨앗 반응 표시,
- * "폰꾸로 만드는 글꼴" 카드. site.css의 토큰(--k-*)과 부품(.k-stage, .k-chips, .k-btn)을 쓴다. */
+/* 글꼴 페이지의 시험대 씨앗과 만드는 기능(font-lab.js) — 시험대 변주 도구, 씨앗 반응 표시, 견본 행의 8칸 세트·출발용
+ * 뼈대 표시, "내 글꼴 만들기" 카드. site.css의 토큰(--k-*)과 부품(.k-stage, .k-chips, .k-btn)을 쓴다.
+ * 견본(<font-kku>)을 품은 자리의 규칙은 자식 결합자(>)로만 쓴다 — 자손 선택자는 런타임 안쪽 span까지 잡는다. */
 
 /* ── 시험대 변주 ── */
 /* 변주 묶음과 글꼴 뽑기가 더해진 시험대 줄 — 넓은 화면에서 한 줄에 들도록 조금 좁힌다 */
@@ -60,7 +61,74 @@ html:not([data-fl-vary="off"]) .k-fontrow-tags .fl-seed-tag {
   color: #fff;
 }
 
-/* ── 폰꾸로 만드는 글꼴 ── */
+/* 시험대 안내 한 줄 — 씨앗을 켰을 때(반응하는 글꼴), 바탕을 바꿨을 때(글자색을 맞춘 글꼴) */
+.fl-tester-note {
+  flex-basis: 100%;
+  margin: -0.35rem 0 0;
+  color: var(--k-ink-2);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.fl-tester-note a {
+  color: var(--k-blue);
+  font-weight: 700;
+}
+
+.fl-tester-note code {
+  font-size: 0.78rem;
+  white-space: nowrap; /* --fy-sprite-paint: mask가 이름 가운데서 꺾이지 않게 */
+}
+
+/* ── 견본 행: 8칸 그림 세트와 출발용 뼈대 ── */
+.fl-nowrap {
+  white-space: nowrap;
+}
+
+.k-fontrow-tags .fl-nofile {
+  color: var(--k-ink-2);
+  font-weight: 700;
+}
+
+.k-fontrow-tags li:has(> .fl-nofile) {
+  border-style: dashed;
+  border-color: var(--k-ink-2);
+}
+
+/* 출발용 뼈대: 다 된 글꼴과 나란히 두되 밑그림처럼 — 점선 틀, 옅은 글자, 무엇인지 적은 한 줄 */
+.fl-starter > .k-fontrow-stage {
+  flex-direction: column;
+  gap: 0.6rem;
+  border: 1.5px dashed var(--k-muted);
+  background-image: repeating-linear-gradient(135deg, rgb(0 0 0 / 2.5%) 0 8px, transparent 8px 16px);
+}
+
+.fl-starter > .k-fontrow-stage > font-kku {
+  opacity: 0.55;
+}
+
+/* 글자색은 무대를 따른다 — 시험대가 어두운 바탕을 고르면 무대(data-tone)가 밝은 글자로 바뀐다 */
+.fl-starter-note {
+  max-inline-size: 34rem;
+  margin: 0;
+  color: inherit;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.fl-starter-note strong {
+  display: inline-block;
+  margin-inline-end: 0.35rem;
+  padding: 0 0.45rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  font-size: 0.78rem;
+}
+
+/* ── 내 글꼴 만들기 ── */
 .fl-make {
   margin-block: 4rem 5rem;
   padding-block: 3rem 3.5rem;
@@ -73,15 +141,11 @@ html:not([data-fl-vary="off"]) .k-fontrow-tags .fl-seed-tag {
   scroll-margin-top: 80px;
 }
 
-.fl-make-head {
-  display: grid;
-  gap: 0.75rem;
-  max-inline-size: 46rem;
-  margin-block-end: 2rem;
-}
-
-.fl-make-head .k-lead {
-  margin: 0;
+/* 여덟 칸 목록은 한 덩어리로 — 줄이 바뀌어도 자모가 흩어지지 않게 */
+.fl-jamo-line {
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
 .fl-grid {
@@ -133,6 +197,31 @@ html:not([data-fl-vary="off"]) .k-fontrow-tags .fl-seed-tag {
   gap: 0.35rem;
 }
 
+/* 앞의 두 카드(8칸 그리기·AI에게 맡기기)는 두 칸씩 — 폰꾸로 글꼴을 만드는 두 길이다 */
+.fl-card--lead {
+  grid-column: span 2;
+}
+
+.fl-card--lead .fl-sample {
+  min-block-size: 8rem;
+}
+
+/* 자소판 40칸: 줄 하나를 다 쓴다 — 견본은 왼쪽, 글은 오른쪽 */
+.fl-card--wide {
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  column-gap: 1.25rem;
+}
+
+.fl-card--wide > .fl-sample {
+  grid-row: 1 / -1;
+}
+
+.fl-card--wide > :not(.fl-sample) {
+  grid-column: 2;
+}
+
 .fl-actions {
   display: flex;
   flex-wrap: wrap;
@@ -151,13 +240,21 @@ html:not([data-fl-vary="off"]) .k-fontrow-tags .fl-seed-tag {
   outline-offset: -1px;
 }
 
-.fl-demo-vector :is([part~="choseong"], [part~="head"]) { color: #d62839; }
-.fl-demo-vector [part~="jungseong"] { color: #1f4fd1; }
-.fl-demo-vector [part~="jongseong"] { color: #12965f; }
-
 @media (max-width: 1100px) {
   .fl-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fl-card--lead {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  /* 휴대폰: 견본 행은 견본을 먼저, 설명·단추를 뒤에. 첫 크기가 40px이라 무대도 낮춘다 */
+  .k-fontrow > .k-fontrow-stage {
+    order: -1;
+    min-block-size: 5.5rem;
   }
 }
 
@@ -166,14 +263,32 @@ html:not([data-fl-vary="off"]) .k-fontrow-tags .fl-seed-tag {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .fl-card--wide {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+  }
+
+  .fl-card--wide > .fl-sample {
+    grid-row: auto;
+  }
+
+  .fl-card--wide > :not(.fl-sample) {
+    grid-column: auto;
+  }
+
   .fl-make {
     padding-block: 2.25rem 2.5rem;
   }
 }
 
-/* 머리(64px)와 고정 시험대(약 72px) 아래로 구간 제목·행이 오게 — 주소의 #글꼴·#make-fonts로 와도 가리지 않는다 */
+/* 고정 머리말과 고정 시험대 아래로 구간 제목·행이 오게 — 주소의 #글꼴로 와도, 시험대에 안내 줄이 붙어 높아져도
+ * 가리지 않는다. --fl-tester-bottom은 font-lab.js가 머리말 + 시험대의 실제 높이로 적는다(좁은 화면은 시험대가
+ * 붙지 않아 머리말만). 값이 없을 때는 넓은 화면의 기본 높이(약 136px). */
 .k-font-group,
-.k-fontrow,
+.k-fontrow {
+  scroll-margin-top: calc(var(--fl-tester-bottom, 136px) + 16px);
+}
+
 #make-fonts {
   scroll-margin-top: 150px;
 }

@@ -5,7 +5,7 @@
 글꼴의 자모 배치는 교정이 필요하므로 새로 만들지 않는다. **기반 글꼴(`sebul`·`gothic`, 또는 글꼴을 밝히지 않은 세벌 고정) 위에 꾸밈 CSS를 얹어** 클래스 하나로 다시 쓰는 "나만의 글꼴"을 만든다. 파일 하나(`my-font.css`)로 저장해 여러 페이지에서 쓴다. 브라우저에서 고르며 만들어 보려면 `https://font.tty.link/fonts.html`의 글꼴 견본에서 **꾸미기**를 누른다(같은 형식의 CSS를 복사·내려받는다).
 
 ```css
-/* 나만의 글꼴: 딸기 — 기반 sebul. 쓰는 법: <font-kku font="sebul" class="kku-berry">…</font-kku> */
+/* 나만의 꾸밈 글꼴: 딸기 — 기반 sebul. 쓰는 법: <font-kku font="sebul" class="kku-berry">…</font-kku> */
 .kku-berry { --fy-element-width: 0.13em; }
 .kku-berry :is([part~="choseong"], [part~="head"]) { color: #c2185b; }
 .kku-berry [part~="jungseong"] { color: #7b1fa2; }
@@ -14,7 +14,7 @@
 ```
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul"></script>
 <link rel="stylesheet" href="./my-font.css" />
 <font-kku font="sebul" class="kku-berry" size="56">딸기 우유</font-kku>
 ```

@@ -1,10 +1,10 @@
 # 폰꾸 (font-kku)
 
-> 한글을 초성·중성·종성으로 나눠 다시 조립해 그리는 브라우저 런타임이다. 스크립트 한 줄로 웹 제목과 강조 문구를 네온·스티커·색동·도장 같은 글꼴로 꾸미고, 꾸밈·움직임·상호작용을 조합하고, 나만의 꾸밈 글꼴이나 직접 그린 그림 자소 글꼴·그림 세트를 만들고, 봇·터미널에서 한글을 크게 강조한다. 글꼴을 밝히지 않으면 기본 세벌(세벌 고정)로 그리고, 획을 CSS로 그어 글꼴 파일도 기기의 한글 글꼴도 필요 없다. Python·Go·Rust·Ruby 렌더러가 같은 결과를 정적 HTML과 평문으로 낸다.
+> 한글 글꼴을 직접(또는 AI로) 만드는 브라우저 런타임이다. ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ 원형 8칸만 SVG 경로로 그리면 — 사람이 작업실에서 그리든 AI가 대화창 답 하나로 그리든 — 나머지 자모와 한글 11,172자를 한글 원리대로 조립하고, 스크립트 한 줄과 `jamo-set`으로 웹에서 바로 쓴다. 초성·중성·종성이 각자 노드라 자모마다 칠하고 움직이며, 씨앗값으로 같은 글자도 자모마다 다르게 그린다. 글꼴을 밝히지 않으면 기본 세벌(세벌 고정)로 그리고, 획을 CSS로 그어 글꼴 파일도 기기의 한글 글꼴도 필요 없다. 봇·터미널에서는 한글을 2줄 평문으로 풀어 쓰고, Python·Go·Rust·Ruby 렌더러가 같은 결과를 정적 HTML과 평문으로 낸다.
 
 AI agents: before building anything with font-kku, read the usage guide [SKILL.md](https://font.tty.link/lib/skill/SKILL.md). It is a table of contents — open only the topic files your task needs.
 
-AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)를 먼저 읽는다. SKILL.md는 목차다 — 할 일에 맞는 주제 파일만 더 연다. 런타임은 `<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul neon sticker"></script>` 한 줄로 붙인다(`sebul`은 글꼴을 밝히지 않은 글도 쓴다).
+AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)를 먼저 읽는다. SKILL.md는 목차다 — 할 일에 맞는 주제 파일만 더 연다. 런타임은 `<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul neon sticker"></script>` 한 줄로 붙인다(`sebul`은 글꼴을 밝히지 않은 글도 쓴다).
 
 ## 지금 판에서 알아 둘 것
 
@@ -24,22 +24,22 @@ AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.
 - [custom-font.md](https://font.tty.link/lib/skill/custom-font.md): 나만의 꾸밈 글꼴
 - [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md): 자모를 SVG로 그려 그림 자소 글꼴 만들기, 원형 8자부터 그리는 그림 세트, 디자인 API(실험), 글꼴 작업실에서 디자인 만들기, 글꼴 파일 내보내기
 - [examples.md](https://font.tty.link/lib/skill/examples.md): 완성 HTML과 사례 템플릿 14종
-- [terminal.md](https://font.tty.link/lib/skill/terminal.md): 봇·터미널에서 한글 크게, 서버에서 JS 없는 정적 HTML(`render_html`)
+- [terminal.md](https://font.tty.link/lib/skill/terminal.md): 봇·터미널에서 한글을 2줄 평문으로 풀어 쓰기, 서버에서 JS 없는 정적 HTML(`render_html`)
 - [no-hangul-device.md](https://font.tty.link/lib/skill/no-hangul-device.md): 한글 글꼴·입력기 없는 기기
 - [troubleshooting.md](https://font.tty.link/lib/skill/troubleshooting.md): 확인과 문제 해결, 디자인 진단, 0.1.0에서 올린 뒤 모양이 바뀌었을 때
 
 ## 라이브러리
 
-- [font-kku.min.js](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js): 런타임(jsDelivr 즉석 압축본, 소스는 `.min`을 뺀 `font-kku.js`). 글꼴 CSS(`profiles/<글꼴>.css`)와 확장·그림 세트는 같은 폴더에서 런타임이 `.min` 압축본으로 받는다
-- [font-kku.d.ts](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.d.ts): 공개 API 타입(실험 API 포함)
-- [spec/themes.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/spec/themes.json): 이름 있는 조합(테마) 목록
-- [spec/fonts.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/spec/fonts.json): 글꼴 목록
-- [spec/design.schema.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/spec/design.schema.json): 디자인 JSON 형식(실험)
+- [font-kku.min.js](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js): 런타임(jsDelivr 즉석 압축본, 소스는 `.min`을 뺀 `font-kku.js`). 글꼴 CSS(`profiles/<글꼴>.css`)와 확장·그림 세트는 같은 폴더에서 런타임이 `.min` 압축본으로 받는다
+- [font-kku.d.ts](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.d.ts): 공개 API 타입(실험 API 포함)
+- [spec/themes.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/spec/themes.json): 이름 있는 조합(테마) 목록
+- [spec/fonts.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/spec/fonts.json): 글꼴 목록
+- [spec/design.schema.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/spec/design.schema.json): 디자인 JSON 형식(실험)
 - [npm @tty.link/font-kku](https://www.npmjs.com/package/@tty.link/font-kku): `npm install @tty.link/font-kku` — 번들러 프로젝트, Node·명령줄(`font-kku-text`)
 
 ## 데모
 
-- [소개](https://font.tty.link/): 대표 쓰임, AI 프롬프트, 이 판에서 바뀐 것
+- [소개](https://font.tty.link/): 8칸으로 만드는 한글 글꼴(직접 그리기 데모), AI에게 8칸을 맡기는 프롬프트와 실제 답, 씨앗 변주, 자모 단위 칠과 움직임, 내 페이지에 쓰는 코드, 한계와 무게
 - [사례](https://font.tty.link/showcase.html): 완성 템플릿 14종(소스를 본보기로 읽는다)
 - [글꼴](https://font.tty.link/fonts.html): 테마 갤러리, 조합기, 글꼴 견본
 - [움직임](https://font.tty.link/effects.html): 자모 움직임과 상호작용
@@ -48,4 +48,4 @@ AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.
 
 ## Optional
 
-- [README](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/README.md): 전체 설명과 계약
+- [README](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/README.md): 전체 설명과 계약

@@ -11,7 +11,7 @@ window.FontKkuThemes = {
   {
    "id": "look",
    "name": "꾸밈",
-   "summary": "칠 — 색·외곽선·그림자. 자모 역할마다 다르게",
+   "summary": "색·외곽선·그림자 — 자모 역할마다 다르게",
    "how": "class=\"kku-look-neon\""
   },
   {
@@ -23,7 +23,7 @@ window.FontKkuThemes = {
   {
    "id": "motion",
    "name": "움직임",
-   "summary": "애니메이션 — 글자 또는 자모 단위로",
+   "summary": "글자 또는 자모 단위로 — 나타나기·물결·깜빡임",
    "how": "animate=\"wave\""
   },
   {
@@ -224,6 +224,12 @@ window.FontKkuThemes = {
    },
    "sprite": {
     "glyphFilter": "drop-shadow(0 0 0.05em #ff4fd8) drop-shadow(0 0 0.16em #ff2fb0)"
+   },
+   "element": {
+    "rim": "0.016em",
+    "core": "color-mix(in srgb, currentColor 25%, #fff)",
+    "glow": "drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.16em color-mix(in srgb, currentColor 70%, transparent))",
+    "why": "원소·SVG 재료: 획마다 속 빈 상자를 그리면 겹친 획 안쪽 선이 보여 ㅂ이 田, ㄹ이 사다리가 됐다 — 흰빛 심(core)에 자모 하나를 두른 관(rim)과 자모 색 빛"
    }
   },
   "sticker": {
@@ -233,6 +239,11 @@ window.FontKkuThemes = {
    "summary": "자모마다 흰 테두리와 뜬 그림자 — 오려 붙인 다꾸 스티커",
    "sprite": {
     "glyphFilter": "drop-shadow(0.035em 0 0 #fff) drop-shadow(-0.035em 0 0 #fff) drop-shadow(0 0.035em 0 #fff) drop-shadow(0 -0.035em 0 #fff) drop-shadow(0.03em 0.05em 0.02em rgb(60 20 40 / 35%))"
+   },
+   "element": {
+    "glow": "drop-shadow(0.045em 0 0 #fff) drop-shadow(-0.045em 0 0 #fff) drop-shadow(0 0.045em 0 #fff) drop-shadow(0 -0.045em 0 #fff)",
+    "glyphFilter": "drop-shadow(0.03em 0.05em 0.02em rgb(60 20 40 / 35%))",
+    "why": "원소·SVG 재료: 흰 테두리는 자모마다(겹친 자모는 나중 자모가 위), 뜬 그림자는 글자 단위"
    }
   },
   "geumbak": {
@@ -251,6 +262,14 @@ window.FontKkuThemes = {
    "summary": "초성·중성·받침이 저마다 다른 방향으로 색 채널이 어긋난다",
    "sprite": {
     "glyphFilter": "drop-shadow(-0.03em 0 0 rgb(0 236 255 / 85%)) drop-shadow(0.03em 0 0 rgb(255 0 170 / 85%))"
+   },
+   "element": {
+    "glow": {
+     "choseong": "drop-shadow(calc(-0.04em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 0 rgb(0 236 255 / 0.9)) drop-shadow(calc(0.03em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 0 rgb(255 0 170 / 0.9))",
+     "jungseong": "drop-shadow(0 calc(-0.035em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 rgb(0 236 255 / 0.9)) drop-shadow(0 calc(0.03em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 rgb(255 0 170 / 0.9))",
+     "jongseong": "drop-shadow(calc(0.035em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) -0.025em 0 rgb(0 236 255 / 0.9)) drop-shadow(calc(-0.03em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0.025em 0 rgb(255 0 170 / 0.9))"
+    },
+    "why": "원소·SVG 재료: 기기 글꼴처럼 초성·중성·받침이 저마다 다른 방향으로 채널이 어긋난다(글자 단위 한 방향 대신)"
    }
   },
   "retro": {
@@ -275,6 +294,23 @@ window.FontKkuThemes = {
    "summary": "형광 분홍·파랑 잉크를 겹쳐 찍고 판이 살짝 어긋난다",
    "sprite": {
     "glyphFilter": "drop-shadow(0.024em -0.018em 0 rgb(0 120 191 / 42%))"
+   },
+   "element": {
+    "paint": {
+     "jamo": {
+      "color": "rgb(255 72 176)",
+      "opacity": "0.88"
+     },
+     "jungseong": {
+      "color": "rgb(0 120 191)",
+      "opacity": "0.86"
+     }
+    },
+    "glow": {
+     "jamo": "drop-shadow(0.024em -0.018em 0 rgb(0 120 191 / 0.42))",
+     "jungseong": "drop-shadow(-0.024em 0.018em 0 rgb(255 72 176 / 0.48))"
+    },
+    "why": "원소·SVG 재료: 반투명 잉크를 획마다 칠하면 겹친 이음매가 진해진다 — 불투명 잉크에 자모 단위 투명도, 판 어긋남은 역할마다"
    }
   },
   "blueprint": {
@@ -282,7 +318,12 @@ window.FontKkuThemes = {
    "from": "blueprint",
    "tone": "blueprint",
    "hollow": true,
-   "summary": "옅게 비치는 선 글자. 자모 역할마다 선 색이 다르다"
+   "summary": "옅게 비치는 선 글자. 자모 역할마다 선 색이 다르다",
+   "element": {
+    "rim": "0.014em",
+    "core": "color-mix(in srgb, currentColor 20%, #0f3d7a)",
+    "why": "원소·SVG 재료: 도면 바탕(#0f3d7a)에 옅게 비치는 속 칠을 미리 섞은 불투명 속 — 반투명 속은 테두리 그림자까지 옅게 만든다"
+   }
   },
   "outline": {
    "name": "외곽선",
@@ -297,6 +338,11 @@ window.FontKkuThemes = {
     "jamo": {
      "-webkit-text-fill-color": "rgb(29 27 38 / 7%)"
     }
+   },
+   "element": {
+    "rim": "0.02em",
+    "core": "color-mix(in srgb, currentColor 7%, #fff)",
+    "why": "원소·SVG 재료: 획마다 외곽선을 그리면 겹친 획이 상자로 갈라진다 — 옅은 속 칠에 자모 하나의 바깥 윤곽(rim)"
    }
   },
   "pastel": {

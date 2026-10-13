@@ -61,8 +61,8 @@
 
 :where(font-kku, .font-kku)[data-fy-upgraded="true"] [part="root"] {
   display: inline;
-  /* 복사하면 원문이 나오게(ADR-025 §12): 그림 쪽 글자(자모로 쪼갠 노드 글자)는 고르지 않는다 — 고르면 원문과 함께
-   * "갑ᆺ" 같은 조각 글자가 줄바꿈과 섞여 복사됐다. 선택·복사는 아래 sr-source(원문)가 맡는다. 선택 강조는 보이지 않는다. */
+  /* 런타임 없는 정적 HTML은 그림 쪽 글자(자모로 쪼갠 노드 글자)를 고르지 않는다 — 복사하면 아래 sr-source(원문)만 나온다.
+   * 런타임이 그린 root(data-fy-select)는 아래 "선택" 규칙대로 자모 단위로 고른다(ADR-003, ADR-025 §12). */
   -webkit-user-select: none;
   user-select: none;
 }
@@ -79,6 +79,87 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: pre;
+}
+
+/* 선택(ADR-003 보강, ADR-025 §12) — 런타임이 그린 root(data-fy-select)는 자모 단위로 고른다. 원문 거울은 선택 밖, 브라우저 강조는
+ * 지운다(노드 글자는 화면 밖이거나 겹친다). 런타임이 비춘 data-fy-selected를 칠한다: root·글자 "all"은 글자 칸 띠(전진폭만큼),
+ * 빈칸은 같은 높이 띠, "part" 글자는 고른 자모 상자(::after, 노드 뒤 — 빛 칠이 노드를 숨겨도 보인다). 색 --fy-selection(페이지).
+ * 복사하는 동기 한 순간(data-fy-select="copy")은 root를 빼고 원문 거울을 골라 브라우저가 원문을 직렬화한다.
+ * inherit: 조상의 user-select: none을 지킨다(WebKit은 auto면 그 아래서도 고른다). */
+:where(font-kku, .font-kku)[data-fy-upgraded="true"] [part="root"][data-fy-select] {
+  -webkit-user-select: inherit;
+  user-select: inherit;
+}
+
+:where(font-kku, .font-kku)[data-fy-upgraded="true"] [part="root"][data-fy-select] ~ [part="sr-source"] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 끌기가 맞히는 것은 자모 노드 상자 — 기기 글꼴 맞춤의 ::before·잎(글자 em 상자, 자모 상자보다 훨씬 크다)은 포인터를 받지 않고, 빛 칠로
+ * 숨긴 노드는 ::after가 노드 상자를 맞는다 */
+:where(font-kku, .font-kku)[data-fy-face="device"] [part="root"][data-fy-select] [part~="jamo"]::before,
+:where(font-kku, .font-kku)[data-fy-face="device"] [part="root"][data-fy-select] [part~="jamo"] > [part="leaf"] {
+  pointer-events: none;
+}
+
+:where(font-kku, .font-kku)[data-fy-glow] [part="root"][data-fy-select] [part~="jamo"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  visibility: var(--fy-ink-visibility, visible);
+}
+
+:where(font-kku, .font-kku) [part="root"][data-fy-select]::selection,
+:where(font-kku, .font-kku) [part="root"][data-fy-select] ::selection {
+  background-color: transparent;
+}
+
+/* WebKit은 바탕 요소의 ::selection으로 줄 틈을 칠해 띠와 겹친다 */
+:where(font-kku, .font-kku):has(> [part="root"][data-fy-select])::selection {
+  background-color: transparent;
+}
+
+:where(font-kku, .font-kku) [part="root"][data-fy-selected="all"] [part="glyph"]::before,
+:where(font-kku, .font-kku) [part="glyph"][data-fy-selected="all"]::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inset-inline-end: calc(-1 * var(--fy-glyph-gap, 0px));
+  background-color: var(--fy-selection, rgb(from Highlight r g b / min(alpha, 0.6)));
+  pointer-events: none;
+}
+
+:where(font-kku, .font-kku) [part="root"][data-fy-selected="all"] [part="glyph"][data-hangul="false"]::before,
+:where(font-kku, .font-kku) [part="glyph"][data-hangul="false"][data-fy-selected="all"]::before {
+  inset-inline-end: 0;
+}
+
+:where(font-kku, .font-kku) [part="root"][data-fy-selected="all"] [part="space"],
+:where(font-kku, .font-kku) [part="space"][data-fy-selected] {
+  vertical-align: top;
+  block-size: var(--fy-glyph-height, 1.2em);
+  background-color: var(--fy-selection, rgb(from Highlight r g b / min(alpha, 0.6)));
+}
+
+:where(font-kku, .font-kku) [part="glyph"][data-fy-selected="part"] :is([part~="jamo"], [part="content"])[data-fy-selected]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  visibility: var(--fy-ink-visibility, visible);
+  background-color: var(--fy-selection, rgb(from Highlight r g b / min(alpha, 0.6)));
+}
+
+:where(font-kku, .font-kku) [part="root"][data-fy-select="copy"] {
+  display: none !important;
+}
+
+:where(font-kku, .font-kku) [part="root"][data-fy-select="copy"] ~ [part="sr-source"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
 }
 
 :where(font-kku, .font-kku) [part="line"] {
@@ -285,16 +366,16 @@
  * 요소에 data-fy-face="device"를 찍고, 자모 노드마다 그 기기 글꼴의 잉크를 표준 상자로 옮기는 값(--fy-face-*)을
  * 적는다 — 어느 기기의 한글 글꼴이든(Apple SD·Noto Sans CJK·One UI Sans·맑은 고딕) 같은 자리다. 글자는 ::before가 낱자(호환 자모)로 그리고, 노드는
  * 기준 글꼴의 전진폭(--fy-face-width)을 가져 slot clip(퍼센트 inset)이 맞춘 뒤의 글자를 자른다. 노드 자기
- * 글자는 visibility가 아니라 text-indent로 시작 쪽 화면 밖에 둔다 — ::before가 조상의 visibility(숨은
- * 자리 잡기 문장, 글꼴 받는 동안의 root)를 그대로 따르도록. 시작 쪽 넘침은 스크롤 영역을 늘리지 않는다.
- * 빛 칠과 겹치면 숨김·clip은 빛 칠대로다. 값이 없는 노드(기준 표에 없는 글자)는 자기 글자를 그대로 그린다. */
+ * 글자는 제자리에서 ::first-letter로 크기 0이 된다(아래 원소·그림 재료와 같다) — visibility가 아니라서 ::before가
+ * 조상의 visibility(숨은 자리 잡기 문장, 글꼴 받는 동안의 root)를 그대로 따른다. 예전에는 text-indent로 시작 쪽 화면
+ * 밖(-9999em)에 밀어 두었는데, 자모나 바탕 요소가 돌면(기울기 변주·말랑·회전한 제목) 밀어 둔 글자가 아래쪽 스크롤
+ * 영역을 수만 px 늘렸다(2026-10-13). 빛 칠과 겹치면 숨김·clip은 빛 칠대로다. 값이 없는 노드(기준 표에 없는 글자)는
+ * 자기 글자를 그대로 그린다. */
 :where(font-kku, .font-kku)[data-fy-face="device"]:not([data-fy-material]) [part~="jamo"] {
-  text-indent: -9999em;
   inline-size: var(--fy-face-width, auto);
 }
-/* 빛 칠 노드는 이미 자기 글자를 숨긴다 — 밀어낸 글자까지 filter 영역에 넣지 않는다 */
-:where(font-kku, .font-kku)[data-fy-face="device"][data-fy-glow]:not([data-fy-material]) [part~="jamo"] {
-  text-indent: 0;
+:where(font-kku, .font-kku)[data-fy-face="device"]:not([data-fy-material]) [part~="jamo"]::first-letter {
+  font-size: 0;
 }
 :where(font-kku, .font-kku)[data-fy-face="device"]:not([data-fy-material]) [part~="jamo"]::before {
   content: var(--fy-face-glyph, attr(data-jamo));
@@ -334,21 +415,27 @@
 
 /* 원소 재료(ADR-024) — data-fy-face="element"면 자모를 글꼴 없이 원소(획)로 그린다. 런타임이 자모 노드 안에
  * 획마다 [part="hoek"], 마디마다 [part="element"](data-element="line"|"ring")를 두고 표준 잉크 상자 좌표를
- * 적는다(--fy-el-*). 노드 자기 글자는 밀어 두고, slot clip은 노드 상자와 같은 획 묶음이 받는다 — 빛 칠의
- * filter가 노드에 걸려도 자른 선에서 빛이 끊기지 않는다. 굵기 --fy-element-width(페이지)·--fy-font-element-width
+ * 적는다(--fy-el-*). 노드 자기 글자는 제자리에서 ::first-letter로 크기 0이 되고(밀어 두면 돌린 자모가 스크롤 영역을
+ * 늘린다), slot clip은 노드 상자와 같은 획 묶음이 받는다 — 빛 칠의 filter가 노드에 걸려도 자른 선에서 빛이 끊기지 않는다. 굵기 --fy-element-width(페이지)·--fy-font-element-width
  * (글꼴, 바탕 요소의 글자 크기 em — 한 음절의 획이 같은 굵기), 끝 --fy-element-cap·--fy-font-element-cap(square·round·butt). 칠은 글자 색(currentColor)이고
  * 속 빈 획은 --fy-element-outline·--fy-font-element-outline(외곽선 굵기 — 글자 외곽선처럼 테두리에 반씩 걸친다)과
- * --fy-element-fill·--fy-font-element-fill(속 칠)이다. 꾸밈의 속 빈 칠(네온·도면·외곽선)이 이 둘로 옮겨진다. 획마다 따로 그려
- * 겹친 자리에 안쪽 선이 보인다(도면의 작도선처럼).
+ * --fy-element-fill·--fy-font-element-fill(속 칠)이다. 외곽선은 획마다 따로 그려 겹친 자리에 안쪽 선이 보인다(작도선처럼) —
+ * 꾸밈의 속 빈 칠(네온·도면·외곽선)은 외곽선 대신 속 칠과, 자모 노드 filter(--fy-font-glow)의 테두리 그림자로 자모 하나의
+ * 바깥 윤곽을 그린다(font-kku-looks.css). 굵기 변주는 획 굵기 배수 --fy-element-weight(자모 노드, 기본 1)로 닿는다.
  * 런타임이 slot 배율에 맞춰 획마다 굵기를 되돌린다(--fy-el-k 굵기 방향, --fy-el-kd 길이 방향). 획이 촘촘한 자모(ㄹ·ㅌ·ㅋ…)는
  * 노드의 밀도 굵기 계수 --fy-el-density(0.75–1, 기본 1 — 옛 배치는 런타임이 노드마다, 세벌 고정은 도장이 정한다)를 굵기와 끝 늘이기에 곱한다. */
 /* 낱자(ADR-025 §6): 음절이 아닌 호환 자모 글자(part="content")도 런타임이 data-fy-standalone을 찍고 자모 노드처럼 획을 넣는다 —
  * 한글 글꼴이 없는 기기에서도 ㅋㅋ가 보인다. 글자 상자는 표준 전진폭, 획 묶음의 기준 상자다(transform이 이미 담는다). */
 :where(font-kku, .font-kku)[data-fy-face="element"]:not([data-fy-material]) :is([part~="jamo"], [part="content"][data-fy-standalone]) {
-  text-indent: -9999em;
   inline-size: var(--fy-face-width, auto);
   clip-path: none;
   visibility: inherit;
+}
+/* 원소·그림 재료의 노드 자기 글자 — 제자리에서 크기 0으로(획은 자식 상자라 ::first-letter가 닿지 않는다). 꾸밈이 글자 칠·
+ * 외곽선·그림자를 주어도 그리지 않는다(::first-letter는 -webkit-text-fill-color를 받지 않아 색으로는 숨지 못한다). 줄 높이는
+ * 노드 글꼴 크기의 strut이 지킨다 */
+:where(font-kku, .font-kku):is([data-fy-face="element"], [data-fy-face="svg"]):not([data-fy-material]) :is([part~="jamo"], [part="content"][data-fy-standalone])::first-letter {
+  font-size: 0;
 }
 :where(font-kku, .font-kku)[data-fy-face="element"] {
   --fy-el-w: var(--fy-element-width, var(--fy-font-element-width, 0.1em));
@@ -364,8 +451,8 @@
   clip-path: var(--fy-clip, var(--fy-slot-clip, var(--fy-role-clip, none)));
 }
 :where(font-kku, .font-kku)[data-fy-face="element"] [part="element"][data-element="line"] {
-  --fy-el-t: calc(var(--fy-el-w) * var(--fy-el-k, 1) * var(--fy-el-density, 1));
-  --fy-el-d: calc(var(--fy-el-w) * var(--fy-el-kd, 1) * var(--fy-el-density, 1));
+  --fy-el-t: calc(var(--fy-el-w) * var(--fy-el-k, 1) * var(--fy-el-density, 1) * var(--fy-element-weight, 1));
+  --fy-el-d: calc(var(--fy-el-w) * var(--fy-el-kd, 1) * var(--fy-el-density, 1) * var(--fy-element-weight, 1));
   position: absolute;
   inset-inline-start: var(--fy-el-x);
   inset-block-start: var(--fy-el-y);
@@ -385,8 +472,8 @@
   --fy-el-e: 0;
 }
 :where(font-kku, .font-kku)[data-fy-face="element"] [part="element"][data-element="ring"] {
-  --fy-el-tx: calc(var(--fy-el-w) * var(--fy-el-kx, 1) * var(--fy-el-density, 1));
-  --fy-el-ty: calc(var(--fy-el-w) * var(--fy-el-ky, 1) * var(--fy-el-density, 1));
+  --fy-el-tx: calc(var(--fy-el-w) * var(--fy-el-kx, 1) * var(--fy-el-density, 1) * var(--fy-element-weight, 1));
+  --fy-el-ty: calc(var(--fy-el-w) * var(--fy-el-ky, 1) * var(--fy-el-density, 1) * var(--fy-element-weight, 1));
   position: absolute;
   box-sizing: border-box;
   inset-inline-start: calc(var(--fy-el-cx) - var(--fy-el-rx) - var(--fy-el-tx) / 2);
@@ -409,9 +496,9 @@
  * (자모 노드의 slot·도장 배율)을 빼지 않으므로, 그림 <svg>를 런타임이 잰 노드 배율의 역수(--fy-el-kd 길이·가로,
  * --fy-el-k 굵기·세로, 고리는 --fy-el-kx·--fy-el-ky)로 되돌리고 상자는 그만큼 키운다 — 화면의 그림 범위(칠)는 그대로
  * 자리를 따라 늘고, 획만 화면에서 --fy-el-w다(겹받침 통짜 도장 1.6배에 굵어져 뭉개지던 것). 밀도 굵기 계수 --fy-el-density는
- * 원소 재료처럼 그림 획 굵기(stroke-width)에도 곱한다 — 칠 그림(붓 세트)이 든 노드는 런타임이 1로 둔다. */
+ * 원소 재료처럼 그림 획 굵기(stroke-width)에도 곱한다 — 칠 그림(붓 세트)이 든 노드는 런타임이 1로 둔다. 그림의 획·칠 색은
+ * 원소 재료의 속 칠(--fy-element-fill·--fy-font-element-fill, 없으면 글자 색)이라 속 빈 꾸밈도 원소 재료와 같이 그린다. */
 :where(font-kku, .font-kku)[data-fy-face="svg"]:not([data-fy-material]) :is([part~="jamo"], [part="content"][data-fy-standalone]) {
-  text-indent: -9999em;
   inline-size: var(--fy-face-width, auto);
   clip-path: none;
   visibility: inherit;
@@ -430,8 +517,8 @@
   clip-path: var(--fy-clip, var(--fy-slot-clip, var(--fy-role-clip, none)));
 }
 :where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element="line"] {
-  --fy-el-t: calc(var(--fy-el-w) * var(--fy-el-k, 1) * var(--fy-el-density, 1));
-  --fy-el-d: calc(var(--fy-el-w) * var(--fy-el-kd, 1) * var(--fy-el-density, 1));
+  --fy-el-t: calc(var(--fy-el-w) * var(--fy-el-k, 1) * var(--fy-el-density, 1) * var(--fy-element-weight, 1));
+  --fy-el-d: calc(var(--fy-el-w) * var(--fy-el-kd, 1) * var(--fy-el-density, 1) * var(--fy-element-weight, 1));
   position: absolute;
   inset-inline-start: var(--fy-el-x);
   inset-block-start: var(--fy-el-y);
@@ -444,8 +531,8 @@
   transform: translate(calc(-1 * var(--fy-el-s) * var(--fy-el-d)), calc(-0.5 * var(--fy-el-t)));
 }
 :where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element="ring"] {
-  --fy-el-tx: calc(var(--fy-el-w) * var(--fy-el-kx, 1) * var(--fy-el-density, 1));
-  --fy-el-ty: calc(var(--fy-el-w) * var(--fy-el-ky, 1) * var(--fy-el-density, 1));
+  --fy-el-tx: calc(var(--fy-el-w) * var(--fy-el-kx, 1) * var(--fy-el-density, 1) * var(--fy-element-weight, 1));
+  --fy-el-ty: calc(var(--fy-el-w) * var(--fy-el-ky, 1) * var(--fy-el-density, 1) * var(--fy-element-weight, 1));
   position: absolute;
   box-sizing: border-box;
   inset-inline-start: calc(var(--fy-el-cx) - var(--fy-el-rx) - var(--fy-el-tx) / 2);
@@ -481,8 +568,8 @@
   block-size: 100%;
   overflow: visible;
   fill: none;
-  stroke: currentColor;
-  stroke-width: calc(var(--fy-el-w) * var(--fy-el-density, 1));
+  stroke: var(--fy-element-fill, var(--fy-font-element-fill, currentColor));
+  stroke-width: calc(var(--fy-el-w) * var(--fy-el-density, 1) * var(--fy-element-weight, 1));
   transform-origin: 0 0;
 }
 :where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"][data-element="box"] > [part="vector"] {
@@ -507,7 +594,7 @@
   vector-effect: non-scaling-stroke;
 }
 :where(font-kku, .font-kku)[data-fy-face="svg"] [part="element"] > [part="vector"] > [data-fill] {
-  fill: currentColor;
+  fill: var(--fy-element-fill, var(--fy-font-element-fill, currentColor));
   stroke: none;
 }
 
@@ -610,7 +697,7 @@
 }
 
 /* BEGIN GENERATED layouts: scripts/build_layout_profiles.js from spec/layout-profiles.json — do not edit by hand. */
-:where(font-kku, .font-kku):where([data-fy-layout="sebul-fixed-v1"]) { --fy-glyph-width: 0.96em; --fy-glyph-height: 1.17em; --fy-glyph-gap: -0.095em; }
+:where(font-kku, .font-kku):where([data-fy-layout="sebul-fixed-v1"]) { --fy-glyph-width: 0.9169em; --fy-glyph-height: 1.1999em; --fy-glyph-gap: 0em; --fy-space-width: 0.32em; }
 /* END GENERATED layouts */
 
 /* Non-Hangul glyphs keep the syllable box height so the text baseline keeps

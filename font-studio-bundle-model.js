@@ -256,7 +256,11 @@
       if (!profile) {
         add("layout-revision-mismatch", { detail: "배치 " + layout.profile + "가 이 런타임에 없다" });
       } else if (String(profile.revision) !== String(layout.revision)) {
-        add("layout-revision-mismatch", { detail: "디자인은 " + layout.profile + " revision " + layout.revision + ", 이 런타임은 " + profile.revision });
+        /* 프로파일이 받아들이는 이전 revision(accepts)은 등록되고 지금 도장으로 그린다 — 경고. 나머지는 등록이 거부한다 — 오류 */
+        var accepted = Array.isArray(profile.accepts) && profile.accepts.indexOf(String(layout.revision)) >= 0;
+        add("layout-revision-mismatch", accepted ? { severity: "warning",
+          detail: "디자인은 " + layout.profile + " revision " + layout.revision + " — 이 런타임은 revision " + profile.revision + " 도장으로 그린다" } :
+          { detail: "디자인은 " + layout.profile + " revision " + layout.revision + ", 이 런타임은 " + profile.revision });
       } else if (isObject(opts.runtimeLayouts) && has(opts.runtimeLayouts, layout.profile) &&
         String(opts.runtimeLayouts[layout.profile]) !== String(profile.revision)) {
         add("layout-revision-mismatch", { severity: "warning",

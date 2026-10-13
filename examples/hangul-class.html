@@ -1,5 +1,11 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — 한글 학습지. 글꼴: saekdong. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — 한글 학습지 (글꼴 saekdong)
+  고쳐 쓰기
+  - 글: 낱말 카드는 .card의 <font-kku> 글과 풀이를 함께 바꿉니다. '다른 낱말' 차례는 스크립트의 samples, 받침 고르기 낱말은 .pick-words 단추입니다.
+  - 색: 맨 위 :root의 --cho·--jung·--tail·--jong·--jong2가 글자의 자모 색, 범례, 풀이 칩을 함께 칠합니다.
+  - 글꼴: font="saekdong"(class="font-kku" 태그는 data-font="saekdong")의 글꼴 이름을 바꿉니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 font="sebul" jamo-set="my-hand"(class="font-kku" 태그는 data-font="sebul" data-jamo-set="my-hand")로 씁니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -88,6 +94,13 @@
     .legend li { display: flex; align-items: center; gap: 6px; }
     .legend i { width: 14px; height: 14px; border-radius: 4px; background: var(--c); }
     .legend b { color: var(--ink); }
+
+    /* 폰꾸 글자의 자모 색 — 범례·풀이 칩과 같은 변수로 칠해, 글꼴을 바꿔도 색 풀이가 맞는다 */
+    .sheet :is([part~="choseong"], [part~="head"]) { color: var(--cho); }
+    .sheet [part~="jungseong"] { color: var(--jung); }
+    .sheet [part~="jungseong-tail"] { color: var(--tail); }
+    .sheet [part~="jongseong"] { color: var(--jong); }
+    .sheet [part~="jongseong-right"] { color: var(--jong2); }
 
     .task { margin-top: 34px; }
     .task h2 {

@@ -1,5 +1,12 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — 예능 자막. 글꼴: sticker saekdong retro. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — 예능 자막 (글꼴 sticker · saekdong · retro)
+  고쳐 쓰기
+  - 글: 장면마다 .scene 안의 <font-kku> 글을 바꿉니다. 하단 이름표는 .lower-third입니다. 장면을 더하거나 빼면 점 표시가 따라갑니다.
+  - 크기: size="9.5cqi"처럼 화면 폭에 대한 비율로 적습니다.
+  - 색: 맨 위 :root의 변수를 바꿉니다. --accent는 이름표와 단추, --bg는 바탕 색입니다.
+  - 글꼴: font="sticker"·font="saekdong"·font="retro"의 글꼴 이름을 바꿉니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 font="sebul" jamo-set="my-hand"로 씁니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -286,7 +293,7 @@
   <main class="studio">
     <header class="head">
       <h1>〈동네 한 바퀴 먹방 원정대〉 3화 자막</h1>
-      <p>편집 미리보기 · 글꼴 파일 없이 웹에서 바로 그린 자막</p>
+      <p>편집 미리보기 · 자막 시안 네 장</p>
     </header>
 
     <div class="screen" role="region" aria-label="방송 화면 미리보기" aria-roledescription="자막 장면">

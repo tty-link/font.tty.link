@@ -7,7 +7,7 @@
 `<head>`나 `<body>` 끝에 넣는다. `data-fonts`에 첫 화면에 보이는 글꼴 이름을 공백으로 나열하면 런타임이 기본 CSS와 그 글꼴 CSS를 처음부터 불러온다. 나열하지 않은 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다(필요할 때 받기).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="neon sticker"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="neon sticker"></script>
 ```
 
 | 스크립트 속성 | 하는 일 |
@@ -65,6 +65,7 @@
 
 - `<font-kku>`는 `host.setAttribute("size", "48")`, 클래스 방식은 `host.dataset.size = "48"`로 크기를 바꾼다. 자동으로 반영되므로 바로 뒤에 `refresh()`를 추가하지 않는다. 원문·글꼴·깊이·해석된 씨앗값이 같으면 기존 자모 요소를 재사용한다.
 - 글을 바꿀 때는 바탕 요소의 `textContent`에 새 글을 넣으면 다시 그린다. 그린 뒤의 `textContent`에는 자모가 섞여 있으므로, 지금 글을 읽을 때는 런타임이 적어 둔 `data-source` 속성을 읽는다.
+- 사용자가 고른 부분의 원문은 `FontKku.sourceRange(요소, 범위)?.text`로 읽는다(복사 단축키는 런타임이 알아서 원문을 넣는다 — styling.md "고르기와 복사").
 - `FontKku.render()`·`refresh()`를 직접 호출하면 관리 DOM 전체를 새로 만든다. 처음 표시와 본문·구조 변경에도 요소 생성이 필요하다. 요소 재사용은 브라우저의 스타일 계산·배치·그리기 비용까지 없애는 뜻은 아니다.
 - 계속 유지할 값은 속성으로 적는다. `render`/`refresh`에 넘긴 옵션은 그 호출 한 번에만 적용된다.
 - 자동 글꼴·자모 모듈 로딩에 실패하면 `FontKku.retryFont(host)`로 재시도한다. 실패는 `font-kku:loaderror` 이벤트의 `detail: { kind, name, url, error }`로 확인한다. `retryFont`는 성공을 기다리는 Promise가 아니다. 직접 CSS URL의 완료를 기다리려면 `await FontKku.loadFont(url)`을 쓴다.
@@ -94,7 +95,7 @@ import FontKkuFx from "@tty.link/font-kku/fx";     // 상호작용을 쓸 때
 import하지 않은 글꼴을 필요할 때 받게 하려면 런타임에 글꼴 파일의 자리를 알려 준다.
 
 ```js
-globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/" };
+globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/" };
 ```
 
 ## 인터넷이 막힌 곳

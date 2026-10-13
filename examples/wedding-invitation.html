@@ -1,5 +1,13 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — 모바일 청첩장. 글꼴: geumbak malang. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — 모바일 청첩장 (글꼴 geumbak · malang)
+  고쳐 쓰기
+  - 글: 이름·일시·장소·인사말·계좌는 본문 글을 바꿉니다. 복사 단추가 옮기는 글은 단추의 data-copy에 있습니다.
+  - 날짜: 스크립트 맨 위 WEDDING 한 곳을 바꾸면 달력과 남은 날이 따라 바뀝니다.
+  - 색: 맨 위 :root의 변수를 바꿉니다. --night·--navy는 바탕, --gold는 금빛 선, --cream은 글 색입니다.
+  - 움직임: 자모가 날아오는 방향·기울기·시차는 .assemble 규칙의 --k-from·--k-turn·--k-role-delay입니다.
+  - 글꼴: data-font="geumbak"·data-font="malang"의 글꼴 이름을 바꿉니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 data-font="sebul" data-jamo-set="my-hand"로 씁니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -424,7 +432,7 @@
     <section class="thanks" aria-label="맺음말">
       <p class="font-kku verse" data-font="malang" data-size="clamp(24px, 7vw, 30px)">함께해 주셔서 고맙습니다</p>
       <div class="ornament" aria-hidden="true"><i></i></div>
-      <p class="credit">이름과 제목은 글꼴 파일 없이 폰꾸 금박으로 그렸습니다.<br />자모가 한 조각씩 날아와 글자로 조립됩니다.</p>
+      <p class="credit">화환은 정중히 사양합니다.<br />축하의 마음만 감사히 받겠습니다.</p>
     </section>
   </main>
 
@@ -433,31 +441,45 @@
   <script>
     (function () {
       "use strict";
+      // 예식 날짜 — 이 한 곳을 바꾸면 달력과 남은 날이 따라 바뀐다(달은 0부터 센다: 10 = 11월)
+      var WEDDING = new Date(2026, 10, 21);
       var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (!reduce && "IntersectionObserver" in window) {
         document.documentElement.classList.add("js-motion");
       }
 
-      // 달력 — 2026년 11월은 일요일에 시작하고 30일까지다
+      // 달력 — 예식 달을 일요일부터 그리고, 예식일에 금빛 동그라미
+      var DOW = "일월화수목금토";
+      var year = WEDDING.getFullYear();
+      var month = WEDDING.getMonth();
+      var mark = WEDDING.getDate();
+      var first = new Date(year, month, 1).getDay();
+      var last = new Date(year, month + 1, 0).getDate();
       var calendar = document.querySelector("[data-calendar]");
-      var cells = ["일", "월", "화", "수", "목", "금", "토"].map(function (d, i) {
+      var cells = DOW.split("").map(function (d, i) {
         return '<li class="dow' + (i === 0 ? " sun" : i === 6 ? " sat" : "") + '" aria-hidden="true">' + d + "</li>";
       });
-      for (var day = 1; day <= 30; day += 1) {
-        var dow = (day - 1) % 7;
-        var cls = day === 21 ? "day-mark" : dow === 0 ? "sun" : dow === 6 ? "sat" : "";
-        cells.push('<li' + (cls ? ' class="' + cls + '"' : "") + (day === 21 ? ' aria-current="date"' : "") + ">" + day + "</li>");
+      for (var blank = 0; blank < first; blank += 1) cells.push('<li aria-hidden="true"></li>');
+      for (var day = 1; day <= last; day += 1) {
+        var dow = (first + day - 1) % 7;
+        var cls = day === mark ? "day-mark" : dow === 0 ? "sun" : dow === 6 ? "sat" : "";
+        cells.push('<li' + (cls ? ' class="' + cls + '"' : "") + (day === mark ? ' aria-current="date"' : "") + ">" + day + "</li>");
       }
       calendar.innerHTML = cells.join("");
+      calendar.setAttribute("aria-label", year + "년 " + (month + 1) + "월 달력, " + mark + "일 " + DOW.charAt(WEDDING.getDay()) + "요일 예식");
+      document.querySelector(".month-head").textContent = year + ". " + (month + 1);
 
-      // 남은 날
-      var wedding = new Date(2026, 10, 21);
+      // 남은 날 — 이름은 혼주 줄의 두 사람 이름(<b>)을 쓴다
+      var couple = Array.prototype.map.call(document.querySelectorAll(".parents b"), function (b) { return b.textContent; }).join(" ♥ ");
       var today = new Date();
       today.setHours(0, 0, 0, 0);
-      var left = Math.round((wedding - today) / 86400000);
+      var left = Math.round((WEDDING - today) / 86400000);
       var dday = document.querySelector("[data-dday]");
       if (left > 0) {
-        dday.innerHTML = "하늘 ♥ 도윤의 결혼식까지 <strong>" + left + "일</strong> 남았습니다";
+        var strong = document.createElement("strong");
+        strong.textContent = left + "일";
+        dday.textContent = couple + "의 결혼식까지 ";
+        dday.append(strong, " 남았습니다");
       } else if (left === 0) {
         dday.innerHTML = "<strong>오늘</strong>이 바로 그날입니다";
       } else {

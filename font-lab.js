@@ -1,9 +1,12 @@
-/* 글꼴 페이지의 "랜덤 글꼴"과 "폰꾸로 만드는 글꼴" — 시험대 변주 도구, 글꼴 뽑기, 기능 모음 카드.
+/* 글꼴 페이지의 시험대 씨앗과 "내 글꼴 만들기" — 시험대 변주 도구, 글꼴 뽑기, 만들기 카드.
  *
  * 변주: 바탕 요소에 seed와 jamo-seeds를 주면 런타임이 자모 노드마다 --fy-jamo-seed(0–1)를 걸고,
  * 씨앗에 반응하는 글꼴(fonts[].seed)은 그 값으로 자모마다 기울기·위치를 흔든다. 끔 / 매번 새로
  * (seed="auto", 그릴 때마다 새 씨앗) / 씨앗 고정(같은 씨앗 = 같은 모양) 셋이다. 씨앗에 반응하지
- * 않는 글꼴은 속성을 줘도 모양이 그대로라 그 사실을 행 표시와 안내로 밝힌다.
+ * 않는 글꼴은 속성을 줘도 모양이 그대로라 그 사실을 행 표시(씨앗 반응)와 시험대 안내 한 줄로 밝힌다
+ * (다른 글꼴은 조합기의 변주로 흔든다). 코드 복사(attrs)는 씨앗에 반응하는 글꼴에만 속성을 붙인다.
+ *
+ * AI 카드의 문장은 소개와 같은 글이다 — FontKkuLandingSets.prompt(8칸, site/landing-ai-sets.js).
  *
  * 글꼴 뽑기: FontKkuCustomizer.draw(seed)가 뽑기 씨앗 하나로 꾸미기 상태를 결정론적으로 정해 꾸미기
  * 창을 연다. 기능 모음의 뽑기 카드는 같은 상태를 창 밖에서 미리 그린다(cssFor·seedFor).
@@ -66,6 +69,12 @@
     var seedWrap = $("[data-var-seed]", config.form);
     seedWrap.hidden = mode !== "fixed";
     $("[data-var-reseed]", config.form).hidden = mode === "off";
+    var note = $("[data-var-note]", config.form);
+    if (note) {
+      var names = $("[data-var-note-fonts]", note);
+      if (names) names.textContent = seedFontNames();
+      note.hidden = mode === "off";
+    }
     var input = $('input[name="seed"]', config.form);
     if (input.value !== seed) input.value = seed;
     document.documentElement.setAttribute("data-fl-vary", mode);
@@ -88,10 +97,40 @@
     });
   }
 
+  /* 씨앗에 반응하는 글꼴 이름(정본 순서) — 옛 꾸러미 글꼴은 견본 행이 없어 뺀다. */
+  function seedFontNames() {
+    return config.fonts.filter(function (item) { return item.seed && !item.legacy; })
+      .map(function (item) { return item.name; }).join("·");
+  }
+
   function attrs(item) {
     var value = seedValue();
     if (value === null || !item || !item.seed) return "";
     return ' seed="' + value + '" jamo-seeds';
+  }
+
+  /* 고정 시험대의 실제 아래끝 — 안내 줄(씨앗·바탕)이 붙거나 줄이 꺾이면 시험대가 높아져, 주소로 온 행(#pixel)의
+   * 제목이 그 밑에 숨었다. 머리말 + 시험대 높이를 --fl-tester-bottom으로 적고 행·무리 제목의 scroll-margin-top이
+   * 그 값을 따른다(font-lab.css). 좁은 화면은 시험대가 붙지 않아(position: static) 머리말 높이만 센다. */
+  function measureTester() {
+    var header = $(".k-header");
+    var form = config.form;
+    var top = header ? header.getBoundingClientRect().height : 0;
+    var sticky = form && getComputedStyle(form).position === "sticky";
+    var bottom = Math.ceil(top + (sticky ? form.getBoundingClientRect().height : 0));
+    document.documentElement.style.setProperty("--fl-tester-bottom", bottom + "px");
+  }
+
+  function watchTester() {
+    measureTester();
+    if (typeof ResizeObserver === "function") {
+      var observer = new ResizeObserver(measureTester);
+      observer.observe(config.form);
+      var header = $(".k-header");
+      if (header) observer.observe(header);
+    }
+    // 폭이 좁아져 시험대가 붙지 않게 되는 때(크기는 같고 position만 바뀜)
+    window.addEventListener("resize", measureTester);
   }
 
   // ── 뽑기 미리보기(기능 모음 카드) ──────────────────────
@@ -132,11 +171,11 @@
 
   // ── 카드 단추 ─────────────────────────────────────────
 
+  /* 소개의 'AI에게 맡길 문장 복사'와 같은 글 — 8칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 칸 계약 세트로 그려 달라는 부탁. */
   function skillPrompt() {
-    return "이 설명서를 읽고 따라 해 줘: " + config.skillUrl + "\n\n" +
-      "붓으로 쓴 듯한 느낌의 폰꾸 그림 자소 글꼴을 만들어 줘.\n" +
-      "설명서 목차의 draw-jamo.md(자모를 SVG로 직접 그리기)대로 자모를 코드로 그리고, sprite-system 위에 바꿔 끼운\n" +
-      "미리보기 HTML 한 장으로 '다람쥐 헌 쳇바퀴에 타고파'를 큰 제목으로 보여 줘.";
+    var sets = window.FontKkuLandingSets;
+    if (sets && typeof sets.prompt === "function") return sets.prompt(sets.MARKER);
+    return "이 설명서를 읽고 따라 해 줘: " + config.skillUrl;
   }
 
   function scrollToRow(id) {
@@ -183,7 +222,10 @@
     if (target.hasAttribute("data-lab-vary-on")) {
       mode = "auto";
       applyVariation();
-      config.form.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      // 고정 시험대는 이미 화면 위에 붙어 있어 거기로 옮기면 화면이 그대로다 — 씨앗에 반응하는 첫 견본 행으로 간다
+      var tag = $(".fl-seed-tag");
+      var seedRow = tag && tag.closest("[data-font-row]");
+      if (seedRow) scrollToRow(seedRow.id);
       return;
     }
     if (target.hasAttribute("data-lab-export")) {
@@ -222,6 +264,7 @@
     config.form.addEventListener("input", onInput);
     config.form.addEventListener("change", onInput);
     applyVariation();
+    watchTester();
     renderDrawPreview(null);
   }
 

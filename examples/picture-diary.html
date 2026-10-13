@@ -1,5 +1,11 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — 그림일기. 글꼴: crayon dojang. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — 그림일기 (글꼴 crayon · dojang)
+  고쳐 쓰기
+  - 글: 제목은 #title-view와 #title-input, 일기는 #text-input의 처음 글을 바꿉니다. 선생님 한마디는 .teacher 안의 글입니다.
+  - 색: 초성·중성·받침 크레용 색은 맨 위 :root의 --cho·--jung·--jong입니다. '처음 색으로'도 이 값으로 돌아갑니다.
+  - 글꼴: 원고지 칸은 제목(#title-view)과 같은 글꼴로 그립니다. 제목의 data-font를 바꾸면 둘 다 바뀝니다. 도장은 font="dojang"입니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 제목에 data-font="sebul" data-jamo-set="my-hand"를 씁니다. 원고지도 따라 바뀝니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -156,10 +162,10 @@
       border-bottom: 1.5px solid var(--grid);
       overflow: hidden;
     }
-    /* 제목과 원고지의 크레용 글자 — 고른 크레용 색으로 자모마다 칠한다 */
-    .diary [data-fy-font="crayon"] [part~="choseong"] { color: var(--cho); }
-    .diary [data-fy-font="crayon"] [part~="jungseong"] { color: var(--jung); }
-    .diary [data-fy-font="crayon"] [part~="jongseong"] { color: var(--jong); }
+    /* 제목과 원고지의 크레용 글자 — 고른 크레용 색으로 자모마다 칠한다(도장은 빼고) */
+    :is(#title-view, .manuscript) :is([part~="choseong"], [part~="head"]) { color: var(--cho); }
+    :is(#title-view, .manuscript) [part~="jungseong"] { color: var(--jung); }
+    :is(#title-view, .manuscript) [part~="jongseong"] { color: var(--jong); }
 
     .teacher {
       display: flex;
@@ -210,6 +216,7 @@
     }
     .tools textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
     .count { margin: 4px 0 0; font-size: 12px; text-align: right; color: var(--muted); }
+    .count[data-full] { font-weight: 700; color: var(--red); }
     .note { margin: 10px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
 
     .role { display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 8px; margin-top: 8px; }
@@ -374,7 +381,7 @@
           <button type="button" id="rainbow" aria-pressed="false">알록달록 칸마다</button>
           <button type="button" id="reset-colors">처음 색으로</button>
         </div>
-        <p class="note">크레용 글꼴은 SVG로 그린 자소판을 모양(마스크)으로만 쓰고, 색은 CSS가 칠해요. 그래서 한 글자 안에서도 초성·중성·받침 색을 따로 고를 수 있어요.</p>
+        <p class="note">초성·중성·받침 크레용 색을 따로 고를 수 있어요. 한 글자 안에서도 색이 나뉘어요.</p>
       </section>
 
       <section>
@@ -396,8 +403,11 @@
         ["초록", "#23a35a"], ["하늘", "#1c9ad6"], ["파랑", "#2c6fd8"], ["보라", "#7048e8"],
         ["분홍", "#e64980"], ["갈색", "#8d5524"], ["검정", "#2b2b2b"]
       ];
-      var DEFAULTS = { cho: "#e23d3d", jung: "#2c6fd8", jong: "#23a35a" };
       var root = document.documentElement;
+      // 처음 색은 맨 위 :root의 --cho·--jung·--jong — CSS 한 곳만 고치면 된다
+      var css = getComputedStyle(root);
+      function cssColor(name, fallback) { return css.getPropertyValue(name).trim() || fallback; }
+      var DEFAULTS = { cho: cssColor("--cho", "#e23d3d"), jung: cssColor("--jung", "#2c6fd8"), jong: cssColor("--jong", "#23a35a") };
       var colors = { cho: DEFAULTS.cho, jung: DEFAULTS.jung, jong: DEFAULTS.jong };
 
       // ── 날짜와 날씨 ──
@@ -432,7 +442,21 @@
       var CAPACITY = 108;
       var rainbow = false;
 
-      // 원고지 쓰는 법: 문단 첫 칸은 비우고, 줄 첫 칸에는 띄어쓰기를 하지 않는다
+      // 원고지 칸은 제목과 같은 글꼴로 그린다 — 제목의 글꼴 속성(data-font, data-jamo-set …)과
+      // --fy-* 꾸밈을 칸마다 옮겨 적으니 제목만 바꾸면 원고지도 따라 바뀐다
+      var FONT_ATTRS = ["data-font", "data-jamo-set", "data-seed", "data-jamo-seeds", "data-stroke-depth"];
+      function followTitle(host) {
+        FONT_ATTRS.forEach(function (name) {
+          if (titleView.hasAttribute(name)) host.setAttribute(name, titleView.getAttribute(name));
+        });
+        for (var k = 0; k < titleView.style.length; k += 1) {
+          var prop = titleView.style[k];
+          if (prop.indexOf("--fy-") === 0) host.style.setProperty(prop, titleView.style.getPropertyValue(prop));
+        }
+      }
+
+      // 원고지 쓰는 법: 문단 첫 칸은 비우고, 줄 첫 칸에는 띄어쓰기를 하지 않는다.
+      // 마침표와 쉼표 다음에는 칸을 비우지 않는다(물음표·느낌표 다음은 한 칸 띈다)
       function layout(text) {
         var out = [];
         text.split(/\n+/).forEach(function (paragraph) {
@@ -441,7 +465,7 @@
           while (out.length % cols) out.push("");
           out.push("");
           Array.from(paragraph).forEach(function (ch) {
-            if (ch === " " && out.length % cols === 0) return;
+            if (ch === " " && (out.length % cols === 0 || /[.,]/.test(out[out.length - 1]))) return;
             out.push(ch === " " ? "" : ch);
           });
         });
@@ -461,7 +485,7 @@
           cell.className = "cell";
           var host = document.createElement("span");
           host.className = "font-kku";
-          host.setAttribute("data-font", "crayon");
+          followTitle(host);
           host.setAttribute("data-size", "74cqi");
           cell.appendChild(host);
           sheet.appendChild(cell);
@@ -480,7 +504,12 @@
           item.text = ch;
           FontKku.refresh(item.host, { text: ch });
         });
-        count.textContent = Array.from(textInput.value).length + " / 96자";
+        // 칸이 모자라면 말없이 버리지 않고 몇 자가 안 들어갔는지 알린다
+        var left = chars.slice(cells.length).filter(Boolean).length;
+        count.toggleAttribute("data-full", left > 0);
+        count.textContent = left > 0
+          ? "원고지가 다 찼어요. 뒤의 " + left + "자는 들어가지 않아요."
+          : Array.from(textInput.value).length + " / 96자";
         srText.textContent = textInput.value;
       }
 

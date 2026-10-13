@@ -1,5 +1,11 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — RPG 대화창. 글꼴: pixel. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — RPG 대화창 (글꼴 pixel)
+  고쳐 쓰기
+  - 글: 대사와 선택지는 스크립트의 SCRIPT 한 곳에서 고칩니다. 장소·금화 표지는 .hud 안의 글입니다.
+  - 색: 맨 위 :root의 변수를 바꿉니다. --line은 대사 글자, --gold는 금화, --win은 대화창 색입니다.
+  - 글꼴: font="pixel"의 글꼴 이름을 바꿉니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 font="sebul" jamo-set="my-hand"로 씁니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -253,9 +259,9 @@
     </div>
 
     <ul class="notes">
-      <li><b>자모 단위로 치는 대사</b>대사가 두벌식 자판으로 치듯 한 자모씩 써집니다(ㅎ → 하 → 한). 폰꾸는 자모를 따로 조립해 그리므로 조합 중인 글자도 그대로 보여 줄 수 있어요.</li>
-      <li><b>한글 글꼴이 없어도 같은 글자</b>이 대화창의 한글은 기기 글꼴이 아니라 도트 SVG 자소판(<code>pixel</code>)으로 그립니다. 한글 글꼴이 없는 게임기·키오스크 화면에서도 똑같이 보입니다.</li>
-      <li><b>글꼴 파일 0개</b>자음·모음 칸만 그린 자소판 한 장으로 한글 11,172자를 모두 씁니다. 대사를 바꿔도 글꼴을 다시 만들 필요가 없어요.</li>
+      <li><b>자모 단위로 치는 대사</b>대사가 두벌식 자판으로 치듯 한 자모씩 써집니다(ㅎ → 하 → 한). 대사와 선택지는 스크립트의 <code>SCRIPT</code> 한 곳에서 고칩니다.</li>
+      <li><b>그림체를 바꾸는 도트 글꼴</b>대화창의 한글은 도트 자소판(<code>pixel</code>) 한 장으로 그립니다. 자소판의 자모 칸을 내 게임 그림체로 다시 그리면 대사 전체가 그 그림체로 바뀝니다.</li>
+      <li><b>색은 CSS로</b>검정 자소판을 모양으로만 쓰고(<code>--fy-sprite-paint: mask</code>) 색은 <code>color</code>로 줍니다. 금화 표지만 금빛인 것처럼 자리마다 색을 바꿀 수 있어요.</li>
     </ul>
   </main>
 

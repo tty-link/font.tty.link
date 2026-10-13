@@ -18,7 +18,7 @@
  * 하지 않는 것(계획 밖): 위 자모를 따라가는 조각 보정(§5.5 — 떼어 낸 독립 그림에서만), 글꼴 낱자 → SVG(§6.6), 세벌 고정의
  * 자모별 크기·자리(도장이 맡는다).
  *
- * FontStudio.draw = { start, doc, setCell, removeCell, importSvg, select, selection, movePart, scalePart, removePart, progress,
+ * FontStudio.draw = { start, doc, setCell, removeCell, importSvg, importCells, select, selection, movePart, scalePart, removePart, progress,
  *                     proposals, statuses, sentence, tool, open, on, off, busy }
  */
 (function () {
@@ -315,6 +315,62 @@
       return Promise.resolve(refused(error, key));
     }
     return commitDoc(opts.label || key + " 그리기", next);
+  }
+
+  /* 칸 여러 개를 편집 하나로(되돌리기 한 번) 넣는다 — 소개 페이지에서 그린 8칸을 이어 그릴 때. cells: { 칸 키: 도형들 | { shapes } }.
+   * 칸마다 출처는 imported이고 그림 범위(box)는 도형에서 다시 잰다(toCells). 고칠 수 없는 키·빈 칸은 건너뛴다. */
+  function importCells(cells, label) {
+    if (!cells || typeof cells !== "object") {
+      return Promise.resolve(refused(new Error("가져올 칸이 없습니다"), ""));
+    }
+    ensureDoc();
+    ensureMounted();
+    var next = doc;
+    var keys = [];
+    try {
+      Object.keys(cells).forEach(function (key) {
+        var cell = cells[key];
+        var shapes = Array.isArray(cell) ? cell : cell && cell.shapes;
+        if (!Draw.isEditableKey(key) || !Array.isArray(shapes) || !shapes.length) {
+          return;
+        }
+        next = Draw.setCell(next, key, shapes, { origin: "imported" });
+        keys.push(key);
+      });
+    } catch (error) {
+      return Promise.resolve(refused(error, keys.length ? keys[keys.length - 1] : ""));
+    }
+    if (!keys.length) {
+      return Promise.resolve(refused(new Error("가져올 칸이 없습니다"), ""));
+    }
+    return commitDoc(label || "칸 " + keys.length + "개 가져오기", next).then(function (edit) {
+      if (edit && edit.ok) {
+        note("칸 " + keys.length + "개(" + keys.join(" ") + ")를 가져왔습니다 — 칸을 눌러 이어서 그리세요.", "info");
+      }
+      return edit;
+    });
+  }
+
+  /* 소개 페이지의 '작업실에서 이어 그리기'가 남긴 칸 — localStorage 한 번만 읽고 지운다(10분 안에 남긴 것만). 저장소가 막혀 있으면 없다 */
+  var HANDOFF_KEY = "font-kku:studio-handoff";
+  function takeHandoff() {
+    var raw = null;
+    try {
+      raw = window.localStorage.getItem(HANDOFF_KEY);
+      window.localStorage.removeItem(HANDOFF_KEY);
+    } catch (error) {
+      return null;
+    }
+    var data = null;
+    try {
+      data = raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      return null;
+    }
+    if (!data || data.v !== 1 || !data.cells || typeof data.cells !== "object" || !(Date.now() - Number(data.at) < 10 * 60 * 1000)) {
+      return null;
+    }
+    return data;
   }
 
   /* 세트 상태 — 영향 목록(F1 impactOf)의 sets 값 { cells, options }. 빈 문서는 {}(등록할 수 없는 세트) */
@@ -1474,6 +1530,29 @@
     attach();
   }
 
+  /* 주소 #draw(소개 페이지의 '8칸 그려서 내 글꼴 만들기')로 들어오면 디자인 칸의 '그리기 8 → 24 → 40' 단추와 같은 길로
+   * 그리기 탭을 바로 연다 — 재료를 그림 세트로 바꾸고 빈 그림 문서를 원형 8 단계로 연 뒤 그 탭으로 내려간다. 이미 그린
+   * 문서(초안·프로젝트)가 있으면 그 문서 그대로 연다. 소개에서 그리던 칸을 넘겼으면(takeHandoff) 그 칸을 가져온다. */
+  if (location.hash === "#draw" && entry) {
+    var entryButton = entry.querySelector("[data-draw-entry]");
+    if (entryButton) {
+      entryButton.click();
+      /* 소개에서 그리던 칸을 가져온다 — 지금 문서(초안 포함)에 칸을 덮어 쓰는 편집 하나라 되돌릴 수 있다 */
+      var handoff = takeHandoff();
+      if (handoff) {
+        importCells(handoff.cells, "소개 페이지에서 그린 칸 가져오기");
+      }
+      requestAnimationFrame(function () {
+        if (section) {
+          /* 붙어 있는 머리말 밑으로 숨지 않게 그 높이만큼 덜 내려간다 */
+          var header = document.querySelector("header");
+          var offset = header && getComputedStyle(header).position === "sticky" ? header.getBoundingClientRect().height + 8 : 0;
+          window.scrollTo(0, Math.max(0, section.getBoundingClientRect().top + window.scrollY - offset));
+        }
+      });
+    }
+  }
+
   function on(name, listener) {
     if (!listeners[name] || typeof listener !== "function") {
       throw new TypeError("font-studio: draw.on(" + JSON.stringify(name) + ") — events are select and change");
@@ -1499,6 +1578,8 @@
     setCell: setCell,
     removeCell: removeCell,
     importSvg: importSvg,
+    /* 칸 여러 개 { 키: 도형들 | { shapes } } → 편집 하나 */
+    importCells: importCells,
     select: select,
     selection: function () { return { jamo: sel.jamo, context: sel.context, key: selectedKey(), part: selectedPart }; },
     movePart: movePart,

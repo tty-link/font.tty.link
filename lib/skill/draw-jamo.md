@@ -13,7 +13,7 @@
 - 칸 키는 `r<행>-<호환 자모>`, 칸 하나는 100×100 좌표다.
 - 행: 0 초성(세로 모음 옆 — 가·거의 ㄱ), 1 중성(합자 모음은 통짜), 2 받침, 3 겹받침, 4 초성(가로 모음 위 — 고·그의 ㄱ), 5 합자 모음(키 큰 초성 옆 — 와·위의 ㅘ).
 - 자모: 자음 `ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ`, 모음 `ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ`, 겹받침 `ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ`(3행). 받침 행에 ㄸ·ㅃ·ㅉ는 없고, 5행은 합자 모음만 있다.
-- **칸은 음절 상자를 그대로 줄인 것이다.** 자모를 칸 가운데가 아니라 음절 안 제자리에 그린다. 칸마다 그릴 자리(잉크 상자 `[x0, y0, x1, y1]`, 두 짝 자음·겹받침·합자 모음은 짝 상자 `parts`)는 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/spec/sprite-layout.json`의 `layouts.system`에 있다. 대표값:
+- **칸은 음절 상자를 그대로 줄인 것이다.** 자모를 칸 가운데가 아니라 음절 안 제자리에 그린다. 칸마다 그릴 자리(잉크 상자 `[x0, y0, x1, y1]`, 두 짝 자음·겹받침·합자 모음은 짝 상자 `parts`)는 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/spec/sprite-layout.json`의 `layouts.system`에 있다. 대표값:
 
 | 칸 | 자리 상자 | 뜻 |
 |---|---|---|
@@ -24,12 +24,12 @@
 | `r4-ㄱ` | `[11.7, 9.4, 71.1, 60.2]` | 가로 모음 위 초성은 위쪽, 넓게 |
 
 - 칸 경계에서 2만큼 안쪽에만 그린다. 굵기는 칸 100 기준 6–9가 읽기 좋다.
-- 본보기 획: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/profiles/sprite-system.jamo.js` (칸 하나가 한 줄)
+- 본보기 획: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/profiles/sprite-system.jamo.js` (칸 하나가 한 줄)
 
 ## 코드로 그리기 (권장)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sprite-system"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sprite-system"></script>
 <script>
   FontKku.registerJamo("brush", {
     "r0-ㄱ": "M5 12 H45 V28 Q45 54 11 65",          // 경로 문자열 = 획 중심선
@@ -73,7 +73,7 @@
 그림이 맡지 않은 획(ㅋ의 더한 획, ㅏ·ㅗ의 점)은 원소 그림 `@line`·`@dot`·`@ring`으로 긋고, 그 그림이 없으면 세트의 `ㅡ`(돌려서)·`ㆍ`·`ㅇ`으로 긋는다 — 원형 8만 그려도 CSS 상자 없이 한 손으로 보인다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sebul"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul"></script>
 <script>
   FontKku.registerJamo("my-hand", {
     "@line": { box: [10, 45, 90, 55], shapes: ["M10 50 C30 46 70 54 90 50"] },
@@ -149,7 +149,7 @@
 - 미리보기에서 자모를 고르면 조립식 후보를 나란히 비교하고(조립식·binding), 그 자모가 무엇으로 어디서 그려졌는지(출처) 답한다. 조합으로 그려진 자모는 "독립 SVG로" 떼어 고칠 수 있다.
 - 고급 — 배치(세벌 고정·네모 문맥)·문맥 규칙·디자인 JSON 편집. 편집 기록(되돌리기·다시)과 바꾸기 전 영향 확인이 있다.
 - 가져가기: **디자인 JSON 저장·복사**, **페이지용 코드 복사**(`registerDesign` + `--fy-design` 한 덩어리), **묶음**(`<이름>.fkk-bundle.json` — 디자인과 직접 그린 그림을 한 파일로, 그림 세트는 `.jamo.js`로도 내보낸다).
-- AI가 할 일: 사용자가 작업실에서 복사한 페이지용 코드나 디자인 JSON을 받으면 런타임 `<script>`(위 주소) 뒤에 넣고 `validateDesign`으로 검사한다. 직접 그린 세트(`studio-draw-…`)를 쓰는 디자인은 묶음 칸의 페이지용 코드(그림 세트 줄이 함께 든다)나 내보낸 `.jamo.js`를 함께 싣는다. 코드에 `profiles/<세트>.jamo.js` 줄이 있으면 기본 제공 세트다 — 런타임이 필요할 때 받으므로 지우거나, 남기려면 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/profiles/<세트>.jamo.js`로 바꾼다.
+- AI가 할 일: 사용자가 작업실에서 복사한 페이지용 코드나 디자인 JSON을 받으면 런타임 `<script>`(위 주소) 뒤에 넣고 `validateDesign`으로 검사한다. 직접 그린 세트(`studio-draw-…`)를 쓰는 디자인은 묶음 칸의 페이지용 코드(그림 세트 줄이 함께 든다)나 내보낸 `.jamo.js`를 함께 싣는다. 코드에 `profiles/<세트>.jamo.js` 줄이 있으면 기본 제공 세트다 — 런타임이 필요할 때 받으므로 지우거나, 남기려면 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/profiles/<세트>.jamo.js`로 바꾼다.
 
 ## 획 깊이 — 자모를 획으로
 
@@ -158,12 +158,12 @@
 - 획에는 획순 차례(`data-hoek`, `--fy-hoek-order`)와 종류(`data-hoek-kind`: `h` `v` `hv` `vh` `lf` `rf` `dot` `ring`), 제자원리 역할(`data-hoek-role`: 기본자 `base`·가획 `added`·이체 `variant`·천 `heaven`·지 `earth`·인 `person`)이 붙는다.
 - 획만 옮기려면 `--fy-hoek-dx`·`--fy-hoek-dy`(칸 0–100 단위)·`--fy-hoek-rotate`.
 - 획순대로 긋는 움직임은 `animate="draw"`(`data-addons="motion"`, 속성으로 주면 획 깊이도 저절로 켜진다), 획마다 흔들리는 변주는 `class="kku-vary-hoek"`.
-- 직접 등록한 세트는 칸 도형을 획순대로 그리고 `registerJamo(…, { hoek: true })`로 알려야 종류·역할이 붙는다(획순 정본: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/spec/strokes.json`).
+- 직접 등록한 세트는 칸 도형을 획순대로 그리고 `registerJamo(…, { hoek: true })`로 알려야 종류·역할이 붙는다(획순 정본: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/spec/strokes.json`).
 - 기본 원소 획(글꼴을 비운 세벌 고정, `sebul`·`gothic`)은 `stroke-depth` 없이도 획마다 `part="hoek"` 노드이고 같은 `data-hoek-role`·`data-hoek-kind`가 붙는다 — 아래 예의 가획 칠하기는 `<font-kku class="edu">ㄱㅋ ㄴㄷㅌ</font-kku>`에서도 된다. 다만 `draw`는 자모 단위로 나타난다.
 - 기기 글꼴·자소판은 쪼갤 수 없어 자모 단위로 그린다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sprite-system" data-jamo-sets="sprite-system"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sprite-system" data-jamo-sets="sprite-system"></script>
 <style>.edu [data-hoek-role="added"] { color: #e63946; }</style>  <!-- 가획만 빨갛게 -->
 <font-kku class="edu" font="sprite-system" jamo-set="sprite-system" stroke-depth="stroke">ㄱㅋ ㄴㄷㅌ</font-kku>
 ```
@@ -171,10 +171,10 @@
 ## SVG 자소판 파일
 
 - `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2100 600" width="2688" height="768">` — 21열 × 6행. 칸마다 `<g id="r행-자모" transform="translate(열×100 행×100)">` 안에 칸 기준 0–100 좌표로 그린다(열 = 위 자모 순서의 번호).
-- 굵기·색·질감은 `<style>`과 `<filter>`로 준다. 본보기: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/profiles/sprite-system.svg`(획), 같은 폴더의 `dojang.svg`(인주 필터), `pixel.svg`(도트).
+- 굵기·색·질감은 `<style>`과 `<filter>`로 준다. 본보기: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/profiles/sprite-system.svg`(획), 같은 폴더의 `dojang.svg`(인주 필터), `pixel.svg`(도트).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="sprite-system"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sprite-system"></script>
 <style>
   .kku-brush { --fy-sprite-url: url("./kku-brush.svg"); --fy-sprite-filter: none; }
 </style>
@@ -194,7 +194,7 @@
 그린 글꼴을 워드·디자인 도구에서 쓰는 보통 글꼴 파일(TTF)로 내려받게 할 수 있다. 페이지가 http(s)로 열려 있어야 한다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku-export.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku-export.js"></script>
 <button id="get-font">글꼴 파일 받기</button>
 <script>
   document.getElementById("get-font").onclick = async () => {

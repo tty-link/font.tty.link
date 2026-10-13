@@ -11,7 +11,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>가을 신메뉴</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js" data-fonts="neon sticker"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="neon sticker"></script>
   <style>
     body { margin: 0; font-family: system-ui, sans-serif; background: #fff7ed; color: #1f2937; }
     header { background: #12121c; padding: 48px 24px; text-align: center; }
@@ -34,13 +34,15 @@
 
 ## 사례 템플릿
 
-폰꾸로 만든 완성 페이지다. 주소를 열어 HTML 소스를 본보기로 읽는다. 모두 `https://font.tty.link/examples/` 아래에 있고, 같은 결과를 내는 프롬프트는 `https://font.tty.link/examples/index.json`의 `prompt`에 있다. 목록 화면은 `https://font.tty.link/showcase.html`.
+폰꾸로 만든 완성 페이지다. 주소를 열어 HTML 소스를 본보기로 읽는다. 모두 `https://font.tty.link/examples/` 아래에 있고, 목록은 `https://font.tty.link/examples/index.json`이다. 항목마다 `kind`(쓰임)·`features`(움직임·입력하면 다시 그림·인쇄용 등)가 있고, `prompt`는 그 페이지의 모습을 글로 적은 요청이다(그 글로 받은 답이 아니다). `made` 기록이 붙은 항목(집들이 쪽지·빵집 칠판)은 `made.prompt`의 요청 글 하나로 AI에게 받은 첫 답을 고치지 않고 실은 것이다. 목록 화면은 `https://font.tty.link/showcase.html` — 그대로 쓰기, 글씨를 8칸 세트로 갈아 끼우는 고쳐 쓰기, 요청 글을 만드는 새로 만들기가 있다.
 
 | 파일 | 무엇 | 쓴 글꼴 | 볼거리 |
 |---|---|---|---|
+| `house-warming-note.html` | 집들이 쪽지 (AI 첫 답) | 세벌 고정 + AI가 그린 8칸 · `gothic` | 요청 글 하나로 받은 페이지, 제목 글꼴도 AI가 8칸으로 그림, 씨앗 변주 |
+| `bakery-board.html` | 빵집 칠판 (AI 첫 답) | `chalk` `pilgi` | 요청 글 하나로 받은 페이지, 자모 조립 제목, 입력한 한마디를 다시 그리기 |
 | `wedding-invitation.html` | 모바일 청첩장 | `geumbak` `malang` | 이름이 금박 자모로 날아와 조립, 달력·약도·계좌 복사 |
 | `neon-sign.html` | 네온 간판 | `neon` | 받침 ㅂ 관 하나만 고장 나 깜빡임, 간판 스위치 |
-| `rpg-dialogue.html` | RPG 대화창 | `pixel` | 대사를 두벌식 타자처럼 자모 단위로, 한글 글꼴 없는 기기에서도 같은 도트 |
+| `rpg-dialogue.html` | RPG 대화창 | `pixel` | 대사를 두벌식 타자처럼 자모 단위로, 자소판의 자모 칸만 바꾸면 대사 전체가 내 게임 그림체로 |
 | `variety-caption.html` | 예능 자막 | `sticker` `saekdong` `retro` | 튀는 스티커 자막, 받침만 늦게 떨어지기, 떨리는 효과음 |
 | `picture-diary.html` | 그림일기 | `crayon` `dojang` | 원고지 칸마다 크레용 글자, 초성·중성·받침 색 따로 |
 | `dev-meetup-poster.html` | 해커톤 포스터 | `glitch` `blueprint` | 자모마다 갈라지는 글리치 제목, 자모 조립을 짚는 도면 |
@@ -53,4 +55,4 @@
 | `game-notice.html` | 게임 공지 | `pixel` `retro` | 도트 창 테두리 공지, 레트로 강조 띠 |
 | `certificate.html` | 칭찬 상장 | `gothic` `dojang` | A4 상장, '참 잘했어요' 도장 |
 
-템플릿 소스는 저장소 안에서 런타임을 상대 경로로 부를 수 있다. 가져다 쓸 때는 런타임 `<script>`를 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js`로 바꾼다.
+템플릿 소스는 저장소 안에서 런타임을 상대 경로로 부를 수 있다. 가져다 쓸 때는 런타임 `<script>`를 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js`로 바꾼다.

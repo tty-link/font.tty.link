@@ -1,5 +1,12 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — 칭찬 상장. 글꼴: gothic dojang. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — 칭찬 상장 (글꼴 gothic · dojang)
+  고쳐 쓰기
+  - 글: 상장 번호·이름·학교·칭찬하는 까닭·날짜·주는 사람은 본문 글을 바꿉니다. 도장 글은 <font-kku> 안의 글입니다.
+  - 굵기: 제목 획 굵기는 .cert-title의 --fy-element-width입니다.
+  - 색: 맨 위 :root의 변수를 바꿉니다. --gold는 테두리, --seal은 도장, --paper는 종이 색입니다.
+  - 글꼴: font="dojang"(class="font-kku" 태그는 data-font="gothic")의 글꼴 이름을 바꿉니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 font="sebul" jamo-set="my-hand"(class="font-kku" 태그는 data-font="sebul" data-jamo-set="my-hand")로 씁니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -65,9 +72,10 @@
     .serial { margin: 0; font-size: 14px; color: var(--muted); letter-spacing: 0.08em; }
 
     .cert-head { margin-top: 36px; text-align: center; }
-    /* 제목: 폰꾸 고딕, 글자 사이를 띄워 격식 있게 */
-    .cert-title { margin: 0; color: var(--ink); --fy-weight: 800; }
-    .cert-title [part~="jamo"] { text-shadow: 0 1px 0 rgb(255 255 255 / 70%); }
+    /* 제목: 폰꾸 고딕을 굵게 — 고딕은 원소 획이라 굵기는 --fy-element-width(획 굵기)로,
+     * 종이에 눌린 듯한 밝은 줄은 글자의 drop-shadow로 준다. 글자 사이를 띄워 격식 있게 */
+    .cert-title { margin: 0; color: var(--ink); --fy-element-width: 0.11em; }
+    .cert-title [part="glyph"] { filter: drop-shadow(0 1px 0 rgb(255 255 255 / 70%)); }
 
     .rule {
       display: flex;

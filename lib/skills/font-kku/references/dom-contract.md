@@ -65,8 +65,8 @@
 - `data-fy-sprite-paint="mask"` — sprite font의 바탕 요소에 `--fy-sprite-paint: mask`가 걸렸을 때(ADR-014). 부분 벡터 세트에서는 누락 칸의 자소판 마스크에 적용된다. 코어 마스크 규칙의 게이트다
 - `data-fy-material="vector"`, `data-fy-jamo-set="<name>"` — sprite font에 `jamo-set`이 걸리고 그 자모 세트가 등록돼 있을 때(ADR-013). 실제 SVG가 있는 노드에만 `data-fy-vector-cell`이 붙고 벡터 규칙이 적용된다. 없는 칸은 기반 자소판을 유지한다. 등록된 칸의 노드마다 `<svg part="vector" data-cell="r<행>-<자모>" viewBox="0 0 100 100" aria-hidden="true">`가 붙는다
 - `data-fy-glow="filter"` — 기기 글꼴 바탕 요소에 빛 칠(`--fy-font-glow`/페이지 `--fy-glow`, `none`이 아닌 drop-shadow 목록)이 걸렸을 때([ADR-021](../../../docs/ADR/ADR-021-glow-paint.md)). 코어가 자모 글자를 `::before`로 그리고 slot clip을 거기에 옮기며, 자모 노드는 글자를 숨기고 `filter`로 빛만 그린다. `::before`는 `--fy-ink-visibility`(기본 visible)를 따르므로, 이때 자모 하나를 숨기려면 `opacity`를 쓴다
-- `data-fy-face="element|device|svg"` — 세벌·고딕 계열(기기 글꼴 재료) 바탕 요소의 글꼴이 표준 잉크 상자(`--fy-font-ink-boxes: standard`, 페이지 `--fy-ink-boxes`)를 밝혔을 때 자모를 무엇으로 그리는지([ADR-024](../../../docs/ADR/ADR-024-hangul-principle-rendering.md)). 글꼴 `--fy-font-face`(sebul·gothic·malang은 `element`, 칠만 다른 꾸러미는 `device`), 페이지 `--fy-face`가 이긴다. `fontInfo(host).face`도 같은 값이다. 어느 값이든 자모 노드는 표준 전진폭 `--fy-face-width`를 갖고 노드 자기 글자는 `text-indent`로 밀어 둔다. 아래 표현은 모두 `spec/html-cases.json` 직렬화 밖의 런타임 표현층이다(생성기가 `[part="hoek"]` 아래를 건너뛴다). 네 언어 정적 렌더러는 글꼴을 밝히지 않은 호출에서 `element` 표면(host 값, 도장 노드의 `--fy-face-width`와 획, 낱자)을 런타임 문자열 그대로 낸다 — [ADR-027](../../../docs/ADR/ADR-027-static-element-face.md), 정답 `spec/element-layer.json`, `face="device"`면 뺀다.
-  - `element`(원소, 기본): 자모 노드 안에 획마다 `<span part="hoek">`(획 깊이와 같은 `data-hoek*`), 마디마다 `<span part="element" data-element="line|ring">`(inline `--fy-el-*`). slot clip은 획 묶음이 받는다. 굵기 `--fy-element-width`·끝 `--fy-element-cap`(`round|butt`면 바탕 요소에 `data-fy-element-cap`)·속 빈 칠 `--fy-element-outline`·`--fy-element-fill`.
+- `data-fy-face="element|device|svg"` — 세벌·고딕 계열(기기 글꼴 재료) 바탕 요소의 글꼴이 표준 잉크 상자(`--fy-font-ink-boxes: standard`, 페이지 `--fy-ink-boxes`)를 밝혔을 때 자모를 무엇으로 그리는지([ADR-024](../../../docs/ADR/ADR-024-hangul-principle-rendering.md)). 글꼴 `--fy-font-face`(sebul·gothic·malang은 `element`, 칠만 다른 꾸러미는 `device`), 페이지 `--fy-face`가 이긴다. `fontInfo(host).face`도 같은 값이다. 어느 값이든 자모 노드는 표준 전진폭 `--fy-face-width`를 갖고 노드 자기 글자는 제자리에서 `::first-letter`의 글자 크기 0으로 숨긴다(밀어 두면 돌린 자모가 스크롤 영역을 늘렸다). 아래 표현은 모두 `spec/html-cases.json` 직렬화 밖의 런타임 표현층이다(생성기가 `[part="hoek"]` 아래를 건너뛴다). 네 언어 정적 렌더러는 글꼴을 밝히지 않은 호출에서 `element` 표면(host 값, 도장 노드의 `--fy-face-width`와 획, 낱자)을 런타임 문자열 그대로 낸다 — [ADR-027](../../../docs/ADR/ADR-027-static-element-face.md), 정답 `spec/element-layer.json`, `face="device"`면 뺀다.
+  - `element`(원소, 기본): 자모 노드 안에 획마다 `<span part="hoek">`(획 깊이와 같은 `data-hoek*`), 마디마다 `<span part="element" data-element="line|ring">`(inline `--fy-el-*`). slot clip은 획 묶음이 받는다. 굵기 `--fy-element-width`·끝 `--fy-element-cap`(`round|butt`면 바탕 요소에 `data-fy-element-cap`)·속 빈 칠 `--fy-element-outline`·`--fy-element-fill`(그림 세트의 획·칠 색도)·자모 노드의 획 굵기 배수 `--fy-element-weight`(기본 1, 변주 굵기).
   - `device`(기기 글꼴, ADR-023): 자모 노드마다 `--fy-face-glyph`·`--fy-face-size`·`--fy-face-x`·`--fy-face-y`·`--fy-face-scale-x`·`--fy-face-scale-y`가 inline으로 붙고 코어가 글자를 `::before`로 그린다. 캔버스를 읽을 수 없으면 값이 없고 조합용 자모를 그대로 그린다.
   - `svg`(그림 세트): 바탕 요소의 `jamo-set`이 칸 계약 세트(`frame: "box"`)일 때. 획 묶음에 쓴 그림 키 `data-hoek-drawing`과 그림 상자 `<span part="element" data-element="box">`, 원소 그림을 쓴 마디에는 `data-element-drawing`이 붙고 그 안에 `<svg part="vector">`가 든다(원소 그림 `@line`·`@dot`·`@ring`, 그 종류가 없으면 세트의 원형 그림 `ㅡ`·`ㆍ`·`ㅇ` — 없으면 속성 없는 CSS 상자). 일부만 그린 셈 치기(미리보기)는 디자인 소스의 `cells`다(ADR-025 — 깊이 고정 변수는 공개 전에 없앴다).
   - 머리 음절(ADR-024 §2): `element`·`svg`에서 `syllable` 깊이의 head 노드는 획 묶음이 둘이고 각 `[part="hoek"]`에 `data-fy-head-part="initial|medial"`(안쪽 초성·모음)이 붙는다. 런타임이 그린 뒤 그 글꼴의 받침 없는 음절(고·구·그)의 초성 t·중성 m 자리를 재서 두 묶음을 그 비례로 옮긴다(`--fy-el-*`) — 재는 동안 관리 root 안에 `data-fy-probe` 음절을 잠깐 넣었다 뺀다(같은 동기 구간, 남지 않는다). 스타일만 바뀐 재해석(`restyle`)에서도 다시 잰다. `spec/html-cases.json` 직렬화 밖이다.
@@ -86,9 +86,22 @@ decorator의 `data-font`/`data-profile`/`data-size`/`data-spacing`/`data-wrap-un
 접근성 메모:
 
 - 관리 root(`part="root"`, `data-fy-root="true"`)에는 `aria-hidden="true"`가 붙어 분해 자소 DOM이 보조기기에서 숨겨진다.
-- root의 형제 `part="sr-source"`(`data-fy-sr="true"`) 노드가 원문 텍스트를 담는 1차 스크린리더/복사 표면이다 (시각적으로만 숨김). 관리 root(`part="root"`)는 `user-select: none`이라 바탕 요소를 골라 복사하면 원문만 나온다 — 자모로 쪼갠 노드 글자가 섞이지 않는다(ADR-025 §12). 대신 선택 강조가 그림 위에 보이지 않는다.
+- root의 형제 `part="sr-source"`(`data-fy-sr="true"`) 노드가 원문 텍스트를 담는 스크린리더 표면이다(시각적으로만 숨김). 런타임 없는 정적 HTML에서는 복사 표면이기도 하다 — 관리 root가 코어 CSS의 `user-select: none`이라 골라 복사하면 원문만 나온다(강조는 없다).
+- 선택·복사(ADR-003 보강 2026-10-13, ADR-025 §12): 런타임이 그린 root에는 `data-fy-select="jamo"`가 붙어 자모 단위로 고른다(코어 CSS `user-select: inherit` — 페이지가 조상에 준 `none`을 지킨다, 원문 거울은 `none`, 브라우저 자체 `::selection`은 투명 — 노드 글자가 화면 밖이라 보이지 않거나 자모 상자끼리 겹친다). 런타임은 문서마다 `selectionchange`·`copy`·`cut` 듣개를 한 번 걸고(렌더 때, 그림자 트리 안 바탕 요소도 문서 듣개가 `getComposedRanges`로 본다), 프레임마다 고른 것을 `data-fy-selected`로 비춘다:
+  - root `data-fy-selected="all"` — 바탕 요소 통째. 모든 글자 칸 띠와 빈칸 띠
+  - 글자 노드 `"all"` — 음절(낱글자) 통째, 글자 칸 띠(`::before`, 전진폭 = 칸 너비 + `--fy-glyph-gap`이라 이웃 띠와 겹치지 않는다)
+  - 글자 노드 `"part"` + 고른 자모 노드마다 `""` — 자모 일부만 고른 음절, 고른 자모 상자(`::after`, 노드 뒤 `z-index: -1`, 빛 칠이 노드를 숨겨도 `--fy-ink-visibility`로 보인다)
+  - 빈칸 노드 `""` — 통째로 담긴 빈칸, 같은 높이 띠
+  - 색은 페이지 변수 `--fy-selection`(기본 `rgb(from Highlight r g b / min(alpha, 0.6))` — 시스템 선택 색, 불투명도 0.6까지). 자모 노드에 선택 끝이 닿으면(획 위를 끌면 끝이 획 노드 안에 놓인다) 그 자모를 고른 것으로 친다. 낱글자(기기 글꼴 글자)는 글자 위치로, 줄바꿈은 두 줄에 걸칠 때
+  - 끌기가 맞히는 것은 자모 노드 상자다 — 고를 수 있는 root 안에서 기기 글꼴 맞춤의 `::before`·잎(글자 em 상자, 자모 상자보다 훨씬 크다)은 `pointer-events: none`, 빛 칠로 숨긴 노드는 빈 `::after`가 노드 상자를 맞는다(고른 자모 상자 `::after`도 포인터를 받는다 — 막으면 고른 순간 맞는 자리가 사라져 끝 옮기기가 브라우저 끌기와 엇갈린다). 끝 옮기기는 실제로 끈 때만(3px 넘게 움직임) 하고, 놓은 다음 프레임에 한 번 더 한다. 숨긴(visibility) 노드 안에는 브라우저가 선택 끝을 두지 못해 다음 빈칸으로 건너뛰므로, 마우스로 끄는 동안(`pointerdown`~`pointerup`) 런타임이 프레임마다 끝을 포인터 아래 자모 노드로 옮긴다(`selection.extend`, 이미 그 자모 안이면 그대로)
+  - 복사·잘라내기(편집 가능한 곳)는 같은 대응으로 클립보드에 원문을 넣는다 — 자모 일부만 고른 음절은 음절 통째, 빈칸·줄바꿈(`\r\n`·`\r`)은 원문 그대로, 음절은 NFC, 바탕 요소 밖 글은 브라우저 직렬화. 복사하는 동기 한 순간에만 root가 `data-fy-select="copy"`(`display: none`)이고 원문 거울을 골라 브라우저가 직렬화한다. `text/html`은 바탕 요소마다 고른 원문 한 줄(`data-fy-*`·`data-source`·`<font-kku>`의 `data-*` 거울·런타임 인라인 변수를 지운 껍데기, 빈칸·줄바꿈이 있으면 `white-space: pre-wrap`). 잘라내기는 일부만 고른 바탕 요소를 남은 원문으로 다시 그리고 나머지는 `execCommand("delete")`로 지운다
+  - 같은 대응을 `FontKku.sourceRange(host, range)` → `{ start, end, text }`(원문 위치, NFC 글)가 돌려준다
+  - 바탕 요소 자신의 `::selection`도 투명하다(코어 CSS, root가 `data-fy-select`일 때 — WebKit은 그것으로 그림 둘레 줄 틈을 칠해 띠가 두 겹이 된다)
+  - 같은 원문을 다시 그리면(`refresh`, 글꼴·세트가 늦게 와 다시 그림) 옛 root 안에 있던 선택 끝을 새 root의 같은 자리(자식 차례 길)로 옮긴다. 원문이 바뀌는 다시 그리기(글 바꿈·잘라내기)는 옮기지 않는다
+  - 그림 위를 두 번 누르면 그 낱말(`[part="word"]`), 세 번 누르면 문단 — `<font-kku>`는 그것을 담은 블록(코어 CSS가 바탕 요소를 `inline-block`으로 두므로 그 위 첫 블록), 꾸밈 방식은 그 바탕 요소 — 을 고른다 — 노드마다 글자가 따로라 브라우저는 자모 하나만(WebKit은 아무것도) 고른다. 페이지가 `mousedown`을 막으면(`preventDefault`, 문서 거품에서 본다) 끝 옮기기와 두세 번 누르기 고르기를 하지 않고, `button` 안과 `user-select: none` 조상 아래는 고르지 않는다. `user-select: none` 조상 아래 바탕 요소는 전체 선택이 품어도 강조·복사(`text/plain`)에서 빠진다(브라우저와 같다)
+  - `data-fy-select`·`data-fy-selected`는 `spec/html-cases.json` 직렬화 밖이다(정적 렌더러는 쓰지 않는다 — 정적 HTML은 원문만 복사된다)
 - 런타임과 정적 렌더러는 바탕 요소에 `aria-label`도 `role`도 쓰지 않는다(ADR-003 보강, 2026-10-12). 버튼·링크·제목의 이름은 sr-source 텍스트에서 계산되고, 작성자가 붙인 `aria-label`·`role`은 그대로 둔다. 정적 렌더러 0.1.0·예전 런타임이 붙인 호환 라벨(`aria-label` = `data-source`, `role` 없음)은 넘겨받을 때 지운다. `data-source`는 원문 기록으로 남는다(보조 기술은 읽지 않는다).
-- sr-source는 `white-space: pre`라 줄바꿈·연속 공백·탭이 복사와 읽기에 그대로 남는다.
+- sr-source는 `white-space: pre`라 줄바꿈·연속 공백·탭이 읽기(와 정적 HTML의 복사)에 그대로 남는다.
 - state 없는 관리 DOM(clone 등)의 원문 복구는 `data-source` → `sr-source` → `textContent` 순으로 폴백한다.
 - SEO/검색 보장은 별도 주장으로 확대하지 않는다.
 
@@ -484,6 +497,7 @@ font CSS가 하지 않는 것: 코어 소유 속성(`margin`, `inset`, `transfor
 - `FontKku.hashSeed(value)`
 - `FontKku.applyJamoSeeds(host, options)`
 - `FontKku.hasHangulFont(options?)` — 기기 글꼴이 완성형 음절과 첫가끝 자모를 그릴 수 있는지(`true`/`false`, 판단 불가면 `null`). 캔버스 글자 상자 비교, 픽셀을 읽지 않고 font-family별 캐시(ADR-012)
+- `FontKku.sourceRange(host, range)` — 범위(`Range`·`StaticRange`)가 바탕 요소에서 고른 원문 `{ start, end, text }`(원문 위치, NFC 글) 또는 `null`. 복사·잘라내기가 쓰는 대응과 같다(§2.3 접근성 메모의 선택·복사)
 - `FontKku.placementTable` (9-key placement table의 frozen defensive copy)
 - `FontKku.version`
 

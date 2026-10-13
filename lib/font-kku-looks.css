@@ -55,10 +55,23 @@
     filter: drop-shadow(0 0 0.05em #ff4fd8) drop-shadow(0 0 0.16em #ff2fb0);
   }
   :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) {
-    --fy-font-element-outline: 0.03em;
+    --fy-font-element-outline: 0px;
+    --fy-element-width: calc(var(--fy-font-element-width, 0.1em) - 2 * 0.016em);
   }
   :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
-    --fy-font-element-fill: transparent;
+    --fy-font-element-fill: color-mix(in srgb, currentColor 25%, #fff);
+    --fy-font-glow: drop-shadow(0.016em 0 0 currentColor) drop-shadow(calc(-1 * 0.016em) 0 0 currentColor) drop-shadow(0 0.016em 0 currentColor) drop-shadow(0 calc(-1 * 0.016em) 0 currentColor) drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.16em color-mix(in srgb, currentColor 70%, transparent));
+  }
+  :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) [part="content"][data-fy-standalone] {
+    --fy-font-element-fill: color-mix(in srgb, currentColor 25%, #fff);
+    filter: drop-shadow(0.016em 0 0 currentColor) drop-shadow(calc(-1 * 0.016em) 0 0 currentColor) drop-shadow(0 0.016em 0 currentColor) drop-shadow(0 calc(-1 * 0.016em) 0 currentColor);
+  }
+  :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
+    filter: none;
+  }
+  :where(.kku-look-neon[data-fy-layout-model="fixed-three"]:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
+    --kku-look-stroke: 0.03em;
+    --fy-stroke: var(--kku-look-stroke);
   }
 
   /* 꾸밈 sticker — 스티커: 자모마다 흰 테두리와 뜬 그림자 — 오려 붙인 다꾸 스티커. 원본: profiles/sticker.css 꾸밈 구간. */
@@ -122,6 +135,12 @@
   }
   :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(0.035em 0 0 #fff) drop-shadow(-0.035em 0 0 #fff) drop-shadow(0 0.035em 0 #fff) drop-shadow(0 -0.035em 0 #fff) drop-shadow(0.03em 0.05em 0.02em rgb(60 20 40 / 35%));
+  }
+  :where(.kku-look-sticker:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
+    --fy-font-glow: drop-shadow(0.045em 0 0 #fff) drop-shadow(-0.045em 0 0 #fff) drop-shadow(0 0.045em 0 #fff) drop-shadow(0 -0.045em 0 #fff);
+  }
+  :where(.kku-look-sticker:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
+    filter: drop-shadow(0.03em 0.05em 0.02em rgb(60 20 40 / 35%));
   }
 
   /* 꾸밈 geumbak — 금박: 결이 다른 금빛 면에 짙은 테두리와 눌린 그림자. 원본: profiles/geumbak.css 꾸밈 구간. */
@@ -205,6 +224,18 @@
   }
   :where(.kku-look-glitch:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(-0.03em 0 0 rgb(0 236 255 / 85%)) drop-shadow(0.03em 0 0 rgb(255 0 170 / 85%));
+  }
+  :where(.kku-look-glitch:is([data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="head"]) {
+    --fy-font-glow: drop-shadow(calc(-0.04em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 0 rgb(0 236 255 / 0.9)) drop-shadow(calc(0.03em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 0 rgb(255 0 170 / 0.9));
+  }
+  :where(.kku-look-glitch:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
+    --fy-font-glow: drop-shadow(0 calc(-0.035em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 rgb(0 236 255 / 0.9)) drop-shadow(0 calc(0.03em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 rgb(255 0 170 / 0.9));
+  }
+  :where(.kku-look-glitch:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
+    --fy-font-glow: drop-shadow(calc(0.035em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) -0.025em 0 rgb(0 236 255 / 0.9)) drop-shadow(calc(-0.03em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0.025em 0 rgb(255 0 170 / 0.9));
+  }
+  :where(.kku-look-glitch:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
+    filter: none;
   }
 
   /* 꾸밈 retro — 레트로: 노란 면, 남색 외곽선, 분홍·남색 두 단 입체 그림자. 원본: profiles/retro.css 꾸밈 구간. */
@@ -329,6 +360,19 @@
   :where(.kku-look-riso:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
     filter: drop-shadow(0.024em -0.018em 0 rgb(0 120 191 / 42%));
   }
+  :where(.kku-look-riso:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
+    color: rgb(255 72 176);
+    opacity: 0.88;
+    --fy-font-glow: drop-shadow(0.024em -0.018em 0 rgb(0 120 191 / 0.42));
+  }
+  :where(.kku-look-riso:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
+    color: rgb(0 120 191);
+    opacity: 0.86;
+    --fy-font-glow: drop-shadow(-0.024em 0.018em 0 rgb(255 72 176 / 0.48));
+  }
+  :where(.kku-look-riso:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
+    filter: none;
+  }
 
   /* 꾸밈 blueprint — 도면: 옅게 비치는 선 글자. 자모 역할마다 선 색이 다르다. 원본: profiles/blueprint.css 꾸밈 구간. */
   :where(.kku-look-blueprint) {
@@ -376,16 +420,23 @@
     color: #ffd666;
   }
   :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) {
-    --fy-font-element-outline: 0.018em;
+    --fy-font-element-outline: 0px;
+    --fy-element-width: calc(var(--fy-font-element-width, 0.1em) - 2 * 0.014em);
   }
   :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
-    --fy-font-element-fill: rgb(242 248 255 / 0.2);
+    --fy-font-element-fill: color-mix(in srgb, currentColor 20%, #0f3d7a);
+    --fy-font-glow: drop-shadow(0.014em 0 0 currentColor) drop-shadow(calc(-1 * 0.014em) 0 0 currentColor) drop-shadow(0 0.014em 0 currentColor) drop-shadow(0 calc(-1 * 0.014em) 0 currentColor);
   }
-  :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jungseong"] {
-    --fy-font-element-fill: rgb(125 211 252 / 0.22);
+  :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part="content"][data-fy-standalone] {
+    --fy-font-element-fill: color-mix(in srgb, currentColor 20%, #0f3d7a);
+    filter: drop-shadow(0.014em 0 0 currentColor) drop-shadow(calc(-1 * 0.014em) 0 0 currentColor) drop-shadow(0 0.014em 0 currentColor) drop-shadow(0 calc(-1 * 0.014em) 0 currentColor);
   }
-  :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jongseong"] {
-    --fy-font-element-fill: rgb(255 214 102 / 0.22);
+  :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
+    filter: none;
+  }
+  :where(.kku-look-blueprint[data-fy-layout-model="fixed-three"]:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
+    --kku-look-stroke: 0.018em;
+    --fy-stroke: var(--kku-look-stroke);
   }
 
   /* 꾸밈 outline — 외곽선: 고른 굵기의 선으로 속을 비운 글자 — 속은 글자색이 옅게 비친다. 원본: spec/themes.json paint. */
@@ -420,10 +471,23 @@
     color: #1d1b26;
   }
   :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) {
-    --fy-font-element-outline: 0.04em;
+    --fy-font-element-outline: 0px;
+    --fy-element-width: calc(var(--fy-font-element-width, 0.1em) - 2 * 0.02em);
   }
   :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
-    --fy-font-element-fill: rgb(29 27 38 / 7%);
+    --fy-font-element-fill: color-mix(in srgb, currentColor 7%, #fff);
+    --fy-font-glow: drop-shadow(0.02em 0 0 currentColor) drop-shadow(calc(-1 * 0.02em) 0 0 currentColor) drop-shadow(0 0.02em 0 currentColor) drop-shadow(0 calc(-1 * 0.02em) 0 currentColor);
+  }
+  :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) [part="content"][data-fy-standalone] {
+    --fy-font-element-fill: color-mix(in srgb, currentColor 7%, #fff);
+    filter: drop-shadow(0.02em 0 0 currentColor) drop-shadow(calc(-1 * 0.02em) 0 0 currentColor) drop-shadow(0 0.02em 0 currentColor) drop-shadow(0 calc(-1 * 0.02em) 0 currentColor);
+  }
+  :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
+    filter: none;
+  }
+  :where(.kku-look-outline[data-fy-layout-model="fixed-three"]:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
+    --kku-look-stroke: 0.04em;
+    --fy-stroke: var(--kku-look-stroke);
   }
 
   /* 꾸밈 pastel — 파스텔: 초성 분홍 · 중성 하늘 · 받침 연두의 부드러운 색과 옅은 그림자. 원본: spec/themes.json paint. */
@@ -559,6 +623,10 @@
   :where(.kku-vary-weight[data-fy-jamo-seeds="true"]:not([data-fy-material])) [data-jamo] {
     --fy-stroke: max(0em, calc(var(--kku-look-stroke, var(--fy-slot-stroke, var(--fy-role-stroke, var(--fy-font-stroke, 0em)))) + (var(--fy-jamo-seed, 0.5) - 0.3) * 0.03em));
   }
+  /* 원소·그림 재료는 글자 외곽선이 없어 획 굵기 배수(--fy-element-weight, 0.91–1.21배)로 같은 폭을 낸다. */
+  :where(.kku-vary-weight[data-fy-jamo-seeds="true"]:is([data-fy-face="element"], [data-fy-face="svg"])) [data-jamo] {
+    --fy-element-weight: calc(1 + (var(--fy-jamo-seed, 0.5) - 0.3) * 0.3);
+  }
 
   /* 너비 — 초성(완성형 head 포함)과 받침(겹받침은 왼쪽 조각)이 씨앗만큼 좁아진다(0–10%). 자모 상자의
    * 왼쪽을 기준으로 줄어 오른쪽 모음·받침 조각에서 멀어진다. 페이지 레벨 배율 보정(--fy-scale-x)이라
@@ -567,10 +635,12 @@
     --fy-scale-x: calc(1 - var(--fy-jamo-seed, 0.5) * 0.1);
   }
 
-  /* 색조 — 자모마다 색조가 씨앗만큼 돈다(±45°). 그림 자소는 코어가 자모 노드의 filter를 쓰므로 페이지 전용
-   * --fy-sprite-filter로 준다(자소판의 획 보정 filter를 대신한다). 검정·흰색은 돌지 않는다. */
+  /* 색조 — 자모마다 색조가 씨앗만큼 돈다(±45°). 코어가 자모 노드의 filter를 빛 칠(--fy-glow, 없으면 --fy-font-glow)로
+   * 정해 꾸밈 레이어의 filter는 닿지 않는다(0.1.0부터 기기 글꼴·원소 재료에서 돌지 않았다) — 그 노드의 --fy-glow를 색조 +
+   * 글꼴·꾸밈의 빛으로 준다. 그림 자소는 페이지 전용 --fy-sprite-filter로 준다(자소판의 획 보정 filter를 대신한다).
+   * 검정·흰색은 돌지 않는다. */
   :where(.kku-vary-hue[data-fy-jamo-seeds="true"]:not([data-fy-material])) [part~="jamo"] {
-    filter: hue-rotate(calc((var(--fy-jamo-seed, 0.5) - 0.5) * 90deg));
+    --fy-glow: hue-rotate(calc((var(--fy-jamo-seed, 0.5) - 0.5) * 90deg)) var(--fy-font-glow, );
   }
   :where(.kku-vary-hue[data-fy-jamo-seeds="true"][data-fy-material]) [part~="jamo"] {
     --fy-sprite-filter: hue-rotate(calc((var(--fy-jamo-seed, 0.5) - 0.5) * 90deg));

@@ -7448,13 +7448,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -7480,13 +7480,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -7619,13 +7619,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -7665,13 +7665,13 @@
           "styles": {
             "--fy-jamo-index": "8",
             "--fy-sprite-jamo-index": "8",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "18.4217%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.657",
+            "--fy-stamp-left": "3.9965%",
+            "--fy-stamp-top": "36.0498%",
+            "--fy-stamp-size": "0.4551em",
+            "--fy-stamp-scale-x": "1.1126",
+            "--fy-stamp-scale-y": "0.8989",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.09em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅩ"
@@ -7697,13 +7697,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -7836,13 +7836,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -7882,13 +7882,13 @@
           "styles": {
             "--fy-jamo-index": "8",
             "--fy-sprite-jamo-index": "8",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "18.4217%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.657",
+            "--fy-stamp-left": "3.9965%",
+            "--fy-stamp-top": "36.0498%",
+            "--fy-stamp-size": "0.4551em",
+            "--fy-stamp-scale-x": "1.1126",
+            "--fy-stamp-scale-y": "0.8989",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.09em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅩ"
@@ -7914,13 +7914,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -7946,13 +7946,13 @@
           "styles": {
             "--fy-jamo-index": "21",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "9.3994%",
-            "--fy-stamp-top": "46.5859%",
-            "--fy-stamp-size": "1.022em",
-            "--fy-stamp-scale-x": "0.8748",
-            "--fy-stamp-scale-y": "0.7463",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0406em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆼ"
@@ -8086,13 +8086,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -8118,13 +8118,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -8150,14 +8150,14 @@
           "styles": {
             "--fy-jamo-index": "18",
             "--fy-sprite-jamo-index": "10",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "44.6223%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
-            "--fy-stamp-density": "0.9526"
+            "--fy-stamp-stroke": "0.0143em",
+            "--fy-stamp-density": "0.8204"
           },
           "text": "ᆹ"
         },
@@ -8289,14 +8289,14 @@
           "styles": {
             "--fy-jamo-index": "18",
             "--fy-sprite-jamo-index": "18",
-            "--fy-stamp-left": "2.9989%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "0.904",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.7906"
+            "--fy-stamp-stroke": "0.0419em",
+            "--fy-stamp-density": "0.9324"
           },
           "text": "ᄒ"
         },
@@ -8321,13 +8321,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -8353,13 +8353,13 @@
           "styles": {
             "--fy-jamo-index": "4",
             "--fy-sprite-jamo-index": "2",
-            "--fy-stamp-left": "-0.6266%",
-            "--fy-stamp-top": "45.0284%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.7533",
-            "--fy-stamp-scale-y": "0.7458",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0411em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆫ"
@@ -8421,13 +8421,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -8453,13 +8453,13 @@
           "styles": {
             "--fy-jamo-index": "18",
             "--fy-sprite-jamo-index": "18",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "3.0444%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "1.0004",
+            "--fy-stamp-left": "2.2846%",
+            "--fy-stamp-top": "-8.8171%",
+            "--fy-stamp-size": "1.1331em",
+            "--fy-stamp-scale-x": "0.7932",
+            "--fy-stamp-scale-y": "1.0086",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅳ"
@@ -8485,14 +8485,14 @@
           "styles": {
             "--fy-jamo-index": "8",
             "--fy-sprite-jamo-index": "5",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "46.9716%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.8194"
+            "--fy-stamp-stroke": "0.0113em",
+            "--fy-stamp-density": "0.7812"
           },
           "text": "ᆯ"
         },
@@ -8710,13 +8710,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -8742,13 +8742,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -8810,13 +8810,13 @@
           "styles": {
             "--fy-jamo-index": "1",
             "--fy-sprite-jamo-index": "1",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄁ"
@@ -8842,13 +8842,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -8910,13 +8910,13 @@
           "styles": {
             "--fy-jamo-index": "2",
             "--fy-sprite-jamo-index": "2",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄂ"
@@ -8942,13 +8942,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9010,13 +9010,13 @@
           "styles": {
             "--fy-jamo-index": "3",
             "--fy-sprite-jamo-index": "3",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0529em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄃ"
@@ -9042,13 +9042,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9110,13 +9110,13 @@
           "styles": {
             "--fy-jamo-index": "4",
             "--fy-sprite-jamo-index": "4",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0529em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄄ"
@@ -9142,13 +9142,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9210,14 +9210,14 @@
           "styles": {
             "--fy-jamo-index": "5",
             "--fy-sprite-jamo-index": "5",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.7739"
+            "--fy-stamp-stroke": "0.0479em",
+            "--fy-stamp-density": "0.9687"
           },
           "text": "ᄅ"
         },
@@ -9242,13 +9242,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9310,13 +9310,13 @@
           "styles": {
             "--fy-jamo-index": "6",
             "--fy-sprite-jamo-index": "6",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0529em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄆ"
@@ -9342,13 +9342,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9410,14 +9410,14 @@
           "styles": {
             "--fy-jamo-index": "7",
             "--fy-sprite-jamo-index": "7",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.8118"
+            "--fy-stamp-stroke": "0.0527em",
+            "--fy-stamp-density": "1"
           },
           "text": "ᄇ"
         },
@@ -9442,13 +9442,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9510,13 +9510,13 @@
           "styles": {
             "--fy-jamo-index": "8",
             "--fy-sprite-jamo-index": "8",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0162em",
             "--fy-stamp-density": "0.75"
           },
           "text": "ᄈ"
@@ -9542,13 +9542,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9610,13 +9610,13 @@
           "styles": {
             "--fy-jamo-index": "9",
             "--fy-sprite-jamo-index": "9",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0525em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄉ"
@@ -9642,13 +9642,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9710,13 +9710,13 @@
           "styles": {
             "--fy-jamo-index": "10",
             "--fy-sprite-jamo-index": "10",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄊ"
@@ -9742,13 +9742,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9810,13 +9810,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -9842,13 +9842,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -9910,13 +9910,13 @@
           "styles": {
             "--fy-jamo-index": "12",
             "--fy-sprite-jamo-index": "12",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄌ"
@@ -9942,13 +9942,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -10010,13 +10010,13 @@
           "styles": {
             "--fy-jamo-index": "13",
             "--fy-sprite-jamo-index": "13",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0525em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄍ"
@@ -10042,13 +10042,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -10110,14 +10110,14 @@
           "styles": {
             "--fy-jamo-index": "14",
             "--fy-sprite-jamo-index": "14",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.8198"
+            "--fy-stamp-stroke": "0.0465em",
+            "--fy-stamp-density": "0.9669"
           },
           "text": "ᄎ"
         },
@@ -10142,13 +10142,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -10210,14 +10210,14 @@
           "styles": {
             "--fy-jamo-index": "15",
             "--fy-sprite-jamo-index": "15",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.75"
+            "--fy-stamp-stroke": "0.0388em",
+            "--fy-stamp-density": "0.9049"
           },
           "text": "ᄏ"
         },
@@ -10242,13 +10242,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -10310,14 +10310,14 @@
           "styles": {
             "--fy-jamo-index": "16",
             "--fy-sprite-jamo-index": "16",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.75"
+            "--fy-stamp-stroke": "0.0406em",
+            "--fy-stamp-density": "0.9164"
           },
           "text": "ᄐ"
         },
@@ -10342,13 +10342,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -10410,14 +10410,14 @@
           "styles": {
             "--fy-jamo-index": "17",
             "--fy-sprite-jamo-index": "17",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "1"
+            "--fy-stamp-stroke": "0.03em",
+            "--fy-stamp-density": "0.8427"
           },
           "text": "ᄑ"
         },
@@ -10442,13 +10442,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -10510,14 +10510,14 @@
           "styles": {
             "--fy-jamo-index": "18",
             "--fy-sprite-jamo-index": "18",
-            "--fy-stamp-left": "2.9989%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "0.904",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.7906"
+            "--fy-stamp-stroke": "0.0419em",
+            "--fy-stamp-density": "0.9324"
           },
           "text": "ᄒ"
         },
@@ -10542,13 +10542,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -10632,13 +10632,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -10664,13 +10664,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -10732,13 +10732,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -10764,13 +10764,13 @@
           "styles": {
             "--fy-jamo-index": "1",
             "--fy-sprite-jamo-index": "1",
-            "--fy-stamp-left": "31.4006%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "22.5649%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.8814em",
+            "--fy-stamp-scale-x": "1.2128",
+            "--fy-stamp-scale-y": "0.8245",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅢ"
@@ -10832,13 +10832,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -10864,13 +10864,13 @@
           "styles": {
             "--fy-jamo-index": "2",
             "--fy-sprite-jamo-index": "2",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "25.681%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅣ"
@@ -10932,13 +10932,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -10964,13 +10964,13 @@
           "styles": {
             "--fy-jamo-index": "3",
             "--fy-sprite-jamo-index": "3",
-            "--fy-stamp-left": "31.4006%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "22.5649%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.8814em",
+            "--fy-stamp-scale-x": "1.2128",
+            "--fy-stamp-scale-y": "0.8245",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅤ"
@@ -11032,13 +11032,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -11064,13 +11064,13 @@
           "styles": {
             "--fy-jamo-index": "4",
             "--fy-sprite-jamo-index": "4",
-            "--fy-stamp-left": "21.8221%",
-            "--fy-stamp-top": "-10.6971%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "31.1342%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅥ"
@@ -11132,13 +11132,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -11164,13 +11164,13 @@
           "styles": {
             "--fy-jamo-index": "5",
             "--fy-sprite-jamo-index": "5",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-10.6971%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "34.6709%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.8087em",
+            "--fy-stamp-scale-x": "1.1129",
+            "--fy-stamp-scale-y": "0.8987",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0135em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅦ"
@@ -11232,13 +11232,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -11264,13 +11264,13 @@
           "styles": {
             "--fy-jamo-index": "6",
             "--fy-sprite-jamo-index": "6",
-            "--fy-stamp-left": "31.1971%",
-            "--fy-stamp-top": "-10.6971%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "31.1342%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅧ"
@@ -11332,13 +11332,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -11364,14 +11364,14 @@
           "styles": {
             "--fy-jamo-index": "7",
             "--fy-sprite-jamo-index": "7",
-            "--fy-stamp-left": "38.1714%",
-            "--fy-stamp-top": "-10.6971%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "35.1737%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7988em",
+            "--fy-stamp-scale-x": "1.0992",
+            "--fy-stamp-scale-y": "0.9098",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "1"
+            "--fy-stamp-stroke": "0.0159em",
+            "--fy-stamp-density": "0.9977"
           },
           "text": "ᅨ"
         },
@@ -11432,13 +11432,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -11464,13 +11464,13 @@
           "styles": {
             "--fy-jamo-index": "8",
             "--fy-sprite-jamo-index": "8",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "18.4217%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.657",
+            "--fy-stamp-left": "2.2846%",
+            "--fy-stamp-top": "36.0498%",
+            "--fy-stamp-size": "0.6064em",
+            "--fy-stamp-scale-x": "1.4821",
+            "--fy-stamp-scale-y": "0.6746",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.09em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅩ"
@@ -11532,13 +11532,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -11578,13 +11578,13 @@
           "styles": {
             "--fy-jamo-index": "8",
             "--fy-sprite-jamo-index": "8",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "18.4217%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.657",
+            "--fy-stamp-left": "3.9965%",
+            "--fy-stamp-top": "36.0498%",
+            "--fy-stamp-size": "0.4551em",
+            "--fy-stamp-scale-x": "1.1126",
+            "--fy-stamp-scale-y": "0.8989",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.09em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅩ"
@@ -11610,13 +11610,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -11678,13 +11678,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -11724,13 +11724,13 @@
           "styles": {
             "--fy-jamo-index": "8",
             "--fy-sprite-jamo-index": "8",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "18.4217%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.657",
+            "--fy-stamp-left": "3.9965%",
+            "--fy-stamp-top": "36.0498%",
+            "--fy-stamp-size": "0.4551em",
+            "--fy-stamp-scale-x": "1.1126",
+            "--fy-stamp-scale-y": "0.8989",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.09em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅩ"
@@ -11756,13 +11756,13 @@
           "styles": {
             "--fy-jamo-index": "1",
             "--fy-sprite-jamo-index": "1",
-            "--fy-stamp-left": "31.4006%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "22.5649%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.8814em",
+            "--fy-stamp-scale-x": "1.2128",
+            "--fy-stamp-scale-y": "0.8245",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅢ"
@@ -11824,13 +11824,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -11870,13 +11870,13 @@
           "styles": {
             "--fy-jamo-index": "8",
             "--fy-sprite-jamo-index": "8",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "18.4217%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.657",
+            "--fy-stamp-left": "3.9965%",
+            "--fy-stamp-top": "36.0498%",
+            "--fy-stamp-size": "0.4551em",
+            "--fy-stamp-scale-x": "1.1126",
+            "--fy-stamp-scale-y": "0.8989",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.09em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅩ"
@@ -11902,13 +11902,13 @@
           "styles": {
             "--fy-jamo-index": "20",
             "--fy-sprite-jamo-index": "20",
-            "--fy-stamp-left": "26.7578%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.4734%",
+            "--fy-stamp-top": "5.5243%",
+            "--fy-stamp-size": "0.9476em",
+            "--fy-stamp-scale-x": "1.0553",
+            "--fy-stamp-scale-y": "0.7581",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅵ"
@@ -11970,13 +11970,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -12002,13 +12002,13 @@
           "styles": {
             "--fy-jamo-index": "12",
             "--fy-sprite-jamo-index": "12",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "18.4217%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.657",
+            "--fy-stamp-left": "1.2416%",
+            "--fy-stamp-top": "36.361%",
+            "--fy-stamp-size": "0.5968em",
+            "--fy-stamp-scale-x": "1.5252",
+            "--fy-stamp-scale-y": "0.6557",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.09em",
+            "--fy-stamp-stroke": "0.105em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅭ"
@@ -12070,13 +12070,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -12102,13 +12102,13 @@
           "styles": {
             "--fy-jamo-index": "13",
             "--fy-sprite-jamo-index": "13",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "9.2642%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.7394",
+            "--fy-stamp-left": "1.2416%",
+            "--fy-stamp-top": "29.231%",
+            "--fy-stamp-size": "0.6102em",
+            "--fy-stamp-scale-x": "1.4917",
+            "--fy-stamp-scale-y": "0.6704",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.07em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅮ"
@@ -12170,13 +12170,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -12216,13 +12216,13 @@
           "styles": {
             "--fy-jamo-index": "13",
             "--fy-sprite-jamo-index": "13",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "9.2642%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.7394",
+            "--fy-stamp-left": "3.4088%",
+            "--fy-stamp-top": "29.231%",
+            "--fy-stamp-size": "0.458em",
+            "--fy-stamp-scale-x": "1.1197",
+            "--fy-stamp-scale-y": "0.8932",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.07em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅮ"
@@ -12248,13 +12248,13 @@
           "styles": {
             "--fy-jamo-index": "4",
             "--fy-sprite-jamo-index": "4",
-            "--fy-stamp-left": "21.8221%",
-            "--fy-stamp-top": "-10.6971%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "31.1342%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅥ"
@@ -12316,13 +12316,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -12362,13 +12362,13 @@
           "styles": {
             "--fy-jamo-index": "13",
             "--fy-sprite-jamo-index": "13",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "9.2642%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.7394",
+            "--fy-stamp-left": "3.4088%",
+            "--fy-stamp-top": "29.231%",
+            "--fy-stamp-size": "0.458em",
+            "--fy-stamp-scale-x": "1.1197",
+            "--fy-stamp-scale-y": "0.8932",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.07em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅮ"
@@ -12394,13 +12394,13 @@
           "styles": {
             "--fy-jamo-index": "5",
             "--fy-sprite-jamo-index": "5",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-10.6971%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "34.6709%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.8087em",
+            "--fy-stamp-scale-x": "1.1129",
+            "--fy-stamp-scale-y": "0.8987",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0135em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅦ"
@@ -12462,13 +12462,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -12508,13 +12508,13 @@
           "styles": {
             "--fy-jamo-index": "13",
             "--fy-sprite-jamo-index": "13",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "9.2642%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.7394",
+            "--fy-stamp-left": "3.4088%",
+            "--fy-stamp-top": "29.231%",
+            "--fy-stamp-size": "0.458em",
+            "--fy-stamp-scale-x": "1.1197",
+            "--fy-stamp-scale-y": "0.8932",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.07em",
+            "--fy-stamp-stroke": "0.1429em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅮ"
@@ -12540,13 +12540,13 @@
           "styles": {
             "--fy-jamo-index": "20",
             "--fy-sprite-jamo-index": "20",
-            "--fy-stamp-left": "26.7578%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.4734%",
+            "--fy-stamp-top": "5.5243%",
+            "--fy-stamp-size": "0.9476em",
+            "--fy-stamp-scale-x": "1.0553",
+            "--fy-stamp-scale-y": "0.7581",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅵ"
@@ -12608,13 +12608,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -12640,13 +12640,13 @@
           "styles": {
             "--fy-jamo-index": "17",
             "--fy-sprite-jamo-index": "17",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "9.2642%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "0.7394",
+            "--fy-stamp-left": "2.2846%",
+            "--fy-stamp-top": "29.875%",
+            "--fy-stamp-size": "0.5996em",
+            "--fy-stamp-scale-x": "1.4989",
+            "--fy-stamp-scale-y": "0.6671",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.07em",
+            "--fy-stamp-stroke": "0.105em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅲ"
@@ -12708,13 +12708,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -12740,13 +12740,13 @@
           "styles": {
             "--fy-jamo-index": "18",
             "--fy-sprite-jamo-index": "18",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "3.0444%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "1.0004",
+            "--fy-stamp-left": "2.2846%",
+            "--fy-stamp-top": "-8.8171%",
+            "--fy-stamp-size": "1.1331em",
+            "--fy-stamp-scale-x": "0.7932",
+            "--fy-stamp-scale-y": "1.0086",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅳ"
@@ -12808,13 +12808,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -12854,13 +12854,13 @@
           "styles": {
             "--fy-jamo-index": "18",
             "--fy-sprite-jamo-index": "18",
-            "--fy-stamp-left": "-1.8962%",
-            "--fy-stamp-top": "3.0444%",
-            "--fy-stamp-size": "0.83em",
-            "--fy-stamp-scale-x": "0.913",
-            "--fy-stamp-scale-y": "1.0004",
+            "--fy-stamp-left": "3.9965%",
+            "--fy-stamp-top": "-8.8182%",
+            "--fy-stamp-size": "0.8505em",
+            "--fy-stamp-scale-x": "0.5953",
+            "--fy-stamp-scale-y": "1.3437",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅳ"
@@ -12886,13 +12886,13 @@
           "styles": {
             "--fy-jamo-index": "20",
             "--fy-sprite-jamo-index": "20",
-            "--fy-stamp-left": "26.7578%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.4734%",
+            "--fy-stamp-top": "5.5243%",
+            "--fy-stamp-size": "0.9476em",
+            "--fy-stamp-scale-x": "1.0553",
+            "--fy-stamp-scale-y": "0.7581",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅵ"
@@ -12954,13 +12954,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "1.298%",
-            "--fy-stamp-top": "-15.7886%",
-            "--fy-stamp-size": "0.76em",
-            "--fy-stamp-scale-x": "0.908",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0527em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄋ"
@@ -12986,13 +12986,13 @@
           "styles": {
             "--fy-jamo-index": "20",
             "--fy-sprite-jamo-index": "20",
-            "--fy-stamp-left": "26.7578%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.4734%",
+            "--fy-stamp-top": "5.5243%",
+            "--fy-stamp-size": "0.9476em",
+            "--fy-stamp-scale-x": "1.0553",
+            "--fy-stamp-scale-y": "0.7581",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅵ"
@@ -13076,13 +13076,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -13108,13 +13108,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -13140,13 +13140,13 @@
           "styles": {
             "--fy-jamo-index": "1",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "45.7088%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0411em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆨ"
@@ -13208,13 +13208,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -13240,13 +13240,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -13272,13 +13272,13 @@
           "styles": {
             "--fy-jamo-index": "2",
             "--fy-sprite-jamo-index": "1",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "45.7088%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0411em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆩ"
@@ -13340,13 +13340,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -13372,13 +13372,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -13404,13 +13404,13 @@
           "styles": {
             "--fy-jamo-index": "3",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "44.3804%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
+            "--fy-stamp-stroke": "0.0382em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆪ"
@@ -13472,13 +13472,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -13504,13 +13504,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -13536,13 +13536,13 @@
           "styles": {
             "--fy-jamo-index": "4",
             "--fy-sprite-jamo-index": "2",
-            "--fy-stamp-left": "-0.6266%",
-            "--fy-stamp-top": "45.0284%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.7533",
-            "--fy-stamp-scale-y": "0.7458",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0411em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆫ"
@@ -13604,13 +13604,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -13636,13 +13636,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -13668,13 +13668,13 @@
           "styles": {
             "--fy-jamo-index": "5",
             "--fy-sprite-jamo-index": "1",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "45.0792%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
+            "--fy-stamp-stroke": "0.0379em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆬ"
@@ -13736,13 +13736,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -13768,13 +13768,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -13800,14 +13800,14 @@
           "styles": {
             "--fy-jamo-index": "6",
             "--fy-sprite-jamo-index": "2",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "45.0735%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
-            "--fy-stamp-density": "0.8222"
+            "--fy-stamp-stroke": "0.0051em",
+            "--fy-stamp-density": "0.75"
           },
           "text": "ᆭ"
         },
@@ -13868,13 +13868,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -13900,13 +13900,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -13932,13 +13932,13 @@
           "styles": {
             "--fy-jamo-index": "7",
             "--fy-sprite-jamo-index": "3",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "46.3412%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0408em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆮ"
@@ -14000,13 +14000,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -14032,13 +14032,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -14064,14 +14064,14 @@
           "styles": {
             "--fy-jamo-index": "8",
             "--fy-sprite-jamo-index": "5",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "46.9716%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.8194"
+            "--fy-stamp-stroke": "0.0113em",
+            "--fy-stamp-density": "0.7812"
           },
           "text": "ᆯ"
         },
@@ -14132,13 +14132,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -14164,13 +14164,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -14196,14 +14196,14 @@
           "styles": {
             "--fy-jamo-index": "9",
             "--fy-sprite-jamo-index": "3",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "45.0746%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
-            "--fy-stamp-density": "0.8307"
+            "--fy-stamp-stroke": "0.0052em",
+            "--fy-stamp-density": "0.75"
           },
           "text": "ᆰ"
         },
@@ -14264,13 +14264,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -14296,13 +14296,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -14328,13 +14328,13 @@
           "styles": {
             "--fy-jamo-index": "10",
             "--fy-sprite-jamo-index": "4",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "45.0767%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
+            "--fy-stamp-stroke": "0.0051em",
             "--fy-stamp-density": "0.75"
           },
           "text": "ᆱ"
@@ -14396,13 +14396,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -14428,13 +14428,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -14460,13 +14460,13 @@
           "styles": {
             "--fy-jamo-index": "11",
             "--fy-sprite-jamo-index": "5",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "45.0767%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
+            "--fy-stamp-stroke": "0.0051em",
             "--fy-stamp-density": "0.75"
           },
           "text": "ᆲ"
@@ -14528,13 +14528,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -14560,13 +14560,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -14592,14 +14592,14 @@
           "styles": {
             "--fy-jamo-index": "12",
             "--fy-sprite-jamo-index": "6",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "45.0792%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
-            "--fy-stamp-density": "0.88"
+            "--fy-stamp-stroke": "0.0061em",
+            "--fy-stamp-density": "0.7578"
           },
           "text": "ᆳ"
         },
@@ -14660,13 +14660,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -14692,13 +14692,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -14724,13 +14724,13 @@
           "styles": {
             "--fy-jamo-index": "13",
             "--fy-sprite-jamo-index": "7",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "45.0767%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
+            "--fy-stamp-stroke": "0.0051em",
             "--fy-stamp-density": "0.75"
           },
           "text": "ᆴ"
@@ -14792,13 +14792,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -14824,13 +14824,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -14856,13 +14856,13 @@
           "styles": {
             "--fy-jamo-index": "14",
             "--fy-sprite-jamo-index": "8",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "45.0767%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
+            "--fy-stamp-stroke": "0.0051em",
             "--fy-stamp-density": "0.75"
           },
           "text": "ᆵ"
@@ -14924,13 +14924,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -14956,13 +14956,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -14988,14 +14988,14 @@
           "styles": {
             "--fy-jamo-index": "15",
             "--fy-sprite-jamo-index": "9",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "45.0748%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
-            "--fy-stamp-density": "0.7685"
+            "--fy-stamp-stroke": "0.0051em",
+            "--fy-stamp-density": "0.75"
           },
           "text": "ᆶ"
         },
@@ -15056,13 +15056,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -15088,13 +15088,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -15120,13 +15120,13 @@
           "styles": {
             "--fy-jamo-index": "16",
             "--fy-sprite-jamo-index": "6",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "46.3412%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0408em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆷ"
@@ -15188,13 +15188,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -15220,13 +15220,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -15252,14 +15252,14 @@
           "styles": {
             "--fy-jamo-index": "17",
             "--fy-sprite-jamo-index": "7",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "46.9698%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.86"
+            "--fy-stamp-stroke": "0.0165em",
+            "--fy-stamp-density": "0.8196"
           },
           "text": "ᆸ"
         },
@@ -15320,13 +15320,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -15352,13 +15352,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -15384,14 +15384,14 @@
           "styles": {
             "--fy-jamo-index": "18",
             "--fy-sprite-jamo-index": "10",
-            "--fy-stamp-left": "-0.264%",
-            "--fy-stamp-top": "44.6223%",
-            "--fy-stamp-size": "0.54em",
-            "--fy-stamp-scale-x": "1.6145",
-            "--fy-stamp-scale-y": "1.5058",
+            "--fy-stamp-left": "-5.9841%",
+            "--fy-stamp-top": "49.8072%",
+            "--fy-stamp-size": "0.8602em",
+            "--fy-stamp-scale-x": "1.1796",
+            "--fy-stamp-scale-y": "0.8477",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.014em",
-            "--fy-stamp-density": "0.9526"
+            "--fy-stamp-stroke": "0.0143em",
+            "--fy-stamp-density": "0.8204"
           },
           "text": "ᆹ"
         },
@@ -15452,13 +15452,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -15484,13 +15484,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -15516,13 +15516,13 @@
           "styles": {
             "--fy-jamo-index": "19",
             "--fy-sprite-jamo-index": "9",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "46.5405%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0404em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆺ"
@@ -15584,13 +15584,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -15616,13 +15616,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -15648,13 +15648,13 @@
           "styles": {
             "--fy-jamo-index": "20",
             "--fy-sprite-jamo-index": "10",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "45.5859%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0406em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆻ"
@@ -15716,13 +15716,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -15748,13 +15748,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -15780,13 +15780,13 @@
           "styles": {
             "--fy-jamo-index": "21",
             "--fy-sprite-jamo-index": "11",
-            "--fy-stamp-left": "9.3994%",
-            "--fy-stamp-top": "46.5859%",
-            "--fy-stamp-size": "1.022em",
-            "--fy-stamp-scale-x": "0.8748",
-            "--fy-stamp-scale-y": "0.7463",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0406em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆼ"
@@ -15848,13 +15848,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -15880,13 +15880,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -15912,13 +15912,13 @@
           "styles": {
             "--fy-jamo-index": "22",
             "--fy-sprite-jamo-index": "12",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "46.9736%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0406em",
             "--fy-stamp-density": "1"
           },
           "text": "ᆽ"
@@ -15980,13 +15980,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -16012,13 +16012,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -16044,14 +16044,14 @@
           "styles": {
             "--fy-jamo-index": "23",
             "--fy-sprite-jamo-index": "14",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "49.4959%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "52.7341%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.8542"
+            "--fy-stamp-stroke": "0.0168em",
+            "--fy-stamp-density": "0.8254"
           },
           "text": "ᆾ"
         },
@@ -16112,13 +16112,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -16144,13 +16144,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -16176,14 +16176,14 @@
           "styles": {
             "--fy-jamo-index": "24",
             "--fy-sprite-jamo-index": "15",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "46.9714%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.7644"
+            "--fy-stamp-stroke": "0.0072em",
+            "--fy-stamp-density": "0.75"
           },
           "text": "ᆿ"
         },
@@ -16244,13 +16244,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -16276,13 +16276,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -16308,14 +16308,14 @@
           "styles": {
             "--fy-jamo-index": "25",
             "--fy-sprite-jamo-index": "16",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "46.3383%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.7732"
+            "--fy-stamp-stroke": "0.0072em",
+            "--fy-stamp-density": "0.75"
           },
           "text": "ᇀ"
         },
@@ -16376,13 +16376,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -16408,13 +16408,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -16440,13 +16440,13 @@
           "styles": {
             "--fy-jamo-index": "26",
             "--fy-sprite-jamo-index": "17",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "45.7088%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "50.6506%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0409em",
             "--fy-stamp-density": "1"
           },
           "text": "ᇁ"
@@ -16508,13 +16508,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "-6.9987%",
-            "--fy-stamp-top": "-17.3878%",
-            "--fy-stamp-size": "0.772em",
-            "--fy-stamp-scale-x": "1.059",
-            "--fy-stamp-scale-y": "0.919",
+            "--fy-stamp-left": "-2.3317%",
+            "--fy-stamp-top": "-7.1265%",
+            "--fy-stamp-size": "0.7404em",
+            "--fy-stamp-scale-x": "0.8849",
+            "--fy-stamp-scale-y": "1.1301",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0534em",
             "--fy-stamp-density": "1"
           },
           "text": "ᄀ"
@@ -16540,13 +16540,13 @@
           "styles": {
             "--fy-jamo-index": "0",
             "--fy-sprite-jamo-index": "0",
-            "--fy-stamp-left": "28.7964%",
-            "--fy-stamp-top": "-5.4153%",
-            "--fy-stamp-size": "1.03em",
-            "--fy-stamp-scale-x": "0.872",
-            "--fy-stamp-scale-y": "0.705",
+            "--fy-stamp-left": "21.9417%",
+            "--fy-stamp-top": "5.5173%",
+            "--fy-stamp-size": "0.7893em",
+            "--fy-stamp-scale-x": "1.086",
+            "--fy-stamp-scale-y": "0.9207",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
+            "--fy-stamp-stroke": "0.0212em",
             "--fy-stamp-density": "1"
           },
           "text": "ᅡ"
@@ -16572,14 +16572,14 @@
           "styles": {
             "--fy-jamo-index": "27",
             "--fy-sprite-jamo-index": "18",
-            "--fy-stamp-left": "-3.7964%",
-            "--fy-stamp-top": "48.8682%",
-            "--fy-stamp-size": "1.042em",
-            "--fy-stamp-scale-x": "0.9662",
-            "--fy-stamp-scale-y": "0.7094",
+            "--fy-stamp-left": "-6.0361%",
+            "--fy-stamp-top": "52.7341%",
+            "--fy-stamp-size": "0.823em",
+            "--fy-stamp-scale-x": "1.1522",
+            "--fy-stamp-scale-y": "0.8679",
             "--fy-stamp-weight": "700",
-            "--fy-stamp-stroke": "0.038em",
-            "--fy-stamp-density": "0.8237"
+            "--fy-stamp-stroke": "0.013em",
+            "--fy-stamp-density": "0.7959"
           },
           "text": "ᇂ"
         },

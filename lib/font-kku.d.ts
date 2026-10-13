@@ -32,7 +32,7 @@ declare namespace FontKku {
     /**
      * 필요할 때 받기(ADR-019)의 기준 주소 — `profiles/<font>.css`·`profiles/<set>.jamo.js`가 그 아래에 있다.
      * 한 줄 설치(`<script src=".../font-kku.js" data-fonts=…>`)는 스크립트 주소에서 스스로 정한다.
-     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/").
+     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/").
      */
     fontBase?: string;
     /** false면 아직 받지 않은 글꼴·자소 세트를 스스로 받지 않는다(기본 true). */
@@ -43,12 +43,15 @@ declare namespace FontKku {
 
   interface LayoutProfile {
     readonly revision: string;
+    /** 이 프로파일이 받아 지금 도장으로 그리는 이전 revision(디자인 진단 `DESIGN_LAYOUT_REVISION_ACCEPTED`). 적지 않은 revision은 거부한다 */
+    readonly accepts: readonly string[];
     readonly model: "fixed-three" | "adaptive-square";
     /** 디자인 규칙 match가 쓸 수 있는 필드. 세벌 고정은 jamo·role뿐 */
     readonly match: readonly string[];
     /** 자리마다 달라지는 변주(display.variationScope: occurrence)를 받는지 */
     readonly occurrence: boolean;
-    readonly cell?: { readonly width: number; readonly height: number; readonly gap: number };
+    /** 글자 칸(em) — 폭·높이·간격, space는 낱말 사이(빈칸 하나) 폭(있으면 `--fy-space-width`) */
+    readonly cell?: { readonly width: number; readonly height: number; readonly gap: number; readonly space?: number };
     readonly depth?: { readonly vowel: "split"; readonly coda: "whole" };
     readonly draw?: { readonly initial?: "cho" | "bar" };
     readonly stamps?: Readonly<Record<string, LayoutStamp | readonly [LayoutStamp, LayoutStamp]>>;
@@ -75,9 +78,10 @@ declare namespace FontKku {
     designStatus: DesignStatus | null;
     /**
      * 배치 프로파일(ADR-026). 글꼴을 밝히지 않은 바탕 요소는 기본 세벌 고정(`sebul-fixed-v1`), 1.2 디자인은 자기 `layout`을 쓴다.
-     * 글꼴을 밝힌 바탕 요소·배치를 적지 않은 이전 디자인·`--fy-design: legacy`는 지금 배치라 null.
+     * 글꼴을 밝힌 바탕 요소·배치를 적지 않은 이전 디자인·`--fy-design: legacy`는 지금 배치라 null. 디자인이 프로파일이 받아들이는
+     * 이전 revision(`accepts`)을 적었으면 `requested`가 그 revision이다 — 그리는 도장은 `revision`이다.
      */
-    layout: { profile: string; revision: string; model: "fixed-three" | "adaptive-square" } | null;
+    layout: { profile: string; revision: string; model: "fixed-three" | "adaptive-square"; requested?: string } | null;
     /** 요청한 font의 CSS가 host에 도달했는지 (`id === font`) */
     loaded: boolean;
   }
@@ -337,6 +341,17 @@ declare namespace FontKku {
     ok: boolean;
     /** registerDesign이 보는 차례 — `errors[0]`이 registerDesign이 던질 오류다 */
     errors: DesignError[];
+    /** 받아들이지만 알리는 것 — 지금은 이전 배치 revision(`DESIGN_LAYOUT_REVISION_ACCEPTED`, 지금 도장으로 그린다) */
+    warnings: DesignWarning[];
+  }
+
+  /** 디자인 진단 코드 — 받아들이지만 알린다(`validateDesign().warnings`, `registerDesign().warnings`, 등록 때 콘솔 경고) */
+  type DesignWarningCode = "DESIGN_LAYOUT_REVISION_ACCEPTED";
+
+  interface DesignWarning {
+    code: DesignWarningCode;
+    path: string;
+    message: string;
   }
 
   /** registerDesign이 던지는 오류: 검증 오류(`DesignErrorCode`), 이름 문법 `DESIGN_NAME_INVALID`, 같은 이름 다른 내용 `DESIGN_NAME_TAKEN` */
@@ -495,6 +510,19 @@ declare namespace FontKku {
     next: "origin8" | "basic24" | "full40" | null;
   }
 
+  /**
+   * 범위가 바탕 요소에서 고른 원문(ADR-003) — 복사·잘라내기가 클립보드에 넣는 그 대응이다. 자모 노드에 범위가 닿으면 그 자모를
+   * 고른 것이고, 자모 일부만 고른 음절은 음절 통째다.
+   */
+  interface SourceRange {
+    /** 원문(`data-source`) 안 시작 위치. 원문 정규화가 글자 경계를 바꾸는 드문 원문이면 0 */
+    start: number;
+    /** 원문 안 끝 위치(끝 미포함). 위와 같은 드문 원문이면 원문 길이 */
+    end: number;
+    /** 고른 원문 — 음절은 NFC, 빈칸·줄바꿈(`\r\n`·`\r` 포함)은 원문 그대로 */
+    text: string;
+  }
+
   interface HangulFontProbeOptions {
     /** 확인할 CSS font-family 목록. 기본은 코어 CSS의 기본 글꼴 목록(Apple SD Gothic Neo,
      * Malgun Gothic, Noto Sans CJK KR, sans-serif) — 기기 대체 글꼴까지 따라간다. */
@@ -593,7 +621,7 @@ declare namespace FontKku {
      * 같은 이름·다른 내용은 `{ replace: true }`일 때만 바꾼다(아니면 `DESIGN_NAME_TAKEN`). 등록·교체하면 그 이름을 고른
      * 바탕 요소가 다시 그린다.
      */
-    registerDesign(name: string, design: Design, options?: RegisterDesignOptions): { name: string; revision: string };
+    registerDesign(name: string, design: Design, options?: RegisterDesignOptions): { name: string; revision: string; warnings?: DesignWarning[] };
     /**
      * 디자인 JSON을 registerDesign과 같은 규칙으로 검사해 오류를 모두 돌려준다(던지지 않고 등록하지 않는다, ADR-025 §2).
      * 이름 문법·같은 이름 충돌은 등록의 일이라 보지 않는다.
@@ -617,6 +645,11 @@ declare namespace FontKku {
     stagePreview(set: string, stage: "full40" | "basic24" | "origin8" | "elements"): Design;
     /** 그림 세트가 원형 8 → 기본 24 → 확장 40 단계마다 그린 자모·남은 자모·단계 밖에 그린 자모(ADR-025 §7) */
     authoringProgress(target: string | string[]): AuthoringProgress;
+    /**
+     * 범위(`Range`·`StaticRange`)가 바탕 요소에서 고른 원문(ADR-003). 복사·잘라내기는 런타임이 문서마다 알아서 이 대응으로
+     * 원문을 넣는다 — 이 함수는 "고른 글 복사" 단추처럼 페이지가 직접 원문을 꺼낼 때 쓴다. 고른 것이 없거나 그린 적 없는 요소면 null.
+     */
+    sourceRange(host: Element, range: AbstractRange): SourceRange | null;
   }
 }
 

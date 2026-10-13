@@ -5,8 +5,8 @@
    * (스타일이 읽는 계약)이라 영어로 두고, 화면에는 title을 쓴다. */
   var pages = [
     { slug: "index", href: "./index.html", title: "소개", category: "Start", desc: "폰꾸 소개와 대표 쓰임" },
-    { slug: "showcase", href: "./showcase.html", title: "사례", category: "Explore", desc: "바로 가져다 쓰는 완성 템플릿" },
-    { slug: "fonts", href: "./fonts.html", title: "글꼴", category: "Read", desc: "여섯 축과 테마 — 테마 갤러리, 조합기, 글꼴 견본과 글꼴별 꾸미기" },
+    { slug: "showcase", href: "./showcase.html", title: "사례", category: "Explore", desc: "청첩장에서 게임까지 — 그대로 쓰고, 고쳐 쓰고, 새로 만드는 사례" },
+    { slug: "fonts", href: "./fonts.html", title: "글꼴", category: "Read", desc: "여섯 축과 테마 — 테마 갤러리, 조합기, 글꼴 견본, 내 글꼴 만들기" },
     { slug: "effects", href: "./effects.html", title: "움직임", category: "Explore", desc: "자모 단위 움직임(animate)과 상호작용(data-kku-fx)" },
     { slug: "docs", href: "./docs.html", title: "문서", category: "Docs", desc: "설치·속성·꾸미기·API 레퍼런스" },
     {

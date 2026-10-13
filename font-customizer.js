@@ -1,4 +1,4 @@
-/* 글꼴 시험대의 꾸미기 — 글꼴 하나를 기반으로 "나만의 꾸밈 글꼴"(페이지 CSS 클래스)을 만든다.
+/* 글꼴 시험대의 꾸미기 — 글꼴 하나를 기반으로 "나만의 꾸밈 글꼴"(페이지 CSS 클래스, 화면 말로는 꾸밈)을 만든다.
  *
  * 결과는 AI 설명서(skills/font-kku-use/custom-font.md)의 나만의 꾸밈 글꼴 형식 그대로다:
  * 머리 주석 + `.kku-<이름>` 규칙. 페이지 CSS는 글꼴 CSS의 레이어 밖이라 특이도와 상관없이
@@ -20,6 +20,10 @@
  * filter: drop-shadow()로 준다(투명 글자의 text-shadow는 숨은 글자 모양을 비추고,
  * background-clip:text 위에서는 그라데이션을 덮는다 — 그래서 그라데이션 칠은 글꼴의
  * text-shadow도 지운다).
+ *
+ * 미리보기 바탕을 권장과 반대 밝기로 바꾸면 제 색을 가진 글꼴(검은 자소판·먹색 마스크 칠·흰 분필)이 묻힌다 —
+ * 조합기와 같은 규칙(FontKkuThemesPage.inkFor)으로 그 바탕의 글자색과 마스크 칠을 미리보기 바탕 요소와 HTML 복사의
+ * 태그(style="color: …; --fy-sprite-paint: mask")에 준다. 꾸밈 CSS는 바탕을 모르므로 이 칠을 넣지 않고, 창에 그렇게 적는다.
  *
  * 변주(씨앗): 바탕 요소에 seed와 jamo-seeds를 주면 런타임이 자모 노드마다 --fy-jamo-seed(0–1)를
  * 건다. 변주 폭은 이 값으로 기울기(--fy-rotate)·크기(--fy-scale-x/y)·굵기(--fy-weight, 기기
@@ -73,6 +77,8 @@
   var opener = null;
   var styleNode = null;
   var hashTimer = 0;
+  /* 외곽선 색을 사람이 골랐는가 — 고른 색은 두께를 처음 올릴 때 바꾸지 않는다(F6). */
+  var olcTouched = false;
   /* 꾸미기를 열기 전의 해시(조합기 #compose= 등) — 닫을 때 되돌려 그 링크를 잃지 않는다. */
   var hashBefore = "";
 
@@ -124,6 +130,27 @@
     }).join("");
   }
 
+  /* 외곽선 기본색 — 밝은 바탕이면 사이트 빨강, 어두운 바탕이면 흰색(흰 바탕의 흰 외곽선은 두께를 올려도 보이지 않았다). */
+  function outlineColor(tone) {
+    return DARK_TONES.indexOf(tone || "light") !== -1 ? "#ffffff" : "#d62839";
+  }
+
+  /* 열 때의 외곽선 색이 기본값인가 — 지금 기본(글꼴 바탕에 따라 빨강·흰색)이거나, 예전 기본(#ffffff, 옛 #kku= 링크)이면
+   * 사람이 고른 색이 아니라 본다. 두께가 0인 링크의 흰 외곽선은 아무도 본 적이 없는 색이라 바꿔도 잃는 것이 없다. */
+  function olcIsDefault(item, s) {
+    var color = String(s.olc || "").toLowerCase();
+    return color === outlineColor(item.tone) || (!s.ol && color === "#ffffff");
+  }
+
+  /* 색이 밝은가(상대 휘도) — 외곽선 색이 미리보기 바탕과 같은 밝기인지 본다. */
+  function isLight(hex) {
+    var rgb = hexToRgb(hex).map(function (v) {
+      var c = v / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2] > 0.4;
+  }
+
   function defaults(item, text) {
     return {
       f: item.id,
@@ -132,7 +159,7 @@
       c: { cho: null, jung: null, jong: null },
       g: ["#ffd166", "#ef476f"],
       ol: 0,
-      olc: "#ffffff",
+      olc: outlineColor(item.tone),
       sh: "font",
       shc: "#000000",
       shs: 1,
@@ -309,7 +336,7 @@
       rules.push("@supports (color: oklch(from red l c h)) {\n" + hue.join("\n").split("\n").map(function (line) { return "  " + line; }).join("\n") + "\n}");
     }
 
-    var head = "/* 나만의 글꼴: " + s.n + " — 기반 " + item.id + ". 쓰는 법: " +
+    var head = "/* 나만의 꾸밈 글꼴: " + s.n + " — 기반 " + item.id + ". 쓰는 법: " +
       usageTag(s).replace(/\*\//g, "* /") + " */";
     if (!rules.length) {
       rules.push(s.vo
@@ -325,16 +352,27 @@
     return font.tone || "";
   }
 
+  /* 권장과 반대 밝기의 바탕을 고르면 칠할 글자색(조합기와 같은 규칙) — 없으면 null. 미리보기와 HTML 복사가 함께 쓴다. */
+  function forcedInk(s) {
+    var themes = window.FontKkuThemesPage;
+    return s.bg !== "auto" && themes && themes.inkFor ? themes.inkFor(font.id, toneFor(s) || "light") : null;
+  }
+
   function buildHtml(s, css) {
     var size = s.t.replace(/\s+/g, "").length <= 6 ? 96 : 64;
     var bg = { dark: "#12121c", pink: "#ffd6e5", paper: "#f7f0e1", board: "#24392f", blueprint: "#0f3d7a", linen: "#efe6d4" }[toneFor(s)] || "#ffffff";
+    // 미리보기가 바탕에 맞춰 칠했으면 내보내는 태그에도 같은 칠 — 그래야 받은 페이지가 미리보기처럼 읽힌다
+    var ink = forcedInk(s);
+    var paint = ink ? ' style="color: ' + escapeHtml(ink) + '; --fy-sprite-paint: mask"' : "";
+    // 어두운 바탕 미리보기는 색을 정하지 않는 글꼴(세벌·고딕)을 밝은 먹으로 그린다(site.css .k-stage[data-tone]) — 받은 페이지도 같게
+    var bodyInk = DARK_TONES.indexOf(toneFor(s) || "light") !== -1 ? " color: #f4f1ea;" : "";
     return "<!doctype html>\n<html lang=\"ko\">\n<head>\n  <meta charset=\"utf-8\" />\n" +
       "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
-      "  <title>" + escapeHtml(s.n) + " — 폰꾸 나만의 글꼴</title>\n" +
+      "  <title>" + escapeHtml(s.n) + " — 폰꾸 꾸밈</title>\n" +
       "  <script src=\"" + config.runtime + "\" data-fonts=\"" + s.f + "\"></" + "script>\n" +
-      "  <style>\n    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: " + bg + "; }\n" +
+      "  <style>\n    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: " + bg + ";" + bodyInk + " }\n" +
       css.trim().split("\n").map(function (line) { return "    " + line; }).join("\n") +
-      "\n  </style>\n</head>\n<body>\n  " + usageTag(s).replace("<font-kku", "<font-kku size=\"" + size + "\"") + "\n</body>\n</html>\n";
+      "\n  </style>\n</head>\n<body>\n  " + usageTag(s).replace("<font-kku", "<font-kku size=\"" + size + "\"" + paint) + "\n</body>\n</html>\n";
   }
 
   function aiPrompt(s, css) {
@@ -439,7 +477,7 @@
   function markup() {
     return '<div class="kku-sheet">' +
       '<header class="kku-head">' +
-      '<div><p class="kku-kicker">나만의 글꼴 만들기 · 기반 <code data-kku-base-id></code><span class="kku-draw-no" data-kku-draw-no hidden> · 뽑기 <code></code></span></p>' +
+      '<div><p class="kku-kicker">꾸밈 만들기 · 기반 <code data-kku-base-id></code><span class="kku-draw-no" data-kku-draw-no hidden> · 뽑기 <code></code></span></p>' +
       '<h2 id="kku-title" data-kku-title>꾸미기</h2></div>' +
       '<button type="button" class="kku-close" data-kku-close aria-label="꾸미기 닫기">닫기 <span aria-hidden="true">✕</span></button>' +
       "</header>" +
@@ -508,6 +546,7 @@
       "</div>" +
       '<button type="button" class="k-btn k-btn--small" data-kku-replay>다시 그리기</button>' +
       "</div>" +
+      '<p class="kku-hint kku-ink-note" data-kku-ink-note hidden>이 바탕은 권장 바탕과 밝기가 반대라 미리보기 글자를 바탕의 글자색으로 칠했습니다. 이 칠은 CSS에는 들어가지 않고 HTML 복사의 태그에만 들어갑니다. 내 페이지에서는 태그에 <code>color</code>와 <code>--fy-sprite-paint: mask</code>를 함께 주세요.</p>' +
       '<figure class="k-stage kku-stage" data-kku-stage><font-kku data-kku-live></font-kku><figcaption class="kku-label">내 꾸밈 · <code data-kku-class></code></figcaption></figure>' +
       '<figure class="k-stage kku-stage kku-stage--base" data-kku-stage-base><font-kku data-kku-original></font-kku><figcaption class="kku-label">기반 글꼴 그대로</figcaption></figure>' +
       "</section>" +
@@ -670,6 +709,18 @@
     [$("[data-kku-stage]"), $("[data-kku-stage-base]")].forEach(function (stage) {
       setAttr(stage, "data-tone", tone || null);
     });
+    // 권장과 반대 밝기의 바탕: 제 색을 가진 글꼴이 묻히지 않게 미리보기에만 글자색 + 마스크 칠(조합기와 같은 규칙)
+    var ink = forcedInk(state);
+    [$("[data-kku-live]"), $("[data-kku-original]")].forEach(function (host) {
+      if (ink) {
+        host.style.color = ink;
+        host.style.setProperty("--fy-sprite-paint", "mask");
+      } else {
+        host.style.removeProperty("color");
+        host.style.removeProperty("--fy-sprite-paint");
+      }
+    });
+    $("[data-kku-ink-note]").hidden = !ink;
 
     var live = $("[data-kku-live]");
     var original = $("[data-kku-original]");
@@ -710,7 +761,21 @@
         applyPreset(PRESETS[0]);
         return;
       }
-    } else if (key === "ol" || key === "shs" || key === "wob" || key === "vs" || key === "vp" || key === "vw" || key === "vh") {
+    } else if (key === "ol") {
+      var was = state.ol;
+      state.ol = Number(target.value);
+      // 두께를 처음 올릴 때 외곽선 색이 미리보기 바탕과 같은 밝기면 보이는 색으로 바꾼다 — 사람이 고른 색은 그대로
+      if (!was && state.ol > 0 && font.paint !== "hollow" && !olcTouched) {
+        var stageDark = DARK_TONES.indexOf(toneFor(state) || "light") !== -1;
+        if (isLight(state.olc) !== stageDark) {
+          state.olc = outlineColor(toneFor(state));
+          $('[data-kku="olc"]').value = state.olc;
+        }
+      }
+    } else if (key === "olc") {
+      state.olc = target.value;
+      olcTouched = true;
+    } else if (key === "shs" || key === "wob" || key === "vs" || key === "vp" || key === "vw" || key === "vh") {
       state[key] = Number(target.value);
     } else if (key === "vo") {
       state.vo = target.checked ? 1 : 0;
@@ -826,6 +891,7 @@
     }
     if (action === "reset") {
       state = defaults(font, state.t);
+      olcTouched = false;
       syncControls();
       render();
       flash(button, "처음으로 되돌림");
@@ -948,6 +1014,7 @@
     if (!dialog) build();
     font = item;
     state = initial && initial.f === id ? initial : defaults(item, config.text());
+    olcTouched = !olcIsDefault(item, state);
     opener = trigger || document.activeElement;
     syncControls();
     if (!dialog.open) {

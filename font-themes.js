@@ -13,6 +13,8 @@
  *
  * 테마 카드 견본은 화면에 다가올 때 그리고(IntersectionObserver), 화면 밖으로 나가면
  * data-kku-paused로 움직임을 세운다. 상호작용은 font-kku-fx.js의 선언(data-kku-fx)으로 단다.
+ * 갤러리는 축을 둘 넘게 고른 테마를 먼저 보이고, 꾸밈 하나(꾸러미 글꼴과 같은 칠)나 글꼴 하나만 고른 테마
+ * (data-single)는 '더 보기' 뒤에 접는다. 카드는 모두 문서에 남아 옛 주소(#neon 등)가 닿으면 펼친다.
  * 조합기 상태는 주소 해시 #compose=…에 담겨 링크로 나눈다(꾸미기 창의 #kku=와 따로 논다).
  *
  * 쓰는 법: FontKkuThemesPage.init({ cdn, copyText, onFont }) — onFont(id)는 글꼴 견본 행으로. */
@@ -22,12 +24,16 @@
   var T = window.FontKkuThemes;
   var AXIS_IDS = ["font", "look", "vary", "motion", "interaction", "tone"];
   var DARK_TONES = ["dark", "board", "blueprint"];
+  /* 출발용 뼈대(sprite-example)는 고를 글꼴이 아니라 조합기에 두지 않는다 — 글꼴 견본 행과 작업실에서 연다. */
   var FONT_GROUPS = [
     { id: "system", name: "세벌·고딕 계열", note: "획을 CSS로 긋는다 — 한글 글꼴 없는 기기에서도 같은 모양" },
     { id: "sprite", name: "그림 자소", note: "직접 그린 자소판(SVG)으로 긋는다" },
-    { id: "texture", name: "획 표현", note: "그림 자소 짜임에 획 재료만 바꿨다" },
-    { id: "starter", name: "출발용", note: "내 자소판을 그려 넣는 뼈대" }
+    { id: "texture", name: "획 표현", note: "그림 자소 짜임에 획 재료만 바꿨다" }
   ];
+  /* 꾸밈 '외곽선'은 그림 자소 재료(자소판·마스크 칠)에 고리를 두르지 못한다 — font-kku-looks.css가 그 재료에는
+   * 글자색만 바꾼다. 런타임 꾸밈 CSS가 고리를 갖기 전까지 조합기는 그 짝을 막는다. */
+  var OUTLINE_LOOK = "outline";
+  var OUTLINE_DEAD = "이 글꼴에는 외곽선이 걸리지 않습니다";
   var FILTERS = [
     { id: "all", label: "모두" },
     { id: "look", label: "꾸밈" },
@@ -48,6 +54,9 @@
   var hashTimer = 0;
   var galleryTimer = 0;
   var interacted = false;
+  var galleryFilter = "all";
+  var galleryOpen = false;
+  var droppedLook = "";
 
   function $(selector, root) {
     return (root || document).querySelector(selector);
@@ -101,11 +110,17 @@
     return s;
   }
 
+  /* 외곽선 꾸밈이 아무것도 바꾸지 못하는 글꼴인가(그림 자소 재료). */
+  function outlineDead(fontId) {
+    var font = T.fonts[fontId];
+    return Boolean(font) && font.group !== "system";
+  }
+
   function sanitize(raw) {
     var s = defaultState();
     if (!raw) return s;
     if (has(T.fonts, raw.font)) s.font = raw.font;
-    if (has(T.looks, raw.look)) s.look = raw.look;
+    if (has(T.looks, raw.look) && !(raw.look === OUTLINE_LOOK && outlineDead(s.font))) s.look = raw.look;
     s.vary = (raw.vary || []).filter(function (id, i, list) {
       return has(T.variations, id) && list.indexOf(id) === i;
     });
@@ -122,7 +137,6 @@
   /* 제 색을 가진 글꼴(그림 자소·먹색 마스크 칠·말랑)을 꾸밈 없이 권장과 반대 밝기의 바탕에 두면 글자가
    * 묻힌다(검은 자소판 + 어두운 바탕, 흰 분필 + 밝은 바탕). 그때만 바탕의 글자색을 칠하고, 자소판은
    * 마스크 칠로 그 색을 받는다. 꾸밈을 고르면 꾸밈이 칠을 정하므로 손대지 않는다. */
-  var DARK_TONES = ["dark", "board", "blueprint"];
   function inkFor(s) {
     var font = T.fonts[s.font];
     if (s.look || !font || (font.group === "system" && !font.base)) return null;
@@ -326,12 +340,22 @@
     return font.structure;
   }
 
+  /* 축 하나만 고른 테마 — 기본 글꼴에 꾸밈 하나(꾸러미 글꼴과 같은 칠, shortcut)이거나 글꼴 하나(바탕만).
+   * 글꼴 견본 행·조합기의 꾸밈 목록과 겹쳐 갤러리에서는 접어 둔다. */
+  function isSingle(id) {
+    var theme = T.themes[id];
+    if (!theme) return false;
+    if (theme.shortcut) return true;
+    return !theme.look && !(theme.vary || []).length && !theme.seed && !theme.motion && !theme.interaction;
+  }
+
   function cardMarkup(id) {
     var theme = T.themes[id];
     var s = themeState(id);
     var recipe = T.recipes[id] || recipeOf(s);
     var tone = recipe.tone && recipe.tone !== "light" ? ' data-tone="' + recipe.tone + '"' : "";
-    return '<article class="ft-card" id="theme-' + id + '" data-theme-card="' + id + '" data-has="' + themeTags(id).join(" ") + '">' +
+    return '<article class="ft-card" id="theme-' + id + '" data-theme-card="' + id + '" data-has="' + themeTags(id).join(" ") + '"' +
+      (isSingle(id) ? " data-single" : "") + ">" +
       (theme.shortcut ? '<span class="ft-anchor" id="' + theme.shortcut + '"></span>' : "") +
       '<div class="k-stage ft-card-stage"' + tone + ' data-theme-stage="' + id + '" data-kku-paused></div>' +
       '<div class="ft-card-body">' +
@@ -385,18 +409,54 @@
     $$("[data-theme-stage][data-rendered]").forEach(renderCardSample);
   }
 
+  /* 거르기: 고른 꼬리표가 있는 테마를 모두 보인다. '모두'일 때만 축 하나만 고른 테마를 접는다(더 보기). */
   function applyFilter(id) {
+    galleryFilter = id;
     var shown = 0;
+    var folded = 0;
     $$("[data-theme-card]").forEach(function (card) {
-      var on = id === "all" || (" " + card.getAttribute("data-has") + " ").indexOf(" " + id + " ") !== -1;
+      var match = id === "all" || (" " + card.getAttribute("data-has") + " ").indexOf(" " + id + " ") !== -1;
+      var single = card.hasAttribute("data-single");
+      var on = match && !(id === "all" && single && !galleryOpen);
       card.hidden = !on;
       if (on) shown += 1;
+      if (single) folded += 1;
     });
     $$("[data-theme-filter]").forEach(function (button) {
       button.setAttribute("aria-pressed", String(button.getAttribute("data-theme-filter") === id));
     });
+    var total = Object.keys(T.themes).length;
     var count = $("[data-theme-count]");
-    if (count) count.textContent = id === "all" ? "테마 " + shown + "개" : Object.keys(T.themes).length + "개 중 " + shown + "개";
+    if (count) {
+      count.textContent = id !== "all" ? total + "개 중 " + shown + "개"
+        : galleryOpen || !folded ? "테마 " + total + "개"
+        : "테마 " + shown + "개 · 하나만 고른 것 " + folded + "개";
+    }
+    var wrap = $("[data-theme-more-wrap]");
+    var more = $("[data-theme-more]");
+    if (wrap && more) {
+      wrap.hidden = id !== "all" || !folded;
+      more.setAttribute("aria-expanded", String(galleryOpen));
+      more.textContent = galleryOpen ? "하나만 고른 테마 " + folded + "개 접기"
+        : "꾸밈 하나·글꼴 하나만 고른 테마 " + folded + "개 더 보기";
+    }
+  }
+
+  /* 주소가 접힌 카드(#neon처럼 옛 글꼴 주소, #theme-pixel)를 가리키면 펼쳐서 보인다. */
+  function revealHashTarget() {
+    var id = "";
+    try {
+      id = decodeURIComponent(location.hash.slice(1));
+    } catch (error) {
+      return;
+    }
+    if (!id || /=/.test(id)) return;
+    var target = document.getElementById(id);
+    var card = target && target.closest && target.closest("[data-theme-card]");
+    if (!card || !card.hidden) return;
+    galleryOpen = true;
+    applyFilter("all");
+    requestAnimationFrame(function () { target.scrollIntoView({ block: "start" }); });
   }
 
   function renderGallery() {
@@ -454,11 +514,13 @@
     });
     html += "</fieldset>";
 
-    html += '<fieldset data-axis="look">' + legend("look", 1, "칠 — 색·외곽선·그림자") + '<div class="ft-opts">' +
+    html += '<fieldset data-axis="look">' + legend("look", 1, "색·외곽선·그림자") + '<div class="ft-opts">' +
       option("radio", "look", "", "없음 (글꼴 그대로)", true) +
       Object.keys(T.looks).map(function (id) {
         return option("radio", "look", id, T.looks[id].name, false, { sample: lookSample(id), title: T.looks[id].summary });
-      }).join("") + "</div></fieldset>";
+      }).join("") + "</div>" +
+      '<p class="ft-note" data-compose-look-note hidden>외곽선 꾸밈은 그림 자소 글꼴(자소판으로 긋는 글꼴)에는 걸리지 않습니다.</p>' +
+      "</fieldset>";
 
     html += '<fieldset data-axis="vary">' + legend("vary", 2, "씨앗 — 자모마다, 그릴 때마다 다르게") + '<div class="ft-opts">' +
       Object.keys(T.variations).map(function (id) {
@@ -518,6 +580,15 @@
     check("motion", compose.motion);
     check("fx", compose.fx);
     check("tone", compose.tone);
+    // 외곽선 꾸밈이 걸리지 않는 글꼴이면 그 짝을 막는다
+    var dead = outlineDead(compose.font);
+    $$('input[name="look"][value="' + OUTLINE_LOOK + '"]', form).forEach(function (input) {
+      var label = input.closest("label");
+      input.disabled = dead;
+      if (label) label.title = dead ? OUTLINE_DEAD : (T.looks[OUTLINE_LOOK] ? T.looks[OUTLINE_LOOK].summary : "");
+    });
+    var lookNote = $("[data-compose-look-note]", form);
+    if (lookNote) lookNote.hidden = !dead;
     var seedInput = form.elements.seedValue;
     if (seedInput.value !== compose.seedValue) seedInput.value = compose.seedValue;
     seedInput.disabled = compose.seed !== "fixed";
@@ -532,7 +603,8 @@
       return input ? input.value : "";
     }
     var next = {
-      font: picked("font"),
+      // 조합기 목록에 없는 글꼴(옛 링크의 출발용 뼈대)이면 고른 칸이 없다 — 그 글꼴을 그대로 둔다
+      font: picked("font") || compose.font,
       look: picked("look"),
       vary: $$('input[name="vary"]:checked', form).map(function (input) { return input.value; }),
       seed: picked("seed") || "off",
@@ -546,6 +618,7 @@
   }
 
   function hint(s) {
+    if (droppedLook) return droppedLook;
     if (s.fx === "shuffle") return "글자를 누르면 씨앗을 새로 뽑습니다.";
     if (s.fx === "scatter") return "글자에 커서를 올리거나 누르면 자모가 흩어졌다 모입니다.";
     if (s.fx === "magnet") return "커서를 글자 가까이 움직여 보세요.";
@@ -623,6 +696,7 @@
     hintNode.textContent = hint(s);
     $("[data-compose-replay]").hidden = !(s.fx === "type" || (s.motion && T.motions[s.motion].play === "once"));
     $("[data-compose-redraw]").hidden = !(s.seed === "auto");
+    droppedLook = "";
     if (!options || options.hash !== false) writeHash();
   }
 
@@ -697,7 +771,8 @@
     var s = defaultState();
     s.font = randomOf(fonts);
     var withLook = Math.random() < 0.72;
-    s.look = withLook ? randomOf(Object.keys(T.looks)) : "";
+    var looks = Object.keys(T.looks).filter(function (id) { return !(id === OUTLINE_LOOK && outlineDead(s.font)); });
+    s.look = withLook ? randomOf(looks) : "";
     s.tone = s.look ? (T.looks[s.look].tone || "light") : fontTone(s.font);
     if (Math.random() < 0.5) {
       var vary = Object.keys(T.variations);
@@ -728,10 +803,24 @@
       applyFilter(target.getAttribute("data-theme-filter"));
       return;
     }
+    if (target.hasAttribute("data-theme-more")) {
+      // 접으면 단추 위의 카드 14장이 사라져 화면이 조합기를 건너뛰고 셋까지 밀려났다 — 단추를 제자리에 둔다.
+      // html의 scroll-behavior: smooth를 따르면 수천 px을 미끄러지므로 바로 옮긴다. 초점은 단추에 그대로 있다.
+      var closing = galleryOpen;
+      var before = target.getBoundingClientRect().top;
+      galleryOpen = !galleryOpen;
+      applyFilter("all");
+      if (closing) {
+        var delta = target.getBoundingClientRect().top - before;
+        if (Math.abs(delta) > 1) window.scrollBy({ top: delta, behavior: "instant" });
+      }
+      return;
+    }
     if (target.hasAttribute("data-theme-open")) {
       interacted = true;
       var state = themeState(target.getAttribute("data-theme-open"));
-      state.text = compose.text;
+      // 갤러리 견본 문장을 그대로 들고 간다 — 조합기 문장을 이미 고쳤으면 그쪽
+      state.text = compose.text || galleryText();
       setCompose(state);
       scrollToCompose();
       return;
@@ -792,6 +881,11 @@
     // 변주를 고르면 씨앗을 켜고, 씨앗을 끄면 변주를 비운다
     if (event && event.target.name === "vary" && event.target.checked && next.seed === "off") next.seed = "auto";
     if (event && event.target.name === "seed" && next.seed === "off") next.vary = [];
+    // 외곽선 꾸밈을 고른 채 그림 자소 글꼴로 바꾸면 꾸밈을 빼고 그 까닭을 알린다
+    if (event && event.target.name === "font" && next.look === OUTLINE_LOOK && outlineDead(next.font)) {
+      next.look = "";
+      droppedLook = "외곽선 꾸밈은 그림 자소 글꼴에 걸리지 않아 뺐습니다.";
+    }
     // 글꼴만 바꾸고 꾸밈이 없으면 그 글꼴이 권하는 바탕으로
     if (event && event.target.name === "font" && !next.look) next.tone = fontTone(next.font);
     if (event && event.target.name === "look" && next.look) next.tone = T.looks[next.look].tone || next.tone;
@@ -852,7 +946,11 @@
     }
     document.addEventListener("click", onClick);
     if (!restoreFromHash()) renderCompose({ hash: false });
-    window.addEventListener("hashchange", restoreFromHash);
+    revealHashTarget();
+    window.addEventListener("hashchange", function () {
+      restoreFromHash();
+      revealHashTarget();
+    });
   }
 
   window.FontKkuThemesPage = {
@@ -866,6 +964,9 @@
     decode: decodeState,
     random: function () { interacted = true; setCompose(randomState()); return JSON.parse(JSON.stringify(compose)); },
     fontTone: fontTone,
+    /* 글꼴 하나를 꾸밈 없이 바탕 tone에 둘 때 칠할 글자색(묻히지 않게) — 없으면 null. 글꼴 견본 시험대와 꾸미기가 함께 쓴다. */
+    inkFor: function (fontId, tone) { return inkFor({ font: fontId, look: "", tone: tone || "light" }); },
+    outlineDead: outlineDead,
     axisIds: AXIS_IDS.slice()
   };
 })();

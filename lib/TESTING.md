@@ -144,6 +144,7 @@ JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실�
   `--check`와 깨진 정본 거부, 디자인 1.2 `layout` 검증(누락·없는 프로파일·revision·세벌 고정의 문맥 규칙·자리 변주), 도장 표(67키, 조합용 자모만,
   ㅘ = ㅗ + ㅏ 조각), 맞춤 규칙이 역할·자모로만 고르는지. 브라우저 사례는 스모크 `fixed-layout`(세 재료 × 11,172음절 불변, 머리 음절 없음, 칸 하나,
   sebul·네모 문맥·이전 디자인·대체·크기·낱자)
+- 소개 페이지의 AI 답 세트(`tests/landing_sets.test.js`, `site/landing-ai-sets.js`): 답 HTML의 등록 코드를 그대로 돌려 얻은 칸이 원형 8칸 칸 계약 세트(`frame: "box"`, 고치지 않음 기록)이고 실제 `registerJamo`가 받는지, 그 8칸만으로 현대 자모(초성·중성·받침)가 모두 조립되는지(`planJamo`의 모든 획이 그림이나 그림이 긋는 획), ㄱ 칸이 3,444자에 들어가는지, 프롬프트가 설명서와 원형 8칸을 담는지
 - 원소 획 표(ADR-027, `tests/element_table.test.js`): 생성기가 네 언어 미러에 굳히는 기본 배치의 원소 획 — 열쇠 125개(초성 19·홑 중성 14·
   합자 중성 조각 14·종성 27·낱자 51)와 UTF-8 바이트 차례, 값마다 런타임 서식(JS `String()` + 단위), 런타임 실측 정답
   `spec/element-layer.json`과 획·마디·값·노드 밀도 대조(숫자는 tolerance 안). 생성기는 `font-kku.js`의 굵기 보정 함수를 빌려 돌린다 —
@@ -192,6 +193,7 @@ JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실�
 1x·2x·3x 세트의 이름·크기·`image-set` CSS와 blob 미리보기, 작은 글씨 사전 설정, 페이지 전용 광학 보정, CSS·광학 CSS 복사)을,
 `assert_font_studio_entry`는 기기 글꼴 재료를 쓰는 글꼴에서 자소판 대신 시작 안내가 보이고 `hidden` 요소가 화면에 남지 않는지,
 안내 버튼과 `#studio-material` 입구가 자소판으로 데려가는지 본다.
+소개 페이지는 `assert_demo`(제목, 히어로의 세 갈래 — 작업실 `#draw`·AI 문장 복사·`#web`, 처음 받는 글꼴 CSS 몇 장과 움직임 타일까지 내려갈 때 네온 글꼴의 필요할 때 받기, 실제 AI 답 여섯과 느낌마다 답이 있는지, 히어로 문장과 제목 둘째 줄이 고른 세트의 SVG 재료로 그려지는지)와 `assert_landing_problems`(AI 답 세트가 원형 8칸 그대로 등록되고 히어로 문장의 자모 노드가 모두 그 8칸에서 나오는지(`traceOf`), 그린 세트에 `animate`를 붙였다 떼도 SVG 재료·획 그대로인지, 칸마다 글자 수, 자모 지도, 칸을 직접 그으면 세트를 다시 등록하고 바뀐 글자 수를 세고 '내 페이지에 쓰기' 코드가 따라오는지, 한 번에 돌려 그은 닫힌 획이 점으로 줄지 않는지, 가져가기 줄과 브라우저 저장, 화면에 보인 6줄 그대로 돌린 JS 흔들기와 이름 씨앗, 짧은 씨앗 고정, NFD 대조, 390px에서 가로 넘침 없음·8칸이 첫 화면 안·메뉴가 화면 안, 서버 모드에서는 11,172자를 모두 그려 자모 노드가 모두 8칸에서 왔는지와 '작업실에서 이어 그리기'로 작업실이 8칸을 가져오는지)가 본다.
 `assert_font_studio_design`은 디자인 패널(설계 v1.2 §13)을 본다: 맨 주소의 첫 화면이 세벌 고정 기본 디자인이고 초안을 쓰지 않는지,
 비교 칸이 초성 ㄱ·중성 ㅏ를 한 가지 자리로 재는지, 재료를 바꿔도 배치가 그대로인지, 네모 문맥에서만 문맥 규칙 탭이 열리는지,
 문맥 규칙이 있는 디자인을 세벌 고정으로 바꾸면 충돌을 보이고 고를 때까지 적용하지 않는지, 등록 실패 때 마지막 정상 디자인을 두는지,
@@ -241,6 +243,24 @@ p < 1.6t이고 바닥(0.75)이 아니면 p ≥ 1.6·k·t(틈이 가늘어진 획
 꼭지 틈 열기(`dotShifts`)를 끄면 세벌 고정 초성 ㅎ에서 틈이 0.07px(0.6·k·t는 1.1px)라 실패한다. 바꾸기 전에는 세벌 고정 초성 ㅎ
 −0.023em, 받침 ㅎ −0.019em, `font="sebul"` 홍 −0.032em으로 꼭지가 가로획에 붙었다.
 
+`assert_selection_copy`(스모크 `selection-copy`, 고정 페이지 `tests/fixtures/selection/index.html`)는 고르기와 복사(ADR-003 보강
+2026-10-13, ADR-025 §12)를 본다. 런타임이 그린 root마다 `data-fy-select="jamo"`·`aria-hidden`·고를 수 있음, 원문 거울은 `user-select: none`,
+브라우저 자체 `::selection`은 root 안과 바탕 요소 자신 모두 투명한지(바탕 요소 쪽이 칠하면 WebKit에서 띠가 두 겹이 된다). 실제 마우스로 앞 글 첫 글자부터 글꼴 없는 바탕 요소(세벌 고정·원소)와 사이 글을 지나 `font="sebul"`의
+괜(그 자리에 놓인 마지막 아닌 자모의 획)까지 끌면 앞 바탕 요소는 root `"all"`(안쪽 표시 없음), 뷁 `"all"`·빈칸·괜 `"part"`에 포인터 아래 자모까지만
+표시되고 띠·자모 상자의 계산된 배경이 칠해지는지. 빛 칠 neon의 나의 첫 자모 위(포인터 아래 맨 위 노드가 그 자모인 곳)까지 끌면 빛 칠 노드가
+숨겨져 있어도 빛 `"all"`·나 `"part"`에 첫 자모가 표시되는지(끄는 동안 런타임이 선택 끝을 포인터 아래 자모로 옮긴다). 실제 복사 단축키가 넣은 글이 `앞 글 한글 꽃밭 사이 글 뷁 괜`이고 HTML이 바탕 요소마다 고른 원문
+한 줄(런타임 표면 없음), 복사 뒤 선택·root가 그대로, Chromium이면 시스템 클립보드(`navigator.clipboard.readText`)도 같은지. 이어서
+\r\n·탭·NFD·\r 원문의 일부(`나\r\n다 한\t라`, `FontKku.sourceRange`의 위치까지), 빛 칠 neon의 자모 상자(`::after` 보임)와 `빛나`, SVG(pilgi-box)에서
+꾸밈 방식 제목까지의 블록 줄바꿈, 그림자 트리 안 선택의 강조·복사(`림자`), 바탕 요소를 품은 선택을 둔 채 다시 그린 새 root의 강조, 끝이 바탕 요소 안인 선택을 둔 채
+`refresh`해도 같은 자리가 남는지(`한글 꽃밭`, 글자 표시 `part·all·all·part`), 그림 위 두 번 누르기 = 낱말(`괜찮아`)·세 번 = 문단, 페이지가
+`mousedown`을 막으면 두 번 눌러도 고르지 않는지, 조상이 `user-select: none`인 바탕 요소는 끌어도·전체 선택해도 고르지·복사하지 않는지, 전체 선택 + 복사의
+깨끗한 글(`SELECTION_ALL_TEXT`), `contenteditable`에서 바탕 요소 중간부터 뒤 글까지 잘라내기(클립보드 `낼 글 남는`, 남은 원문 `잘라 `, 뒤 글 지움).
+끌기는 정수 좌표로 누른다 — 소수 좌표로 누르면 헤드리스 Chromium이 고르기를 시작하지 않고 캐럿만 옮긴다. 강조는 `selectionchange` 뒤 다음 프레임이라
+세 프레임 기다린다. Firefox·WebKit이 설치돼 있으면 `test_selection_copy_engines`가 같은 검사를 돈다(블록 사이 줄바꿈 수만 그 브라우저 직렬화대로 —
+`same_page_text`). 범위 → 원문 대응 규칙(자모가 닿으면 음절 통째, 빈칸은 통째로 담길 때, 줄바꿈은 두 줄에 걸칠 때, CRLF·NFD·낱글자 글자 위치, root 뒤
+원문 거울을 덮어도 거울 위치로 세지 않음)은 노드 시험(`tests/font_kku.test.js`의 `selection:` 셋, DOM 명세 경계점 비교를 흉내 낸 범위)이 본다.
+`assert_design_selection`의 복사 사례(ㅃ 낱자·겹받침·머리 음절, 낱자 하나)는 복사 이벤트(`ClipboardEvent` + `DataTransfer`)로 원문을 본다.
+
 스모크 검사 목록은 `tests/playwright_smoke.py`의 `run_check()`(명령줄 `--mode both`)와 pytest
 쪽 래퍼 함수에 각각 있다. `test_smoke_registration_in_sync`(AST, 브라우저 없음)가 최상위
 `assert_*` 화면 검사가 두 목록에 모두 등록됐는지와 두 목록이 같은지 확인한다. 새
@@ -270,23 +290,39 @@ p < 1.6t이고 바닥(0.75)이 아니면 p ≥ 1.6·k·t(틈이 가늘어진 획
   측정은 darwin 실측으로 교정돼 있어(`platforms`) 다른 플랫폼에서는 verify가 사유와 함께
   SKIPPED로 기록한다.
 - `Stroke audit (fixed layout, element|device)` 단계: `glyph_stroke_audit.py --font sebul --layout fixed --face …`가 세벌 고정의
-  획 굵기를 잰다. 원소 재료는 굵기를 스스로 맞추고, 기기 글꼴 재료는 `spec/layout-profiles.json` 맞춤 규칙의 굵기 보정(ㅡ 세로 배율,
-  ㅗ·ㅛ·ㅜ·ㅠ의 font-weight·text-stroke)이 기준 안에 있는지 본다.
+  획 굵기를 잰다. 원소 재료는 굵기를 스스로 맞추고, 기기 글꼴 재료는 `spec/layout-profiles.json` 맞춤 규칙 `deviceStroke`의 굵기
+  보정(도장마다 text-stroke, ㅡ·ㅣ는 그 방향 배율, ㅛ·ㅠ는 두 꼭지가 붙지 않는 `cap`)이 기준 안에 있는지 본다.
 - `Stroke audit (svg <세트>)`·`Stroke audit (fixed layout, svg <세트>)` 단계(2026-10-12): 획 굵기 감사의 `--policy --jamo-set <세트>`가
   기기 글꼴 재료에 칸 계약 그림 세트를 걸어 SVG 재료(ADR-024)로 잰다. 기본 제공 세트 셋(`pilgi-box`·`dunggeun-box`·`butgeul-box`) × 두 배치라
   여섯 단계다. 옛 배치는 정책 `jamoSets` 항목의 글꼴로 재고(필기·둥근은 sebul·gothic, 붓은 sebul), `--layout fixed`는 세벌 고정(sebul)으로 잰다.
   판정은 세트 항목의 허용 폭·예외에 글꼴 항목의 `face: "svg"` 예외를 더한다. 세트 예외의 `layout`(legacy|fixed)은 그 배치에서만 쓴다.
   - 필기·둥근은 예외 없이 넘침 0이다. 그림 `<svg>`의 노드 배율 되돌림(코어 CSS)이 빠지면 여기서 걸린다(고치기 전 29·21·32·23).
-  - 붓은 그림 자소 글꼴 butgeul과 같은 허용 폭 0.35다. 예외는 받침 ㅎ, 옛 배치의 가로모음 막대(ㅗ·ㅛ·ㅜ·ㅠ)와 가로모음 위 ㄱ이다 —
+  - 붓은 그림 자소 글꼴 butgeul과 같은 허용 폭 0.35다. 예외는 받침 ㅎ, 옛 배치의 가로모음 막대(ㅗ·ㅛ·ㅜ·ㅠ·ㅡ — ㅡ는 세벌 고정 revision 2의 긴 기둥 비로 누른 옛 배치 기둥이 가늘어져서)와 가로모음 위 ㄱ이다 —
     채운 붓은 한 그림이라 기본 배치에 맞춰 누른다. gothic은 재지 않는다(gothic 자리 기하를 채운 붓이 그대로 받아 0.35에서도 넘침 40).
   - 단계마다 세션 2–4개, 캐시 없이 약 6–7초다(여섯 단계 약 40초). 일상 층은 측정 캐시를 읽는다.
   - 겹침 감사의 `--jamo-set`은 개발용이다(verify 단계 아님, `--layout fixed`와 함께 쓸 수 있다, 측정 캐시 열쇠에 세트가 들어간다).
   - 그림 획 굵기 계약 자체는 스모크 `face-svg-stroke`가 본다.
 - `Overlap audit (fixed layout, element|device)` 단계: `glyph_overlap_audit.py --font sebul --layout fixed --sample full`(일상 층은 `family`)이 글꼴을 밝히지 않은
   바탕 요소의 기본 배치(세벌 고정, ADR-026)를 원소·기기 글꼴 두 재료로 잰다. 정책 예외 없이 기본 임계 15%다 — 도장은 역할·자모마다
-  하나라 특정 음절만 고칠 수 없고, 겹침은 `spec/layout-profiles.json`의 맞춤 규칙(프로파일 전체)으로 고친다. 도장을 다시 잴 때는
-  `scripts/measure_layout_stamps.py --write`(브라우저) 뒤 `node scripts/build_layout_profiles.js --write`, 값이 바뀌면 프로파일 revision을 올린다.
-  붓 그림 세트(`butgeul-box`)는 도장 배율로 붓을 미리 누르므로 `node scripts/build_jamo_svg.js --write`도 다시 돌린다(`npm test`의 `--check`가 어긋남을 잡는다).
+  하나라 특정 음절만 고칠 수 없고, 겹침은 `spec/layout-profiles.json`의 역할 상자·맞춤 규칙(프로파일 전체)으로 고친다. 도장을 다시 지을 때는
+  `scripts/measure_layout_stamps.py --write`(역할 상자에서 짓는다, 브라우저 없음) 뒤 `node scripts/build_layout_profiles.js --write`,
+  값이 바뀌면 프로파일 revision을 올린다(이전 revision 디자인을 받을지는 `accepts`). 이어서 붓 그림 세트(`butgeul-box`)가 도장 배율로
+  붓을 미리 누르므로 `node scripts/build_jamo_svg.js --write`, 네 언어 미러·정적 자산·원소 획 정답·HTML 사례를 다시 낸다
+  (`generate_sidecar_tables.js --write` → `sync_assets.py` → `record_element_layer.py --write` → `generate_html_cases.py`, ADR-026 §2).
+  `npm test`의 `--check`들이 빠진 단계를 잡는다.
+
+- `Legibility audit (fixed layout)` 단계(2026-10-13): `scripts/glyph_legibility_audit.py`가 기본 배치(세벌 고정)가 **읽히는 꼴**인지
+  원소·기기 글꼴·SVG 그림(`pilgi-box`) 세 재료로 잰다 — 겹침·획 굵기 감사가 재지 않는 것이다(세벌 고정 revision 1은 두 감사를 넘고도
+  받침이 떨어지고 줄이 부딪혀 읽히지 않았다, ADR-026). 표본 1,000자(11자 걸러) + 대표 음절 + 문장 음절을 100px로 하나씩 띄워 그리고
+  역할마다 색(초성 빨강·중성 초록·종성 파랑)을 칠해 찍어, 음절마다 역할별 잉크 상자를 화소로 얻는다. 글자 칸·간격·빈칸 폭은 DOM에서 읽고
+  40자 줄 격자·문장은 그 상자로 셈한다. 게이트: 칸 밖 잉크 ≤ 0.01em, 위아래 줄·이웃 글자 잉크 틈 ≥ 0.06em, 받침 위 틈 ≥ 0.03em,
+  세로 모음 끝–받침 ≤ 0.08em, 초성 아래–받침 위 가운데값 ≤ 0.28em, 낱말 안 틈의 최대 < 낱말 사이의 최소. SVG 그림 세트는 획이 상자 밖으로
+  조금 나와 틈 지표를 0.02em 덜 본다. 세 재료 약 30초, 기기 글꼴 재료를 darwin 글꼴로 재므로 획 감사와 같은 플랫폼 조건이다.
+  `--font sebul`처럼 글꼴을 밝히면 보고만 한다. 지표의 셈은 `tests/test_glyph_tools.py`가 브라우저 없이 본다(가짜 상자로 통과·실패).
+- 검수 시트(게이트 아님): `scripts/review_sheets.py`가 첫 화면 제목(128px, 원소·글자 칸·기기·SVG·네온·스티커), 낱말(112·48px),
+  문단(24·48px), 1,000자 격자, 확대 자모 칸(원소·기기), 낱자, 재료 셋, 작은 글씨(16·24px, 1x·2x), 꾸밈 여덟 가지를 그린다.
+  `--before <checkout>`이면 그 checkout의 런타임으로 같은 시트를 그려 전·후를 나란히 붙인다. 배치·재료·꾸밈을 바꾸면 이 시트를 **눈으로 본다**
+  (점검표 `skills/font-kku/references/legibility.md` §3.1).
 
 ### 패키지와 그림 자소 스모크
 

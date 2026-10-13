@@ -123,6 +123,20 @@
   border-radius: 5px;
 }
 
+/* 머리말 두 문단 — 무엇을 하는 곳인지, 그리고 여섯 축 */
+.ft-leads {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.ft-head .k-hero-actions {
+  align-items: center;
+}
+
+.ft-head .k-textlink {
+  margin-inline-start: 0.4rem;
+}
+
 .ft-formula {
   margin: 0;
   color: var(--k-ink-2);
@@ -297,6 +311,22 @@
   align-self: end;
   gap: 0.4rem;
   margin-block-start: 0.2rem;
+}
+
+/* 축 하나만 고른 테마(꾸밈 하나·글꼴 하나)는 이 단추 뒤에 접혀 있다 */
+.ft-more {
+  display: flex;
+  justify-content: center;
+  margin-block-start: 1.5rem;
+}
+
+.ft-more[hidden] {
+  display: none;
+}
+
+/* 좁은 화면에서 두 줄이 되면 '더 보기'만 남지 않게 고르게 나눈다(폰꾸 글자가 아닌 단추 글이라 balance를 써도 된다) */
+.ft-more .k-btn {
+  text-wrap: balance;
 }
 
 .ft-link-btn {

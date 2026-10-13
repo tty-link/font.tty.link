@@ -17,9 +17,11 @@
 (function () {
   "use strict";
 
-  var CDN = "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/";
+  var CDN = "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/";
   var SKILL_PATH = "skill/SKILL.md";
   var SKILL_URL = "https://font.tty.link/lib/skill/SKILL.md";
+  /* 공개 사이트 — site/가 뿌리라 사례 템플릿은 SITE_URL + "examples/<파일>"이다(scripts/build_pages.py). */
+  var SITE_URL = "https://font.tty.link/";
   var SITE_ROOT = new URL("lib/", document.currentScript ? document.currentScript.src : location.href).href;
   /* 배포 빌드가 CDN을 사이트 lib/로 바꾸면(--base) 그곳에는 즉석 압축본이 없어 원본 이름을 쓴다. */
   var RUNTIME = CDN + (/^https:\/\/cdn\.jsdelivr\.net\//.test(CDN) ? "font-kku.min.js" : "font-kku.js");
@@ -164,6 +166,7 @@
     CDN: CDN,
     RUNTIME: RUNTIME,
     SKILL_URL: SKILL_URL,
+    SITE_URL: SITE_URL,
     copyText: copyText,
     toCdn: toCdn,
     download: download,

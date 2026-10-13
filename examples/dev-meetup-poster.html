@@ -1,5 +1,11 @@
 <!doctype html>
-<!-- 폰꾸 사례 템플릿 — 개발자 해커톤 포스터. 글꼴: glitch blueprint. 저장소 밖에서는 src를 https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.1/font-kku.min.js 로 바꿔 쓰세요. -->
+<!-- 폰꾸 사례 템플릿 — 개발자 해커톤 포스터 (글꼴 glitch · blueprint)
+  고쳐 쓰기
+  - 글: 행사 이름·일정·연사는 본문 글을 바꿉니다. 구조도의 처음 글자는 #glyph와 #glyph-input의 value를 함께 바꿉니다.
+  - 색: 맨 위 :root의 변수를 바꿉니다. --cyan·--magenta는 강조, --bp는 도면 바탕, --bp-cho·--bp-jung·--bp-jong은 구조도 선 색입니다.
+  - 글꼴: font="glitch"(class="font-kku" 태그는 data-font="blueprint")의 글꼴 이름을 바꿉니다. 첫 화면 글꼴은 맨 위 스크립트의 data-fonts에도 적습니다. 글꼴 목록 https://font.tty.link/fonts.html
+  - 내 글꼴: 여덟 칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 그려 FontKku.registerJamo("my-hand", …, { frame: "box" })로 등록하고 font="sebul" jamo-set="my-hand"(class="font-kku" 태그는 data-font="sebul" data-jamo-set="my-hand")로 씁니다. 그리는 곳 https://font.tty.link/font-studio.html#draw
+-->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -66,15 +72,6 @@
       font-size: clamp(17px, 2.6vw, 22px);
       font-weight: 700;
       line-height: 1.5;
-    }
-    .note {
-      display: inline-block;
-      margin: 14px 0 0;
-      padding: 6px 10px;
-      border-left: 2px solid var(--magenta);
-      font: 12.5px/1.6 var(--mono);
-      color: var(--muted);
-      background: rgb(255 255 255 / 3%);
     }
 
     /* 자모마다 다른 방향으로 잠깐 더 어긋난다 — 코어 배치(transform)를 건드리지 않게 translate 속성만 움직인다 */
@@ -265,7 +262,6 @@
         <font-kku class="year" font="glitch" size="clamp(36px, 7vw, 72px)">2026</font-kku>
       </h1>
       <p class="sub">한글을 코드로 쪼개고 다시 짓는 24시간.<br />입력기, 렌더러, 글꼴, 봇 — 한글을 다루는 무엇이든 만들어요.</p>
-      <p class="note">↳ 글리치 글꼴은 초성은 가로, 중성은 세로, 받침은 대각선으로 갈라집니다. 한 글자 안에서도 자모마다 따로 어긋나요.</p>
     </header>
 
     <dl class="facts">
@@ -291,7 +287,6 @@
           <li style="--c: var(--bp-jung)">중성 하늘 선</li>
           <li style="--c: var(--bp-jong)">받침 노란 선</li>
         </ul>
-        <p class="note" style="border-color: var(--bp-jong); background: rgb(0 0 0 / 12%); color: rgb(230 240 255 / 80%)">↳ 도면 글꼴은 자모 역할마다 선 색이 달라, 폰꾸가 한글을 자모 조각으로 조립하는 구조가 그대로 보입니다.</p>
       </div>
 
       <div class="schedule">
@@ -387,44 +382,80 @@
         return null;
       }
 
+      // 이름표 세로 자리: 차례를 지키고 서로 gap 이상 떨어지면서, 저마다 제 자모 높이에 가장 가깝게.
+      // (y − 차례 × gap)을 줄지 않게 맞추는 차례 회귀 — 이웃끼리 어긋나면 두 자리의 가운데로 모은다
+      function spread(ys, gap, lo, hi) {
+        var blocks = [];
+        ys.forEach(function (y, i) {
+          blocks.push({ sum: y - i * gap, n: 1 });
+          while (blocks.length > 1) {
+            var last = blocks[blocks.length - 1];
+            var prev = blocks[blocks.length - 2];
+            if (prev.sum / prev.n <= last.sum / last.n) break;
+            prev.sum += last.sum;
+            prev.n += last.n;
+            blocks.pop();
+          }
+        });
+        var out = [];
+        blocks.forEach(function (b) {
+          for (var k = 0; k < b.n; k += 1) out.push(b.sum / b.n + out.length * gap);
+        });
+        if (!out.length) return out;
+        var shift = out[0] < lo ? lo - out[0] : Math.min(0, hi - out[out.length - 1]);
+        return out.map(function (v) { return v + shift; });
+      }
+
+      var RANK = { "is-cho": 0, "is-jung": 1, "is-jong": 2 };
       function annotate() {
         var box = stage.getBoundingClientRect();
         var items = [];
+        var right = 0;
         glyph.querySelectorAll('[part~="jamo"]').forEach(function (node) {
           var role = roleOf(node);
           if (!role) return;
           var r = node.getBoundingClientRect();
           if (!r.width) return;
+          right = Math.max(right, r.right - box.left);
           items.push({
             role: role,
+            order: items.length,
             jamo: compat(node.dataset.jamo),
             x: r.left + r.width / 2 - box.left,
             y: r.top + r.height / 2 - box.top
           });
         });
-        items.sort(function (a, b) { return a.y - b.y; });
-        // 이름표가 겹치지 않게 세로 간격을 벌린다
-        var gap = 30;
-        items.forEach(function (item, i) {
-          item.ly = Math.max(item.y, i ? items[i - 1].ly + gap : 16);
+        // 이름표는 읽는 차례로 — 초성, 중성, 받침, 같은 역할 안에서는 런타임이 그린 차례(ㅢ = ㅡ, ㅣ)
+        items.sort(function (a, b) { return RANK[a.role[2]] - RANK[b.role[2]] || a.order - b.order; });
+        spread(items.map(function (item) { return item.y; }), 30, 16, box.height - 16).forEach(function (ly, i) {
+          items[i].ly = ly;
+          items[i].rank = i;
         });
-        var overflow = items.length ? items[items.length - 1].ly - (box.height - 16) : 0;
-        if (overflow > 0) items.forEach(function (item) { item.ly -= overflow; });
 
         labels.innerHTML = items.map(function (item) {
           return '<span class="label ' + item.role[2] + '" style="top:' + item.ly.toFixed(1) + 'px">' + item.role[1] + " " + item.jamo + "</span>";
         }).join("");
         var tags = labels.querySelectorAll(".label");
-        var color = { "is-cho": "#f2f8ff", "is-jung": "#7dd3fc", "is-jong": "#ffd666" };
+        var ends = Array.prototype.map.call(tags, function (tag) { return tag.getBoundingClientRect().left - box.left - 4; });
+        // 지시선: 자모에서 오른쪽으로 글자 밖까지 → 빈 띠에서 이름표 높이로 꺾기 → 이름표.
+        // 가는 길에 다른 자모의 표시가 있으면 그 이름표가 아래면 위로, 위면 아래로 비켜 간다
+        var out = right + 10;
+        var turn = Math.max(out + 12, Math.min.apply(null, ends) - 8);
+        var byX = items.slice().sort(function (a, b) { return a.x - b.x; });
+        var f = function (v) { return v.toFixed(1); };
         svg.setAttribute("viewBox", "0 0 " + box.width + " " + box.height);
         svg.innerHTML = items.map(function (item, i) {
-          var tag = tags[i].getBoundingClientRect();
-          var end = tag.left - box.left - 4;
-          var bend = Math.max(item.x + 24, end - 40);
-          var c = color[item.role[2]];
-          return '<circle cx="' + item.x.toFixed(1) + '" cy="' + item.y.toFixed(1) + '" r="4" fill="none" stroke="' + c + '" stroke-width="1.5"/>' +
-            '<path d="M' + (item.x + 4).toFixed(1) + " " + item.y.toFixed(1) + " H" + bend.toFixed(1) + " L" + (bend + 14).toFixed(1) + " " + item.ly.toFixed(1) + " H" + end.toFixed(1) +
-            '" fill="none" stroke="' + c + '" stroke-width="1.2" stroke-dasharray="4 3"/>';
+          var c = "var(--bp-" + item.role[2].slice(3) + ")";
+          var y = item.y;
+          var d = "M" + f(item.x + 4) + " " + f(y);
+          byX.forEach(function (other) {
+            if (other === item || other.x <= item.x + 4 || Math.abs(other.y - y) >= 10) return;
+            y = other.y + (item.rank < other.rank ? -11 : 11);
+            d += " H" + f(other.x - 16) + " L" + f(other.x - 8) + " " + f(y);
+          });
+          d += " H" + f(out) + " L" + f(turn) + " " + f(item.ly) + " H" + f(ends[i]);
+          return '<circle cx="' + f(item.x) + '" cy="' + f(item.y) + '" r="4" fill="none" style="stroke: ' + c + '" stroke-width="1.5"/>' +
+            '<path d="' + d + '" fill="none" style="stroke: ' + c + '" stroke-width="1.2" stroke-dasharray="4 3"/>';
         }).join("");
       }
 
