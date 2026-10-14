@@ -339,6 +339,11 @@ window.FontKkuThemes = {
      "-webkit-text-fill-color": "rgb(29 27 38 / 7%)"
     }
    },
+   "sprite": {
+    "rim": "0.02em",
+    "core": "color-mix(in srgb, currentColor 7%, #fff)",
+    "why": "그림 자소 재료: 마스크 칠은 자소판 알파를 글자색으로 채워 글자 외곽선이 닿지 않는다(외곽선이 색만 바꾸던 것) — 옅은 속 칠에 글자 단위 테두리"
+   },
    "element": {
     "rim": "0.02em",
     "core": "color-mix(in srgb, currentColor 7%, #fff)",

@@ -835,6 +835,27 @@
     root.style.scrollBehavior = was;
   }
 
+  /* 처음 열 때: 맞춘 뒤에도 카드·고쳐 쓰기 미리보기가 늦게 서며 위쪽 높이가 바뀌면 목표가 밀린다(느린 기기에서 #apps가
+   * 머리말 밑으로 숨고, #new는 미리보기 틀이 줄었다 몇 초 뒤 다시 늘며 300px 밀렸다). 사용자가 스크롤·입력하기 전까지 15초 동안
+   * 프레임마다 보고, 어긋나면 다시 맞춘다. ResizeObserver는 쓰지 않는다 — 미리보기 틀의 크기 맞춤(더 깊은 관찰)과 한 프레임에
+   * 겹치면 얕은 구획의 알림이 미뤄져(ResizeObserver loop) 늦게 맞췄다 */
+  function holdJump(node) {
+    var until = Date.now() + 15000;
+    var inputs = ["wheel", "touchstart", "pointerdown", "keydown"];
+    var stop = function () { until = 0; };
+    inputs.forEach(function (type) { window.addEventListener(type, stop, { passive: true }); });
+    jumpTo(node);
+    (function frame() {
+      if (Date.now() > until) {
+        inputs.forEach(function (type) { window.removeEventListener(type, stop); });
+        return;
+      }
+      var margin = parseFloat(getComputedStyle(node).scrollMarginTop) || 0;
+      if (Math.abs(node.getBoundingClientRect().top - margin) > 1) jumpTo(node);
+      requestAnimationFrame(frame);
+    })();
+  }
+
   /* 쓰임 고르기로 숨은 카드를 가리키면 고르기를 풀어 보이게 한다 */
   function revealCase(node) {
     if (node.hidden) applyFilter("");
@@ -861,13 +882,13 @@
     var node = target ? document.getElementById("case-" + target[1]) : null;
     if (node) {
       revealCase(node);
-      if (initial) jumpTo(node);
+      if (initial) holdJump(node);
       else node.scrollIntoView({ block: "start" });
       return;
     }
     if (initial && hash.length > 1) {
       node = document.getElementById(hash.slice(1));
-      if (node) jumpTo(node);
+      if (node) holdJump(node);
     }
   }
 

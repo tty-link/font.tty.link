@@ -172,6 +172,18 @@
     --fy-jamo-dx: -0.019em;
   }
 
+  :where([data-fy-font="neon"]) :is([data-jamo="ᄁ"], [data-jamo="ᄄ"], [data-jamo="ᆩ"]) {
+    --fy-t-stroke: 0.008em; --fy-tt-stroke: 0.008em; --fy-tlo-stroke: 0.008em; --fy-tlc-stroke: 0.008em;
+    --fy-tls-stroke: 0.008em; --fy-ttl-stroke: 0.008em;
+    --fy-b-stroke: 0.008em; --fy-brs-stroke: 0.008em; --fy-bbrs-stroke: 0.008em; --fy-bw-stroke: 0.008em;
+    --fy-brw-stroke: 0.008em; --fy-bbw-stroke: 0.008em; --fy-bl-stroke: 0.008em; --fy-blr-stroke: 0.008em;
+    --fy-bbl-stroke: 0.008em; --fy-br-stroke: 0.008em; --fy-brd-stroke: 0.008em; --fy-bbrd-stroke: 0.008em;
+  }
+  :where([data-fy-font="neon"]) [data-jamo="ᄈ"] {
+    --fy-t-stroke: 0.011em; --fy-tt-stroke: 0.011em; --fy-tlo-stroke: 0.011em; --fy-tlc-stroke: 0.011em;
+    --fy-tls-stroke: 0.011em; --fy-ttl-stroke: 0.011em;
+  }
+
   :where([data-fy-font="neon"]) [data-fy-pos="t"]:is([data-jamo="ᄂ"]) {
     --fy-t-left: 9.64%;
     --fy-t-scale-x: 0.817;
@@ -382,7 +394,7 @@
     --fy-ctx-dy: 0.095em;
   }
 
-  :where([data-fy-font="neon"]) [part="glyph"]:has([data-fy-pos="trs"][data-jamo="ᅢ"]) [data-fy-pos="hs"] {
+  :where([data-fy-font="neon"]) [part="glyph"]:has([data-fy-pos="trs"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="hs"] {
     --fy-hs-scale-x: 0.82;
   }
   :where([data-fy-font="neon"]) [part="glyph"]:has([data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="hts"] {
@@ -417,3 +429,21 @@
     -webkit-text-stroke-color: #6ff4ff;
   }
 }
+
+/* BEGIN GENERATED: scripts/build_looks.js — 그린 재료(원소·SVG) 칠. spec/themes.json 꾸밈 neon의 element·sprite 구간과 위 손 칠의
+ * 색에서 만든다(ADR-024 §7). 고치지 않는다 — 원본을 고치고 `node scripts/build_looks.js --write`. */
+@layer font-kku.font {
+  :where([data-fy-font="neon"][data-fy-face="element"]), :where([data-fy-font="neon"][data-fy-face="svg"]) {
+    --fy-font-element-outline: 0px;
+    --fy-font-element-width: max(calc(0.1em - 2 * 0.016em), 1.1px);
+    --fy-font-element-fill: color-mix(in srgb, currentColor 25%, #fff);
+    --fy-font-glow: drop-shadow(max(0.016em, 1.1px) 0 0 currentColor) drop-shadow(calc(-1 * max(0.016em, 1.1px)) 0 0 currentColor) drop-shadow(0 max(0.016em, 1.1px) 0 currentColor) drop-shadow(0 calc(-1 * max(0.016em, 1.1px)) 0 currentColor) drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.16em color-mix(in srgb, currentColor 70%, transparent));
+  }
+  :where([data-fy-font="neon"][data-fy-face="element"]) [part~="jamo"], :where([data-fy-font="neon"][data-fy-face="svg"]) [part~="jamo"] {
+    color: #ff6fdf;
+  }
+  :where([data-fy-font="neon"][data-fy-face="element"]) [part~="jungseong"], :where([data-fy-font="neon"][data-fy-face="svg"]) [part~="jungseong"] {
+    color: #6ff4ff;
+  }
+}
+/* END GENERATED: scripts/build_looks.js */

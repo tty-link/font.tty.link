@@ -19,6 +19,8 @@ export type {
   API,
   Component,
   Contour,
+  ExportError,
+  ExportErrorCode,
   ExportOptions,
   ExportReport,
   ExportResult,

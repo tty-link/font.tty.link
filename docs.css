@@ -732,14 +732,14 @@ a.d-card:hover {
 
 /* #customize: 역할마다 색 */
 .paint :is([part~="choseong"], [part~="head"]) { color: #d62839; }
-.paint [part~="jungseong"] { color: #1f4fd1; }
+.paint :is([part~="jungseong"], [data-fy-head-part="medial"]) { color: #1f4fd1; }
 .paint [part~="jongseong"] { color: #12965f; }
 
 /* #customize: 나만의 꾸밈 글꼴 — AI 설명서 custom-font.md의 kku-berry. 원소 획(기본)의 굵기는 --fy-element-width,
  * 그림자는 글자 칸 filter(자모의 text-shadow는 원소 획에서 보이지 않는다). */
 .kku-berry { --fy-element-width: 0.13em; }
 .kku-berry :is([part~="choseong"], [part~="head"]) { color: #c2185b; }
-.kku-berry [part~="jungseong"] { color: #7b1fa2; }
+.kku-berry :is([part~="jungseong"], [data-fy-head-part="medial"]) { color: #7b1fa2; }
 .kku-berry [part~="jongseong"] { color: #f06292; }
 .kku-berry [part="glyph"] { filter: drop-shadow(0.04em 0.04em 0 #ffd1e3); }
 

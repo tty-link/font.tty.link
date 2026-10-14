@@ -1470,7 +1470,8 @@
         { "suffix": "rotate", "type": "angle", "default": "0deg" },
         { "suffix": "size", "type": "length-percentage", "default": "1em" },
         { "suffix": "side-bearing", "type": "length-percentage", "default": "0" },
-        { "suffix": "advance", "type": "keyword", "default": "auto" }
+        { "suffix": "advance", "type": "keyword", "default": "auto" },
+        { "suffix": "stroke", "type": "length", "default": null }
       ]
     }
   ],

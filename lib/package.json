@@ -1,6 +1,6 @@
 {
   "name": "@tty.link/font-kku",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Browser library for decomposing Korean Hangul syllables into jamo and rendering them as stylable, repositionable glyph parts",
   "license": "MIT",
   "homepage": "https://font.tty.link/",
@@ -167,7 +167,8 @@
     "test:docs": "node scripts/check_markdown_links.js && node scripts/check_document_contracts.js",
     "verify": ".venv/bin/python scripts/verify.py",
     "verify:release": ".venv/bin/python scripts/verify.py --release",
-    "verify:fast": "python3 scripts/verify.py --fast"
+    "verify:fast": "python3 scripts/verify.py --fast",
+    "prepublishOnly": "python3 scripts/release_gate.py"
   },
   "publishConfig": {
     "access": "public"

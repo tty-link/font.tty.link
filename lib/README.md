@@ -9,7 +9,7 @@
 포스터, 제목, 배너, 짧은 강조 문구처럼 조형성과 상호작용이 중요한 글에 잘 맞습니다. 글자마다 관리 DOM을 만들기 때문에 일반 웹 글꼴이나 장문 본문 렌더러를 대신하지는 않습니다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js" data-fonts="sebul neon"></script>
 <font-kku font="neon" size="64">을지로 네온</font-kku>
 ```
 
@@ -18,7 +18,7 @@
 글꼴 하나에 꾸밈·변주·움직임·상호작용을 클래스와 속성으로 얹어 **조합**할 수도 있습니다. 네온 칠은 세벌에도, 고딕에도, 도트 그림 자소에도 같은 클래스로 걸립니다([조합 — 여섯 축과 테마](#조합--여섯-축과-테마)).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
 <font-kku font="gothic" class="kku-look-neon" animate="flicker" size="64">을지로 네온</font-kku>
 ```
 
@@ -70,7 +70,7 @@
 
 ### 한 줄 설치
 
-`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/" }`로 자리를 알려 줍니다.
+`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/" }`로 자리를 알려 줍니다.
 
 공개 페이지에는 jsDelivr의 `font-kku.min.js`를 씁니다. jsDelivr는 `.min`을 붙인 주소에 원본에서 즉석으로 만든 압축본(소스 맵 포함)을 보내고, 런타임은 그 이름을 보고 CSS·글꼴·확장·자소 모듈도 `.min` 압축본으로 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md) §2). 소스를 읽거나 오류를 따라갈 때는 `.min`을 뺀 `font-kku.js`를 씁니다(CSS·확장도 원본으로 받습니다). unpkg는 압축본을 만들지 않으므로 unpkg에서는 `font-kku.js`를 씁니다. 즉석 압축본에는 SRI(`integrity`)를 걸지 않습니다.
 
@@ -79,7 +79,7 @@
 <script src="./font-kku.js" data-fonts="sebul neon"></script>
 
 <!-- jsDelivr의 npm 패키지 주소 — .min이면 CSS·글꼴·확장도 .min으로 (unpkg는 .min 없이 font-kku.js) -->
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js" data-fonts="sebul neon"></script>
 ```
 
 `data-addons`를 더하면 같은 자리의 확장도 함께 붙습니다([조합](#조합--여섯-축과-테마)). `data-fonts` 없이 `data-addons`만 써도 됩니다.
@@ -123,7 +123,7 @@ named export), TypeScript 선언, CSS·글꼴·spec 서브패스 export를 제�
 
 ```bash
 npm install @tty.link/font-kku
-# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.2.tgz
+# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.3.tgz
 ```
 
 ```js
@@ -154,7 +154,7 @@ CDN 없이 파일을 직접 제공하려면 npm 패키지의 파일을 프로젝
 
 ```bash
 npm pack @tty.link/font-kku
-tar -xzf tty.link-font-kku-0.1.2.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
+tar -xzf tty.link-font-kku-0.1.3.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
 ```
 
 한 줄 설치 대신 CSS를 직접 연결하려면 `font-kku.js`, base CSS, 사용할 글꼴 CSS를 같은 폴더 구조로 둡니다.
@@ -241,7 +241,7 @@ attribute와 `data-*`는 지속 옵션입니다. `FontKku.render()`나 `refresh(
 <font-kku font="crayon" seed="auto" jamo-seeds class="kku-vary-tilt kku-vary-hue" data-kku-fx="shuffle">참 잘했어요</font-kku>
 ```
 
-- **꾸밈**은 글꼴의 칠을 섞지 않고 바꿉니다. 기기 글꼴에는 색·외곽선·그림자를 모두 글자 칠로 칠합니다. 원소 획에는 색과 속 빈 획(`--fy-element-outline`·`--fy-element-fill`)으로, 그림자·테두리는 글자 단위 `drop-shadow`로 칠합니다. 그림 자소에는 마스크 칠([ADR-014](docs/ADR/ADR-014-sprite-mask-paint.md))로 색만 칠하고, 그림자는 글자 단위로 칠합니다. 자소판의 획 질감은 남습니다.
+- **꾸밈**은 글꼴의 칠을 섞지 않고 바꿉니다. 기기 글꼴에는 색·외곽선·그림자를 모두 글자 칠로 칠합니다. 원소 획에는 색과 속 빈 획(`--fy-element-outline`·`--fy-element-fill`)으로, 그림자·테두리는 글자 단위 `drop-shadow`로 칠합니다. 그림 자소에는 마스크 칠([ADR-014](docs/ADR/ADR-014-sprite-mask-paint.md))로 색만 칠하고, 그림자와 외곽선 꾸밈의 테두리는 글자 단위로 칠합니다. 자소판의 획 질감은 남습니다. 꾸러미 글꼴(`neon`·`retro`·`blueprint`…)에 그림 세트(`jamo-set`)를 걸어도 같은 꾸밈의 그린 칠을 받습니다.
 - **변주**는 `seed`와 `jamo-seeds`를 켠 요소에서만 움직입니다. 기울기·들썩임 폭은 모든 조합 글꼴에서 겹침 감사를 통과한 범위이고, 들썩임은 자모가 서로 멀어지는 쪽으로만 움직입니다.
 - **움직임**은 글자 단위 여섯 가지가 코어에 있고, 자모 단위 일곱 가지가 `motion` 확장에 있습니다. 둘 다 같은 `animate` 속성으로 고르며, 사용자가 움직임 줄이기를 켜면 멈춥니다.
 - **상호작용**은 `fx` 확장의 `FontKkuFx.type(host, ["첫 문장", "둘째 문장"])`처럼 JS로 걸거나, `data-kku-fx`로 선언합니다.
@@ -254,8 +254,8 @@ attribute와 `data-*`는 지속 옵션입니다. `FontKku.render()`나 `refresh(
 **기본 배치는 세벌 고정입니다**([ADR-026](docs/ADR/ADR-026-sebul-fixed-layout.md)). 글꼴을 밝히지 않은 `<font-kku>`는 세벌 타자기처럼
 초성·중성·종성을 역할마다 정해진 자리와 크기로 찍습니다. 같은 초성 ㄱ은 가·고·과·각·곽 어디서나 같은 도장이고, 받침 자리는 늘 비워 둡니다.
 ㅘ는 ㅗ 조각과 ㅏ 조각으로 찍습니다. `font="sebul"`처럼 글꼴을 밝히면 그 글꼴의 문맥 배치(모음·받침에 따라 자리가 바뀌는 탈네모꼴)로 그립니다.
-배치는 디자인으로도 고릅니다. `registerDesign`에 `version: "1.2"`와 `layout: { profile: "sebul-fixed-v1", revision: "2" }`(세벌 고정) 또는
-`{ profile: "square-context-v1", revision: "1" }`(네모 문맥)를 줍니다. 0.1.1까지의 세벌 고정 revision `"1"`을 적은 디자인도 받아 지금 도장으로 그리고 진단을 남깁니다.
+배치는 디자인으로도 고릅니다. `registerDesign`에 `version: "1.2"`와 `layout: { profile: "sebul-fixed-v1", revision: "3" }`(세벌 고정) 또는
+`{ profile: "square-context-v1", revision: "1" }`(네모 문맥)를 줍니다. 0.1.1까지의 세벌 고정 revision `"1"`과 0.1.2의 `"2"`를 적은 디자인도 받아 지금 도장으로 그리고 진단을 남깁니다.
 
 | 이름 | 재료 | 용도 |
 | --- | --- | --- |
@@ -290,7 +290,7 @@ attribute와 `data-*`는 지속 옵션입니다. `FontKku.render()`나 `refresh(
 
 그림 자소 글꼴은 자소판 대신 **자모마다 SVG**로도 그립니다(벡터 자소, [ADR-013](docs/ADR/ADR-013-vector-jamo.md)). `jamo-set="sprite-system"`처럼 자모 세트를 고르면 자모 노드마다 인라인 SVG가 들어가, 획이 글자 색(`color`)을 따르고 자리가 눌려도 굵기가 그대로이며 자모마다 색·굵기·끝 모양을 CSS로 바꿉니다. 자모 세트는 코드로 등록합니다 — 기본 세트 `profiles/sprite-system.jamo.js`·`sprite-example.jamo.js`·`pixel.jamo.js`, 또는 `FontKku.registerJamo("brush", { "r0-ㄱ": "M5 12 H45 V28 Q45 54 11 65", … })`.
 
-그림 자소·벡터 자소 글꼴은 **보통 글꼴 파일(TTF·WOFF)로 내보낼 수** 있습니다(`font-kku-export.js`, [ADR-015](docs/ADR/ADR-015-font-file-export.md)) — 런타임이 조립한 자리 변환과 칸 외곽선으로 한글 11,172자를 브라우저에서 몇 초 만에 만들고(WOFF2 약 20KB), 손으로 그린 PNG 자소판도 외곽선을 따서 같은 길로 갑니다. 글꼴 작업실 재료 탭, 글꼴 시험대의 "글꼴 파일 받기", `python scripts/export_font_file.py`에서 씁니다.
+그림 자소·벡터 자소 글꼴은 **보통 글꼴 파일(TTF·WOFF)로 내보낼 수** 있습니다(`font-kku-export.js`, [ADR-015](docs/ADR/ADR-015-font-file-export.md)) — 런타임이 조립한 자리 변환과 칸 외곽선으로 한글 11,172자를 브라우저에서 몇 초 만에 만들고(WOFF2 약 20KB), 손으로 그린 PNG 자소판도 외곽선을 따서 같은 길로 갑니다. 글꼴 작업실 재료 탭, 글꼴 시험대의 "글꼴 파일 받기", `python scripts/export_font_file.py`에서 씁니다. 넣을 글자가 하나도 없으면(원소 획·8칸 그림 세트·기기 글꼴, 실리지 않은 글꼴, 한글 없는 `text`, 빈 자소판) 빈 글꼴 파일 대신 `error.code`(`EXPORT_UNSUPPORTED_FACE` 등)가 달린 오류로 거절합니다.
 
 기본 제공 자소판은 `scripts/build_jamo_svg.js`가 같은 획 정의를 `spec/sprite-layout.json`의 자리 상자에 놓고 그린 SVG입니다([ADR-011](docs/ADR/ADR-011-svg-jamo-sheets.md)). 자소판 하나는 **획 뼈대**(곧은 `plain`·필기 `pilgi`·둥근 `dunggeun`·붓 `butgeul` — 획을 어떻게 긋는가)와 **획 표현**(민획 `plain`·도트 `dot`·인주 `stamp`·분필 `chalk`·크레용 `crayon`·실땀 `stitch` — 그은 획에 입히는 재료)의 조합이며, 어느 뼈대에나 어느 표현이든 `STYLES` 한 줄로 붙습니다. 벡터라 크게 띄워도 계단이 지지 않습니다. 획 정의를 고친 뒤 `node scripts/build_jamo_svg.js --write`로 다시 그리지 않으면 `npm test`가 실패합니다. 같은 자리 상자 안에 그리면 사람이든 AI 에이전트든 새 자소판이 sprite-system의 보정된 배치를 그대로 씁니다.
 
@@ -398,7 +398,7 @@ font-kku-text --version
 한글 글꼴도 한글 입력기도 없는 기기(키오스크, 최소 설치 리눅스, 외국에서 빌린 컴퓨터)에서도 한글을 보이고 쓰게 할 수 있습니다([ADR-012](docs/ADR/ADR-012-hangul-ime-and-fontless-devices.md)).
 
 - **보이기** — 기본 원소 획(글꼴을 밝히지 않은 글, `sebul`·`gothic`·`malang`)은 자소와 낱자(`ㅋㅋ`, 조합 중인 `ㄱ`)를 CSS 획으로, 그림 자소 글꼴(`sprite-system`·`pilgi`·`dunggeun`·`butgeul`·`pixel`·`dojang`·`chalk`·`crayon`·`jasu`)은 자소판 그림으로 칠해 기기 글꼴이 필요 없습니다. 기기 글꼴로 그리는 꾸러미 글꼴(`neon`·`sticker` …)과 `--fy-face: device`만 한글 글꼴이 있어야 합니다 — `FontKku.hasHangulFont()`가 `false`면 꾸러미 글꼴 대신 같은 꾸밈 클래스(`kku-look-*`)를 원소 획에 거세요.
-- **쓰기** — 선택 모듈 `font-kku-ime.js`(npm `@tty.link/font-kku/ime`)가 영문 자판의 키를 두벌식 표준·세벌식 390·세벌식 최종 배열대로 받아 유니코드 한글을 조합합니다. `<input>`·`<textarea>`에 `attach()`로 붙이거나, `convert()`로 키 문자열을 한 번에 바꿉니다.
+- **쓰기** — 선택 모듈 `font-kku-ime.js`(npm `@tty.link/font-kku/ime`)가 영문 자판의 키를 두벌식 표준·세벌식 390·세벌식 최종 배열대로 받아 유니코드 한글을 조합합니다. `<input>`·`<textarea>`에 `attach()`로 붙이거나, `convert()`로 키 문자열을 한 번에 바꿉니다. `attach()`로 친 한글은 Cmd/Ctrl+Z로 되돌리고, 선택이 없는 칸(`type="email"`·`number` 등)에는 붙지 않습니다(`TypeError`).
 
 ```html
 <script src="font-kku-ime.js"></script>

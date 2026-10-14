@@ -32,7 +32,7 @@ declare namespace FontKku {
     /**
      * 필요할 때 받기(ADR-019)의 기준 주소 — `profiles/<font>.css`·`profiles/<set>.jamo.js`가 그 아래에 있다.
      * 한 줄 설치(`<script src=".../font-kku.js" data-fonts=…>`)는 스크립트 주소에서 스스로 정한다.
-     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/").
+     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/").
      */
     fontBase?: string;
     /** false면 아직 받지 않은 글꼴·자소 세트를 스스로 받지 않는다(기본 true). */
@@ -54,6 +54,8 @@ declare namespace FontKku {
     readonly cell?: { readonly width: number; readonly height: number; readonly gap: number; readonly space?: number };
     readonly depth?: { readonly vowel: "split"; readonly coda: "whole" };
     readonly draw?: { readonly initial?: "cho" | "bar" };
+    /** 세벌 고정 도장의 밀도 굵기 계수를 셈한 원소 굵기(바탕 em, sebul 0.1). 페이지 `--fy-element-width`가 다르면 런타임이 그 굵기로 다시 셈한다 */
+    readonly stroke?: number;
     readonly stamps?: Readonly<Record<string, LayoutStamp | readonly [LayoutStamp, LayoutStamp]>>;
   }
 
@@ -82,7 +84,7 @@ declare namespace FontKku {
      * 이전 revision(`accepts`)을 적었으면 `requested`가 그 revision이다 — 그리는 도장은 `revision`이다.
      */
     layout: { profile: string; revision: string; model: "fixed-three" | "adaptive-square"; requested?: string } | null;
-    /** 요청한 font의 CSS가 host에 도달했는지 (`id === font`) */
+    /** 요청한 font의 CSS가 host에 도달했는지 (`id === font`), 그리고 바탕 CSS(`font-kku.css`)가 그 host의 root에 닿는지 */
     loaded: boolean;
   }
 
@@ -153,6 +155,8 @@ declare namespace FontKku {
     /**
      * stylesheet를 넣을 곳. Document면 그 `<head>`(기본: 현재 document),
      * ShadowRoot면 shadow root 안 — document stylesheet는 shadow tree를 스타일하지 않는다.
+     * 바탕 CSS(`font-kku.css`)는 shadow root 안 바탕 요소가 처음 그려질 때 런타임이 그 root 맨 앞에 한 번 넣는다
+     * (한 줄 설치가 붙인 주소 → 문서의 font-kku.css 링크 → `FontKkuConfig.fontBase`). iframe 문서에는 넣지 않는다.
      */
     root?: Document | ShadowRoot;
   }
@@ -609,7 +613,8 @@ declare namespace FontKku {
      * 벡터 자소 세트를 등록한다(ADR-013). `jamo-set="<name>"`인 바탕 요소가 자소판 대신
      * 자모별 인라인 SVG로 그린다. 같은 이름을 다시 등록하면 바꾸고, 그 세트를 쓰는 바탕
      * 요소를 다시 그린다. 런타임보다 먼저 실린 모듈은 `globalThis.FontKkuJamo`에
-     * `[name, cells, options]`를 push한다.
+     * `[name, cells, options]`를 push한다. 칸을 검증해 틀리면 칸 열쇠를 대며 `TypeError`를 던진다 — 경로는 브라우저가
+     * `<path d>`로 읽는 문법이어야 한다(M/m으로 시작, 명령마다 인자 수: M·L·T 2, H·V 1, S·Q 4, C 6, A 7 — 호 깃발은 0/1, Z 0).
      */
     registerJamo(name: string, cells: JamoCells, options?: JamoSetOptions): { name: string; cells: number };
     /** 등록된 벡터 자소 세트 이름 */
@@ -624,7 +629,8 @@ declare namespace FontKku {
     registerDesign(name: string, design: Design, options?: RegisterDesignOptions): { name: string; revision: string; warnings?: DesignWarning[] };
     /**
      * 디자인 JSON을 registerDesign과 같은 규칙으로 검사해 오류를 모두 돌려준다(던지지 않고 등록하지 않는다, ADR-025 §2).
-     * 이름 문법·같은 이름 충돌은 등록의 일이라 보지 않는다.
+     * 이름 문법·같은 이름 충돌은 등록의 일이라 보지 않는다. 디자인은 JSON 데이터라, 자기를 가리키는 고리나 BigInt가 있으면
+     * 그 자리를 path로 `DESIGN_NOT_OBJECT` 하나만 돌려준다.
      */
     validateDesign(design: unknown): DesignValidation;
     /**

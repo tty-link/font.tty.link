@@ -45,6 +45,19 @@ Accepted
 - 글꼴 시험대: 그림 자소 글꼴 5종에 "글꼴 파일 받기 (TTF)".
 - CLI `scripts/export_font_file.py`: 저장소를 로컬 http로 열고 헤드리스 Chromium에서 내보낸 뒤 fontTools로 검증한다. `--woff2`를 받고, `--compare`는 표본 음절을 런타임과 비교한다(잉크 IoU).
 
+### 6. 넣을 글자가 없으면 거절한다 (2026-10-13 보강)
+- 전에는 원소 획 글꼴(`sebul`·`gothic`), 8칸 그림 세트(`frame: "box"`, 재료 `svg`), 기기 글꼴, 문서에 없는 글꼴, 한글 없는 `text`, 빈 자소판에서 `.notdef`와 공백 셋만 든 TTF(800B 안팎)를 성공으로 돌려줬다. `report.missing`만 보고는 알기 어렵고, NFD·라틴 `text`는 `missing`에도 남지 않았다.
+- 이제 `exportFont`는 빈 글꼴 대신 `Error`에 `code`를 달아 던진다(`name: "FontKkuExportError"`, `font`, `jamoSet`).
+  - `EXPORT_NO_HANGUL`: `text`에 한글 음절·호환 자모가 없다. 빈 문자열도 해당한다(전에는 '주지 않음'으로 보고 11,223자를 만들었다).
+  - `EXPORT_FONT_NOT_LOADED`: 글꼴 CSS가 없다(받기 실패·꺼짐·오타).
+  - `EXPORT_JAMO_SET_NOT_LOADED`: `jamoSet`이 등록되지 않았다.
+  - `EXPORT_UNSUPPORTED_FACE`: 재료가 그림 자소·벡터 자소가 아니다. `error.face`가 `element`·`svg`·`device`·`system` 가운데 하나다.
+  - `EXPORT_NO_GLYPHS`: 쓰는 칸 그림에 잉크가 없다.
+- 판정은 11,223자를 조립하기 전에 표본 바탕 요소 하나로 한다(`fontInfo().loaded`·`face`, `data-fy-material`, `FontKku.jamoSets()`). 런타임이 필요할 때 받는 중(`data-fy-font-pending`)이면 도착하거나 `font-kku:loaderror`가 올 때까지 최대 10초 기다린다. 표본은 `position: fixed`라 화면을 어디까지 내렸든 바로 받는다.
+- `text`는 NFC로 맞춘 뒤 거른다. 한글이 아니라 넣지 않은 글자는 `report.skipped`에 적는다(공백 제외). `report.glyphs`는 글꼴에 실제로 든 글자 수이고, 칸 그림이 비어 매핑하지 않은 글자도 `report.missing`에 넣는다.
+- 사이트 입구(시험대 단추, 작업실 재료 탭)는 `code`를 한글 까닭으로 보여 주고 내려받지 않는다.
+- 8칸 그림 세트·원소 획을 글꼴 파일로 만드는 길(그림 노드의 칸 아핀을 읽어 `[part=vector]`·`[part=element]`를 래스터로 따기)은 아직 없다. 거절은 그 전까지의 정직한 동작이다.
+
 ## Alternatives Considered
 ### 자리 배치를 JS 표로 옮겨 브라우저 없이 만들기
 - 장점: Node만으로 빌드된다.
@@ -81,3 +94,4 @@ Accepted
 
 ## Change Log
 - 2026-10-10: `font-kku-export.js`, 작업실·시험대 입구, `scripts/export_font_file.py`와 함께 Accepted로 기록
+- 2026-10-13: §6 — 넣을 글자가 없으면 `code`가 달린 오류로 거절(빈 TTF를 성공으로 돌려주던 결함), 필요할 때 받기 기다림, `text` NFC·`report.skipped`, `report.glyphs`는 든 글자 수. 시험: Node(가짜 런타임), 스모크 `font-export-refusals`, 작업실 빈 자소판, 시험대 단추

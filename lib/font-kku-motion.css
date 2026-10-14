@@ -40,11 +40,29 @@
  *   레이어 순서 문은 글꼴 CSS·꾸밈 확장과 같은 순서를 되풀이해 불러온 순서와 무관하게 한다. */
 @layer font-kku.font, font-kku.jamo, font-kku.context, font-kku.look, font-kku.motion;
 
-/* shine의 빛줄기 자리. 등록해야 키프레임 사이를 보간한다. */
-@property --kku-shine {
-  syntax: "<percentage>";
+/* shine 빛줄기 자리(자모 상자 축 위 비율 -0.4 → 1.4). 수라서 길이로도 퍼센트로도 곱한다.
+ * 0.1.2의 --kku-shine(퍼센트)과 이름을 달리해 두 판의 등록이 부딪히지 않는다. */
+@property --kku-shine-at {
+  syntax: "<number>";
   inherits: false;
-  initial-value: -40%;
+  initial-value: -0.4;
+}
+
+/* scroll-assemble 스크롤 값(0 → 1). 타임라인이 서지 않으면 1(조립). */
+@property --kku-gather-view {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+@property --kku-gather-in {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+@property --kku-gather-end {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
 }
 
 @layer font-kku.motion {
@@ -99,26 +117,75 @@
   }
 
   /* ── shine: 반짝 ────────────────────────────────────── */
+  /* 띠는 자모 상자마다 115deg로 지나간다. 키프레임은 자모 노드의 --kku-shine-at만 움직이고 재료마다 칠한다:
+   * 기기 글꼴은 글자로 오린 바탕(background-clip: text), 그림 자소는 마스크 칠(--fy-sprite-fill), 원소·SVG의
+   * CSS 획은 획 상자마다 자모 기준의 띠를 이어 칠하고, 그림 획(SVG 그림·벡터 자소)은 띠가 자모 가운데를 지날 때
+   * 빛 색 쪽으로 번쩍인다. 빛 칠·꾸밈은 칠을 오리면 흰 심·그림자가 띠를 덮어 밝기 번쩍임(kku-shine-glint)이다.
+   * 셈과 함정은 docs/NOTES/motion-addon.md. */
   :where(font-kku, .font-kku)[data-fy-animate="shine"] :where([part~="jamo"]) {
     --kku-shine-paint: linear-gradient(115deg,
-      currentColor calc(var(--kku-shine) - 26%),
-      var(--kku-shine-color, #fff8de) var(--kku-shine),
-      currentColor calc(var(--kku-shine) + 26%));
+      currentColor calc(var(--kku-shine-at) * 100% - 26%),
+      var(--kku-shine-color, #fff8de) calc(var(--kku-shine-at) * 100%),
+      currentColor calc(var(--kku-shine-at) * 100% + 26%));
     --fy-sprite-fill: var(--kku-shine-paint);
     animation: kku-shine var(--kku-motion-duration, 3s) ease-in-out infinite;
     animation-delay: calc(var(--fy-glyph-index, 0) * var(--kku-motion-stagger, 140ms));
   }
-  /* 기기 글꼴: 글자 모양으로 오린 바탕에 띠를 칠한다. 꾸밈(kku-look-*)이 걸린 글자는 칠을 투명하게
-   * 만들면 꾸밈의 그림자·외곽선이 글자 몸통으로 비쳐 색이 망가지므로, 칠은 그대로 두고 자모마다
-   * 밝기가 번쩍 지나가게 한다. */
-  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material]):not([class*="kku-look-"]) :where([part~="jamo"]) {
+  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material], [data-fy-glow], [data-fy-face="element"], [data-fy-face="svg"], [class*="kku-look-"]) :where([part~="jamo"]) {
     background-image: var(--kku-shine-paint);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material])[class*="kku-look-"] :where([part~="jamo"]) {
+  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material]):is([class*="kku-look-"], [data-fy-glow]) :where([part~="jamo"]) {
     animation-name: kku-shine-glint;
+  }
+  /* 재료 칠은 움직일 때만 — 움직임 줄이기 출력은 정지 출력과 같다 */
+  @media (prefers-reduced-motion: no-preference) {
+    /* 띠 자리를 자모 노드에서 길이로 바꿔 물려준다(축 길이 = 전진폭·sin115° + 1em·|cos115°|). --kku-shine-mix는
+     * 띠가 자모 가운데에 가까운 정도(가운데 70% — 끝까지 섞으면 흰 바탕에서 글자가 사라져 보인다). 낱자(ㅋㅋ)는
+     * 기기 글꼴처럼 움직이지 않고 같은 칠만 받는다. */
+    :where(font-kku, .font-kku)[data-fy-animate="shine"]:is([data-fy-face="element"], [data-fy-face="svg"], [data-fy-material="vector"]) :where([part~="jamo"], [part="content"][data-fy-standalone]) {
+      --kku-shine-len: calc(var(--fy-face-width, 1em) * 0.9063 + 0.4226em);
+      --kku-shine-pos: calc(var(--kku-shine-at) * var(--kku-shine-len));
+      --kku-shine-half: calc(var(--kku-shine-len) * 0.26);
+      --kku-shine-mix: calc(max(0, 1 - max(var(--kku-shine-at) - 0.5, 0.5 - var(--kku-shine-at)) / 0.26) * 70%);
+      --kku-shine-base: var(--fy-element-fill, var(--fy-font-element-fill, currentColor));
+    }
+    /* 마디: (x, y)에서 θ만큼 돈 상자의 그라데이션(115° − θ) 줄 위 띠 자리는
+     * S − (x, y)·u + (w·|sin| + t·|cos|)/2 − (w/2 − s·d)·sin. 칠 변수는 이 상자에서만 바꾼다 — 그림을 품은
+     * 상자는 자식 SVG 획이 그라데이션을 받지 못한다. */
+    :where(font-kku, .font-kku)[data-fy-animate="shine"]:is([data-fy-face="element"], [data-fy-face="svg"]):not([data-fy-material], [class*="kku-look-"]) :where([part="element"][data-element="line"]:not([data-element-drawing])) {
+      --kku-shine-a: calc(115deg - var(--fy-el-angle, 0deg));
+      --kku-shine-w: calc(var(--fy-el-len) + (var(--fy-el-s) + var(--fy-el-e)) * var(--fy-el-d));
+      --kku-shine-g: calc(var(--kku-shine-pos) - var(--fy-el-x) * 0.9063 - var(--fy-el-y) * 0.4226
+        + (var(--kku-shine-w) * max(sin(var(--kku-shine-a)), -1 * sin(var(--kku-shine-a)))
+          + var(--fy-el-t) * max(cos(var(--kku-shine-a)), -1 * cos(var(--kku-shine-a)))) / 2
+        - (var(--kku-shine-w) / 2 - var(--fy-el-s) * var(--fy-el-d)) * sin(var(--kku-shine-a)));
+      --fy-element-fill: linear-gradient(var(--kku-shine-a),
+        var(--kku-shine-base) calc(var(--kku-shine-g) - var(--kku-shine-half)),
+        var(--kku-shine-color, #fff8de) var(--kku-shine-g),
+        var(--kku-shine-base) calc(var(--kku-shine-g) + var(--kku-shine-half)));
+    }
+    /* 고리: 테두리를 비우고 테두리 상자에 띠를 칠한 뒤 안쪽(padding 상자)을 마스크로 덜어 낸다 */
+    :where(font-kku, .font-kku)[data-fy-animate="shine"]:is([data-fy-face="element"], [data-fy-face="svg"]):not([data-fy-material], [class*="kku-look-"]) :where([part="element"][data-element="ring"]:not([data-element-drawing])) {
+      --kku-shine-g: calc(var(--kku-shine-pos)
+        - (var(--fy-el-cx) - var(--fy-el-rx) - var(--fy-el-tx) / 2) * 0.9063
+        - (var(--fy-el-cy) - var(--fy-el-ry) - var(--fy-el-ty) / 2) * 0.4226);
+      --fy-element-fill: transparent;
+      background: linear-gradient(115deg,
+        var(--kku-shine-base) calc(var(--kku-shine-g) - var(--kku-shine-half)),
+        var(--kku-shine-color, #fff8de) var(--kku-shine-g),
+        var(--kku-shine-base) calc(var(--kku-shine-g) + var(--kku-shine-half))) border-box;
+      mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0) border-box;
+    }
+    /* 그림 획: SVG 재료는 칠 변수로, 벡터 자소는 글자 색으로 번쩍인다 */
+    :where(font-kku, .font-kku)[data-fy-animate="shine"][data-fy-face="svg"]:not([data-fy-material], [class*="kku-look-"]) :where([part="element"] > [part="vector"]) {
+      --fy-element-fill: color-mix(in srgb, var(--kku-shine-base), var(--kku-shine-color, #fff8de) var(--kku-shine-mix));
+    }
+    :where(font-kku, .font-kku)[data-fy-animate="shine"][data-fy-material="vector"] :where([data-fy-vector-cell] > [part="vector"]) {
+      color: color-mix(in srgb, currentColor, var(--kku-shine-color, #fff8de) var(--kku-shine-mix));
+    }
   }
 
   /* 그림 자소에서 색을 바꾸는 움직임은 마스크 칠로 — 런타임은 처음 그릴 때 바탕 요소의
@@ -154,7 +221,11 @@
   /* ── scroll-assemble: 스크롤 조립 ────────────────────── */
   /* 자모마다 씨앗값(jamo-seeds)으로 정한 방향에서 모여든다. 씨앗이 없으면 역할·글자 순번으로
    * 방향을 나눈다. 조상에 overflow: hidden이 있으면 그 상자가 기준 화면이 되므로 페이지는
-   * overflow: clip을 쓴다. 스크롤 연동 움직임이 없는 브라우저에서는 조립된 채로 보인다. */
+   * overflow: clip을 쓴다. 스크롤 연동 움직임이 없는 브라우저에서는 조립된 채로 보인다.
+   * 진행도 = view + (in − view) × end — view는 들어와서(entry 10%) 가운데까지(cover 50%), in은 화면에 다
+   * 들어올 때까지(entry 100%), end는 스크롤 상자의 마지막 50vh. 끝이 멀면 예전 진행 그대로이고, 끝에 가까울수록
+   * 빠른 쪽으로 옮겨 가 문서 끝·짧은 페이지 아래쪽처럼 가운데까지 못 오는 바탕 요소도 끝에서(스크롤할 거리가
+   * 없으면 다 보일 때) 다 모인다 — 흩어진 translate가 늘린 스크롤 높이도 끝에서 남기지 않는다. */
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       :where(font-kku, .font-kku)[data-fy-animate="scroll-assemble"] {
@@ -163,9 +234,13 @@
       :where(font-kku, .font-kku)[data-fy-animate="scroll-assemble"] :where([part~="jamo"]) {
         --kku-angle: calc(var(--fy-jamo-seed, calc(0.12 + var(--kku-step, 0) * 0.31)) * 360deg + var(--fy-glyph-index, 0) * 47deg);
         --kku-spin: calc((var(--fy-jamo-seed, calc(0.2 + var(--kku-step, 0) * 0.3)) - 0.5) * 160deg);
-        animation: kku-scroll-assemble linear both;
-        animation-timeline: --kku-scroll;
-        animation-range: entry 10% cover 50%;
+        --kku-scatter: calc(1 - var(--kku-gather-view) - (var(--kku-gather-in) - var(--kku-gather-view)) * var(--kku-gather-end));
+        animation: kku-scroll-assemble linear both, kku-scroll-assemble-in linear both, kku-scroll-assemble-end linear both;
+        animation-timeline: --kku-scroll, --kku-scroll, scroll(nearest block);
+        animation-range: entry 10% cover 50%, entry 10% entry 100%, calc(100% - 50vh) 100%;
+        opacity: calc(1 - var(--kku-scatter));
+        translate: calc(cos(var(--kku-angle)) * 1.4em * var(--kku-scatter)) calc(sin(var(--kku-angle)) * 1.4em * var(--kku-scatter));
+        rotate: calc(var(--kku-spin) * var(--kku-scatter));
       }
     }
   }
@@ -180,9 +255,11 @@
   }
 
   /* ── 움직임 줄이기 ──────────────────────────────────── */
+  /* !important — 보통 선언이면 더 구체적인 획순 규칙([data-fy-stroke-depth="stroke"])에 져 벡터 자소의 획이
+   * 그어졌다. 레이어 안 !important는 명시도와 무관하게 이 레이어의 움직임과 레이어 밖 보통 선언을 이긴다. */
   @media (prefers-reduced-motion: reduce) {
     :where(font-kku, .font-kku)[data-fy-animate] :where([part="glyph"], [part~="jamo"], [part="hoek"]) {
-      animation: none;
+      animation: none !important;
     }
   }
 }
@@ -264,19 +341,21 @@
 }
 
 @keyframes kku-shine {
-  0%, 25% { --kku-shine: -40%; }
-  75%, 100% { --kku-shine: 140%; }
+  0%, 25% { --kku-shine-at: -0.4; }
+  75%, 100% { --kku-shine-at: 1.4; }
 }
 
 @keyframes kku-scroll-assemble {
-  from {
-    opacity: 0;
-    translate: calc(cos(var(--kku-angle)) * 1.4em) calc(sin(var(--kku-angle)) * 1.4em);
-    rotate: var(--kku-spin);
-  }
-  to {
-    opacity: 1;
-    translate: 0 0;
-    rotate: 0deg;
-  }
+  from { --kku-gather-view: 0; }
+  to { --kku-gather-view: 1; }
+}
+
+@keyframes kku-scroll-assemble-in {
+  from { --kku-gather-in: 0; }
+  to { --kku-gather-in: 1; }
+}
+
+@keyframes kku-scroll-assemble-end {
+  from { --kku-gather-end: 0; }
+  to { --kku-gather-end: 1; }
 }

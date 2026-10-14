@@ -7,17 +7,19 @@
 `<head>`나 `<body>` 끝에 넣는다. `data-fonts`에 첫 화면에 보이는 글꼴 이름을 공백으로 나열하면 런타임이 기본 CSS와 그 글꼴 CSS를 처음부터 불러온다. 나열하지 않은 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다(필요할 때 받기).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="neon sticker"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js" data-fonts="neon sticker"></script>
 ```
 
 | 스크립트 속성 | 하는 일 |
 |---|---|
 | `data-fonts` | 처음부터 받을 글꼴(공백·쉼표로 나눔). 첫 화면 제목 글꼴은 여기에 적는다 — 받는 동안 잠깐(최대 3초) 가려진다. 글꼴을 밝히지 않은 글(세벌 고정)은 `sebul`로 적는다. 비우면 기본 CSS만 붙인다 |
 | `data-addons` | 확장: `looks`(꾸밈 `kku-look-*`·변주 `kku-vary-*`), `motion`(자모 움직임), `fx`(타자·흩어지기·자석·섞기). 예: `data-addons="looks motion fx"` |
-| `data-jamo-sets` | 벡터 자소 세트를 처음부터 받는다(예: `sprite-system`) — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md) |
+| `data-jamo-sets` | 벡터 자소 세트를 처음부터 받는다(예: `sprite-system`) — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md). 이것만 적어도 기본 CSS를 붙이고 필요할 때 받기를 켠다(`<link>`로 CSS를 붙인 페이지도) |
 | `data-autoload="false"` | 필요할 때 받기를 끈다. 이때는 쓰는 글꼴을 모두 `data-fonts`에 적는다 |
 
 - `data-fonts`에 없는 글꼴도 쓸 수 있다 — 화면에 나올 때 받는다.
+- 글·위젯마다 한 줄 설치를 붙여 한 페이지에 태그가 여럿이어도 런타임은 하나다. 뒤 태그의 `data-fonts`·`data-addons`·`data-jamo-sets`도 먼저 실린 런타임이 받는다(이미 받은 것은 다시 받지 않는다).
+- 웹 컴포넌트(shadow root) 안의 바탕 요소는 문서 CSS가 닿지 않는다 — 런타임이 그 shadow root에 기본 CSS를 한 번 넣는다. iframe은 다른 문서라 iframe 문서마다 한 줄 설치를 따로 넣는다.
 - 꾸러미 글꼴(`neon` 등) 여러 개 대신 `font="sebul" class="kku-look-neon"`처럼 꾸밈 클래스를 쓰면 CSS를 덜 받는다([compose.md](https://font.tty.link/lib/skill/compose.md)).
 - 런타임은 스크립트 주소를 기준으로 CSS와 글꼴 파일을 받는다. 스크립트 주소를 고치거나 런타임 내용을 페이지에 복사해 넣지 않는다.
 - 주소의 `font-kku.min.js`는 jsDelivr가 즉석으로 만든 압축본이다 — 런타임이 CSS·글꼴·확장도 `.min` 압축본으로 받는다. 소스를 읽거나 오류를 따라갈 때만 `.min`을 뺀 `font-kku.js`를 쓴다.
@@ -95,7 +97,7 @@ import FontKkuFx from "@tty.link/font-kku/fx";     // 상호작용을 쓸 때
 import하지 않은 글꼴을 필요할 때 받게 하려면 런타임에 글꼴 파일의 자리를 알려 준다.
 
 ```js
-globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/" };
+globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/" };
 ```
 
 ## 인터넷이 막힌 곳

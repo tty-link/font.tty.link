@@ -30,10 +30,6 @@
     { id: "sprite", name: "그림 자소", note: "직접 그린 자소판(SVG)으로 긋는다" },
     { id: "texture", name: "획 표현", note: "그림 자소 짜임에 획 재료만 바꿨다" }
   ];
-  /* 꾸밈 '외곽선'은 그림 자소 재료(자소판·마스크 칠)에 고리를 두르지 못한다 — font-kku-looks.css가 그 재료에는
-   * 글자색만 바꾼다. 런타임 꾸밈 CSS가 고리를 갖기 전까지 조합기는 그 짝을 막는다. */
-  var OUTLINE_LOOK = "outline";
-  var OUTLINE_DEAD = "이 글꼴에는 외곽선이 걸리지 않습니다";
   var FILTERS = [
     { id: "all", label: "모두" },
     { id: "look", label: "꾸밈" },
@@ -56,7 +52,6 @@
   var interacted = false;
   var galleryFilter = "all";
   var galleryOpen = false;
-  var droppedLook = "";
 
   function $(selector, root) {
     return (root || document).querySelector(selector);
@@ -110,17 +105,11 @@
     return s;
   }
 
-  /* 외곽선 꾸밈이 아무것도 바꾸지 못하는 글꼴인가(그림 자소 재료). */
-  function outlineDead(fontId) {
-    var font = T.fonts[fontId];
-    return Boolean(font) && font.group !== "system";
-  }
-
   function sanitize(raw) {
     var s = defaultState();
     if (!raw) return s;
     if (has(T.fonts, raw.font)) s.font = raw.font;
-    if (has(T.looks, raw.look) && !(raw.look === OUTLINE_LOOK && outlineDead(s.font))) s.look = raw.look;
+    if (has(T.looks, raw.look)) s.look = raw.look;
     s.vary = (raw.vary || []).filter(function (id, i, list) {
       return has(T.variations, id) && list.indexOf(id) === i;
     });
@@ -519,7 +508,6 @@
       Object.keys(T.looks).map(function (id) {
         return option("radio", "look", id, T.looks[id].name, false, { sample: lookSample(id), title: T.looks[id].summary });
       }).join("") + "</div>" +
-      '<p class="ft-note" data-compose-look-note hidden>외곽선 꾸밈은 그림 자소 글꼴(자소판으로 긋는 글꼴)에는 걸리지 않습니다.</p>' +
       "</fieldset>";
 
     html += '<fieldset data-axis="vary">' + legend("vary", 2, "씨앗 — 자모마다, 그릴 때마다 다르게") + '<div class="ft-opts">' +
@@ -580,15 +568,6 @@
     check("motion", compose.motion);
     check("fx", compose.fx);
     check("tone", compose.tone);
-    // 외곽선 꾸밈이 걸리지 않는 글꼴이면 그 짝을 막는다
-    var dead = outlineDead(compose.font);
-    $$('input[name="look"][value="' + OUTLINE_LOOK + '"]', form).forEach(function (input) {
-      var label = input.closest("label");
-      input.disabled = dead;
-      if (label) label.title = dead ? OUTLINE_DEAD : (T.looks[OUTLINE_LOOK] ? T.looks[OUTLINE_LOOK].summary : "");
-    });
-    var lookNote = $("[data-compose-look-note]", form);
-    if (lookNote) lookNote.hidden = !dead;
     var seedInput = form.elements.seedValue;
     if (seedInput.value !== compose.seedValue) seedInput.value = compose.seedValue;
     seedInput.disabled = compose.seed !== "fixed";
@@ -618,7 +597,6 @@
   }
 
   function hint(s) {
-    if (droppedLook) return droppedLook;
     if (s.fx === "shuffle") return "글자를 누르면 씨앗을 새로 뽑습니다.";
     if (s.fx === "scatter") return "글자에 커서를 올리거나 누르면 자모가 흩어졌다 모입니다.";
     if (s.fx === "magnet") return "커서를 글자 가까이 움직여 보세요.";
@@ -696,7 +674,6 @@
     hintNode.textContent = hint(s);
     $("[data-compose-replay]").hidden = !(s.fx === "type" || (s.motion && T.motions[s.motion].play === "once"));
     $("[data-compose-redraw]").hidden = !(s.seed === "auto");
-    droppedLook = "";
     if (!options || options.hash !== false) writeHash();
   }
 
@@ -771,8 +748,7 @@
     var s = defaultState();
     s.font = randomOf(fonts);
     var withLook = Math.random() < 0.72;
-    var looks = Object.keys(T.looks).filter(function (id) { return !(id === OUTLINE_LOOK && outlineDead(s.font)); });
-    s.look = withLook ? randomOf(looks) : "";
+    s.look = withLook ? randomOf(Object.keys(T.looks)) : "";
     s.tone = s.look ? (T.looks[s.look].tone || "light") : fontTone(s.font);
     if (Math.random() < 0.5) {
       var vary = Object.keys(T.variations);
@@ -881,11 +857,6 @@
     // 변주를 고르면 씨앗을 켜고, 씨앗을 끄면 변주를 비운다
     if (event && event.target.name === "vary" && event.target.checked && next.seed === "off") next.seed = "auto";
     if (event && event.target.name === "seed" && next.seed === "off") next.vary = [];
-    // 외곽선 꾸밈을 고른 채 그림 자소 글꼴로 바꾸면 꾸밈을 빼고 그 까닭을 알린다
-    if (event && event.target.name === "font" && next.look === OUTLINE_LOOK && outlineDead(next.font)) {
-      next.look = "";
-      droppedLook = "외곽선 꾸밈은 그림 자소 글꼴에 걸리지 않아 뺐습니다.";
-    }
     // 글꼴만 바꾸고 꾸밈이 없으면 그 글꼴이 권하는 바탕으로
     if (event && event.target.name === "font" && !next.look) next.tone = fontTone(next.font);
     if (event && event.target.name === "look" && next.look) next.tone = T.looks[next.look].tone || next.tone;
@@ -966,7 +937,6 @@
     fontTone: fontTone,
     /* 글꼴 하나를 꾸밈 없이 바탕 tone에 둘 때 칠할 글자색(묻히지 않게) — 없으면 null. 글꼴 견본 시험대와 꾸미기가 함께 쓴다. */
     inkFor: function (fontId, tone) { return inkFor({ font: fontId, look: "", tone: tone || "light" }); },
-    outlineDead: outlineDead,
     axisIds: AXIS_IDS.slice()
   };
 })();

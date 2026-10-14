@@ -58,15 +58,40 @@ Accepted
 - `--check`는 하나라도 다르면 실패하며, `npm run verify`(빠른 묶음 포함)의 `Version copies` 단계로 돈다.
 
 ### 6. 릴리스 순서
-1. `python3 scripts/bump_version.py <버전>`을 실행하고 CHANGELOG에 `YYYY-MM-DD release <버전>` 줄을 쓴다.
-2. 커밋한 뒤 `npm run verify:release`를 돌린다(공개 층 — 전체 측정 표본, 캐시를 읽지 않음).
-3. `npm publish`를 한다. 2FA가 필요하므로 maintainer가 직접 한다. 자동 배포를 붙이면 trusted publishing이나 `npm stage publish`를 쓴다.
+이 절이 공개 절차의 정본이다. [TESTING.md](../../TESTING.md) 'CI와 릴리스 점검표'와 운영 노트는 이 절을 가리키고 다시 적지 않는다.
+npm 공개와 사이트 배포는 사용자가 승인한다. 공개를 준비하는 에이전트는 아래 차례를 따르고, 5의 틀을 다 채우기 전에는 승인을 청하지 않는다.
+
+1. **공개할 커밋을 만든다.** `python3 scripts/bump_version.py <버전>`을 실행한다. CHANGELOG에 `YYYY-MM-DD release <버전>` 줄을 쓴다. 이 줄에는 바뀌는 것, 예전 출력을 지키는 법, 알려진 문제, 답 없이 기본값으로 정한 결정을 적는다. 그리고 커밋한다.
+   - 판 번호를 verify 뒤에 올리면 패키지 파일이 바뀌어 검증한 커밋과 공개할 커밋이 갈린다. 그래서 번호를 먼저 올린다.
+2. **그 커밋에서 `npm run verify:release`를 돌린다**(공개 층 — 전체 측정 표본, 캐시를 읽지 않음). 트리가 깨끗해야 한다. summary JSON이 git HEAD, 트리 더러움, pack 무결성을 함께 적어 이 커밋에 묶인다.
+   - 공개 층 단계 'Release review sheets'가 직전 공개판(npm에 올라간 바이트) 대비 전후 시트를 만들고 summary `reviewSheets`에 경로를 적는다. 모양은 판정하지 않는다. 시트는 5의 ②에서 사용자가 본다.
+3. **공개 전 탐색 점검을 돌린다.** `tests/probes/run.py`로 재현 탐침을 다시 돌린다([사용법](../../tests/probes/README.md)). 직전 공개판 이후 런타임 영역(`font-kku*.js`·`font-kku*.css`·`profiles/`)이 바뀌었으면 탐색 점검 워크플로도 돌린다. 범위는 직전 공개판부터의 diff로 좁힌다. 절차는 [runtime-sweep.md](../NOTES/runtime-sweep.md).
+   - 보고 전용 도구(헷갈리는 짝 `scripts/glyph_confusable_audit.py`, 재료 × 꾸밈 `tests/matrix_probe.py`)는 판정하지 않는다. 2의 `verify:release`가 맨 끝 보고만 단계(`Confusable pairs audit`·`Matrix probe`)로 돌고 summary `reports`에 남긴다. 시트를 열어 본다.
+   - 실패한 탐침(고쳤던 결함이 돌아옴)은 심각도와 상관없이, 이번 판에서 새로 생긴 높음 회귀는 고친 뒤 2부터 다시 한다. 아직 안 고친 알려진 결함의 탐침은 `KNOWN`을 달아 실패해도 막지 않는다(보고만). 오래된 결함은 TODO_LIST '공개판 알려진 문제'에 적고 공개를 막지 않는다.
+   - 다른 무거운 작업과 동시에 돌리지 않는다(AGENTS.md §병렬 작업).
+   - **배포 미리보기 정적 사이트 점검** `scripts/site_preview_check.py`: 그 커밋으로 font.tty.link를 정적으로 빌드해(`build_pages.py --base`로 라이브러리 주소를 사본으로) 127.0.0.1에서 내주고, 모든 쪽을 세 엔진·데스크톱·휴대폰으로 연다. tty.link는 공개 사이트를 열되 `font.tty.link/lib/**`만 사본으로 돌린다. 공개 사이트와 견줘 오류·실패 요청·예외가 있거나 덜 그려진 바탕 요소가 늘면 실패다. 전후 시트(`tmp/site-preview/<버전>-<커밋>/index.html`)는 5의 ②에서 함께 보인다. 8의 배포 전에도 다시 돈다.
+4. **`scripts/release_gate.py`가 승인 보고를 찍는다.** package.json `prepublishOnly`에 걸려 있어 `npm run prepublishOnly`로 먼저 돌려 본다. summary와 HEAD를 대조하고 승인 보고(그 사이 바뀐 패키지 파일 등)를 찍는다. `npm publish`도 같은 검사를 다시 돌려 조건이 깨졌으면 멈춘다.
+5. **사용자가 승인한다.** 아래 '공개 승인 요청 틀'을 채워 보인다. 승인 링크(npm 2FA)는 사용자가 틀을 보고 준비됐다고 할 때만 띄운다.
+6. **`npm publish`.** 2FA가 필요하므로 maintainer가 승인한다. 자동 배포를 붙이면 trusted publishing이나 `npm stage publish`를 쓴다.
    - 웹 2FA 승인 링크는 약 5분 뒤 만료된다. 브라우저에서 npmjs.com에 먼저 로그인해 둔다.
    - 대화형 터미널에서 실행한다. 비대화형 셸에서는 승인을 기다리지 않고 가려진 링크만 찍고 끝난다.
    - 올린 뒤 registry·jsDelivr에 보이기까지 몇 분 걸린다. `npm view @tty.link/font-kku version`으로 확인한다.
-4. font.tty.link를 배포한다(`python3 scripts/build_pages.py --out <배포 사본>`). 사이트의 복사 코드는 jsDelivr의 `@<버전>` 주소를 그대로 쓴다. 그래서 빌드는 런타임이 받는 파일(JS·CSS·그림·글꼴 파일)이 npm의 같은 버전과 하나라도 다르면 멈춘다 — 사이트가 보여 주는 것과 복사한 코드가 받는 것이 갈리지 않게. npm에 없는 변경을 미리 올려 보려면 `--base https://font.tty.link/lib/`로 주소를 사이트 사본으로 바꾼다.
+   - 공개한 커밋은 `npm view @tty.link/font-kku@<버전> gitHead`로 안다(npm이 공개할 때 HEAD를 적는다). 로컬 git tag는 사용자가 청할 때만 만든다.
+7. **`scripts/check_cdn_min.py`.** jsDelivr에 새 버전이 보이면 압축본 길(`font-kku.min.js`가 받는 `.min` CSS·확장·자소 모듈)이 원본과 DOM·화소까지 같게 그리는지 본다(2026-10-12 Change Log).
+8. **font.tty.link를 배포한다**(사용자 승인, `python3 scripts/build_pages.py --out <배포 사본>`). 사이트의 복사 코드는 jsDelivr의 `@<버전>` 주소를 그대로 쓴다. 그래서 빌드는 런타임이 받는 파일(JS·CSS·그림·글꼴 파일)이 npm의 같은 버전과 하나라도 다르면 멈춘다 — 사이트가 보여 주는 것과 복사한 코드가 받는 것이 갈리지 않게. npm에 없는 변경을 미리 올려 보려면 `--base https://font.tty.link/lib/`로 주소를 사이트 사본으로 바꾼다.
    - **문서만 고칠 때는 공개하지 않는다**(2026-10-13 사용자 결정). 설명서·README(.md), 명세 .json, 타입 .d.ts는 사이트 쪽이 npm보다 새로워도 빌드가 알리기만 하고 배포한다. AI 설명서 주소는 판 없는 `https://font.tty.link/lib/skill/SKILL.md`(늘 최신)이고, 설명서 안의 코드 주소는 공개된 판에 고정돼 있어 받는 코드와 어긋나지 않는다. npm·jsDelivr의 문서 사본은 다음 코드 공개 때 함께 바뀐다. 사이트 문서는 공개된 동작만 설명한다(런타임 파일 대조가 지킨다).
-5. 공개 저장소가 생긴 뒤에는 `scripts/export_public.py v<버전> --push`로 tag를 붙이고, Go tag `renderers/go/v<버전>`도 만든다.
+
+공개 저장소가 생긴 뒤에는 `scripts/export_public.py v<버전> --push`로 tag를 붙이고, Go tag `renderers/go/v<버전>`도 만든다(사용자 승인).
+
+#### 공개 승인 요청 틀
+승인을 청할 때 여섯 칸을 모두 채운다. 해당이 없으면 '없음'이라고 적는다. 한 칸이라도 비어 있으면 승인 링크를 청하지 않는다.
+
+- **① 커밋** — 검증한 커밋(summary)과 공개할 커밋, 그 사이 패키지 파일 차이(`release_gate.py` 출력). 같으면 '같음'.
+- **② 전후 시트** — 직전 공개판 대비 시트(summary `reviewSheets`)의 경로나 그림을 사용자에게 직접 보인다. 16·24·32·48·120px 문단과 헷갈리는 짝을 담는다. 에이전트·LLM 판정단이 본 것으로 대신하지 않는다.
+- **③ 알려진 문제** — TODO_LIST '## 공개판 알려진 문제'를 그대로 싣는다. 3의 탐색 점검 결과와, 실기기 확인을 하지 않았다면 그 사실도 넣는다.
+- **④ 답이 없는 결정** — TODO_LIST '## 결정 대기'의 항목과 각 기본값. 답 없이 공개하면 기본값으로 공개했다고 CHANGELOG에 적는다.
+- **⑤ 관문 변경** — 직전 공개판 이후 더한 정책 예외(`tests/*-policy.json`의 새 `reason` 줄)와 기준선 변경(`tests/baselines/`·`spec/html-cases.json`·`spec/element-layer.json`).
+- **⑥ 바뀌는 것** — 기존 페이지 출력이 바뀌는 것과 예전 출력을 지키는 법(예: CDN `@<직전 버전>` 고정, `font="sebul"`). CHANGELOG release 줄과 같게.
 
 ## Alternatives Considered
 ### 비스코프 이름 `font-kku`
@@ -89,3 +114,7 @@ Accepted
 ## Change Log
 - 2026-10-12: 릴리스 순서 3(`npm publish`) 뒤 — jsDelivr에 새 버전이 보이면 `scripts/check_cdn_min.py`로 압축본 길(`font-kku.min.js`가 받는 `.min` CSS·확장·자소 모듈)이 원본과 DOM·화소까지 같게 그리는지 본다. 네트워크를 써서 verify에는 넣지 않는다(그 버전이 없으면 SKIP). 공개 전에는 `--simulate`가 같은 판 Terser 5.48.0·clean-css 5.3.3으로 흉내 낸다(0.1.0 공개본과 바이트까지 같다).
 - 2026-10-13: §6 보강 — 문서·README·명세 .json·타입은 npm 공개 없이 사이트로 고친다. 배포 빌드는 런타임 파일만 npm 공개본과 대조하고, AI 설명서 주소를 `font.tty.link/lib/skill/`로 옮겼다(사용자 결정)
+- 2026-10-13: §6을 공개 절차의 정본으로 고쳐 썼다 — 번호를 먼저 올린 커밋에서 `verify:release`(summary가 HEAD·더러움·pack 무결성을 묶음), 공개 전 탐색 점검, `scripts/release_gate.py`(`prepublishOnly`) 승인 보고, 공개 승인 요청 틀 여섯 칸, `gitHead`로 공개 커밋 확인(로컬 tag는 사용자가 청할 때만). 0.1.2를 `verify:release`한 커밋과 다른 커밋으로 공개했고, 승인 요청에 전후 시트·알려진 문제가 없었던 일에서 나왔다(비판 검토, 사용자 승인 2026-10-13)
+- 2026-10-13: §6의 3 — 실패한 탐침은 심각도와 상관없이 공개를 막는다(예전에는 새 high만 막아 records-1·api-9 같은 medium·low가 돌아와도 지나갔다). 같은 날 사용자가 공개 순서(번호 먼저)와 관문 엄격함(깨끗한 트리·pack 무결성·레지스트리에 닿아야 공개 PASS)을 그대로 두기로 했다(사용자 결정)
+- 2026-10-14: §6의 3 — 배포 미리보기 정적 사이트 점검(`scripts/site_preview_check.py`)을 공개 전 점검에 넣었다. 0.1.3 준비에서 사용자가 "font.tty.link도 테스트해야지, 정적으로 가져가서"라고 지적해 임시 스크립트로 돌렸고(공개판 대비 462번 열기), 공개 승인 요청 때 단계로 두기로 했다(사용자 결정). 화면 모양은 판정하지 않는다 — 넷째 탐색이 찾은 사례 미리보기 카드(Firefox, transform으로 줄인 질감 글씨)는 이 점검으로는 보이지 않았다
+- 2026-10-14: §6의 3 — 탐침에 `KNOWN`(아직 안 고친 알려진 결함, 그 결함이 있는 판)을 두었다. 막는 규칙은 KNOWN이 없는 탐침의 실패만 센다. 0.1.3 공개 전 탐색이 옛 결함에도 탐침을 써서, 그대로 두면 그 결함을 고칠 때까지 공개가 막혔다(사용자 결정)

@@ -557,18 +557,31 @@
     --fy-tt-top: -20.9%;
     --fy-tt-scale-y: 0.67;
   }
+
+  :where([data-fy-font="blueprint"]) [part="glyph"]:has([data-fy-pos="trs"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="tls"][data-jamo="ᄁ"] {
+    --fy-tls-left: -5.2%;
+    --fy-tls-scale-x: 0.982;
+  }
+  :where([data-fy-font="blueprint"]) [part="glyph"]:has([data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
+    --fy-ttl-left: -3.8%;
+    --fy-ttl-scale-x: 0.905;
+  }
 }
 /* END GENERATED: scripts/build_derived_fonts.js */
 
 /* 꾸밈 — 도면. 속 빈 선 글자를 긋고 자모 역할마다 선 색을 달리해(초성 흰색, 중성 하늘색,
  * 받침 노랑) 한글이 자모 조각으로 조립되는 구조를 설계도처럼 보여 준다. 파란 도면 바탕에서
  * 쓴다. 선 폭은 폰트 레벨 획 보상(--fy-font-stroke)이다 — gothic은 slot 외곽선을 쓰지 않아
- * 이 값이 모든 자모에 닿는다. 비한글 글자는 host 칠(흰 선)을 쓴다. */
+ * 이 값이 모든 자모에 닿는다. 비한글 글자와 낱자(ㅋㅋ)도 host 칠로 같은 흰 선 글자다 — 옅게 비치는
+ * 속(-webkit-text-fill-color)에 한글과 같은 선 폭(--fy-content-stroke, 2026-10-13. 그 전에는 속 찬 흰
+ * 글자였다). 채운 비한글을 원하면 페이지가 바탕 요소에 --fy-content-stroke: 0px. */
 @layer font-kku.font {
   :where([data-fy-font="blueprint"]) {
     --fy-font-face: device; /* 글자 칠(외곽선·그림자)이 이 글꼴이라 기기 글꼴 재료로 그린다(ADR-024). 원소 재료로는 기반 글꼴 + kku-look-blueprint */
     --fy-font-stroke: 0.018em;
+    --fy-content-stroke: var(--fy-font-stroke, 0.018em);
     color: #f2f8ff;
+    -webkit-text-fill-color: rgb(242 248 255 / 0.2);
     -webkit-text-stroke-color: #f2f8ff;
   }
   :where([data-fy-font="blueprint"]) [part~="jamo"] {
@@ -584,3 +597,24 @@
     -webkit-text-stroke-color: #ffd666;
   }
 }
+
+/* BEGIN GENERATED: scripts/build_looks.js — 그린 재료(원소·SVG) 칠. spec/themes.json 꾸밈 blueprint의 element·sprite 구간과 위 손 칠의
+ * 색에서 만든다(ADR-024 §7). 고치지 않는다 — 원본을 고치고 `node scripts/build_looks.js --write`. */
+@layer font-kku.font {
+  :where([data-fy-font="blueprint"][data-fy-face="element"]), :where([data-fy-font="blueprint"][data-fy-face="svg"]) {
+    --fy-font-element-outline: 0px;
+    --fy-font-element-width: max(calc(0.072em - 2 * 0.014em), 1.1px);
+    --fy-font-element-fill: color-mix(in srgb, currentColor 20%, #0f3d7a);
+    --fy-font-glow: drop-shadow(max(0.014em, 1.1px) 0 0 currentColor) drop-shadow(calc(-1 * max(0.014em, 1.1px)) 0 0 currentColor) drop-shadow(0 max(0.014em, 1.1px) 0 currentColor) drop-shadow(0 calc(-1 * max(0.014em, 1.1px)) 0 currentColor);
+  }
+  :where([data-fy-font="blueprint"][data-fy-face="element"]) [part~="jamo"], :where([data-fy-font="blueprint"][data-fy-face="svg"]) [part~="jamo"] {
+    color: #f2f8ff;
+  }
+  :where([data-fy-font="blueprint"][data-fy-face="element"]) [part~="jungseong"], :where([data-fy-font="blueprint"][data-fy-face="svg"]) [part~="jungseong"] {
+    color: #7dd3fc;
+  }
+  :where([data-fy-font="blueprint"][data-fy-face="element"]) [part~="jongseong"], :where([data-fy-font="blueprint"][data-fy-face="svg"]) [part~="jongseong"] {
+    color: #ffd666;
+  }
+}
+/* END GENERATED: scripts/build_looks.js */

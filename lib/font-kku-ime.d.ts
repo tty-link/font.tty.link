@@ -1,5 +1,6 @@
 /* Types for font-kku-ime.js — 영문 자판으로 한글을 조합하는 입력기(ADR-012).
- * 폰꾸 런타임과 독립인 선택 모듈이다. 조합기는 DOM 없이 돌고, attach()만 브라우저용이다. */
+ * 폰꾸 런타임과 독립인 선택 모듈이다. 조합기는 DOM 없이 돌고, attach()만 브라우저용이다.
+ * attach()는 초점이 있는 칸에 execCommand("insertText")로 써서 Cmd/Ctrl+Z로 되돌릴 수 있다. */
 declare namespace FontKkuIme {
   /** 두벌식 표준(KS X 5002), 세벌식 390, 세벌식 최종(3-91). */
   type LayoutId = "dubeol" | "sebeol-390" | "sebeol-final";
@@ -105,6 +106,14 @@ declare namespace FontKkuIme {
     keyMap(layout?: LayoutInput | null): KeyCap[][];
     /** KeyboardEvent → QWERTY 글자(물리 키 기준). 배열과 무관한 키면 null */
     keyFromEvent(event: Pick<KeyboardEvent, "code" | "key" | "shiftKey">): string | null;
+    /** 입력기를 붙인다. 선택이 없는 칸(`type="email"`·`number`·`date` …, selectionStart가 null)은 TypeError로
+     * 거절한다 — text·search·url·tel·password `<input>`이나 `<textarea>`에 붙인다. 붙인 뒤 type이 그런 값으로
+     * 바뀌면 키를 가로채지 않고 브라우저에 넘긴다(경고 한 번).
+     *
+     * 초점이 있는 칸에는 `document.execCommand("insertText" | "delete")`로 써서 브라우저 되돌리기 기록에 남는다 —
+     * Cmd/Ctrl+Z·Shift+Z가 듣는다(Chromium·Firefox는 키 하나씩, WebKit은 이어 친 글을 한 번에). 초점이 없는 칸(화면
+     * 키보드)이나 명령이 듣지 않으면 `setRangeText`로 쓰고, 그때는 브라우저가 되돌리기 기록을 비운다. 어느 쪽이든
+     * 키 하나에 `input` 이벤트는 한 번이다(`event.fontKkuIme === true`). */
     attach(field: HTMLInputElement | HTMLTextAreaElement, options?: AttachOptions): Controller;
   }
 }

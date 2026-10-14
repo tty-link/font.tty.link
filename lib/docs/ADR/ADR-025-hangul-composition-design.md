@@ -286,6 +286,9 @@ v1.1 §25.16 절차(어댑터·진단·전환 기간 뒤 제거)를 따른다.
   [ADR-018](ADR-018-stroke-depth.md), [ADR-013](ADR-013-vector-jamo.md), [ADR-008](ADR-008-font-contract-v2.md), [ADR-003](ADR-003-accessibility-contract.md)
 
 ## Change Log
+- 2026-10-13: §2 디자인은 JSON 데이터 — 자기를 가리키는 고리·BigInt는 `DESIGN_NOT_OBJECT`(path는 그 자리) 하나로, `validateDesign`과 `registerDesign`이
+  같은 오류를 낸다(전에는 검증은 ok, 등록은 revision 직렬화에서 code 없는 스택 넘침). §12 줄 끝을 지나 끌어 놓기·묶음당 선택 한 번 읽기
+  ([ADR-003](ADR-003-accessibility-contract.md) 2026-10-13 보강)
 - 2026-10-13: §12 고르기와 복사 — root `user-select: none`(10-12)을 런타임이 그린 root에서 풀고 자모 단위 선택·강조와 원문 복사를 런타임이
   맡는다([ADR-003](ADR-003-accessibility-contract.md) 2026-10-13). 정적 HTML은 그대로 원문만 복사된다
 - 2026-10-13: §12 세 브라우저 검증 보강 — WebKit 두 겹 강조(바탕 요소 `::selection`), 같은 원문 다시 그리기의 선택 끝 지키기, 두 번·세 번

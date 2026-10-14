@@ -16,7 +16,7 @@
 설치 없이 런타임 파일 하나를 받아 쓴다. 같은 파일이 브라우저와 Node 둘 다에서 돈다.
 
 ```bash
-curl -sO https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.js
+curl -sO https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.js
 node -e 'console.log(require("./font-kku.js").renderText("배포 완료").join("\n"))'
 ```
 
@@ -55,5 +55,5 @@ part = render_html("한글 제목", size=64, mode="fragment")       # 요소만
 
 - 글꼴을 밝히지 않으면 브라우저의 `<font-kku>`처럼 **세벌 고정 + 원소 획**이다 — 읽는 기기의 한글 글꼴과 무관하게 같은 모양.
 - `face="device"`(Ruby `face: "device"`, Go `WithFace("device")`, Rust `HtmlOptions.face`)는 같은 자리에 기기 한글 글꼴 글자를 놓는다(출력이 가볍다). `font="sebul"`·`"gothic"`을 밝히면 그 글꼴의 문맥 배치이고 기기 글꼴 글자다 — `font="sebul"`이 0.1.0의 기본 출력과 같다. 정적 출력의 `font="sebul"`은 기기 글꼴 글자라 브라우저 `<font-kku font="sebul">`(원소 획)과 획 모양이 다르다.
-- `fragment`를 넣는 페이지에는 CSS 두 장을 붙인다: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.css`와 `…/profiles/sebul.min.css`(`gothic`이면 `gothic.min.css`).
+- `fragment`를 넣는 페이지에는 CSS 두 장을 붙인다: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.css`와 `…/profiles/sebul.min.css`(`gothic`이면 `gothic.min.css`).
 - 정적 출력에는 그림 자소 글꼴·그림 세트·디자인·움직임·상호작용이 없다(`sebul`·`gothic`만). 만든 요소에 브라우저 런타임을 다시 돌리지 않는다.

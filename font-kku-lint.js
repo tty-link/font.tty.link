@@ -236,6 +236,7 @@
       "--fy-content-size": ["font", "host", "font", "length-percentage", "stable"],
       "--fy-content-side-bearing": ["font", "host", "font", "length-percentage", "stable"],
       "--fy-content-advance": ["font", "host", "font", "keyword", "stable"],
+      "--fy-content-stroke": ["font", "host", "font", "length", "stable"],
       "--fy-cluster-x": ["font", "host", "font", "length-percentage", "stable"],
       "--fy-cluster-y": ["font", "host", "font", "length-percentage", "stable"],
       "--fy-cluster-scale-x": ["font", "host", "font", "number", "stable"],
@@ -904,11 +905,13 @@
 
   // ── DOM contract (skills/font-kku/references/dom-contract.md §2.3·§4·§5) ──
 
-  /* Host output surface a font may add as a condition inside its scope :where. */
+  /* Host output surface a font may add as a condition inside its scope :where. data-fy-face (ADR-024)
+   * lets a font paint the element / svg faces apart from its glyph paint — text-shadow and text-stroke
+   * do not reach drawn strokes, so a paint-only font gives them colour and --fy-font-* paint there. */
   var HOST_ATTRIBUTES = [
     "data-fy-upgraded", "data-fy-host", "data-fy-expression", "data-fy-vowel-depth", "data-fy-coda-depth",
     "data-fy-material", "data-fy-sprite-kinds", "data-fy-size", "data-fy-spacing", "data-fy-wrap-unit",
-    "data-fy-animate", "data-fy-seed", "data-fy-jamo-seeds"
+    "data-fy-animate", "data-fy-seed", "data-fy-jamo-seeds", "data-fy-face"
   ];
   /* Jamo node attributes. Slot/role/kind conditions belong to the font layer,
    * identity conditions to the jamo layer. */

@@ -1383,6 +1383,16 @@ pre.demo-code::before {
   pointer-events: none;
 }
 
+/* 낱말 사이 칸은 접히는 공백(inline, 코어 CSS)이라 줄 위 띠처럼 진행폭 0인 inline-block으로 그린다 */
+:root[data-demo-boundaries="on"] [part="space"]:not(:first-child, :last-child)::before {
+  position: static;
+  display: inline-block;
+  vertical-align: top;
+  inline-size: calc(var(--fy-space-count, 1) * var(--fy-space-width, 0.5em));
+  margin-inline-end: calc(-1 * var(--fy-space-count, 1) * var(--fy-space-width, 0.5em));
+  box-sizing: border-box;
+}
+
 /* ── Footer ────────────────────────────────────────────── */
 .demo-footer {
   display: flex;

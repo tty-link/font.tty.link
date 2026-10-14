@@ -9,8 +9,8 @@
 - 기기 글꼴로 그려지는 `<textarea>`·버튼 글은 이런 기기에서 보이지 않는다. 보이는 한글은 폰꾸로 그리고, 화면 글(단추·안내)은 영어로 둔다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku.min.js" data-fonts="sebul sticker" data-addons="looks"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/font-kku-ime.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js" data-fonts="sebul sticker" data-addons="looks"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku-ime.js"></script>
 
 <font-kku size="56" id="title">어서 오세요</font-kku>                <!-- 원소 획: 한글 글꼴 없이도 보인다 -->
 <font-kku font="sticker" size="40" id="badge">오늘만 1+1</font-kku>  <!-- 꾸러미: 기기 한글 글꼴로 그린다 -->
@@ -33,5 +33,6 @@
 ```
 
 - `hasHangulFont()`는 판단할 수 없으면 `null`을 돌려준다. `false`일 때만 바꾼다.
+- `FontKkuIme.attach()`는 `<textarea>`나 text·search·url·tel·password `<input>`에 붙인다. `type="email"`·`number`처럼 선택이 없는 칸은 `TypeError`로 거절한다. 친 한글은 Cmd/Ctrl+Z로 되돌린다.
 
 완성 예: 폰꾸 사이트의 웹 앱 전광판 `https://font.tty.link/sign.html`과 메모장 `https://font.tty.link/memo.html`. 주소에 `?hangul-font=none`을 붙이면 글꼴 없는 기기처럼 보인다.

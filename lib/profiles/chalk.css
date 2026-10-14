@@ -176,6 +176,13 @@
     --fy-ttl-top: 0.03%; --fy-ttl-left: 0.68%; --fy-ttl-size: 1.104em; --fy-ttl-scale-x: 0.626; --fy-ttl-scale-y: 0.526;
   }
 
+  :where([data-fy-font="chalk"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄁ"] {
+    --fy-tls-left: -0.1%; --fy-tls-scale-x: 0.591;
+  }
+  :where([data-fy-font="chalk"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
+    --fy-ttl-left: 1.24%; --fy-ttl-scale-x: 0.57;
+  }
+
   :where([data-fy-font="chalk"]) [part="glyph"]:has([data-fy-pos="tro"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
     --fy-tlo-left: 0.8%; --fy-tlo-scale-x: 0.8;
   }
@@ -271,6 +278,26 @@
 
   :where([data-fy-font="chalk"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"] {
     --fy-b-top: 8.82%; --fy-b-scale-y: 0.895;
+  }
+}
+
+@layer font-kku.jamo {
+  :where([data-fy-font="chalk"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-top: 3.71%; --fy-b-scale-y: 0.971;
+  }
+}
+@layer font-kku.context {
+  :where([data-fy-font="chalk"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-top: 10.29%; --fy-b-scale-y: 0.883;
+  }
+  :where([data-fy-font="chalk"]) [part="glyph"]:has([data-fy-pos="b"][data-jamo="ᇂ"]) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+    --fy-ctx-dy: -0.048em;
+  }
+  :where([data-fy-font="chalk"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-top: 13.9%; --fy-b-scale-y: 0.833;
+  }
+  :where([data-fy-font="chalk"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"])):has([data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"], [data-jamo="ᅳ"])) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-top: -2.07%; --fy-b-scale-y: 1.051;
   }
 }
 
@@ -530,6 +557,8 @@
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"])) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])[data-fy-pos="ttl"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 60; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅪ"], [data-jamo="ᅫ"], [data-jamo="ᅬ"])) [data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])[data-fy-pos="tls"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 36; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅪ"], [data-jamo="ᅫ"], [data-jamo="ᅬ"])) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])[data-fy-pos="ttl"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 60; }
+  :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄁ"][data-fy-pos="tls"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 48; }
+  :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"][data-jamo="ᄁ"][data-fy-pos="ttl"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 60; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="tro"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlo"][data-jamo="ᄈ"][data-fy-pos="tlo"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 30; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="trc"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlc"][data-jamo="ᄈ"][data-fy-pos="tlc"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 42; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅴ"]) [data-fy-pos="tls"][data-jamo="ᄋ"][data-fy-pos="tls"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 12; }
@@ -538,6 +567,10 @@
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅱ"][data-fy-pos="mtw"][data-sprite-jamo-kind="vowel"] { --fy-sprite-row: 1; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"][data-fy-pos="b"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 2; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"][data-fy-pos="b"][data-sprite-jamo-kind="coda-cluster"] { --fy-sprite-row: 3; }
+  :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="b"][data-jamo="ᇂ"][data-fy-pos="b"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 2; }
+  :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="b"][data-jamo="ᇂ"][data-fy-pos="b"][data-sprite-jamo-kind="coda-cluster"] { --fy-sprite-row: 3; }
+  :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"][data-jamo="ᇂ"][data-fy-pos="b"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 8; }
+  :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"][data-jamo="ᇂ"][data-fy-pos="b"][data-sprite-jamo-kind="coda-cluster"] { --fy-sprite-row: 9; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅪ"], [data-jamo="ᅬ"])) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"])[data-fy-pos="tls"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 30; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"])[data-fy-pos="tls"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 54; }
   :where([data-fy-font="chalk"][data-fy-material="sprite"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"])[data-fy-pos="tls"][data-sprite-jamo-kind="consonant"] { --fy-sprite-row: 54; }

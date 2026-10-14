@@ -172,6 +172,18 @@
     --fy-jamo-dx: -0.019em;
   }
 
+  :where([data-fy-font="geumbak"]) :is([data-jamo="ᄁ"], [data-jamo="ᄄ"], [data-jamo="ᆩ"]) {
+    --fy-t-stroke: 0.008em; --fy-tt-stroke: 0.008em; --fy-tlo-stroke: 0.008em; --fy-tlc-stroke: 0.008em;
+    --fy-tls-stroke: 0.008em; --fy-ttl-stroke: 0.008em;
+    --fy-b-stroke: 0.008em; --fy-brs-stroke: 0.008em; --fy-bbrs-stroke: 0.008em; --fy-bw-stroke: 0.008em;
+    --fy-brw-stroke: 0.008em; --fy-bbw-stroke: 0.008em; --fy-bl-stroke: 0.008em; --fy-blr-stroke: 0.008em;
+    --fy-bbl-stroke: 0.008em; --fy-br-stroke: 0.008em; --fy-brd-stroke: 0.008em; --fy-bbrd-stroke: 0.008em;
+  }
+  :where([data-fy-font="geumbak"]) [data-jamo="ᄈ"] {
+    --fy-t-stroke: 0.011em; --fy-tt-stroke: 0.011em; --fy-tlo-stroke: 0.011em; --fy-tlc-stroke: 0.011em;
+    --fy-tls-stroke: 0.011em; --fy-ttl-stroke: 0.011em;
+  }
+
   :where([data-fy-font="geumbak"]) [data-fy-pos="t"]:is([data-jamo="ᄂ"]) {
     --fy-t-left: 9.64%;
     --fy-t-scale-x: 0.817;
@@ -382,7 +394,7 @@
     --fy-ctx-dy: 0.095em;
   }
 
-  :where([data-fy-font="geumbak"]) [part="glyph"]:has([data-fy-pos="trs"][data-jamo="ᅢ"]) [data-fy-pos="hs"] {
+  :where([data-fy-font="geumbak"]) [part="glyph"]:has([data-fy-pos="trs"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="hs"] {
     --fy-hs-scale-x: 0.82;
   }
   :where([data-fy-font="geumbak"]) [part="glyph"]:has([data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="hts"] {
@@ -410,3 +422,12 @@
   :where([data-fy-font="geumbak"]) [part~="jungseong"] { color: #e3ad3a; }
   :where([data-fy-font="geumbak"]) [part~="jongseong"] { color: #eba45c; }
 }
+
+/* BEGIN GENERATED: scripts/build_looks.js — 그린 재료(원소·SVG) 칠. spec/themes.json 꾸밈 geumbak의 element·sprite 구간과 위 손 칠의
+ * 색에서 만든다(ADR-024 §7). 고치지 않는다 — 원본을 고치고 `node scripts/build_looks.js --write`. */
+@layer font-kku.font {
+  :where([data-fy-font="geumbak"][data-fy-face="element"]), :where([data-fy-font="geumbak"][data-fy-face="svg"]) {
+    --fy-font-glow: drop-shadow(0 -0.012em 0 #fff6cf) drop-shadow(0 0.03em 0 #6b4510) drop-shadow(0 0.05em 0.04em rgb(15 8 0 / 50%));
+  }
+}
+/* END GENERATED: scripts/build_looks.js */

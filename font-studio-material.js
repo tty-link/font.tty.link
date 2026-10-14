@@ -931,15 +931,39 @@
         window.FontKkuExport.download(result.ttf, name);
       }
       exportStatus(name + " · " + result.report.glyphs.toLocaleString() + "자 · " + Math.round(result.ttf.length / 1024) + "KB" +
-        (result.report.missing.length ? " · 칸이 없어 뺀 글자 " + result.report.missing.length + "개" : ""));
+        (result.report.missing.length ? " · 칸이 비어 뺀 글자 " + result.report.missing.length + "개" : ""));
       root.dataset.exportedFont = result.report.glyphs + "/" + result.ttf.length;
+      delete root.dataset.exportError;
       return result;
     }, function (error) {
       state.exporting = false;
-      exportStatus("");
-      Studio.message("글꼴 파일을 만들지 못했습니다: " + error.message, "error");
+      /* 내보낼 글자가 없으면 내보내기 모듈이 code를 단 오류로 거절한다 — 빈 파일을 내려받지 않고 까닭을 보인다 */
+      var text = exportErrorText(error);
+      exportStatus(text);
+      root.dataset.exportError = (error && error.code) || "error";
+      Studio.message(text, "error");
       throw error;
     });
+  }
+
+  var FACE_NAMES = { element: "원소 획", svg: "8칸 그림 세트(SVG)", device: "기기 글꼴", system: "기기 글꼴" };
+
+  function exportErrorText(error) {
+    switch (error && error.code) {
+      case "EXPORT_NO_GLYPHS":
+        return "자소판 칸이 비어 있어 글꼴 파일을 만들지 않았습니다 — 자소를 그린 뒤 다시 내보내세요.";
+      case "EXPORT_FONT_NOT_LOADED":
+        return "미리보기에 글꼴 CSS가 아직 걸리지 않았습니다 — 잠시 뒤 다시 내보내세요.";
+      case "EXPORT_JAMO_SET_NOT_LOADED":
+        return "그림 세트가 아직 등록되지 않아 글꼴 파일을 만들지 않았습니다.";
+      case "EXPORT_UNSUPPORTED_FACE":
+        return "이 글꼴은 " + (FACE_NAMES[error.face] || error.face || "다른 재료") +
+          "로 그려 글꼴 파일이 되지 않습니다 — 그림 자소(자소판) 글꼴만 내보냅니다.";
+      case "EXPORT_NO_HANGUL":
+        return "내보낼 한글이 없습니다.";
+      default:
+        return "글꼴 파일을 만들지 못했습니다: " + (error && error.message);
+    }
   }
 
   function exportStatus(text) {

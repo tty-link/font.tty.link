@@ -729,6 +729,18 @@
           }
           return exporter;
         }
+        /* 내보낼 글자가 없으면 내보내기 모듈이 code를 단 오류로 거절한다 — 빈 글꼴 파일을 받지 않게 단추에 까닭을 쓴다 */
+        var EXPORT_ERROR_TEXT = {
+          EXPORT_FONT_NOT_LOADED: "글꼴을 아직 받지 못했습니다 — 잠시 뒤 다시",
+          EXPORT_JAMO_SET_NOT_LOADED: "그림 세트를 아직 받지 못했습니다",
+          EXPORT_UNSUPPORTED_FACE: "이 글꼴은 글꼴 파일이 되지 않습니다",
+          EXPORT_NO_GLYPHS: "칸 그림이 비어 만들지 않았습니다",
+          EXPORT_NO_HANGUL: "내보낼 한글이 없습니다"
+        };
+        function exportErrorText(error) {
+          if (error && EXPORT_ERROR_TEXT[error.code]) return EXPORT_ERROR_TEXT[error.code];
+          return /origin|http/.test(error && error.message) ? "http 주소로 연 페이지에서만 됩니다" : "만들지 못했습니다";
+        }
         document.addEventListener("click", function (event) {
           var button = event.target.closest("[data-download-font]");
           if (!button || button.disabled) return;
@@ -746,9 +758,10 @@
             window.FontKkuExport.download(result.ttf, "fontkku-" + font.id + ".ttf");
             button.textContent = "받았습니다 · " + Math.round(result.ttf.length / 1024) + "KB";
             button.dataset.exported = String(result.report.glyphs);
+            delete button.dataset.exportError;
           }, function (error) {
-            button.textContent = /origin|http/.test(error.message) ? "http 주소로 연 페이지에서만 됩니다" : "만들지 못했습니다";
-            button.dataset.exportError = error.message;
+            button.textContent = exportErrorText(error);
+            button.dataset.exportError = (error && error.code) || (error && error.message) || "error";
           }).then(function () {
             setTimeout(function () { button.disabled = false; button.textContent = label; }, 4000);
           });

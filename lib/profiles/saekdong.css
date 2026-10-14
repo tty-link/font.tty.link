@@ -557,6 +557,15 @@
     --fy-tt-top: -20.9%;
     --fy-tt-scale-y: 0.67;
   }
+
+  :where([data-fy-font="saekdong"]) [part="glyph"]:has([data-fy-pos="trs"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="tls"][data-jamo="ᄁ"] {
+    --fy-tls-left: -5.2%;
+    --fy-tls-scale-x: 0.982;
+  }
+  :where([data-fy-font="saekdong"]) [part="glyph"]:has([data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
+    --fy-ttl-left: -3.8%;
+    --fy-ttl-scale-x: 0.905;
+  }
 }
 /* END GENERATED: scripts/build_derived_fonts.js */
 

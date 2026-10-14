@@ -137,9 +137,21 @@
   inset-inline-end: 0;
 }
 
-:where(font-kku, .font-kku) [part="root"][data-fy-selected="all"] [part="space"],
-:where(font-kku, .font-kku) [part="space"][data-fy-selected] {
+:where(font-kku, .font-kku) [part="root"][data-fy-selected="all"] [part="space"]:is(:first-child, :last-child),
+:where(font-kku, .font-kku) [part="space"]:is(:first-child, :last-child)[data-fy-selected] {
   vertical-align: top;
+  block-size: var(--fy-glyph-height, 1.2em);
+  background-color: var(--fy-selection, rgb(from Highlight r g b / min(alpha, 0.6)));
+}
+
+/* 낱말 사이 칸(아래 접히는 공백)의 띠 — 칸 폭의 상자를 줄 위에 두되 음수 끝 여백으로 진행폭은 0이다. 고르기가 줄바꿈을 바꾸지 않는다 */
+:where(font-kku, .font-kku) [part="root"][data-fy-selected="all"] [part="space"]:not(:first-child, :last-child)::before,
+:where(font-kku, .font-kku) [part="space"]:not(:first-child, :last-child)[data-fy-selected]::before {
+  content: "";
+  display: inline-block;
+  vertical-align: top;
+  inline-size: calc(var(--fy-space-count, 1) * var(--fy-space-width, 0.5em));
+  margin-inline-end: calc(-1 * var(--fy-space-count, 1) * var(--fy-space-width, 0.5em));
   block-size: var(--fy-glyph-height, 1.2em);
   background-color: var(--fy-selection, rgb(from Highlight r g b / min(alpha, 0.6)));
 }
@@ -197,6 +209,22 @@
   display: inline-block;
   inline-size: calc(var(--fy-space-count, 1) * var(--fy-space-width, 0.5em));
   block-size: 1px;
+}
+
+/* 낱말 사이 칸(앞뒤가 낱말인 칸)은 접히는 실제 공백 하나로 낸다 — 생성 내용 " "을 글자 크기 0으로 두고 폭은 word-spacing(칸 수 ×
+ * --fy-space-width, 칸 노드에서 길이로 굳어 물려받는다)으로 준다. 그래서 브라우저가 보통 글처럼 칸 뒤에서만 줄을 바꾸고, 줄 끝에 온
+ * 칸은 폭을 차지하지 않는다 — 줄 첫머리가 한 칸 들여 쓰이거나 가운데·오른쪽 정렬 줄이 반 칸 어긋나지 않고, text-align: justify가
+ * 칸을 늘린다. DOM은 그대로다(빈 span, 정적 렌더러 같음). 생성 내용은 고르거나 복사되지 않고 root가 aria-hidden이라 읽히지 않는다 —
+ * 읽히는 글자는 여전히 sr-source 하나다(ADR-003). 줄 처음·끝 칸(원문의 들여쓰기·꼬리 빈칸)은 위 inline-block 폭을 그대로 지킨다. */
+:where(font-kku, .font-kku) [part="space"]:not(:first-child, :last-child) {
+  display: inline;
+  word-spacing: calc(var(--fy-space-count, 1) * var(--fy-space-width, 0.5em));
+}
+
+:where(font-kku, .font-kku) [part="space"]:not(:first-child, :last-child)::after {
+  content: " ";
+  font-size: 0;
+  letter-spacing: 0;
 }
 
 :where(font-kku, .font-kku) [part="glyph"] {
@@ -436,6 +464,10 @@
  * 노드 글꼴 크기의 strut이 지킨다 */
 :where(font-kku, .font-kku):is([data-fy-face="element"], [data-fy-face="svg"]):not([data-fy-material]) :is([part~="jamo"], [part="content"][data-fy-standalone])::first-letter {
   font-size: 0;
+}
+/* 낱자 상자도 자모 노드처럼 빛 칠(--fy-glow, 없으면 --fy-font-glow)을 filter로 받는다 — 글꼴의 빛·테두리와 꾸밈의 테두리가 ㅋㅋ에도 닿는다 */
+:where(font-kku, .font-kku):is([data-fy-face="element"], [data-fy-face="svg"]):not([data-fy-material]) [part="content"][data-fy-standalone] {
+  filter: var(--fy-glow, var(--fy-font-glow, none));
 }
 :where(font-kku, .font-kku)[data-fy-face="element"] {
   --fy-el-w: var(--fy-element-width, var(--fy-font-element-width, 0.1em));
@@ -697,7 +729,7 @@
 }
 
 /* BEGIN GENERATED layouts: scripts/build_layout_profiles.js from spec/layout-profiles.json — do not edit by hand. */
-:where(font-kku, .font-kku):where([data-fy-layout="sebul-fixed-v1"]) { --fy-glyph-width: 0.9169em; --fy-glyph-height: 1.1999em; --fy-glyph-gap: 0em; --fy-space-width: 0.32em; }
+:where(font-kku, .font-kku):where([data-fy-layout="sebul-fixed-v1"]) { --fy-glyph-width: 0.9169em; --fy-glyph-height: 1.2037em; --fy-glyph-gap: 0em; --fy-space-width: 0.32em; }
 /* END GENERATED layouts */
 
 /* Non-Hangul glyphs keep the syllable box height so the text baseline keeps
@@ -714,12 +746,17 @@
 /* [part="content"] is emitted only for non-Hangul glyphs. It is a static
  * line-height:1 box anchored at the glyph box top — exactly the same vertical
  * frame the jamo nodes are placed in — so punctuation lands on the Hangul
- * baseline instead of floating at the cell centre. */
+ * baseline instead of floating at the cell centre.
+ * --fy-content-stroke (font or look) outlines non-Hangul text and standalone
+ * jamo like the font's hollow Hangul (도면·외곽선). No fallback on purpose:
+ * unset, the declaration is invalid at computed-value time and the stroke
+ * width inherits as before. */
 :where(font-kku, .font-kku) [part="content"] {
   display: inline-block;
   padding-inline: var(--fy-content-side-bearing, 0);
   font: inherit;
   font-size: var(--fy-content-size, 1em);
+  -webkit-text-stroke-width: var(--fy-content-stroke);
   line-height: 1;
   white-space: nowrap;
   transform-origin: center;
@@ -784,8 +821,12 @@
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   background-image: var(--fy-sprite-fill, linear-gradient(currentColor, currentColor));
-  background-size: 100% 100%;
-  background-position: 0 0;
+  /* WebKit(Safari·iPhone)은 노드 상자 가장자리 화소에 칠을 비쳐 자모마다 옅은 칸 테두리선이 생긴다. 칠을 상자보다 화면 한 화소씩
+   * 안쪽(그리고 칸의 1% — 자소판 칸 가장자리 1%는 비어 있다) 으로만 깐다. 큰 글자에서는 칸 여백 안이라 잉크가 그대로이고,
+   * 작은 글자에서는 상자 가장자리 한 화소 안의 잉크 끝만 빠진다. 2배 화면은 아래에서 0.5px */
+  background-size: calc(100% - 2 * max(1%, 1px)) calc(100% - 2 * max(1%, 1px));
+  background-position: center;
+  background-repeat: no-repeat;
   -webkit-mask-image: var(--fy-sprite-image, var(--fy-sprite-url, none));
   mask-image: var(--fy-sprite-image, var(--fy-sprite-url, none));
   -webkit-mask-repeat: no-repeat;
@@ -806,6 +847,14 @@
       + var(--fy-optical-sprite-crop-x, var(--fy-sprite-crop-x, 0em)))
     calc(var(--fy-sprite-row, 0) * var(--fy-sprite-cell, 1em) * var(--fy-optical-sprite-zoom, var(--fy-sprite-zoom, 1)) * -1
       + var(--fy-optical-sprite-crop-y, var(--fy-sprite-crop-y, 0em)));
+}
+
+@media (min-resolution: 2dppx), (-webkit-min-device-pixel-ratio: 2) {
+  :where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-paint="mask"][data-fy-sprite-kinds~="consonant"] [data-sprite-jamo-kind="consonant"]:not([data-fy-vector-cell]),
+  :where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-paint="mask"][data-fy-sprite-kinds~="vowel"] [data-sprite-jamo-kind="vowel"]:not([data-fy-vector-cell]),
+  :where(font-kku, .font-kku):is([data-fy-material="sprite"], [data-fy-material="vector"])[data-fy-sprite-paint="mask"][data-fy-sprite-kinds~="coda-cluster"] [data-sprite-jamo-kind="coda-cluster"]:not([data-fy-vector-cell]) {
+    background-size: calc(100% - 2 * max(1%, 0.5px)) calc(100% - 2 * max(1%, 0.5px));
+  }
 }
 
 /* A standalone jamo (ㅋ, a composing ㄱ) is a non-Hangul glyph. In a sprite
@@ -842,7 +891,9 @@
 :where(font-kku, .font-kku)[data-fy-material="vector"][data-fy-sprite-kinds~="consonant"] [data-sprite-jamo-kind="consonant"][data-fy-vector-cell],
 :where(font-kku, .font-kku)[data-fy-material="vector"][data-fy-sprite-kinds~="vowel"] [data-sprite-jamo-kind="vowel"][data-fy-vector-cell],
 :where(font-kku, .font-kku)[data-fy-material="vector"][data-fy-sprite-kinds~="coda-cluster"] [data-sprite-jamo-kind="coda-cluster"][data-fy-vector-cell] {
+  /* 노드 자기 글자는 칠도 획도 없이 숨긴다 — 속 빈 꾸밈(네온·외곽선)의 획 폭이 숨은 기기 글꼴 글자의 윤곽을 그림 위에 겹쳐 그렸다 */
   -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 0;
   text-shadow: none;
   inline-size: var(--fy-sprite-cell, 1em);
   block-size: var(--fy-sprite-cell, 1em);

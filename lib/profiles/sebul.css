@@ -262,6 +262,22 @@
   :where([data-fy-font="sebul"]) [data-jamo="ᅵ"] {
     --fy-jamo-dx: -0.019em;
   }
+  /* 병서 ㄲ·ㄸ·ㅃ(초성)·ㄲ(받침) — 기기 글꼴 재료의 획 굵기 보상(--fy-font-stroke)은 사방으로 넓혀, 납작하게 눌린 쌍자음의
+   * 두 낱자 사이를 메웠다. ㄲ이 위 가로줄 하나에 다리 둘인 ㅠ 꼴로 읽혔다(꾸≈푸, 밖의 받침 ≈ ㅠ, 2026-10-13). 이 자모만 보상을
+   * 줄인다(초성 0.014 → 0.008em, 받침 0.038 → 0.008em, ㅃ은 세로획 넷이 눌려 가늘어 0.011em) — 획이 조금 가볍지만(세로모음 옆
+   * 까·따·빠는 획 굵기 감사의 61%, tests/stroke-policy.json 예외) 두 낱자가 떨어진다. 원소 재료는 낱자 틈 맞춤(런타임)이, 세벌 고정은
+   * 도장이 따로 정한다 */
+  :where([data-fy-font="sebul"]) :is([data-jamo="ᄁ"], [data-jamo="ᄄ"], [data-jamo="ᆩ"]) {
+    --fy-t-stroke: 0.008em; --fy-tt-stroke: 0.008em; --fy-tlo-stroke: 0.008em; --fy-tlc-stroke: 0.008em;
+    --fy-tls-stroke: 0.008em; --fy-ttl-stroke: 0.008em;
+    --fy-b-stroke: 0.008em; --fy-brs-stroke: 0.008em; --fy-bbrs-stroke: 0.008em; --fy-bw-stroke: 0.008em;
+    --fy-brw-stroke: 0.008em; --fy-bbw-stroke: 0.008em; --fy-bl-stroke: 0.008em; --fy-blr-stroke: 0.008em;
+    --fy-bbl-stroke: 0.008em; --fy-br-stroke: 0.008em; --fy-brd-stroke: 0.008em; --fy-bbrd-stroke: 0.008em;
+  }
+  :where([data-fy-font="sebul"]) [data-jamo="ᄈ"] {
+    --fy-t-stroke: 0.011em; --fy-tt-stroke: 0.011em; --fy-tlo-stroke: 0.011em; --fy-tlc-stroke: 0.011em;
+    --fy-tls-stroke: 0.011em; --fy-ttl-stroke: 0.011em;
+  }
 
   /* 자모별 초성 상자 보정 (glyph_fit_jamo_box.py, slot=t) —
    * 한 slot의 affine은 대표 자음 하나에만 맞는다. 나머지 자음은 여기서 잡는다. */
@@ -517,8 +533,10 @@
 
   /* ㅙ/ㅞ — tail ㅐ/ㅔ가 넓어 head가 tail 첫 기둥까지 덮는다(괘·뽸 hs×trs 23%, 괭·뾓
    * hts×ttr 34%). native도 ㅙ/ㅞ에서는 head를 55% 폭으로 줄인다. tail 첫 기둥과 밀착까지만
-   * head를 좁힌다(받침 있는 tail의 ᅢ/ᅦ 왼쪽 보정은 jamo 레이어에서 껐다). */
-  :where([data-fy-font="sebul"]) [part="glyph"]:has([data-fy-pos="trs"][data-jamo="ᅢ"]) [data-fy-pos="hs"] {
+   * head를 좁힌다(받침 있는 tail의 ᅢ/ᅦ 왼쪽 보정은 jamo 레이어에서 껐다).
+   * 받침 없는 ㅞ(꿰·쒜·뛔)도 같다 — ㅔ 곁가지가 머리(꾸·쑤·뚜) 오른쪽 낱자를 덮어 기기 글꼴 재료에서
+   * 꿰가 궤, 쒜가 쉐로 읽혔다(겹침 7–9%라 감사 임계 아래였다, 2026-10-13). */
+  :where([data-fy-font="sebul"]) [part="glyph"]:has([data-fy-pos="trs"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="hs"] {
     --fy-hs-scale-x: 0.82;
   }
   :where([data-fy-font="sebul"]) [part="glyph"]:has([data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="hts"] {

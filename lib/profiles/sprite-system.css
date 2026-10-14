@@ -206,6 +206,15 @@
     --fy-sprite-row: 4;
     --fy-ttl-top: 0.03%; --fy-ttl-left: 0.68%; --fy-ttl-size: 1.104em; --fy-ttl-scale-x: 0.626; --fy-ttl-scale-y: 0.526; /* 잉크 x[0.088,0.498] y[0.055,0.35] */
   }
+  /* ㅙ 위 ㄲ — 위 상자는 홑 ㄱ(과괘괴) 평균이라, 잉크가 더 넓은 4행 ㄲ은 오른끝이 0.530em까지 가서 둘째 ㄱ 기둥이
+     ㅐ 왼기둥(0.525em)과 틈 없이 붙어 굵은 기둥 하나가 됐다 — 꽤·꽥·꽹이 괘·괙·괭으로 읽혔다(겹침 비율은 13%라
+     임계 밑). 빼의 ㅃ(기둥 0.05em 앞)처럼 왼끝을 두고 가로를 좁혀 오른끝을 0.480em에 둔다. ㅘ·ㅚ는 기둥이 멀어 그대로. */
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄁ"] {
+    --fy-tls-left: -0.1%; --fy-tls-scale-x: 0.591; /* 잉크 x[0.060,0.480] */
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
+    --fy-ttl-left: 1.24%; --fy-ttl-scale-x: 0.57; /* 잉크 x[0.070,0.480] */
+  }
   /* ㅐㅒㅔㅖ 옆 ㅃ — 0행 ㅃ 칸을 두 짝으로 복원(추출 수정)하자 오른 ㅂ이 ㅐ 왼기둥(0.52)에
      겹쳤다(빼 27%, 뺀 25%). 기준은 ㅃ을 좁혀 기둥 0.06em 앞(빼 0.513)에서 끝낸다 — 왼끝을
      고정하고 가로만 0.8배로 좁힌다. */
@@ -324,6 +333,37 @@
      흙 ㄺ 0.525~). 받침이 제자리면 내려온 bar와 20~36% 포갰다(홀·횰·홍). */
   :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"] {
     --fy-b-top: 8.82%; --fy-b-scale-y: 0.895;
+  }
+}
+
+/* 가로모음 아래 받침 ㅎ의 꼭지 틈 — 받침 ㅎ 칸은 꼭지까지 키가 커서(칸 잉크 위 0.47) 기본 b 자리(꼭지 윗선
+   0.440em)에 두면 받침 키 규칙이 올린 ㅗ 막대(밑 0.463em)에 꼭지가 묻혀, 놓·좋이 'ㅗ 막대 두 줄 + ㅇ'으로 읽혔다
+   (겹침 비율은 9–12%라 임계 밑). ㅜ·ㅠ는 기둥 끝(0.512em)이 꼭지를 덮어 뭏·눟이 늫처럼 보였다. 기준(Apple SD Gothic
+   Neo)은 받침 ㅎ을 납작하게 그려 꼭지를 모음 밑 0.03–0.05em에 둔다(놀의 ㄹ 머리 틈 0.03em과 같다). 받침 밑선(0.884–0.887em)은
+   두고 꼭지 윗선만 내린다: y(em) = top × 1.2 + 칸 잉크(0.466–0.865) × 0.992 × scale-y.
+   · 보통 초성 + ㅗ·ㅛ·ㅡ: 꼭지 0.497em(놓 틈 0.034, 읗 0.054)
+   · ㄱ·ㄲ + ㅗ·ㅛ·ㅡ: 막대가 0.03em 높아(초성 키 규칙) 꼭지 0.465em
+   · ㅜ·ㅠ(초성 무관 — 초성 키 규칙들이 기둥 끝을 모두 0.512em에 맞춘다): 꼭지 0.535em, ㅜ·ㅠ를 0.01em 더 올려 기둥 끝
+     0.502em(뭏 틈 0.03 — 흔들린 획의 필기도 0.02)
+   · ㄹ·ㅊ·ㅌ: 위 규칙(0.517em) 그대로. ㅎ 초성: 막대가 낮아(밑 0.533em) 꼭지 0.555em
+   tests/playwright_smoke.py(assert_sprite_jamo_gaps)가 그림 자소 글꼴마다 이 틈을 잰다. */
+@layer font-kku.jamo {
+  :where([data-fy-font="sprite-system"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-top: 3.71%; --fy-b-scale-y: 0.971;
+  }
+}
+@layer font-kku.context {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-top: 10.29%; --fy-b-scale-y: 0.883;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="b"][data-jamo="ᇂ"]) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+    --fy-ctx-dy: -0.048em;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-top: 13.9%; --fy-b-scale-y: 0.833;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"])):has([data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"], [data-jamo="ᅳ"])) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-top: -2.07%; --fy-b-scale-y: 1.051;
   }
 }
 
@@ -654,6 +694,12 @@
   :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅪ"], [data-jamo="ᅫ"], [data-jamo="ᅬ"])) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-ttl-dilate: drop-shadow(0.009em 0 0 #000) drop-shadow(-0.009em 0 0 #000) drop-shadow(0 0.015em 0 #000) drop-shadow(0 -0.015em 0 #000);
   }
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄁ"] {
+    --fy-tls-dilate: drop-shadow(0.012em 0 0 #000) drop-shadow(-0.012em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
+    --fy-ttl-dilate: drop-shadow(0.012em 0 0 #000) drop-shadow(-0.012em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
   :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tro"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
     --fy-tlo-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000);
   }
@@ -674,6 +720,12 @@
   }
   :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"] {
     --fy-b-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-dilate: drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
   }
   :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅪ"], [data-jamo="ᅬ"])) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-tls-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);

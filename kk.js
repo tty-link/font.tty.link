@@ -17,7 +17,7 @@
 (function () {
   "use strict";
 
-  var CDN = "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.2/";
+  var CDN = "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/";
   var SKILL_PATH = "skill/SKILL.md";
   var SKILL_URL = "https://font.tty.link/lib/skill/SKILL.md";
   /* 공개 사이트 — site/가 뿌리라 사례 템플릿은 SITE_URL + "examples/<파일>"이다(scripts/build_pages.py). */

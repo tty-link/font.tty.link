@@ -689,4 +689,16 @@
     --fy-tt-top: -20.9%;
     --fy-tt-scale-y: 0.67;
   }
+  /* ㅙ·ㅞ 위 ㄲ(꽤·꿰·꽥·꿴) — 초성 자리 상자는 홑 ㄱ(괘·궤, 오른끝 0.483em)에 맞춰져 있어, 잉크가 더 넓은 ㄲ은
+   * 오른끝이 0.55em까지 가서 둘째 ㄱ이 ㅐ 왼기둥(0.523em)·ㅔ 짧은 획에 묻혔다 — 꽤·꿰가 괘·궤처럼 읽혔고
+   * 칸 계약 세트(dunggeun-box)를 걸면 꿰 18%로 임계를 넘었다. 기준 ㄲ도 이 자리에서는 좁다(꿰 x[0.03,0.40]).
+   * 왼끝을 두고 가로만 좁혀 오른끝을 ㄱ과 같은 0.483em에 둔다. */
+  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="trs"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="tls"][data-jamo="ᄁ"] {
+    --fy-tls-left: -5.2%;
+    --fy-tls-scale-x: 0.982; /* 잉크 x[0.047,0.483] */
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
+    --fy-ttl-left: -3.8%;
+    --fy-ttl-scale-x: 0.905; /* 잉크 x[0.060,0.483] */
+  }
 }

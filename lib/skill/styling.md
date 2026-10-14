@@ -11,6 +11,7 @@
 | `[part~="jamo"]` | 모든 자소 |
 | `[part~="choseong"]` | 초성 |
 | `[part~="head"]` | 초성과 모음 앞쪽을 한 덩어리로 그린 머리(`font="sebul"`·`malang`이 '과'를 '고'+ㅏ로 그릴 때, 세벌 고정에는 없다) — 초성 색을 바꿀 때 함께 고른다 |
+| `[data-fy-head-part="medial"]` | 머리 안의 모음 획 묶음(원소 획·그림 세트) — 중성 색을 바꿀 때 함께 고르면 과의 ㅗ가 고의 ㅗ와 같은 색이다(기기 글꼴 재료의 머리는 완성형 글자 하나라 초성 색) |
 | `[part="glyph"]` | 글자 하나(자모를 모두 담는다) — 그림자·테두리를 `filter: drop-shadow()`로 줄 때 |
 | `[part~="jungseong"]` | 중성(모음) |
 | `[part~="jongseong"]` | 받침 |
@@ -18,7 +19,7 @@
 ```css
 /* 초성·중성·받침 색 바꾸기 */
 .title :is([part~="choseong"], [part~="head"]) { color: #e63946; }
-.title [part~="jungseong"] { color: #1d4ed8; }
+.title :is([part~="jungseong"], [data-fy-head-part="medial"]) { color: #1d4ed8; }
 .title [part~="jongseong"] { color: #f59e0b; }
 
 /* 네온 색 바꾸기 — 관은 color(기기 글꼴 neon은 외곽선 색도), 빛은 글자의 drop-shadow */

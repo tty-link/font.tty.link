@@ -43,9 +43,10 @@
 (function () {
   "use strict";
 
+  /* 머리 음절(과의 고)은 초성 쪽 노드다 — 그 안의 모음 획 묶음(data-fy-head-part="medial", 원소·SVG 재료)은 중성 색을 받는다 */
   var ROLES = [
     { key: "cho", label: "초성", selector: ':is([part~="choseong"], [part~="head"])' },
-    { key: "jung", label: "중성", selector: '[part~="jungseong"]' },
+    { key: "jung", label: "중성", selector: ':is([part~="jungseong"], [data-fy-head-part="medial"])' },
     { key: "jong", label: "받침", selector: '[part~="jongseong"]' }
   ];
   var PRESETS = [

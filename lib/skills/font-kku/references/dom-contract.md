@@ -473,7 +473,7 @@ font CSS가 하지 않는 것: 코어 소유 속성(`margin`, `inset`, `transfor
 | `--kku-shine-color` | 페이지 변수 | `font-kku-motion.css` | `shine`의 빛줄기 색 |
 | `--kku-look-stroke` | 바탕 요소 변수 | `font-kku-looks.css` | 외곽선 꾸밈의 고른 선 폭(변주 굵기가 이 값에 더한다) |
 
-`--kku-step`·`--kku-from`·`--kku-turn`·`--kku-spin`·`--kku-angle`·`--kku-scroll`·`--kku-shine`·`--kku-shine-paint`는 `font-kku-motion.css` 안에서만 쓰는 내부 변수다 — 페이지가 고칠 값이 아니다.
+`--kku-step`·`--kku-from`·`--kku-turn`·`--kku-spin`·`--kku-angle`·`--kku-scroll`·`--kku-scatter`·`--kku-gather-view`·`--kku-gather-in`·`--kku-gather-end`·`--kku-shine-at`·`--kku-shine-paint`·`--kku-shine-len`·`--kku-shine-pos`·`--kku-shine-half`·`--kku-shine-mix`·`--kku-shine-base`·`--kku-shine-a`·`--kku-shine-w`·`--kku-shine-g`는 `font-kku-motion.css` 안에서만 쓰는 내부 변수다 — 페이지가 고칠 값이 아니다(0.1.2까지의 `--kku-shine`은 `--kku-shine-at`이 되었다).
 
 ## 10. JS API quick reference
 
