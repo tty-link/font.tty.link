@@ -7,12 +7,12 @@
 `<head>`나 `<body>` 끝에 넣는다. `data-fonts`에 첫 화면에 보이는 글꼴 이름을 공백으로 나열하면 런타임이 기본 CSS와 그 글꼴 CSS를 처음부터 불러온다. 나열하지 않은 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다(필요할 때 받기).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js" data-fonts="neon sticker"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="neon sticker"></script>
 ```
 
 | 스크립트 속성 | 하는 일 |
 |---|---|
-| `data-fonts` | 처음부터 받을 글꼴(공백·쉼표로 나눔). 첫 화면 제목 글꼴은 여기에 적는다 — 받는 동안 잠깐(최대 3초) 가려진다. 글꼴을 밝히지 않은 글(세벌 고정)은 `sebul`로 적는다. 비우면 기본 CSS만 붙인다 |
+| `data-fonts` | 처음부터 받을 글꼴(공백·쉼표로 나눔). 첫 화면 제목 글꼴은 여기에 적는다 — 받는 동안 잠깐(최대 3초) 가려진다. 글꼴을 밝히지 않은 글(세벌식)은 `sebul`로 적는다. 비우면 기본 CSS만 붙인다 |
 | `data-addons` | 확장: `looks`(꾸밈 `kku-look-*`·변주 `kku-vary-*`), `motion`(자모 움직임), `fx`(타자·흩어지기·자석·섞기). 예: `data-addons="looks motion fx"` |
 | `data-jamo-sets` | 벡터 자소 세트를 처음부터 받는다(예: `sprite-system`) — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md). 이것만 적어도 기본 CSS를 붙이고 필요할 때 받기를 켠다(`<link>`로 CSS를 붙인 페이지도) |
 | `data-autoload="false"` | 필요할 때 받기를 끈다. 이때는 쓰는 글꼴을 모두 `data-fonts`에 적는다 |
@@ -51,7 +51,7 @@
 
 | 전용 태그 | 클래스 방식 | 기본값 | 값 |
 |---|---|---|---|
-| `font` | `data-font` | 없음 = 세벌 고정 | 글꼴 이름. 비우면 기본 배치 세벌 고정, `sebul`을 밝히면 세벌 문맥 배치 — [fonts.md](https://font.tty.link/lib/skill/fonts.md) |
+| `font` | `data-font` | 없음 = 세벌식 | 글꼴 이름. 비우면 기본 배치 세벌식, `jikgyeol`은 직결식, `sebul`을 밝히면 세벌 문맥 배치 — [fonts.md](https://font.tty.link/lib/skill/fonts.md) |
 | `size` | `data-size` | `24px` | px 숫자(`48`) 또는 CSS 길이(`3rem`, `clamp(36px, 8vw, 72px)`) |
 | `spacing` | `data-spacing` | 없음 | 띄어쓰기 폭과 낱말 사이 간격(CSS 길이) |
 | `wrap-unit` | `data-wrap-unit` | `word` | 줄바꿈 단위: `word` 낱말 · `glyph` 글자 · `line` 줄 |
@@ -73,7 +73,7 @@
 - 자동 글꼴·자모 모듈 로딩에 실패하면 `FontKku.retryFont(host)`로 재시도한다. 실패는 `font-kku:loaderror` 이벤트의 `detail: { kind, name, url, error }`로 확인한다. `retryFont`는 성공을 기다리는 Promise가 아니다. 직접 CSS URL의 완료를 기다리려면 `await FontKku.loadFont(url)`을 쓴다.
 - `<style>` 내용·CSS 행 선택처럼 load 이벤트가 없는 변경 뒤에는 `FontKku.refreshAll(host)`로 스타일을 다시 해석한다.
 - `font-kku:render`는 기존 DOM을 유지한 갱신에서도 발생한다. 이벤트에서 하는 후처리는 같은 노드에 반복해도 안전하게 작성한다.
-- 바탕 요소가 지금 어떻게 그려졌는지는 `FontKku.fontInfo(host)`로 본다 — 주요 값은 `{ font, face, layout, design, designStatus, loaded }`. `face`는 재료(`"element"` 원소 획 · `"device"` 기기 글꼴 · `"svg"` 그림 세트, 그림 자소 글꼴은 `null`), `layout`은 세벌 고정이면 `{ profile: "sebul-fixed-v1", … }`이고 문맥 배치면 `null`이다.
+- 바탕 요소가 지금 어떻게 그려졌는지는 `FontKku.fontInfo(host)`로 본다 — 주요 값은 `{ font, face, layout, design, designStatus, loaded }`. `face`는 재료(`"element"` 원소 획 · `"device"` 기기 글꼴 · `"svg"` 그림 세트, 그림 자소 글꼴은 `null`), `layout`은 세벌식이면 `{ profile: "sebul-cases-v1", … }`, 직결식이면 `{ profile: "sebul-fixed-v1", … }`이고 문맥 배치면 `null`이다.
 
 ## 번들러·ESM에서
 
@@ -97,7 +97,7 @@ import FontKkuFx from "@tty.link/font-kku/fx";     // 상호작용을 쓸 때
 import하지 않은 글꼴을 필요할 때 받게 하려면 런타임에 글꼴 파일의 자리를 알려 준다.
 
 ```js
-globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/" };
+globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/" };
 ```
 
 ## 인터넷이 막힌 곳

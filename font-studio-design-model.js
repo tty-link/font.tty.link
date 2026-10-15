@@ -1,6 +1,6 @@
 /* font-studio-design-model.js — 작업실 디자인 패널의 순수 도우미 (설계 v1.2 §13, ADR-025 F, ADR-026)
  *
- * DOM 없이 디자인 JSON(spec/design.schema.json)을 다룬다. 기본 디자인(세벌 고정), 재료 바꾸기, 배치 바꾸기와 문맥 규칙 충돌,
+ * DOM 없이 디자인 JSON(spec/design.schema.json)을 다룬다. 기본 디자인(세벌식, ADR-028), 재료 바꾸기, 배치 바꾸기와 문맥 규칙 충돌,
  * JSON 읽기 오류의 줄·칸, 검증 오류 코드의 한국어 설명, 비교 칸 자리 세기. 정본 검증은 런타임 FontKku.validateDesign(오류 전부)·
  * registerDesign이 한다 — 여기서는 화면이 미리 알려 줄 것만 본다. 작업실은 이름 하나(STUDIO_NAME)를 registerDesign의
  * { replace: true }로 바꿔 쓴다 — 등록부가 늘지 않는다. 브라우저(window.FontStudioDesign)와 Node(require) 공용.
@@ -13,9 +13,13 @@
     "editor", "display"];
   /* 작업실이 등록하는 이름 하나 — 고칠 때마다 registerDesign(STUDIO_NAME, json, { replace: true })로 바꾼다 */
   var STUDIO_NAME = "studio-design";
-  var FIXED_PROFILE = "sebul-fixed-v1";
+  /* 새 디자인의 배치 — 세벌식(짜임 고정, ADR-028). 직결식(세벌 고정)도 같은 고정 배치라 같은 제약을 받는다 */
+  var FIXED_PROFILE = "sebul-cases-v1";
+  var JIKGYEOL_PROFILE = "sebul-fixed-v1";
   var SQUARE_PROFILE = "square-context-v1";
-  /* 세벌 고정이 조각 둘로 찍는 합자 모음(font-kku.js FIXED_COMPOUND_MEDIALS와 같다) */
+  /* 도장 표로 찍는 고정 배치 모델(font-kku.js STAMPED_MODELS와 같다) — 역할·자모로만 고르고 자리마다 변주가 없다 */
+  var FIXED_MODELS = { "fixed-three": true, "case-fixed": true };
+  /* 고정 배치가 조각 둘로 찍는 합자 모음(font-kku.js FIXED_COMPOUND_MEDIALS와 같다) */
   var COMPOUND_MEDIALS = "ㅘㅙㅚㅝㅞㅟㅢ";
   var DEFAULT_FAMILY = "Apple SD Gothic Neo";
   var ROLES = ["initial", "medial", "final"];
@@ -36,7 +40,7 @@
     { id: "initial", text: "가 고 과 각 곽", role: "initial", jamo: "ᄀ", label: "초성 ㄱ" },
     { id: "medial", text: "가 나 간 난", role: "medial", jamo: "ᅡ", label: "중성 ㅏ" }
   ];
-  var LAYOUT_LABELS = { "sebul-fixed-v1": "세벌 고정", "square-context-v1": "네모 문맥", legacy: "지금 배치" };
+  var LAYOUT_LABELS = { "sebul-cases-v1": "세벌식", "sebul-fixed-v1": "직결식", "square-context-v1": "네모 문맥", legacy: "지금 배치" };
   var NODE_ROLES = { choseong: "initial", head: "head" };
   var SOURCE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
   var RESERVED = { legacy: true, inherit: true, initial: true, unset: true, revert: true, "revert-layer": true, none: true };
@@ -62,7 +66,7 @@
     return JSON.stringify(value === undefined ? null : value);
   }
 
-  /* 새 디자인 — 1.2, 세벌 고정, 선·원 재료. revision은 런타임 프로파일에서 읽는다(손으로 적지 않는다) */
+  /* 새 디자인 — 1.2, 세벌식, 선·원 재료. revision은 런타임 프로파일에서 읽는다(손으로 적지 않는다) */
   function defaultDesign(profiles) {
     var profile = profiles && profiles[FIXED_PROFILE];
     if (!profile) {
@@ -81,7 +85,7 @@
     };
   }
 
-  /* 배치 상태: fixed(세벌 고정) · square(네모 문맥) · legacy(배치를 적지 않은 1.0·1.1 — 지금 배치) · unknown(모르는 프로파일) */
+  /* 배치 상태: fixed(고정 배치 — 세벌식·직결식) · square(네모 문맥) · legacy(배치를 적지 않은 1.0·1.1 — 지금 배치) · unknown(모르는 프로파일) */
   function layoutState(design, profiles) {
     var layout = design && design.layout;
     if (!isObject(layout)) {
@@ -92,7 +96,7 @@
       return { kind: "unknown", profile: layout.profile || null, revision: layout.revision || null, model: null };
     }
     return {
-      kind: info.model === "fixed-three" ? "fixed" : "square",
+      kind: FIXED_MODELS[info.model] ? "fixed" : "square",
       profile: layout.profile,
       revision: layout.revision,
       model: info.model
@@ -277,7 +281,7 @@
     return { design: next, dropped: pruneDangling(next) };
   }
 
-  /* 세벌 고정이 받지 않는 것(설계 v1.2 L08·L09·L13): 이웃 모음·받침으로 고르는 규칙, 자리마다 다른 변주, 통짜 합자 모음 */
+  /* 고정 배치가 받지 않는 것(설계 v1.2 L08·L09·L13): 이웃 모음·받침으로 고르는 규칙, 자리마다 다른 변주, 통짜 합자 모음 */
   function fixedConflicts(design) {
     var out = [];
     (design && Array.isArray(design.rules) ? design.rules : []).forEach(function (rule) {
@@ -309,20 +313,20 @@
         return "규칙 " + conflict.ruleId + " — " + conflict.jamo + "(" + (conflict.role || "역할 없음") + ")을 받침 " +
           (conflict.value ? "있음" : "없음") + "으로 고름";
       case "method":
-        return "규칙 " + conflict.ruleId + " — 합자 모음 " + conflict.jamo + "을 통째로(direct) 그림 — 세벌 고정은 조각 둘로 찍는다";
+        return "규칙 " + conflict.ruleId + " — 합자 모음 " + conflict.jamo + "을 통째로(direct) 그림 — 고정 배치는 조각 둘로 찍는다";
       default:
         return "표시 — 자리마다 다른 변주(display.variationScope: occurrence)";
     }
   }
 
-  /* 배치 바꾸기 — 사용자가 고를 때만 1.2 + layout이 된다(L25: 이전 디자인에 배치를 몰래 끼우지 않는다). 세벌 고정으로 갈 때
+  /* 배치 바꾸기 — 사용자가 고를 때만 1.2 + layout이 된다(L25: 이전 디자인에 배치를 몰래 끼우지 않는다). 고정 배치로 갈 때
    * 문맥 규칙이 있으면 디자인을 돌려주지 않고 충돌만 돌려준다 — 지우거나 역할별 값으로 확정하기 전에는 적용하지 않는다(§13.2). */
   function withLayout(design, profile, profiles) {
     var info = profiles && profiles[profile];
     if (!info) {
       throw new TypeError("font-studio-design: unknown layout profile " + JSON.stringify(profile));
     }
-    var conflicts = info.model === "fixed-three" ? fixedConflicts(design) : [];
+    var conflicts = FIXED_MODELS[info.model] ? fixedConflicts(design) : [];
     if (conflicts.length) {
       return { design: null, conflicts: conflicts };
     }
@@ -615,11 +619,11 @@
     DESIGN_VERSION_INVALID: "version은 1.0·1.1·1.2 가운데 하나입니다",
     DESIGN_MODE_INVALID: "mode는 primitive·svg·font 가운데 하나입니다",
     DESIGN_LAYOUT_MISSING: "1.2 디자인은 배치 layout { profile, revision }을 적어야 합니다",
-    DESIGN_LAYOUT_UNKNOWN: "모르는 배치 프로파일입니다 — sebul-fixed-v1(세벌 고정)·square-context-v1(네모 문맥)",
+    DESIGN_LAYOUT_UNKNOWN: "모르는 배치 프로파일입니다 — sebul-cases-v1(세벌식)·sebul-fixed-v1(직결식)·square-context-v1(네모 문맥)",
     DESIGN_LAYOUT_REVISION: "배치 revision이 런타임 프로파일과 다릅니다 — 배치 단추로 다시 고르면 맞춥니다",
-    DESIGN_FIXED_VARIATION: "세벌 고정은 자리마다 다른 변주(display.variationScope: occurrence)를 받지 않습니다",
-    DESIGN_FIXED_CONTEXT: "세벌 고정은 역할·자모로만 고릅니다 — 이웃 모음 짜임·받침 조건(vowelLayout·hasFinal)은 네모 문맥에서만",
-    DESIGN_FIXED_COMPOUND: "세벌 고정은 합자 모음을 조각 둘로 찍습니다 — 통째로(direct) 그리는 규칙은 네모 문맥에서만",
+    DESIGN_FIXED_VARIATION: "고정 배치는 자리마다 다른 변주(display.variationScope: occurrence)를 받지 않습니다",
+    DESIGN_FIXED_CONTEXT: "고정 배치는 역할·자모로만 고릅니다 — 이웃 모음 짜임·받침 조건(vowelLayout·hasFinal)은 네모 문맥에서만",
+    DESIGN_FIXED_COMPOUND: "고정 배치는 합자 모음을 조각 둘로 찍습니다 — 통째로(direct) 그리는 규칙은 네모 문맥에서만",
     DESIGN_SOURCES_EMPTY: "소스(sources)가 하나는 있어야 합니다",
     DESIGN_SOURCE_INVALID: "소스 모양이 틀렸습니다 — id는 글자·숫자로 시작, svg는 assetSet(그림 세트 이름), font는 family",
     DESIGN_SOURCE_KIND: "소스 종류(kind)가 디자인 재료(mode)와 다릅니다",
@@ -685,7 +689,7 @@
 
   // ── 비교 칸 자리 세기 ──────────────────────────────────────────────
 
-  /* 자모 노드의 역할: 세벌 고정 도장(data-fy-stamp)이 먼저, 아니면 data-fy-role(choseong · jung-* · jong-* · head) */
+  /* 자모 노드의 역할: 고정 배치 도장(data-fy-stamp)이 먼저, 아니면 data-fy-role(choseong · jung-* · jong-* · head) */
   function nodeRole(roleAttr, stampAttr) {
     if (stampAttr) {
       return stampAttr;
@@ -758,6 +762,8 @@
     STUDIO_NAME: STUDIO_NAME,
     ERROR_TEXT: ERROR_TEXT,
     FIXED_PROFILE: FIXED_PROFILE,
+    JIKGYEOL_PROFILE: JIKGYEOL_PROFILE,
+    FIXED_MODELS: FIXED_MODELS,
     SQUARE_PROFILE: SQUARE_PROFILE,
     COMPOUND_MEDIALS: COMPOUND_MEDIALS,
     DEFAULT_FAMILY: DEFAULT_FAMILY,

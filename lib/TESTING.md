@@ -85,7 +85,7 @@ PASS"다. 릴리스 판정은 필요한 환경(macOS)에서 생략 없이 통과
 돌리지 않고 단계만 보려면 `python3 scripts/verify.py --list-stages [--tier fast|everyday|release] [--markdown]`.
 
 <!-- BEGIN GENERATED: verify.py --list-stages -->
-단계 수: fast 11 · everyday 48 · release 51. 번호는 공개 층 차례다 — 다른 층의 번호(`--from <번호>`)는 `--list-stages --tier <층>`.
+단계 수: fast 11 · everyday 49 · release 52. 번호는 공개 층 차례다 — 다른 층의 번호(`--from <번호>`)는 `--list-stages --tier <층>`.
 
 | # | 단계 | 층 | 개별 명령 | 판정 |
 | --- | --- | --- | --- | --- |
@@ -102,7 +102,7 @@ PASS"다. 릴리스 판정은 필요한 환경(macOS)에서 생략 없이 통과
 | 11 | Element boundary | fast·everyday·release | `node scripts/element_edition.js --check --report` | 원소 재료 경로(순수 코어 + 원소 출력)가 Canvas·FontFace·SVG 준비에 닿지 않음(설계 v1.2 §15.4). 매니페스트 `scripts/element-edition.json`의 자르는 자리로 잘라 본 원소 판이 구문 검사·document 없는 실행·순수 코어 값 대조를 넘고, 원소 판 크기(배포하지 않음)를 전체 판과 따로 보고한다. 브라우저 호출 수는 스모크 `element-boundary` |
 | 12 | Python renderer tests | everyday·release | `.venv/bin/python -m pytest renderers/python/tests -q` | 평문/HTML/명세/글꼴 메타데이터 정합 |
 | 13 | Static parity tolerance unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_static_html_parity.py -q` | 비교 허용오차 규칙 통과 |
-| 14 | Tooling unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_glyph_tools.py tests/test_font_export.py tests/test_verify_tools.py tests/test_confusable_audit.py tests/test_matrix_probe.py tests/test_playwright_smoke.py::test_smoke_registration_in_sync tests/test_playwright_smoke.py::test_missing_engine_policy -q` | 글자 측정 도구 import/`--help`/순수 도우미/겹침 정책 판정, `font-kku-export.js`가 쓴 TTF·WOFF를 fontTools가 읽는지(복합 글리프·cmap·lsb·WOFF2 재저장), verify·공개 관문의 순수 도우미(`tests/test_verify_tools.py`), 헷갈리는 짝 감사·매트릭스 탐침의 순수 도우미, 기계 슬롯·공유 캐시, 스모크 등록 어긋남 없음과 엔진 요구 정책 |
+| 14 | Tooling unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_glyph_tools.py tests/test_font_export.py tests/test_verify_tools.py tests/test_confusable_audit.py tests/test_matrix_probe.py tests/test_build_pages.py tests/test_playwright_smoke.py::test_smoke_registration_in_sync tests/test_playwright_smoke.py::test_missing_engine_policy -q` | 글자 측정 도구 import/`--help`/순수 도우미/겹침 정책 판정, `font-kku-export.js`가 쓴 TTF·WOFF를 fontTools가 읽는지(복합 글리프·cmap·lsb·WOFF2 재저장), verify·공개 관문의 순수 도우미(`tests/test_verify_tools.py`), 헷갈리는 짝 감사·매트릭스 탐침의 순수 도우미, 기계 슬롯·공유 캐시, font.tty.link 배포 폴더 보호(`tests/test_build_pages.py`), 스모크 등록 어긋남 없음과 엔진 요구 정책 |
 | 15 | Go vet | everyday·release | `(cd renderers/go && go vet ./...)` | vet 통과 |
 | 16 | Go tests | everyday·release | `(cd renderers/go && go test -count=1 ./...)` | test 통과 (`-count=1`: 시험 캐시가 모듈 밖 `spec/*.json` 변경을 보지 않는다) |
 | 17 | Rust format | everyday·release | `(cd renderers/rust && cargo fmt --check)` | `cargo fmt` 형식 그대로 |
@@ -116,30 +116,31 @@ PASS"다. 릴리스 판정은 필요한 환경(macOS)에서 생략 없이 통과
 | 25 | Browser-derived HTML spec regeneration | everyday·release | `.venv/bin/python scripts/generate_html_cases.py` | 생성 전후 `html-cases.json` hash 동일 |
 | 26 | Browser smoke | everyday·release | `[공개 층: FONT_KKU_SMOKE_MODES=both FONT_KKU_REQUIRE_ENGINES=1] .venv/bin/python -m pytest tests/test_playwright_smoke.py -q --durations=15 -n <jobs>` | server 런타임과 데모 화면 통과 — file:// 갈림이 있는 검사(`FILE_DIFFERS`, 7개)만 file 모드도 (`pytest-xdist`가 있으면 일꾼 여럿 — 일꾼마다 세션 브라우저·정적 서버). 공개 층은 모든 검사를 두 모드로, 다른 엔진이 꼭 있어야 한다(`FONT_KKU_SMOKE_MODES=both`, `FONT_KKU_REQUIRE_ENGINES=1`). 느린 검사 15개를 함께 보인다(`--durations=15`) |
 | 27 | Static HTML parity | everyday·release | `.venv/bin/python tests/static_html_parity.py` | 커밋된 HTML 케이스 전체의 DOM/style/geometry 정합 — 글꼴을 밝히지 않은 사례는 원소 획(`[part=hoek]`·`[part=element]`, 정체·마디 변수와 노드의 `--fy-face-width`·`--fy-el-density` 1e-4)까지 (ADR-027) |
-| 28 | Element layer oracle | everyday·release | `.venv/bin/python scripts/record_element_layer.py --check` | 글꼴을 밝히지 않은 바탕 요소(세벌 고정, 원소 재료)를 런타임이 64px로 그린 획과 노드 밀도 굵기 계수(`--fy-el-density`)가 `spec/element-layer.json`과 같음 — 같은 열쇠는 어느 음절에서든 같은 값(세벌 고정 불변식), 숫자는 tolerance 안. 승인된 변경만 `--write` |
+| 28 | Element layer oracle | everyday·release | `.venv/bin/python scripts/record_element_layer.py --check` | 글꼴을 밝히지 않은 바탕 요소(세벌식, 원소 재료)를 런타임이 64px로 그린 획과 노드 밀도 굵기 계수(`--fy-el-density`)가 `spec/element-layer.json`과 같음 — 같은 열쇠(짜임까지)는 어느 음절에서든 같은 값(고정 배치 불변식), 숫자는 tolerance 안. 승인된 변경만 `--write` |
 | 29 | Sprite cell coverage | everyday·release | `.venv/bin/python tests/sprite_cell_coverage.py` | sprite-system과 파생 그림 자소 글꼴마다 11,172자가 고르는 자소판 칸(`r<행>-<자모>`)이 SVG에 모두 있음 — 빈칸은 겹침·획 굵기 감사가 잡지 못한다 |
 | 30 | Visual regression | everyday·release | `.venv/bin/python tests/visual_regression.py` | 현재 플랫폼 기준선(`tests/baselines/<환경>/`)의 픽셀 임계값 통과 |
 | 31 | Composition baseline | everyday·release | `.venv/bin/python scripts/capture_composition_baseline.py --check --cache use\|refresh` | 원소·그림·기기 글꼴 재료(sebul·gothic·malang × element·device·svg 세 세트 × 네 깊이)가 자모 노드 안에 낸 획·마디·그림 DOM과 인라인 수치 변수가 기준선(`tests/baselines/composition/<환경>.json`, 50자 묶음 해시)과 같음. HTML 정합은 원소 노드를 빼므로 해석기·조립식 정본 변경의 "출력 무변경"은 이것으로 본다(PLAN-HANGUL-001). 승인된 모양 변경만 `--write`, 차이는 `--dump DIR`로 비교 |
-| 32 | Overlap audit | everyday·release | `.venv/bin/python scripts/glyph_overlap_audit.py --policy tests/overlap-policy.json --tier everyday\|release --cache use\|refresh` | 모든 글꼴의 음절 내부 잉크 겹침이 정책(`tests/overlap-policy.json`) 안 (darwin 전용, 다른 플랫폼은 사유와 함께 SKIPPED). 일상 층은 표본 family·씨앗 하나 |
+| 32 | Overlap audit | everyday·release | `.venv/bin/python scripts/glyph_overlap_audit.py --policy tests/overlap-policy.json --tier everyday\|release --cache use\|refresh` | 모든 글꼴의 음절 내부 잉크 겹침이 정책(`tests/overlap-policy.json`) 안 — 직결식(`jikgyeol`)도 여기서 (darwin 전용, 다른 플랫폼은 사유와 함께 SKIPPED). 일상 층은 표본 family·씨앗 하나 |
 | 33 | Overlap audit (device face) | everyday·release | `.venv/bin/python scripts/glyph_overlap_audit.py --policy tests/overlap-policy.json --tier everyday\|release --face device --fonts sebul,gothic,malang --cache use\|refresh` | 기본이 원소 재료인 글꼴을 기기 글꼴 재료(페이지 `--fy-face: device`)로도 잰다(ADR-024) |
-| 34 | Overlap audit (fixed layout, element) | everyday·release | `.venv/bin/python scripts/glyph_overlap_audit.py --font sebul --layout fixed --sample family\|full --face element --cache use\|refresh` | 글꼴을 밝히지 않은 바탕 요소의 기본 배치(세벌 고정, ADR-026)를 원소 재료로 — 정책 예외 없이 기본 임계 15%. 일상 층은 표본 family |
-| 35 | Overlap audit (fixed layout, device) | everyday·release | `.venv/bin/python scripts/glyph_overlap_audit.py --font sebul --layout fixed --sample family\|full --face device --cache use\|refresh` | 같은 세벌 고정 겹침을 기기 글꼴 재료로 |
+| 34 | Overlap audit (fixed layout, element) | everyday·release | `.venv/bin/python scripts/glyph_overlap_audit.py --font sebul --layout fixed --sample family\|full --face element --cache use\|refresh` | 글꼴을 밝히지 않은 바탕 요소의 기본 배치(세벌식, ADR-028)를 원소 재료로 — 정책 예외 없이 기본 임계 15%. 일상 층은 표본 family |
+| 35 | Overlap audit (fixed layout, device) | everyday·release | `.venv/bin/python scripts/glyph_overlap_audit.py --font sebul --layout fixed --sample family\|full --face device --cache use\|refresh` | 같은 세벌식 겹침을 기기 글꼴 재료로 |
 | 36 | Stroke audit | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --cache use\|refresh` | 자기 획을 가진 글꼴(기반·그림 자소 파생)의 자모·자리별 획 굵기가 고르다 — 가로모음 막대·세로모음 기둥·자음 획이 기준(세로모음 기둥)에서 허용 폭 안, 의도한 차이는 사유와 함께 정책(`tests/stroke-policy.json`)에 (darwin 전용). 재료는 글꼴 기본 |
 | 37 | Stroke audit (device face) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --face device --fonts sebul,gothic --cache use\|refresh` | 같은 획 굵기 게이트를 기기 글꼴 재료로 |
-| 38 | Stroke audit (fixed layout, element) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --font sebul --layout fixed --face element --cache use\|refresh` | 세벌 고정의 획 굵기 — 원소 재료는 굵기를 스스로 맞춘다 |
-| 39 | Stroke audit (fixed layout, device) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --font sebul --layout fixed --face device --cache use\|refresh` | 세벌 고정 기기 글꼴 재료의 굵기 보정(`spec/layout-profiles.json` 맞춤 규칙 `deviceStroke`)이 기준 안 |
+| 38 | Stroke audit (fixed layout, element) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --layout fixed --face element --cache use\|refresh` | 기본 배치(세벌식)의 획 굵기 — 원소 재료는 굵기를 스스로 맞춘다. 판정은 정책 `fixedLayout` 절(사선 다리 예외) |
+| 39 | Stroke audit (fixed layout, device) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --layout fixed --face device --cache use\|refresh` | 세벌식 기기 글꼴 재료의 굵기 보정(`spec/layout-profiles.json` 맞춤 규칙 `deviceStroke`)이 기준 안 |
 | 40 | Stroke audit (svg pilgi-box) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --jamo-set pilgi-box --cache use\|refresh` | 칸 계약 그림 세트 `pilgi-box`를 SVG 재료로, 정책 `jamoSets` 항목의 글꼴(옛 배치)에서 — 그림 획이 화면에서 `--fy-el-w`인지, 붓 세트는 허용 폭·예외로 |
-| 41 | Stroke audit (fixed layout, svg pilgi-box) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --jamo-set pilgi-box --layout fixed --cache use\|refresh` | 칸 계약 그림 세트 `pilgi-box`를 SVG 재료로, 세벌 고정에서 — 그림 획이 화면에서 `--fy-el-w`인지, 붓 세트는 허용 폭·예외로 |
+| 41 | Stroke audit (fixed layout, svg pilgi-box) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --jamo-set pilgi-box --layout fixed --cache use\|refresh` | 칸 계약 그림 세트 `pilgi-box`를 SVG 재료로, 기본 배치(세벌식)에서 — 그림 획이 화면에서 `--fy-el-w`인지, 붓 세트는 허용 폭·예외로 |
 | 42 | Stroke audit (svg dunggeun-box) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --jamo-set dunggeun-box --cache use\|refresh` | 칸 계약 그림 세트 `dunggeun-box`를 SVG 재료로, 정책 `jamoSets` 항목의 글꼴(옛 배치)에서 — 그림 획이 화면에서 `--fy-el-w`인지, 붓 세트는 허용 폭·예외로 |
-| 43 | Stroke audit (fixed layout, svg dunggeun-box) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --jamo-set dunggeun-box --layout fixed --cache use\|refresh` | 칸 계약 그림 세트 `dunggeun-box`를 SVG 재료로, 세벌 고정에서 — 그림 획이 화면에서 `--fy-el-w`인지, 붓 세트는 허용 폭·예외로 |
+| 43 | Stroke audit (fixed layout, svg dunggeun-box) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --jamo-set dunggeun-box --layout fixed --cache use\|refresh` | 칸 계약 그림 세트 `dunggeun-box`를 SVG 재료로, 기본 배치(세벌식)에서 — 그림 획이 화면에서 `--fy-el-w`인지, 붓 세트는 허용 폭·예외로 |
 | 44 | Stroke audit (svg butgeul-box) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --jamo-set butgeul-box --cache use\|refresh` | 칸 계약 그림 세트 `butgeul-box`를 SVG 재료로, 정책 `jamoSets` 항목의 글꼴(옛 배치)에서 — 그림 획이 화면에서 `--fy-el-w`인지, 붓 세트는 허용 폭·예외로 |
-| 45 | Stroke audit (fixed layout, svg butgeul-box) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --jamo-set butgeul-box --layout fixed --cache use\|refresh` | 칸 계약 그림 세트 `butgeul-box`를 SVG 재료로, 세벌 고정에서 — 그림 획이 화면에서 `--fy-el-w`인지, 붓 세트는 허용 폭·예외로 |
-| 46 | Legibility audit (fixed layout) | everyday·release | `.venv/bin/python scripts/glyph_legibility_audit.py` | 기본 배치(세벌 고정)가 읽히는 꼴인지 원소·기기 글꼴·SVG(`pilgi-box`) 세 재료로 — 칸 밖 잉크, 위아래 줄·이웃 글자 틈, 받침 틈, 낱말 안 틈 < 낱말 사이 (darwin 전용) |
-| 47 | Sprite pipeline fixture | everyday·release | `.venv/bin/python scripts/verify.py --sprite-smoke` | PNG/report/CSS/hash 값 정합 |
-| 48 | Whitespace errors | everyday·release | `git diff --check` | 작업 트리·인덱스의 공백 오류 없음(`git diff --check`) |
-| 49 | Release review sheets | release (everyday `--sheets`) | `.venv/bin/python scripts/review_sheets.py --before tmp/release-baseline/<latest>/package --font <(없음)·sebul·gothic·pixel> --sections hero,para,small,looks --out tmp/review-sheets/<HEAD>/<글꼴>` | 직전 공개판(npm `latest`)과 지금 트리의 검수 시트를 나란히 그린다 — 기본 배치·sebul·gothic·pixel × 제목·문단·작은 글씨·꾸밈. 판정하지 않는다. 시트 경로·sha256은 summary `reviewSheets`, 공개 승인 요청에 붙여 사용자가 본다. 레지스트리에 닿지 않으면 SKIPPED(공개 판정 아님) |
-| 50 | Confusable pairs audit | release · 보고만 | `.venv/bin/python scripts/glyph_confusable_audit.py --fonts all --report --out tmp/confusable/release --before tmp/release-baseline/<latest>/package` | 헷갈리는 짝 21쌍(`tests/confusable-pairs.json`)을 글꼴 21개+기본 배치 × 16·24·32px × 화면 배율 1·2로 그려 기기 글꼴 대비 구별성 `rel`과 직전 공개판 대비 변화를 낸다. 보고만 — `tmp/confusable/release/sheet.png`를 실제 크기로 보고 공개 승인 요청에 붙인다(제안 경고: `rel` < 0.2, 직전 판보다 30% 넘게 떨어짐). 1px보다 좁은 낱자 틈은 못 본다 |
-| 51 | Matrix probe | release · 보고만 | `.venv/bin/python tests/matrix_probe.py --report --require-engines --jobs 2 --out tmp/matrix-probe/release` | 세 엔진 × 글꼴 22 × 꾸밈 12 × 16·48px, 움직임 14 × 재료에서 빈칸·꾸밈 무변화·엔진 차·움직임 무변화·움직임 줄이기 위반을 찾는다. 보고만 — 모양은 판정하지 않는다. `tmp/matrix-probe/release/contact-sheet.png`와 `pages/*.png`를 눈으로 본다 |
+| 45 | Stroke audit (fixed layout, svg butgeul-box) | everyday·release | `.venv/bin/python scripts/glyph_stroke_audit.py --policy tests/stroke-policy.json --jamo-set butgeul-box --layout fixed --cache use\|refresh` | 칸 계약 그림 세트 `butgeul-box`를 SVG 재료로, 기본 배치(세벌식)에서 — 그림 획이 화면에서 `--fy-el-w`인지, 붓 세트는 허용 폭·예외로 |
+| 46 | Legibility audit (fixed layout) | everyday·release | `.venv/bin/python scripts/glyph_legibility_audit.py` | 기본 배치(세벌식)가 읽히는 꼴인지 원소·기기 글꼴·SVG(`pilgi-box`) 세 재료로 — 칸 밖 잉크, 위아래 줄·이웃 글자 틈, 받침 틈, 낱말 안 틈 < 낱말 사이 (darwin 전용) |
+| 47 | Legibility audit (jikgyeol) | everyday·release | `.venv/bin/python scripts/glyph_legibility_audit.py --font jikgyeol --face element` | 직결식(`font="jikgyeol"`, `sebul-fixed-v1`)이 같은 게이트를 넘는지 원소 재료로 (darwin 전용) |
+| 48 | Sprite pipeline fixture | everyday·release | `.venv/bin/python scripts/verify.py --sprite-smoke` | PNG/report/CSS/hash 값 정합 |
+| 49 | Whitespace errors | everyday·release | `git diff --check` | 작업 트리·인덱스의 공백 오류 없음(`git diff --check`) |
+| 50 | Release review sheets | release (everyday `--sheets`) | `.venv/bin/python scripts/review_sheets.py --before tmp/release-baseline/<latest>/package --font <(없음)·sebul·gothic·pixel> --sections hero,para,small,looks --out tmp/review-sheets/<HEAD>/<글꼴>` | 직전 공개판(npm `latest`)과 지금 트리의 검수 시트를 나란히 그린다 — 기본 배치·sebul·gothic·pixel × 제목·문단·작은 글씨·꾸밈. 판정하지 않는다. 시트 경로·sha256은 summary `reviewSheets`, 공개 승인 요청에 붙여 사용자가 본다. 레지스트리에 닿지 않으면 SKIPPED(공개 판정 아님) |
+| 51 | Confusable pairs audit | release · 보고만 | `.venv/bin/python scripts/glyph_confusable_audit.py --fonts all --report --out tmp/confusable/release --before tmp/release-baseline/<latest>/package` | 헷갈리는 짝 21쌍(`tests/confusable-pairs.json`)을 글꼴 21개+기본 배치 × 16·24·32px × 화면 배율 1·2로 그려 기기 글꼴 대비 구별성 `rel`과 직전 공개판 대비 변화를 낸다. 보고만 — `tmp/confusable/release/sheet.png`를 실제 크기로 보고 공개 승인 요청에 붙인다(제안 경고: `rel` < 0.2, 직전 판보다 30% 넘게 떨어짐). 1px보다 좁은 낱자 틈은 못 본다 |
+| 52 | Matrix probe | release · 보고만 | `.venv/bin/python tests/matrix_probe.py --report --require-engines --jobs 2 --out tmp/matrix-probe/release` | 세 엔진 × 글꼴 22 × 꾸밈 12 × 16·48px, 움직임 14 × 재료에서 빈칸·꾸밈 무변화·엔진 차·움직임 무변화·움직임 줄이기 위반을 찾는다. 보고만 — 모양은 판정하지 않는다. `tmp/matrix-probe/release/contact-sheet.png`와 `pages/*.png`를 눈으로 본다 |
 <!-- END GENERATED -->
 
 `npm run verify:fast`는 위 표에서 층에 `fast`가 있는 단계만 돈다(표 맨 앞).
@@ -175,7 +176,7 @@ JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실�
 - 패키지 version/export/type/bin 공개 범위
 - CSS 레지스트리, 글꼴 메타데이터와 그림 자소 상수 어긋남
 - 글꼴 작업실 모델(`tests/font_studio_model.test.js`): CSS 파싱·왕복 변환·편집 범위, 자소판 표, 새 그림 자소 글꼴 템플릿과 v1 그림 자소 프로젝트 가져오기
-- 작업실 디자인 모델(`tests/font_studio_design.test.js`): 기본 디자인(1.2 세벌 고정, 런타임 revision)·재료 바꾸기·배치 바꾸기가 만든 디자인을 실제 `registerDesign`으로 등록해 보고, 세벌 고정 충돌(문맥 규칙·통짜 합자 모음·자리 변주)이 런타임 거부와 같은지, 확정 뒤 남는 충돌은 합치지 않는지, 내용 주소 이름, JSON 오류 줄·칸, 비교 칸 자리 세기, 스키마 맨 위 키
+- 작업실 디자인 모델(`tests/font_studio_design.test.js`): 기본 디자인(1.2 세벌식, 런타임 revision)·재료 바꾸기·배치 바꾸기가 만든 디자인을 실제 `registerDesign`으로 등록해 보고, 고정 배치 충돌(문맥 규칙·통짜 합자 모음·자리 변주)이 런타임 거부와 같은지, 확정 뒤 남는 충돌은 합치지 않는지, 내용 주소 이름, JSON 오류 줄·칸, 비교 칸 자리 세기, 스키마 맨 위 키
 - 작업실 F 묶음(`tests/font_studio_f.test.js`가 `tests/studio_f/*.test.js`를 이름 차례로 싣는다 — 새 묶음은 package.json을 고치지 않는다): F0 편집 기록(되돌리기·다시·건너뛰기·한도·참가자 상태 복사본)·묶음 편집(취소하면 기록 없음, commit은 한 줄)·검사 결과 모양 맞추기·임시 등록(`studio-tmp-<n>`을 실제 런타임 `planJamo`로 풀고 `unregisterDesign`으로 지운다, 남의 번호는 건너뜀, 없으면 내용 주소 이름) · F1 조립식 목록 거울(정본 투영·런타임 생성 구간·`--check`)과 규칙 모델(모드 × 배치 × 역할 × 자모 × 방법 전수가 `registerDesign`과 같은 판정, 무작위 300단계 뒤 같은 구체성 충돌 없음, 잠금·씨앗 섞기·소스 빼기, 영향 목록이 ㄱ 칸 지우기에서 ㄱ·ㅋ·ㄲ만) · F2 출처 모델(디자인 31 × 자모 51 × 역할 4 × 짜임 3 × 받침 2의 요청 약 11만에서 Q3 = `planJamo` trace.rules) · F4 그림 문서(실제 `registerJamo`, `sanitizeSvg` 시험 그림 둘, 떼어 내기) · F7 팔레트(준비 상태·기록 셈, `pal-*`가 `withMode`에서 살아남음) · F8 묶음(왕복, 해로운 묶음의 칸마다 거부, 이름 겹침, 사전 검사, `.jamo.js`를 VM으로) · F9 영향 확인을 언제 묻는가
 - 한글 입력기(`tests/font_kku_ime.test.js`): 두벌식 표준·세벌식 390·세벌식 최종의 키 표(행 단위 골든), 손으로 친 문장, 합자 모음·겹받침·두벌식 받침 넘김·세벌식 겹초성, 자모 단위 Backspace, 가짜 입력 칸으로 `attach()` 키 경로·한/영 전환·초점 없는 칸 캐럿, 패키지 `exports`/`files`
 - 조합 체계(ADR-017, `tests/asset_sync.test.js`): `node scripts/build_looks.js --check`와 같은 대조 — `font-kku-looks.css`·`site/themes-data.js`가 `spec/themes.json`과 꾸러미 글꼴 꾸밈 구간에서 다시 만든 것과 같은지, 레이어 순서 문(`font-kku.look`, `font-kku.motion`), 정본의 깨진 참조·분류 안 된 글꼴·꾸러미 테마 규칙·없는 움직임 훅·변주 목록 불일치 거부, 꾸밈이 칠 속성만 옮기는지와 씨앗 조건 유지, 조합법의 확장 목록, 패키지 `files`/`exports`(`./fx`, 확장 CSS, `spec/themes.json`)
@@ -184,12 +185,12 @@ JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실�
 - 글꼴 계약 v2 검사(`tests/font_lint.test.js`, `site/font-kku-lint.js`): 기본 제공 글꼴·별칭 shim·작업실 fixture 통과, 텍스트 검사 우회로(중첩 속 규칙, 범위 밖 선택자, 부분 문자열 레이어 판정, 속성 누수, 단위 없는 0 변형, `@import` 면제, 디스패치·런타임 변수, `!important`)가 코드별로 실패, 생성된 레지스트리 요약 최신성
 
 - 배치 프로파일(ADR-026, `tests/layout_cases.test.js`): 설계 v1.2 사례 28개를 모두 node·browser·audit·deferred로 분류하고 node 사례를 실행 — 정본 생성기
-  `--check`와 깨진 정본 거부, 디자인 1.2 `layout` 검증(누락·없는 프로파일·revision·세벌 고정의 문맥 규칙·자리 변주), 도장 표(67키, 조합용 자모만,
+  `--check`와 깨진 정본 거부, 디자인 1.2 `layout` 검증(누락·없는 프로파일·revision·고정 배치의 문맥 규칙·자리 변주), 도장 표(67키, 조합용 자모만,
   ㅘ = ㅗ + ㅏ 조각), 맞춤 규칙이 역할·자모로만 고르는지. 브라우저 사례는 스모크 `fixed-layout`(세 재료 × 11,172음절 불변, 머리 음절 없음, 칸 하나,
   sebul·네모 문맥·이전 디자인·대체·크기·낱자)
 - 소개 페이지의 AI 답 세트(`tests/landing_sets.test.js`, `site/landing-ai-sets.js`): 답 HTML의 등록 코드를 그대로 돌려 얻은 칸이 원형 8칸 칸 계약 세트(`frame: "box"`, 고치지 않음 기록)이고 실제 `registerJamo`가 받는지, 그 8칸만으로 현대 자모(초성·중성·받침)가 모두 조립되는지(`planJamo`의 모든 획이 그림이나 그림이 긋는 획), ㄱ 칸이 3,444자에 들어가는지, 프롬프트가 설명서와 원형 8칸을 담는지
-- 원소 획 표(ADR-027, `tests/element_table.test.js`): 생성기가 네 언어 미러에 굳히는 기본 배치의 원소 획 — 열쇠 125개(초성 19·홑 중성 14·
-  합자 중성 조각 14·종성 27·낱자 51)와 UTF-8 바이트 차례, 값마다 런타임 서식(JS `String()` + 단위), 런타임 실측 정답
+- 원소 획 표(ADR-027, `tests/element_table.test.js`): 생성기가 네 언어 미러에 굳히는 기본 배치(세벌식)의 원소 획 — 열쇠 283개(도장 짜임·조각마다
+  232와 낱자 51, 짜임 열쇠 접미사 `|v0`·`|h` …)와 UTF-8 바이트 차례, 값마다 런타임 서식(JS `String()` + 단위), 런타임 실측 정답
   `spec/element-layer.json`과 획·마디·값·노드 밀도 대조(숫자는 tolerance 안). 생성기는 `font-kku.js`의 굵기 보정 함수를 빌려 돌린다 —
   갈라짐 가드: 런타임 셈을 바꾸면 도장 밀도(파이썬 사본 `measure_layout_stamps.py`) 대조가 실패하고, 꼭지 틈을 끄면 ㅎ·ㅊ 열쇠가 따라
   바뀌며, 빌린 함수가 새 도우미·새 선택자를 쓰면 실패한다
@@ -218,7 +219,7 @@ JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실�
 (`--fy-el-*`)는 이름·단위가 같고 수가 1e-4 안이어야 한다. 화소는 스모크
 `test_sidecar_element_face_without_js[24·64]`(JS 끈 정적 출력 = 런타임 바탕 요소, `face="device"`는 다름)와
 `test_sidecar_element_face_is_device_independent`(기기 한글 글꼴을 바꿔 끼워도 원소 출력은 같고 기기 출력은 달라짐 —
-다른 한글 글꼴이 없으면 건너뜀)가 본다. 네 언어 원소 출력은 각 언어 시험이 `spec/element-layer.json`(열쇠 125개)과 대조한다.
+다른 한글 글꼴이 없으면 건너뜀)가 본다. 네 언어 원소 출력은 각 언어 시험이 `spec/element-layer.json`(열쇠 283개)과 대조한다.
 
 ### 브라우저 스모크
 
@@ -240,10 +241,10 @@ file 모드도 돈다(아래 '모드').
 `assert_font_studio_entry`는 기기 글꼴 재료를 쓰는 글꼴에서 자소판 대신 시작 안내가 보이고 `hidden` 요소가 화면에 남지 않는지,
 안내 버튼과 `#studio-material` 입구가 자소판으로 데려가는지 본다.
 소개 페이지는 `assert_demo`(제목, 히어로의 세 갈래 — 작업실 `#draw`·AI 문장 복사·`#web`, 처음 받는 글꼴 CSS 몇 장과 움직임 타일까지 내려갈 때 네온 글꼴의 필요할 때 받기, 실제 AI 답 여섯과 느낌마다 답이 있는지, 히어로 문장과 제목 둘째 줄이 고른 세트의 SVG 재료로 그려지는지)와 `assert_landing_problems`(AI 답 세트가 원형 8칸 그대로 등록되고 히어로 문장의 자모 노드가 모두 그 8칸에서 나오는지(`traceOf`), 그린 세트에 `animate`를 붙였다 떼도 SVG 재료·획 그대로인지, 칸마다 글자 수, 자모 지도, 칸을 직접 그으면 세트를 다시 등록하고 바뀐 글자 수를 세고 '내 페이지에 쓰기' 코드가 따라오는지, 한 번에 돌려 그은 닫힌 획이 점으로 줄지 않는지, 가져가기 줄과 브라우저 저장, 화면에 보인 6줄 그대로 돌린 JS 흔들기와 이름 씨앗, 짧은 씨앗 고정, NFD 대조, 390px에서 가로 넘침 없음·8칸이 첫 화면 안·메뉴가 화면 안, 서버 모드에서는 11,172자를 모두 그려 자모 노드가 모두 8칸에서 왔는지와 '작업실에서 이어 그리기'로 작업실이 8칸을 가져오는지)가 본다.
-`assert_font_studio_design`은 디자인 패널(설계 v1.2 §13)을 본다: 맨 주소의 첫 화면이 세벌 고정 기본 디자인이고 초안을 쓰지 않는지,
+`assert_font_studio_design`은 디자인 패널(설계 v1.2 §13)을 본다: 맨 주소의 첫 화면이 세벌식 기본 디자인이고 초안을 쓰지 않는지,
 비교 칸이 초성 ㄱ·중성 ㅏ를 한 가지 자리로 재는지, 재료를 바꿔도 배치가 그대로인지, 네모 문맥에서만 문맥 규칙 탭이 열리는지,
-문맥 규칙이 있는 디자인을 세벌 고정으로 바꾸면 충돌을 보이고 고를 때까지 적용하지 않는지, 등록 실패 때 마지막 정상 디자인을 두는지,
-세벌 고정 도장 노드의 글꼴 CSS 편집을 받지 않는지, 디자인 JSON 저장·1.1 디자인 열기(배치를 끼워 넣지 않음)·초안 복원,
+문맥 규칙이 있는 디자인을 고정 배치로 바꾸면 충돌을 보이고 고를 때까지 적용하지 않는지, 등록 실패 때 마지막 정상 디자인을 두는지,
+고정 배치 도장 노드의 글꼴 CSS 편집을 받지 않는지, 디자인 JSON 저장·1.1 디자인 열기(배치를 끼워 넣지 않음)·초안 복원,
 그림 자소 글꼴을 "받지 않음"으로 보이는지.
 작업실 F 묶음(계획 F)의 스모크는 `tests/studio_f/smoke_*.py`에 둔다 — `studio_f_checks()`가 맨 위 `assert_*`를 찾아 `run_check`의
 `assert_font_studio_f`와 pytest `test_font_studio_f_surface[<이름>]`에 올리므로 공유 파일을 고치지 않고, 등록 드리프트 검사도 그대로다.
@@ -265,33 +266,33 @@ F0의 `assert_studio_f_foundation`은 편집 창구를 본다: 붙인 칸이 없
 화면에 칠해지는 한글 텍스트 노드가 모두 그림 자소 노드인지 훑는다 — 기기 글꼴을 지우지 않고 "기기 글꼴로 칠하는 한글이 없다"를 구조로 검사한다.
 
 `assert_face_svg_stroke`(스모크 `face-svg-stroke`)는 SVG 재료(ADR-024 §4)의 그림 획이 화면에서 바탕 요소의 `--fy-el-w` × 노드의 밀도
-굵기 계수 k인지 그림마다 축별로 잰다(화면 획 / k·`--fy-el-w`가 0.97–1.03, 촘촘한 받침이 실제로 가늘어졌는지도) — 세벌 고정·옛 배치(`font="sebul"`)의 `pilgi-box`·`dunggeun-box` 겹받침·홑받침 대조 음절과
+굵기 계수 k인지 그림마다 축별로 잰다(화면 획 / k·`--fy-el-w`가 0.97–1.03, 촘촘한 받침이 실제로 가늘어졌는지도) — 세벌식·옛 배치(`font="sebul"`)의 `pilgi-box`·`dunggeun-box` 겹받침·홑받침 대조 음절과
 원소 미리보기(`@line`·`@ring`, gothic의 흐·흙·읊·훅 포함). 그림 `<svg>`가 노드 배율을 되돌리지 않으면 겹받침 1.61·받침 0.71로 실패한다.
 이 비율은 그림의 화면 배율에서 계산하므로 엔진의 `non-scaling-stroke` 해석을 전제한다. 그래서 화소로도 본다(`svg_stroke_pixel_ratios`):
 그림 하나만 보이게 찍은 잉크 합 ÷ 같은 그림을 변환 없는 `<svg>`에 같은 화면 상자·`--fy-el-w` 획으로 그려 찍은 잉크 합이 0.95–1.05다
-(필기 세벌 고정·둥근 `font="sebul"`의 ㄳ·ㄺ·ㅏ·ㅣ — 되돌림을 빼면 1.52–1.60·0.81–0.89). Playwright Firefox가 설치돼 있으면
+(필기 세벌식·둥근 `font="sebul"`의 ㄳ·ㄺ·ㅏ·ㅣ — 되돌림을 빼면 1.52–1.60·0.81–0.89). Playwright Firefox가 설치돼 있으면
 (`.venv/bin/python -m playwright install firefox`) `test_face_svg_stroke_firefox`가 같은 검사를 Firefox로 돌고, 없으면 건너뛴다 —
 기본 스모크는 Chromium 하나다. 2026-10-12 Firefox 151(Playwright firefox-1532)에서 Chromium·WebKit과 같았다.
 고리 그림은 화면 상자가 고리 마디 상자에서 굵기의 절반씩 안쪽(고리 중심선 상자, ±0.1px)이어야 한다 — 테두리 안쪽 상자를 기준으로 하면
 기기 화소로 버린 테두리 굵기만큼(72px에서 한쪽 0.4–0.8px), 크기가 `auto`면 viewBox 비율로 커져 아래 ㅡ·ㅜ에 닿는다.
 
-`assert_element_density`(스모크 `element-density`)는 밀도 굵기 계수(ADR-024 §3)를 그려진 DOM에서 다시 잰다. 세벌 고정·`font="sebul"`·
+`assert_element_density`(스모크 `element-density`)는 밀도 굵기 계수(ADR-024 §3)를 그려진 DOM에서 다시 잰다. 세벌식·`font="sebul"`·
 `font="gothic"`의 노드마다 마디의 인라인 자리와 노드 변환으로 같은 방향 평행 마디의 중심 간격 p를 셈해, k = 1이면 p ≥ 1.6t, k < 1이면
 p < 1.6t이고 바닥(0.75)이 아니면 p ≥ 1.6·k·t(틈이 가늘어진 획의 0.6배 이상), 가로 마디의 화면 굵기가 k·t인지 본다. ㅎ·ㅊ 꼭지(점 획)는
-평행 간격에서 빼고 꼭지 틈으로 세므로, 꼭지가 든 노드는 p가 넉넉해도 k < 1일 수 있다. 세벌 고정의 계수가 도장 값이고 받침 ㄹ·ㅀ과
+평행 간격에서 빼고 꼭지 틈으로 세므로, 꼭지가 든 노드는 p가 넉넉해도 k < 1일 수 있다. 세벌식의 계수가 도장 값이고 받침 ㄹ·ㅀ과
 초성 ㅎ(꼭지 틈)은 가늘고 ㄷ은 1인지, 24px와 48px에서 같은지(L21 — 옛 배치의 머리 음절은 2층 재귀가
 화소로 재서 크기마다 자리가 조금 달라 뺀다), 선 그림 세트의 `stroke-width`가 k·t이고 칠 세트(붓)가 든 노드는 1인지도 본다.
-계수를 끄면(바닥 1) 옛 배치 받침 ㄹ에서, 도장 값을 코어 CSS가 받지 않으면 세벌 고정 받침 ㄹ에서 실패한다.
+계수를 끄면(바닥 1) 옛 배치 받침 ㄹ에서, 도장 값을 코어 CSS가 받지 않으면 세벌식 받침 ㄹ에서 실패한다.
 
-`assert_element_cap_gap`(스모크 `element-cap-gap`)은 꼭지 틈(ADR-024 §3)을 그려진 화면 상자로 잰다. 세벌 고정·`font="sebul"`·
+`assert_element_cap_gap`(스모크 `element-cap-gap`)은 꼭지 틈(ADR-024 §3)을 그려진 화면 상자로 잰다. 세벌식·`font="sebul"`·
 `font="gothic"` × 24·48px에서 하·호·화(머리)·홍·좋·낳·않·잃·차·초·최·몇과 낱자 ㅎ·ㅊ의 꼭지와 가로획 사이가 0.6·k·t 이상(계수가
 바닥 0.75면 0.4·k·t 이상)이고, ㅎ 동그라미 속이 0.5·k·t 이상 열려 있으며, 틈 ÷ 글자 크기가 두 크기에서 같은지(L21) 본다.
-꼭지 틈 열기(`dotShifts`)를 끄면 세벌 고정 초성 ㅎ에서 틈이 0.07px(0.6·k·t는 1.1px)라 실패한다. 바꾸기 전에는 세벌 고정 초성 ㅎ
+꼭지 틈 열기(`dotShifts`)를 끄면 세벌식 초성 ㅎ에서 틈이 0.07px(0.6·k·t는 1.1px)라 실패한다. 바꾸기 전에는 세벌식 초성 ㅎ
 −0.023em, 받침 ㅎ −0.019em, `font="sebul"` 홍 −0.032em으로 꼭지가 가로획에 붙었다.
 
 `assert_selection_copy`(스모크 `selection-copy`, 고정 페이지 `tests/fixtures/selection/index.html`)는 고르기와 복사(ADR-003 보강
 2026-10-13, ADR-025 §12)를 본다. 런타임이 그린 root마다 `data-fy-select="jamo"`·`aria-hidden`·고를 수 있음, 원문 거울은 `user-select: none`,
-브라우저 자체 `::selection`은 root 안과 바탕 요소 자신 모두 투명한지(바탕 요소 쪽이 칠하면 WebKit에서 띠가 두 겹이 된다). 실제 마우스로 앞 글 첫 글자부터 글꼴 없는 바탕 요소(세벌 고정·원소)와 사이 글을 지나 `font="sebul"`의
+브라우저 자체 `::selection`은 root 안과 바탕 요소 자신 모두 투명한지(바탕 요소 쪽이 칠하면 WebKit에서 띠가 두 겹이 된다). 실제 마우스로 앞 글 첫 글자부터 글꼴 없는 바탕 요소(세벌식·원소)와 사이 글을 지나 `font="sebul"`의
 괜(그 자리에 놓인 마지막 아닌 자모의 획)까지 끌면 앞 바탕 요소는 root `"all"`(안쪽 표시 없음), 뷁 `"all"`·빈칸·괜 `"part"`에 포인터 아래 자모까지만
 표시되고 띠·자모 상자의 계산된 배경이 칠해지는지. 빛 칠 neon의 나의 첫 자모 위(포인터 아래 맨 위 노드가 그 자모인 곳)까지 끌면 빛 칠 노드가
 숨겨져 있어도 빛 `"all"`·나 `"part"`에 첫 자모가 표시되는지(끄는 동안 런타임이 선택 끝을 포인터 아래 자모로 옮긴다). 실제 복사 단축키가 넣은 글이 `앞 글 한글 꽃밭 사이 글 뷁 괜`이고 HTML이 바탕 요소마다 고른 원문
@@ -310,7 +311,7 @@ p < 1.6t이고 바닥(0.75)이 아니면 p ≥ 1.6·k·t(틈이 가늘어진 획
 0.1.3 준비 런타임 감사 스모크(2026-10-13, 모두 고치기 전 코드에서 실패하는 것을 확인했다):
 `space-wrap`(`tests/fixtures/space-wrap`, `test_space_wrap_engines[firefox|webkit]`) — 7폭 × 꾸밈 5에서 줄 첫머리 들여쓰기·넘침 없음, 가운데(±0.75px)·오른쪽·양쪽 정렬, 칸 1·2개·nbsp·탭 폭, 맨 앞 빈칸 폭 유지, 고르기가 줄바꿈을 바꾸지 않음, 고른 칸의 글자 높이 띠.
 `sprite-mask-seams`(`tests/fixtures/sprite-mask-seams`, DSF 1·2, `test_sprite_mask_seams_engines`) — 칸 가운데 점만 찍은 자소판을 마스크 칠·보통 칠로 그려 노드 가장자리 1px 띠의 가장 어두운 화소가 같아야 한다(옛 CSS WebKit 27–66 대 0).
-`layout-readability` — 세벌 고정 ㅗ·ㅜ 꼭지·다리 ≥ 0.14em, 세벌 고정·sebul·malang 원소 ㄲ·ㄸ·ㅃ·ᆩ 낱자 틈 ≥ 0.03em(ㅃ 0.02), 기기 재료 쌍자음 획 넓힘 줄임, `--fy-element-width: 0.13em`의 '를' 틈 ≥ 0.3t와 인라인 밀도, 옛 sebul ㅞ 머리 0.82(sebul 기기·neon), `butgeul-box` 낱자 `@solo` 늘이기 0.85–1.2(하위 검사 14개 모두 0.1.2에서 실패).
+`layout-readability` — 세벌식 ㅗ·ㅜ 꼭지·다리 ≥ 0.14em, 세벌식·sebul·malang 원소 ㄲ·ㄸ·ㅃ·ᆩ 낱자 틈 ≥ 0.03em(ㅃ 0.02), 기기 재료 쌍자음 획 넓힘 줄임, `--fy-element-width: 0.13em`의 '를' 틈 ≥ 0.3t와 인라인 밀도, 옛 sebul ㅞ 머리 0.82(sebul 기기·neon), `butgeul-box` 낱자 `@solo` 늘이기 0.85–1.2(하위 검사 14개 모두 0.1.2에서 실패).
 `look-paint`(Chromium server — `both`면 file도, `test_look_paint_engines[firefox|webkit]`는 server) — 과의 머리 모음 = 고의 ㅗ 색, neon + 다른 꾸밈의 빛 없음, 벡터 칸 글자 획 0, 그림 자소 외곽선의 테·옅은 속(옅은 화소 ≥ 4배), 도면 비한글 선, 16·24px 테 × 노드 배율 ≥ 0.98px와 진한 잉크 비 ≥ 0.35, 꾸러미 글꼴 + 칸 계약 세트의 그린 칠.
 `sprite-jamo-gaps` — 노드마다 따로 찍은 잉크로 그림 자소 9종 놓·좋·뭏·읗의 받침 ㅎ 틈 ≥ 0.01em, 꽤·꽥·꽹(그림 자소)·꽤·꿰·꽥·꿴(gothic 원소·기기·dunggeun-box)의 ㄲ → ㅐ·ㅔ 기둥 틈 ≥ 0.01em.
 `sprite-sheet-engines`(`test_sprite_sheet_engines[firefox|webkit]`, WebKit file://에서는 crayon을 건너뛴다) — chalk·crayon·dojang·jasu 24/48/96/160px 잉크, pixel 16px와 64px를 ¼로 줄인 꼴의 차 ≤ 0.42.
@@ -393,12 +394,12 @@ FONT_KKU_JOBS=1 FONT_KKU_SMOKE_CPU_THROTTLE=4 .venv/bin/python -m pytest tests/t
   겹침, 예외 상한 초과가 실패다. 임계 아래로 내려온 예외는 `STALE`로 알려 주니 정책에서 지운다.
   측정은 darwin 실측으로 교정돼 있어(`platforms`) 다른 플랫폼에서는 verify가 사유와 함께
   SKIPPED로 기록한다.
-- `Stroke audit (fixed layout, element|device)` 단계: `glyph_stroke_audit.py --font sebul --layout fixed --face …`가 세벌 고정의
+- `Stroke audit (fixed layout, element|device)` 단계: `glyph_stroke_audit.py --font sebul --layout fixed --face …`가 세벌식의
   획 굵기를 잰다. 원소 재료는 굵기를 스스로 맞추고, 기기 글꼴 재료는 `spec/layout-profiles.json` 맞춤 규칙 `deviceStroke`의 굵기
   보정(도장마다 text-stroke, ㅡ·ㅣ는 그 방향 배율, ㅛ·ㅠ는 두 꼭지가 붙지 않는 `cap`)이 기준 안에 있는지 본다.
 - `Stroke audit (svg <세트>)`·`Stroke audit (fixed layout, svg <세트>)` 단계(2026-10-12): 획 굵기 감사의 `--policy --jamo-set <세트>`가
   기기 글꼴 재료에 칸 계약 그림 세트를 걸어 SVG 재료(ADR-024)로 잰다. 기본 제공 세트 셋(`pilgi-box`·`dunggeun-box`·`butgeul-box`) × 두 배치라
-  여섯 단계다. 옛 배치는 정책 `jamoSets` 항목의 글꼴로 재고(필기·둥근은 sebul·gothic, 붓은 sebul), `--layout fixed`는 세벌 고정(sebul)으로 잰다.
+  여섯 단계다. 옛 배치는 정책 `jamoSets` 항목의 글꼴로 재고(필기·둥근은 sebul·gothic, 붓은 sebul), `--layout fixed`는 세벌식(sebul)으로 잰다.
   판정은 세트 항목의 허용 폭·예외에 글꼴 항목의 `face: "svg"` 예외를 더한다. 세트 예외의 `layout`(legacy|fixed)은 그 배치에서만 쓴다.
   - 필기·둥근은 예외 없이 넘침 0이다. 그림 `<svg>`의 노드 배율 되돌림(코어 CSS)이 빠지면 여기서 걸린다(고치기 전 29·21·32·23).
   - 붓은 그림 자소 글꼴 butgeul과 같은 허용 폭 0.35다. 예외는 받침 ㅎ, 옛 배치의 가로모음 막대(ㅗ·ㅛ·ㅜ·ㅠ·ㅡ — ㅡ는 세벌 고정 revision 2의 긴 기둥 비로 누른 옛 배치 기둥이 가늘어져서)와 가로모음 위 ㄱ이다 —
@@ -407,21 +408,24 @@ FONT_KKU_JOBS=1 FONT_KKU_SMOKE_CPU_THROTTLE=4 .venv/bin/python -m pytest tests/t
   - 겹침 감사의 `--jamo-set`은 개발용이다(verify 단계 아님, `--layout fixed`와 함께 쓸 수 있다, 측정 캐시 열쇠에 세트가 들어간다).
   - 그림 획 굵기 계약 자체는 스모크 `face-svg-stroke`가 본다.
 - `Overlap audit (fixed layout, element|device)` 단계: `glyph_overlap_audit.py --font sebul --layout fixed --sample full`(일상 층은 `family`)이 글꼴을 밝히지 않은
-  바탕 요소의 기본 배치(세벌 고정, ADR-026)를 원소·기기 글꼴 두 재료로 잰다. 정책 예외 없이 기본 임계 15%다 — 도장은 역할·자모마다
+  바탕 요소의 기본 배치(세벌식, ADR-028)를 원소·기기 글꼴 두 재료로 잰다. 정책 예외 없이 기본 임계 15%다 — 도장은 짜임·역할·자모마다
   하나라 특정 음절만 고칠 수 없고, 겹침은 `spec/layout-profiles.json`의 역할 상자·맞춤 규칙(프로파일 전체)으로 고친다. 도장을 다시 지을 때는
   `scripts/measure_layout_stamps.py --write`(역할 상자에서 짓는다, 브라우저 없음) 뒤 `node scripts/build_layout_profiles.js --write`,
-  값이 바뀌면 프로파일 revision을 올린다(이전 revision 디자인을 받을지는 `accepts`). 이어서 붓 그림 세트(`butgeul-box`)가 도장 배율로
-  붓을 미리 누르므로 `node scripts/build_jamo_svg.js --write`, 네 언어 미러·정적 자산·원소 획 정답·HTML 사례를 다시 낸다
+  값이 바뀌면 프로파일 revision을 올린다(이전 revision 디자인을 받을지는 `accepts`). 붓 그림 세트(`butgeul-box`)는 직결식
+  (`sebul-fixed-v1`) 도장 배율로 붓을 미리 누르므로 직결식 도장을 바꿨으면 `node scripts/build_jamo_svg.js --write`. 직결식(`jikgyeol`)의
+  겹침은 정책 단계 `Overlap audit`가 잰다. 이어서 네 언어 미러·정적 자산·원소 획 정답·HTML 사례를 다시 낸다
   (`generate_sidecar_tables.js --write` → `sync_assets.py` → `record_element_layer.py --write` → `generate_html_cases.py`, ADR-026 §2).
   `npm test`의 `--check`들이 빠진 단계를 잡는다.
 
-- `Legibility audit (fixed layout)` 단계(2026-10-13): `scripts/glyph_legibility_audit.py`가 기본 배치(세벌 고정)가 **읽히는 꼴**인지
+- `Legibility audit (fixed layout)` 단계(2026-10-13): `scripts/glyph_legibility_audit.py`가 기본 배치(세벌식)가 **읽히는 꼴**인지
   원소·기기 글꼴·SVG 그림(`pilgi-box`) 세 재료로 잰다 — 겹침·획 굵기 감사가 재지 않는 것이다(세벌 고정 revision 1은 두 감사를 넘고도
   받침이 떨어지고 줄이 부딪혀 읽히지 않았다, ADR-026). 표본 1,000자(11자 걸러) + 대표 음절 + 문장 음절을 100px로 하나씩 띄워 그리고
   역할마다 색(초성 빨강·중성 초록·종성 파랑)을 칠해 찍어, 음절마다 역할별 잉크 상자를 화소로 얻는다. 글자 칸·간격·빈칸 폭은 DOM에서 읽고
   40자 줄 격자·문장은 그 상자로 셈한다. 게이트: 칸 밖 잉크 ≤ 0.01em, 위아래 줄·이웃 글자 잉크 틈 ≥ 0.06em, 받침 위 틈 ≥ 0.03em,
   세로 모음 끝–받침 ≤ 0.08em, 초성 아래–받침 위 가운데값 ≤ 0.28em, 낱말 안 틈의 최대 < 낱말 사이의 최소. SVG 그림 세트는 획이 상자 밖으로
   조금 나와 틈 지표를 0.02em 덜 본다. 세 재료 약 30초, 기기 글꼴 재료를 darwin 글꼴로 재므로 획 감사와 같은 플랫폼 조건이다.
+  `Legibility audit (jikgyeol)`은 직결식(`font="jikgyeol"`)을 원소 재료로 같은 게이트에 건다 — 고정 배치를 고르는 글꼴은 게이트,
+  그 밖의 글꼴을 밝힌 문맥 배치는 보고만 한다(2026-10-14).
   `--font sebul`처럼 글꼴을 밝히면 보고만 한다. 지표의 셈은 `tests/test_glyph_tools.py`가 브라우저 없이 본다(가짜 상자로 통과·실패).
 - 검수 시트(게이트 아님): `scripts/review_sheets.py`가 첫 화면 제목(128px, 원소·글자 칸·기기·SVG·네온·스티커), 낱말(112·48px),
   문단(24·48px), 1,000자 격자, 확대 자모 칸(원소·기기), 낱자, 재료 셋, 작은 글씨(16·24px, 1x·2x), 꾸밈 여덟 가지를 그린다.

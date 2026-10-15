@@ -5,7 +5,7 @@
  * (FontStudio.design.lease)에 등록하고, 비교 칸처럼 미리보기 글꼴 시트를 받는 따로 된 shadow root의 <font-kku>로 그린다. 후보마다
  * 런타임 기록(traceOf — 그 칸이 나뉘어 찍히면 planJamo)에서 결과·상태·조립식·소스를 읽어 [data-recipes-candidate]에 적는다.
  * 고르기·조각 binding·잠금은 FontStudio.design.edit 한 번씩(이름 붙은 기록 한 줄) — 규칙은 pick-<역할>-u<16진> 하나로 모인다.
- * 문맥 조건(vowelLayout·hasFinal)은 만들지 않는다(세벌 고정 L08 — 네모 문맥의 문맥 규칙은 고급의 문맥 탭).
+ * 문맥 조건(vowelLayout·hasFinal)은 만들지 않는다(고정 배치 L08 — 네모 문맥의 문맥 규칙은 고급의 문맥 탭).
  *
  * 대상: 미리보기에서 자모를 고르면(select — 같은 선택을 다시 그릴 때 오는 사건은 건너뛴다) 그 음절의 그 역할 자모(ㅘ의 조각을
  * 골라도 ㅘ), 또는 칸 안의 자모 목록 [data-recipes-target](현대 자모 51)·역할 input[name=recipes-role]. 탭은 처음 고를 때(또는
@@ -542,7 +542,7 @@
     });
   }
 
-  /* 후보 하나의 읽기 — 미리보기 기록에서 그 칸의 맨 위 요청(조각 경로 []). 합자 모음·겹받침을 조각 둘로 찍으면(세벌 고정, 네모
+  /* 후보 하나의 읽기 — 미리보기 기록에서 그 칸의 맨 위 요청(조각 경로 []). 합자 모음·겹받침을 조각 둘로 찍으면(고정 배치, 네모
    * 문맥의 머리 음절) 맨 위 요청이 없다: 그 역할의 조각 요청(경로 한 마디 — 견줄 글에서 그 역할은 대상 자모뿐)을 모으고, 묶음
    * (방법·조립식·소스)은 planJamo로 */
   function readCandidate(row, cand) {
@@ -697,7 +697,7 @@
     var compound = target.jamo && Design.COMPOUND_MEDIALS.indexOf(target.jamo) >= 0 && (target.role === null || target.role === "medial");
     if (layout.kind === "fixed" && compound) {
       var recipe = Rules.recipesFor(target.jamo)[0];
-      addNote("fixed-compound", "세벌 고정은 " + target.jamo + "을 조각 둘(" + recipe.parts.map(function (part) { return part.jamo; }).join(" + ") +
+      addNote("fixed-compound", "고정 배치는 " + target.jamo + "을 조각 둘(" + recipe.parts.map(function (part) { return part.jamo; }).join(" + ") +
         ")로 찍습니다 — 원본(통째)은 고를 수 없고, 조합의 조각마다 소스를 고릅니다.");
     }
     if (layout.kind === "square") {

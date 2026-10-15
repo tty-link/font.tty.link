@@ -4,7 +4,7 @@
  * FontStudio.design.edit로 넘긴다. 정본 검증은 런타임(validateDesign·registerDesign)이다.
  *
  * - 고르기(choice): 자모·역할 칸 하나에 규칙 하나 — pick-<역할|any>-u<16진>(사용자가 고름) · mix-<역할>-u<16진>(자동 섞기). 같은 칸에
- *   같은 구체성 규칙이 둘 남지 않는다(런타임 충돌). 문맥 조건(vowelLayout·hasFinal)은 만들지 않는다(세벌 고정 L08).
+ *   같은 구체성 규칙이 둘 남지 않는다(런타임 충돌). 문맥 조건(vowelLayout·hasFinal)은 만들지 않는다(고정 배치 L08).
  * - 잠금: design.editor.locks = [{ jamo, role?, part? }] — 그리기는 보지 않는다(revision만 바뀐다). 자동 섞기가 건너뛴다.
  * - 자동 섞기(§8.4 seed): 런타임에는 없다 — 씨앗에서 칸마다 소스를 골라 mix-* 규칙으로 적는다. 같은 씨앗이면 같은 디자인.
  * - 소스 빼기: 그 소스에 기대는 규칙·역할 기본·대체 목록을 정리하고, 기본 소스면 같은 종류 다른 소스로 옮긴다(없으면 거부).
@@ -24,7 +24,7 @@
   var ROLES = ["initial", "medial", "final", "standalone"];
   var MIX_ROLES = ["initial", "medial", "final"];
   var METHODS = ["auto", "direct", "compose"];
-  /* 세벌 고정이 조각 둘로 찍는 합자 모음(font-kku.js FIXED_COMPOUND_MEDIALS와 같다) */
+  /* 고정 배치가 조각 둘로 찍는 합자 모음(font-kku.js FIXED_COMPOUND_MEDIALS와 같다) */
   var COMPOUND_MEDIALS = "ㅘㅙㅚㅝㅞㅟㅢ";
   /* 런타임 규칙 id 문법(font-kku.js DESIGN_SOURCE_ID) — 한글은 못 쓰니 자모는 u3131처럼 적는다 */
   var RULE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
@@ -369,7 +369,8 @@
   function fixedLayout(design, profiles) {
     var layout = design && isObject(design.layout) ? design.layout : null;
     var info = layout && profiles ? profiles[layout.profile] : null;
-    return Boolean(info) && info.model === "fixed-three";
+    // 고정 배치 — 직결식(fixed-three)과 세벌식(case-fixed, ADR-028)
+    return Boolean(info) && (info.model === "fixed-three" || info.model === "case-fixed");
   }
 
   /* 그 칸에 그 방법을 고를 수 있는가: { ok, code, reason, warning? }. 거부(ok: false)는 런타임도 등록하지 않는 것 — 다만 ROLE_MISMATCH는
@@ -387,7 +388,7 @@
       return { ok: false, code: "NO_RECIPE", reason: jamo + "을 만드는 조립식이 없음 — 원본(direct)이나 자동(auto)으로" };
     }
     if (method === "direct" && fixedLayout(design, profiles) && COMPOUND_MEDIALS.indexOf(jamo) >= 0 && (key === null || key === "medial")) {
-      return { ok: false, code: "FIXED_COMPOUND", reason: "세벌 고정은 합자 모음 " + jamo + "을 조각 둘로 찍어 통째로(원본) 그리지 못함 — " +
+      return { ok: false, code: "FIXED_COMPOUND", reason: "고정 배치는 합자 모음 " + jamo + "을 조각 둘로 찍어 통째로(원본) 그리지 못함 — " +
         "조각마다 원본을 고르는 조합(compose)으로, 또는 네모 문맥 배치에서" };
     }
     if (key !== null && roleJamo(key).indexOf(jamo) < 0) {

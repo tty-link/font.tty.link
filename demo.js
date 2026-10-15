@@ -30,7 +30,7 @@
     { slug: "api-studio", href: "./api-studio.html", title: "놀이터", desc: "render·renderText·createTextModel을 조작하며 DOM·평문·구조 모델을 나란히 확인" },
     { slug: "sprite-demo", href: "./sprite-demo.html", title: "그림 자소 보기", desc: "자소판에서 자소를 잘라 조합하는 계약과 작은 크기 비교" },
     { slug: "animation-catalog", href: "./animation-catalog.html", title: "움직임 훅", desc: "글자 단위 내장 훅·자모 움직임 확장·직접 만드는 자소 훅과 씨앗값 변주" },
-    { slug: "faces", href: "./faces.html", title: "재료와 깊이", desc: "기기 글꼴·CSS 원소·그림 세트 재료, 배치(세벌 고정·세벌 문맥)와 렌더링 깊이(원소·제자·기본·확장), 자모마다 고른 그림" }
+    { slug: "faces", href: "./faces.html", title: "재료와 깊이", desc: "기기 글꼴·CSS 원소·그림 세트 재료, 배치(세벌식·직결식·세벌 문맥)와 렌더링 깊이(원소·제자·기본·확장), 자모마다 고른 그림" }
   ];
 
   var DEBUG_BOUNDARY_KEY = "font-kku-demo-show-boundaries";

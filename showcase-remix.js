@@ -3,7 +3,7 @@
  * 미리보기와 복사하는 HTML이 같은 글에서 나오도록 변환은 글(문자열)만 다룬다. 바꾸는 것은 넷이다.
  * - 바탕 요소의 글꼴: <font-kku …>의 font="x" → font="sebul" jamo-set="my-font",
  *   class에 font-kku가 든 꾸미개의 data-font="x" → data-font="sebul" data-jamo-set="my-font".
- *   글꼴을 밝히지 않은 바탕 요소(기본 배치 세벌 고정)에는 jamo-set만 더해 세벌 고정 그대로 그린다(draw-jamo.md).
+ *   글꼴을 밝히지 않은 바탕 요소(기본 배치 세벌식)에는 jamo-set만 더해 세벌식 그대로 그린다(draw-jamo.md).
  * - 런타임 <script>의 data-fonts → "sebul"과 바꾸지 않은 글꼴, 그 바로 뒤에 registerJamo 등록 코드 한 덩이.
  *   바꾼 뒤 아무 데서도 쓰지 않게 된 템플릿 자신의 registerJamo("이름", …) 호출은 뺀다(그 호출만 든 <script>면 통째로).
  * - </head> 앞에 세트의 획 굵기(--fy-element-width) 규칙. 씨앗을 켜면 바탕 요소마다 seed="auto"·jamo-seeds
@@ -15,7 +15,7 @@
   "use strict";
 
   var SET_NAME = "my-font";
-  /* 글꼴 이름이 없는 바탕 요소(기본 배치 세벌 고정)를 가리키는 열쇠 — 사례 목록 index.json의 fonts에도 같은 말을 쓴다 */
+  /* 글꼴 이름이 없는 바탕 요소(기본 배치 세벌식)를 가리키는 열쇠 — 사례 목록 index.json의 fonts에도 같은 말을 쓴다 */
   var FIXED = "fixed";
   var ORDER = ["ㄱ", "ㄴ", "ㅁ", "ㅅ", "ㅇ", "ㆍ", "ㅡ", "ㅣ"];
   /* 여는 태그 — 따옴표 안의 '>'·'<'를 태그 끝으로 읽지 않게 속성 하나씩(이름, = 값) 읽는다. 1: 이름, 2: 속성들, 3: 끝(공백·/) */
@@ -107,7 +107,7 @@
     if (set) {
       var font = findAttr(list, [prefix + "font", prefix + "profile"]);
       var setAttr = " " + prefix + "jamo-set=\"" + SET_NAME + "\"";
-      /* 글꼴을 밝히지 않은 바탕 요소는 그림 세트만 건다 — 기본 배치(세벌 고정)가 그대로다. 새 속성은 옛 글꼴(없으면 옛
+      /* 글꼴을 밝히지 않은 바탕 요소는 그림 세트만 건다 — 기본 배치(세벌식)가 그대로다. 새 속성은 옛 글꼴(없으면 옛
        * 그림 세트) 자리에 둔다 */
       var at = font || findAttr(list, [prefix + "jamo-set"]);
       out = list.map(function (attr) {

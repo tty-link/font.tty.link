@@ -74,7 +74,7 @@
   :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
     filter: none;
   }
-  :where(.kku-look-neon[data-fy-layout-model="fixed-three"]:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
+  :where(.kku-look-neon:is([data-fy-layout-model="fixed-three"], [data-fy-layout-model="case-fixed"]):not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
     --kku-look-stroke: 0.03em;
     --fy-stroke: var(--kku-look-stroke);
   }
@@ -478,7 +478,7 @@
   :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
     filter: none;
   }
-  :where(.kku-look-blueprint[data-fy-layout-model="fixed-three"]:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
+  :where(.kku-look-blueprint:is([data-fy-layout-model="fixed-three"], [data-fy-layout-model="case-fixed"]):not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
     --kku-look-stroke: 0.018em;
     --fy-stroke: var(--kku-look-stroke);
   }
@@ -536,7 +536,7 @@
   :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
     filter: none;
   }
-  :where(.kku-look-outline[data-fy-layout-model="fixed-three"]:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
+  :where(.kku-look-outline:is([data-fy-layout-model="fixed-three"], [data-fy-layout-model="case-fixed"]):not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
     --kku-look-stroke: 0.04em;
     --fy-stroke: var(--kku-look-stroke);
   }
@@ -650,7 +650,7 @@
   :where(:is(.kku-look-neon, .kku-look-retro, .kku-look-blueprint):is([data-fy-font="blueprint"])) {
     --fy-font-stroke: 0.018em;
   }
-  :where(:is(.kku-look-neon, .kku-look-retro, .kku-look-blueprint):is([data-fy-font="geumbak"], [data-fy-font="glitch"], [data-fy-font="malang"], [data-fy-font="neon"], [data-fy-font="retro"], [data-fy-font="sebul"], [data-fy-font="sticker"])) {
+  :where(:is(.kku-look-neon, .kku-look-retro, .kku-look-blueprint):is([data-fy-font="geumbak"], [data-fy-font="glitch"], [data-fy-font="jikgyeol"], [data-fy-font="malang"], [data-fy-font="neon"], [data-fy-font="retro"], [data-fy-font="sebul"], [data-fy-font="sticker"])) {
     --fy-font-stroke: 0.014em;
   }
 

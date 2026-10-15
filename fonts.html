@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="./font-lab.css" />
     <link rel="stylesheet" href="./font-themes.css" />
     <style>
-      /* 기본 배치(세벌 고정과 문맥 배치) 비교 — 이 페이지에만 있다 */
+      /* 기본 배치(세벌식·직결식과 문맥 배치) 비교 — 이 페이지에만 있다 */
       .ft-layout {
         display: grid;
         gap: 0.9rem;
@@ -219,17 +219,25 @@
 
         <div class="k-wrap">
           <div class="ft-layout" id="layout" aria-labelledby="layout-title">
-            <h3 id="layout-title" class="k-font-group">기본 배치 <span>세벌 고정과 문맥 배치</span></h3>
+            <h3 id="layout-title" class="k-font-group">기본 배치 <span>세벌식·직결식과 문맥 배치</span></h3>
             <p class="ft-layout-lead">
-              <code>font</code>를 적지 않은 <code>&lt;font-kku&gt;</code>는 <strong>세벌 고정</strong>으로 그립니다. 같은 역할의 같은 자모는
-              11,172자 어디서나 같은 자리, 같은 크기입니다. <code>font="sebul"</code>을 적으면 <strong>문맥 배치</strong>로, 모음과 받침에 따라
-              자모의 자리와 크기가 바뀌어 글자마다 꽉 찹니다(0.1.0까지의 기본). 위 견본은 모두 글꼴 이름을 밝혀 그립니다.
+              <code>font</code>를 적지 않은 <code>&lt;font-kku&gt;</code>는 <strong>세벌식</strong>으로 그립니다. 같은 짜임(모음 모양·받침)의 같은
+              자모는 어디서나 같은 자리, 같은 크기이고, 받침 없는 글자는 아래를 비우며 받침 있는 글자는 칸을 다 씁니다.
+              <code>font="jikgyeol"</code>은 <strong>직결식</strong>으로, 같은 역할의 같은 자모가 11,172자 어디서나 같은 자리, 같은 크기입니다(0.1.1–0.1.3의 기본).
+              <code>font="sebul"</code>을 적으면 <strong>문맥 배치</strong>로, 모음과 받침에 따라 자모의 자리와 크기가 바뀌어 글자마다 꽉 찹니다(0.1.0까지의 기본).
+              위 견본은 모두 글꼴 이름을 밝혀 그립니다.
             </p>
-            <div class="k-vs">
+            <div class="k-vs k-vs--three">
               <figure class="k-vs-side">
-                <figcaption>세벌 고정 · 기본 — <code>font</code> 없음</figcaption>
-                <div class="k-stage ft-layout-stage"><font-kku size="clamp(40px, 6vw, 56px)" data-layout-sample="fixed">가 고 과 각 곽</font-kku></div>
+                <figcaption>세벌식 · 기본 — <code>font</code> 없음</figcaption>
+                <div class="k-stage ft-layout-stage"><font-kku size="clamp(40px, 6vw, 56px)" data-layout-sample="cases">가 고 과 각 곽</font-kku></div>
                 <pre class="ft-layout-code"><code>&lt;font-kku&gt;가 고 과 각 곽&lt;/font-kku&gt;</code></pre>
+                <p class="k-note" data-layout-readout="cases"></p>
+              </figure>
+              <figure class="k-vs-side">
+                <figcaption>직결식 — <code>font="jikgyeol"</code></figcaption>
+                <div class="k-stage ft-layout-stage"><font-kku font="jikgyeol" size="clamp(40px, 6vw, 56px)" data-layout-sample="fixed">가 고 과 각 곽</font-kku></div>
+                <pre class="ft-layout-code"><code>&lt;font-kku font="jikgyeol"&gt;가 고 과 각 곽&lt;/font-kku&gt;</code></pre>
                 <p class="k-note" data-layout-readout="fixed"></p>
               </figure>
               <figure class="k-vs-side">
@@ -517,7 +525,7 @@
             '<ul class="k-fontrow-tags">' + meta.map(function (m) { return "<li>" + m + "</li>"; }).join("") +
             (font.use && !starter ? "<li>어울리는 곳: " + escapeHtml(font.use) + "</li>" : "") +
             (font.seed ? '<li class="fl-seed-tag" title="seed·jamo-seeds 속성을 주면 자모마다 다르게 흔들립니다">씨앗 반응</li>' : "") +
-            (font.id === "sebul" ? '<li><a href="#layout">이름을 밝히면 문맥 배치 · <code>font</code>를 적지 않으면 세벌 고정</a></li>' : "") +
+            (font.id === "sebul" ? '<li><a href="#layout">이름을 밝히면 문맥 배치 · <code>font</code>를 적지 않으면 세벌식</a></li>' : "") +
             "</ul>" +
             '<div class="k-fontrow-actions">' +
             '<button type="button" class="k-btn k-btn--small k-btn--primary" data-customize-font="' + font.id + '" aria-haspopup="dialog">꾸미기</button> ' +
@@ -605,7 +613,7 @@
         });
 
         /* 기본 배치 비교 — 초성 ㄱ(문맥 배치의 과·곽은 머리 음절의 초성 획)이 글자 칸 안 몇 가지 자리·크기에 놓였는지 잰다.
-         * 세벌 고정은 같은 도장이라 1가지다. 화면 말은 방문자 말로 — 속성·API 이름은 문서(#fonts-layout)에 있다. */
+         * 직결식은 같은 도장이라 1가지, 세벌식은 짜임마다 한 도장이다. 화면 말은 방문자 말로 — 속성·API 이름은 문서(#fonts-layout)에 있다. */
         function layoutReadout(host) {
           var out = document.querySelector('[data-layout-readout="' + host.getAttribute("data-layout-sample") + '"]');
           if (!out || !host.isConnected) return;
@@ -622,7 +630,9 @@
             }).join(",")] = true;
           });
           var count = Object.keys(spots).length;
-          out.textContent = "초성 ㄱ 자리 " + count + "가지 — " + (count === 1 ? "글자마다 같은 도장" : "글자마다 다르게");
+          var sample = host.getAttribute("data-layout-sample");
+          out.textContent = "초성 ㄱ 자리 " + count + "가지 — " + (count === 1 ? "글자마다 같은 도장"
+            : sample === "cases" ? "짜임(모음 모양·받침)마다 같은 도장" : "글자마다 다르게");
         }
         document.addEventListener("font-kku:render", function (event) {
           var host = event.target;

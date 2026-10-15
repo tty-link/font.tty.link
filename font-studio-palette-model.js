@@ -310,7 +310,7 @@
     return out;
   }
 
-  /* 매트릭스 칸 하나(표본 음절을 그린 바탕 요소의 기록) — 그 역할의 요청만 본다(세벌 고정의 합자 모음은 조각 둘). warn: 대체 글꼴
+  /* 매트릭스 칸 하나(표본 음절을 그린 바탕 요소의 기록) — 그 역할의 요청만 본다(고정 배치의 합자 모음은 조각 둘). warn: 대체 글꼴
    * 의심이 먼저, 그다음 잴 수 없음 */
   function cellFlags(nodes, role) {
     var out = { requests: 0, suspected: false, unmeasured: false, warn: "" };

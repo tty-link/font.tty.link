@@ -15,7 +15,7 @@
  *   ('<자모> 독립 SVG로')가 그림 문서를 바꾼다. 이 자모를 조합으로 묶는 규칙(apply.method compose)이 있으면 독립 그림이 쓰이지
  *   않으므로 같은 편집에서 그 규칙의 조립 지정을 뺄 수 있다(dropComposeRule — 남는 지정이 없으면 규칙째).
  *
- * 하지 않는 것(계획 밖): 위 자모를 따라가는 조각 보정(§5.5 linked-adjustment), 글꼴 낱자 → SVG(§6.6), 세벌 고정의 자모별
+ * 하지 않는 것(계획 밖): 위 자모를 따라가는 조각 보정(§5.5 linked-adjustment), 글꼴 낱자 → SVG(§6.6), 고정 배치의 자모별
  * 크기·자리(도장이 맡는다).
  *
  * FontStudio.drawDetach = { capture(jamo, { contexts }) → Promise<잡은 것>, detach(jamo, { contexts, dropComposeRule }) →

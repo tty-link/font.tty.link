@@ -161,6 +161,7 @@
       "--fy-font-face": ["font", "host", "font", "keyword", "stable", ["device", "element", "svg"]],
       "--fy-face": ["page", "page", "page", "keyword", "stable", ["device", "element", "svg"]],
       "--fy-font-design": ["font", "host", "font", "keyword", "stable"],
+      "--fy-font-layout": ["font", "host", "font", "keyword", "stable"],
       "--fy-design": ["page", "page", "page", "keyword", "stable"],
       "--fy-font-element-width": ["font", "host", "font", "length", "stable"],
       "--fy-element-width": ["page", "page", "page", "length", "stable"],

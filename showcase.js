@@ -3,7 +3,7 @@
  *
  * - 사례 목록은 examples/index.json이다. 카드는 목록 차례대로 서고([data-case]), 쓰임 고르기는 카드에 hidden만 준다.
  *   file은 /^[a-z0-9-]+\.html$/만 받는다(주소·속성에 그대로 들어간다). fonts의 "fixed"는 글꼴 이름을 비운 바탕 요소
- *   (기본 배치 세벌 고정)다 — 카드 표와 고쳐 쓰기 칩에 '세벌 고정'으로 보인다.
+ *   (기본 배치 세벌식)다 — 카드 표와 고쳐 쓰기 칩에 '세벌식'으로 보인다.
  *   항목의 made({ by, where, date, attempt, edited, prompt, note, builder? })는 그 페이지가 요청 글 하나로 AI에게 받은
  *   답이라는 기록이다 — 카드에 그 표지와 요청 원문을 보인다. builder는 그 요청 글을 낸 요청 글 만들기의 고르기다
  *   (buildPrompt(builder)가 prompt와 같을 때만 '이 설정 불러오기'를 보인다). made가 없는 항목의 prompt는 페이지를 글로
@@ -67,7 +67,7 @@
   var FIXED = R ? R.FIXED : "fixed";
 
   function fontName(id) {
-    if (id === FIXED) return "세벌 고정";
+    if (id === FIXED) return "세벌식";
     for (var i = 0; i < FONTS.length; i += 1) {
       if (FONTS[i].id === id) return FONTS[i].name;
     }
@@ -303,7 +303,7 @@
     var name = baseName(item.file);
     var made = madeOf(item);
     var tags = (item.fonts || []).map(function (font) {
-      if (font === FIXED) return '<li class="sc-fixed"><a href="./fonts.html#layout" title="글꼴 이름을 비워 기본 배치로 그린 글자">세벌 고정</a></li>';
+      if (font === FIXED) return '<li class="sc-fixed"><a href="./fonts.html#layout" title="글꼴 이름을 비워 기본 배치로 그린 글자">세벌식</a></li>';
       return '<li><a href="./fonts.html#' + escapeHtml(font) + '"><code>' + escapeHtml(font) + "</code></a></li>";
     }).concat((item.features || []).map(function (feature) {
       return '<li class="sc-feature">' + escapeHtml(feature) + "</li>";
@@ -525,7 +525,7 @@
     var text = keep.length ?
       "색 바탕 위 스티커처럼 글꼴이 제 색으로 읽히는 곳(" + keep.map(fontName).join("·") + ")은 처음에 그대로 둡니다. 눌러서 켜고 끕니다." :
       "누르면 그 글꼴로 그린 곳만 켜고 끕니다.";
-    if ((item.fonts || []).indexOf(FIXED) >= 0) text += " 세벌 고정(글꼴 이름을 비운 곳)에는 그림 세트만 걸어 배치를 그대로 둡니다.";
+    if ((item.fonts || []).indexOf(FIXED) >= 0) text += " 세벌식(글꼴 이름을 비운 곳)에는 그림 세트만 걸어 배치를 그대로 둡니다.";
     var html = (remix.empty ? "<strong>바꿀 글꼴을 하나 이상 켜세요.</strong> " : "") + escapeHtml(text);
     /* 읽어 주는 영역(aria-live)이라 글이 바뀔 때만 고쳐 쓴다 */
     if (html === fontsNoteHtml) return;

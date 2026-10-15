@@ -47,7 +47,7 @@ window.FontKkuThemes = {
    "stroke": "원소 (CSS 선·원)",
    "tone": "light",
    "use": "기본 제목·포스터",
-   "desc": "받침 유무에 따라 글줄이 흐르는 탈네모꼴 세벌식. 기본 글꼴입니다 — 이름을 밝히면 이 문맥 배치, 밝히지 않으면 세벌 고정으로 그립니다."
+   "desc": "받침 유무에 따라 글줄이 흐르는 탈네모꼴 세벌식. 기본 글꼴입니다 — 이름을 밝히면 이 문맥 배치, 밝히지 않으면 세벌식(짜임마다 다듬은 배치)으로 그립니다. 타자기처럼 같은 자리에 찍는 배치는 직결식(jikgyeol)입니다."
   },
   "gothic": {
    "name": "고딕",
@@ -57,6 +57,16 @@ window.FontKkuThemes = {
    "tone": "light",
    "use": "공지·배너·강조",
    "desc": "음절 높이를 네모꼴로 묶는 단정한 조합."
+  },
+  "jikgyeol": {
+   "name": "직결식",
+   "group": "system",
+   "base": "sebul",
+   "structure": "세벌식 타자기 — 초성·중성·종성이 어느 글자에서나 같은 자리·크기",
+   "stroke": "원소 (CSS 선·원)",
+   "tone": "light",
+   "use": "타자기 느낌의 제목·레트로 공지",
+   "desc": "세벌식 타자기처럼 초성·중성·종성을 어느 글자에서나 같은 자리·같은 크기로 찍습니다. 0.1.3까지의 기본 배치입니다."
   },
   "malang": {
    "name": "말랑",
@@ -879,6 +889,13 @@ window.FontKkuThemes = {
    "use": "개발·건축·교육",
    "summary": "역할마다 선 색이 다른 설계도 — 고딕에 도면 꾸밈"
   },
+  "jikgyeol": {
+   "name": "직결식",
+   "font": "jikgyeol",
+   "tone": "light",
+   "use": "타자기 느낌의 제목·레트로 공지",
+   "summary": "초성·중성·종성이 늘 같은 자리 — 세벌식 타자기"
+  },
   "malang": {
    "name": "말랑",
    "font": "malang",
@@ -1353,6 +1370,16 @@ window.FontKkuThemes = {
     "looks"
    ],
    "tone": "blueprint"
+  },
+  "jikgyeol": {
+   "font": "jikgyeol",
+   "classes": [],
+   "seed": null,
+   "jamoSeeds": false,
+   "animate": null,
+   "fx": null,
+   "addons": [],
+   "tone": "light"
   },
   "malang": {
    "font": "malang",

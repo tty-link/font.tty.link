@@ -32,6 +32,13 @@
    "codaDepth": "whole",
    "sidecar": false
   },
+  "jikgyeol": {
+   "derivedFrom": "sebul",
+   "expressionMode": "sebeol",
+   "vowelDepth": "syllable",
+   "codaDepth": "whole",
+   "sidecar": false
+  },
   "neon": {
    "derivedFrom": "sebul",
    "expressionMode": "sebeol",

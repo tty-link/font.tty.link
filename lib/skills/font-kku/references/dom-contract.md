@@ -73,7 +73,7 @@
   - 그려지지 않은 바탕 요소(display: none 안)는 굵기 보정·머리 맞춤을 미뤘다가(ResizeObserver) 보이면 다시 하고 `font-kku:render`(`restyle`)를 낸다.
   - 낱자(ADR-025 §6): `element`·`svg`에서 음절이 아닌 호환 자모 글자(`part="content"`, ㄱ–ㅣ)에도 런타임이 `data-fy-standalone="<자모>"`를 찍고 자모 노드처럼 획 묶음을 넣는다(표준 상자 `spec/jamo-ink-boxes.json`의 낱자 51, 뼈대는 곧은 꼴 — 받침 꼴, ㄸ·ㅃ·ㅉ는 가로 모음 위 꼴). 글자는 `text-indent`로 밀어 둔다. `spec/html-cases.json` 직렬화에는 들지 않는다
   - 글꼴 팔레트(ADR-025 §9): 글꼴 글자 재료(`device`)에 글꼴 디자인(`mode: "font"`)이 걸리면 자모 노드마다 고른 글꼴을 inline `font-family`(·`font-weight`·`font-style`)로 두고, 한 노드를 조각마다 다른 글꼴이나 조립식으로 그리면 노드에 `data-fy-leaves`를 찍고 조각마다 `<span part="leaf" data-leaf-source="<소스>" data-leaf-path="<조각 경로>">낱자</span>`(inline `--fy-leaf-size`·`--fy-leaf-x`·`--fy-leaf-y`·`--fy-leaf-scale-x`·`--fy-leaf-scale-y`, 노드 `::before`와 같은 맞춤)를 넣는다. 그 노드는 `::before`를 그리지 않는다
-- `data-fy-layout="<profile>"`, `data-fy-layout-model="fixed-three|adaptive-square"` — 배치 프로파일([ADR-026](../../../docs/ADR/ADR-026-sebul-fixed-layout.md)). 글꼴을 밝히지 않은 바탕 요소는 기본 `sebul-fixed-v1`(세벌 고정), 1.2 디자인은 자기 `layout`. 글꼴을 밝힌 바탕 요소·배치를 적지 않은 이전 디자인·`--fy-design: legacy`는 지금 배치라 두 속성이 없다. 세벌 고정이면 해석된 자모 깊이가 `split`/`whole`이고(합자 모음은 고정 조각, 겹받침은 통짜, 머리 음절 없음), 자모 노드에 역할 도장이 붙는다(§7). 네 언어 정적 렌더러(`render_html`)도 글꼴을 밝히지 않은 호출(font 없음·빈 문자열, `FontDefinition` 없음)에 같은 표면을 쓴다 — host `font` 속성 없음, 두 속성은 `data-fy-coda-depth` 바로 뒤, 도장은 런타임 문자열 그대로, 그 뒤 `data-fy-face="element"`와 원소 획(ADR-027). `spec/html-cases.json`(1.9)의 `implicitFont` 사례가 이 표면과 도장 열쇠 74개를 정합 계약으로 고정한다(원소 층은 `spec/element-layer.json`)([언어 공통 렌더 계약](../../../docs/ARCHITECTURE/renderer-contracts.md#기본-배치세벌-고정))
+- `data-fy-layout="<profile>"`, `data-fy-layout-model="case-fixed|fixed-three|adaptive-square"` — 배치 프로파일([ADR-026](../../../docs/ADR/ADR-026-sebul-fixed-layout.md)·[ADR-028](../../../docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md)). 글꼴을 밝히지 않은 바탕 요소는 기본 `sebul-cases-v1`(세벌식, case-fixed), 글꼴 CSS가 `--fy-font-layout`을 밝히면 그 배치(`jikgyeol` → `sebul-fixed-v1` 직결식, fixed-three), 1.2 디자인은 자기 `layout`(디자인이 이긴다). 그 밖의 글꼴을 밝힌 바탕 요소·배치를 적지 않은 이전 디자인·`--fy-design: legacy`는 지금 배치라 두 속성이 없다. 고정 배치(세벌식·직결식)면 해석된 자모 깊이가 `split`/`whole`이고(합자 모음은 고정 조각, 겹받침은 통짜, 머리 음절 없음), 자모 노드에 역할 도장이 붙는다(§7). 네 언어 정적 렌더러(`render_html`)도 글꼴을 밝히지 않은 호출(font 없음·빈 문자열, `FontDefinition` 없음)에 같은 표면을 쓴다 — host `font` 속성 없음, 두 속성은 `data-fy-coda-depth` 바로 뒤, 도장은 런타임 문자열 그대로, 그 뒤 `data-fy-face="element"`와 원소 획(ADR-027). `spec/html-cases.json`(1.9)의 `implicitFont` 사례가 이 표면과 기본 배치의 도장 열쇠 전부(세벌식은 짜임별 232개)를 정합 계약으로 고정한다(원소 층은 `spec/element-layer.json`)([언어 공통 렌더 계약](../../../docs/ARCHITECTURE/renderer-contracts.md#기본-배치세벌식))
 - `data-fy-design="<name>"`, `data-fy-design-status` — 디자인([ADR-025](../../../docs/ADR/ADR-025-hangul-composition-design.md), 실험). 글꼴 `--fy-font-design`·페이지 `--fy-design`이 `FontKku.registerDesign`으로 등록한 이름을 고르면 `data-fy-design`이 붙고 재료(`data-fy-face`)·그림 세트·직접/조합 규칙을 그 디자인이 정한다(`jamo-set`·`--fy-face`는 구조 선택에 쓰지 않는다). 고르지 못하면 지금 설정으로 그리고 `data-fy-design-status`에 까닭을 남긴다 — `DESIGN_TOKEN_INVALID`(이름 문법), `DESIGN_NOT_REGISTERED`(미등록·`unregisterDesign`으로 지움 — 등록되는 순간 다시 그린다), `DESIGN_UNSUPPORTED_FONT`(이 글꼴은 디자인을 받지 않는다 — 그림 자소 재료이거나 표준 잉크 상자 `--fy-font-ink-boxes`를 밝히지 않았거나 페이지가 `--fy-ink-boxes: none`으로 껐다. 이름 문법이 틀리면 `DESIGN_TOKEN_INVALID`가 먼저, 등록해도 바뀌지 않는다). `fontInfo(host).designStatus`·`traceOf(host).designStatus`도 같은 값이다. 디자인을 `registerDesign(name, json, { replace: true })`로 바꾸면 그 이름을 고른 바탕 요소가 다시 그린다. `legacy`는 물려받은 선택을 끊는다. 자모 노드 DOM은 같은 꼴(`part="hoek"`·`part="element"`)이고, 어느 조각을 어느 소스·규칙으로 그렸는지는 DOM이 아니라 `FontKku.traceOf(host)`가 돌려준다
 - `data-fy-stroke-depth="stroke|jamo"` — 획 깊이를 요청했을 때만(§3.4). 벡터 자소면 `stroke`, 획으로 쪼갤 수 없는 재료(기기 글꼴·자소판)면 `jamo`로 되돌린 것을 알린다
 - `data-source`
@@ -113,7 +113,7 @@ decorator의 `data-font`/`data-profile`/`data-size`/`data-spacing`/`data-wrap-un
 - `profiles/gothic.css`
 - `profiles/sprite-example.css`
 - `profiles/sprite-system.css` — 종성·겹받침·문맥 변형까지 포함한 6행 sprite
-- 파생 글꼴: `neon`·`sticker`·`malang`·`geumbak`·`glitch`(기반 `sebul`), `retro`·`saekdong`·`riso`·`blueprint`(기반 `gothic`), `pixel`·`dojang`·`chalk`·`crayon`·`jasu`·`pilgi`·`dunggeun`·`butgeul`(기반 `sprite-system`). 기반 글꼴과 같은 DOM·자리·depth를 쓰고(배치를 복사했으므로) 칠·그림자·기울기·자소판만 다르다. `sidecar: false`라 사이드카 `render_html`은 지원하지 않는다
+- 파생 글꼴: `neon`·`sticker`·`malang`·`geumbak`·`glitch`·`jikgyeol`(기반 `sebul` — `jikgyeol`은 `--fy-font-layout: sebul-fixed-v1`로 직결식 배치를 고른다), `retro`·`saekdong`·`riso`·`blueprint`(기반 `gothic`), `pixel`·`dojang`·`chalk`·`crayon`·`jasu`·`pilgi`·`dunggeun`·`butgeul`(기반 `sprite-system`). 기반 글꼴과 같은 DOM·자리·depth를 쓰고(배치를 복사했으므로) 칠·그림자·기울기·자소판만 다르다. `sidecar: false`라 사이드카 `render_html`은 지원하지 않는다
 - 조합 확장(ADR-017)은 DOM을 바꾸지 않는다. 꾸밈 `kku-look-*`·변주 `kku-vary-*`는 바탕 요소의 class이고, 런타임 출력 `data-fy-material`·`data-fy-jamo-seeds`·`data-fy-font`로 갈래를 고른다(그림 자소에는 바탕 요소의 `--fy-sprite-paint: mask`로 마스크 칠 → `data-fy-sprite-paint="mask"`). 자모 움직임은 같은 `data-fy-animate` 훅, 상호작용(`font-kku-fx.js`)은 자모 노드의 인라인 `translate`·`rotate`와 바탕 요소의 `seed` 속성만 바꾼다
 
 ### 3.2 deprecated alias
@@ -303,7 +303,7 @@ glyph는 NFC 뒤의 extended grapheme cluster 하나다. 한 코드포인트짜�
 | host | `data-fy-host` | host mode |
 | host | `data-fy-expression` | font CSS가 계산한 표현 방식(디자인 축) |
 | host | `data-fy-vowel-depth`, `data-fy-coda-depth` | font CSS가 계산한 자모 분해 깊이의 독립 두 축 |
-| host | `data-fy-layout`, `data-fy-layout-model` | 배치 프로파일(ADR-026) — 글꼴을 밝히지 않은 바탕 요소(기본 `sebul-fixed-v1`)와 1.2 디자인. 정적 렌더러도 글꼴을 밝히지 않은 호출에 쓴다(html-cases 1.9) |
+| host | `data-fy-layout`, `data-fy-layout-model` | 배치 프로파일(ADR-026·028) — 글꼴을 밝히지 않은 바탕 요소(기본 `sebul-cases-v1`), `--fy-font-layout`을 밝힌 글꼴(`jikgyeol`)과 1.2 디자인. 정적 렌더러도 글꼴을 밝히지 않은 호출에 쓴다(html-cases 1.9) |
 | host | `data-fy-font`, `data-fy-profile`, `data-fy-size`, `data-fy-spacing`, `data-fy-wrap-unit`, `data-fy-animate`, `data-fy-seed` | canonical 정규화 옵션 상태 |
 | host | `data-fy-material`, `data-fy-sprite-kinds` | font CSS가 선언한 재료와 시트에 칸이 있는 자모 종류(비-`system` font만) |
 | decorator host | `data-font`, `data-profile`, `data-size`, `data-spacing`, `data-wrap-unit`, `data-animate`, `data-seed` | authored 지속 입력(런타임이 보존) |
@@ -314,8 +314,8 @@ glyph는 NFC 뒤의 extended grapheme cluster 하나다. 한 코드포인트짜�
 | glyph | `data-fy-layout-bucket` | 큰 구조 버킷 |
 | glyph/body/cluster/jamo | `data-fy-axis`, `data-fy-open`, `data-fy-jong-count` | semantic frame |
 | jamo | `data-jamo` | 실제 conjoining jamo 값 |
-| jamo | `data-fy-stamp="initial\|medial\|final"`, 인라인 `--fy-stamp-left/top/size/scale-x/scale-y/weight/stroke` | 세벌 고정(ADR-026)의 역할 도장 — 역할·자모마다 한 값(합자 모음 조각은 그 합자 모음의 조각 도장). 코어 CSS가 slot 값을 여기서 받고 글꼴 CSS의 slot·역할·자모·문맥 보정과 자르기를 끈다. `data-fy-pos`는 정보로 남는다. 정적 렌더러도 같은 문자열을 쓴다(html-cases 1.9, 순서는 색인 변수 뒤) |
-| jamo | `data-fy-draw="cho\|bar"` | 세벌 고정 초성의 그림 문맥(원소·그림 재료의 초성 꼴) — 모음 짜임 대신 프로파일이 정한다 |
+| jamo | `data-fy-stamp="initial\|medial\|final"`, 인라인 `--fy-stamp-left/top/size/scale-x/scale-y/weight/stroke` | 고정 배치의 역할 도장 — 직결식(ADR-026)은 역할·자모마다 한 값, 세벌식(ADR-028)은 짜임(글자 칸 `data-jung-layout`·`data-jong-layout`)마다 한 값(합자 모음 조각은 그 합자 모음의 조각 도장). 코어 CSS가 slot 값을 여기서 받고 글꼴 CSS의 slot·역할·자모·문맥 보정과 자르기를 끈다. `data-fy-pos`는 정보로 남는다. 정적 렌더러도 같은 문자열을 쓴다(html-cases 1.9, 순서는 색인 변수 뒤) |
+| jamo | `data-fy-draw="cho\|bar\|sebeol"` | 고정 배치의 그림 문맥 — 직결식 초성은 프로파일이 정한다(`bar`, 모음 짜임을 보지 않음). 세벌식 받침은 `sebeol`(겹받침 세벌식 뼈대 `<자모>@sebeol`이 있으면 그것, 없으면 기본 뼈대)이고 세벌식 초성은 붙지 않는다(모음 짜임을 따른다) |
 | jamo/cluster | `data-jamo-role` | `choseong`, `jungseong`, `jongseong`, `jungseong-cluster`, `jongseong-cluster` |
 | jamo | `data-fy-role` | `choseong`, `jung-main`, `jung-base`, `jung-tail`, `jong-main`, `jong-left`, `jong-right` |
 | jamo | `data-fy-pos` | placement token |

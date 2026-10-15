@@ -10,8 +10,9 @@
   {"id": "tone", "name": "바탕", "summary": "꾸밈이 가장 잘 사는 배경", "how": "페이지 배경"}
  ],
  "fonts": {
-  "sebul": {"name": "세벌", "group": "system", "structure": "세벌식 탈네모 — 받침 유무에 따라 글줄이 흐른다", "stroke": "원소 (CSS 선·원)", "tone": "light", "use": "기본 제목·포스터", "desc": "받침 유무에 따라 글줄이 흐르는 탈네모꼴 세벌식. 기본 글꼴입니다 — 이름을 밝히면 이 문맥 배치, 밝히지 않으면 세벌 고정으로 그립니다."},
+  "sebul": {"name": "세벌", "group": "system", "structure": "세벌식 탈네모 — 받침 유무에 따라 글줄이 흐른다", "stroke": "원소 (CSS 선·원)", "tone": "light", "use": "기본 제목·포스터", "desc": "받침 유무에 따라 글줄이 흐르는 탈네모꼴 세벌식. 기본 글꼴입니다 — 이름을 밝히면 이 문맥 배치, 밝히지 않으면 세벌식(짜임마다 다듬은 배치)으로 그립니다. 타자기처럼 같은 자리에 찍는 배치는 직결식(jikgyeol)입니다."},
   "gothic": {"name": "고딕", "group": "system", "structure": "네모꼴 — 음절 높이를 한 칸에 묶는다", "stroke": "원소 (CSS 선·원)", "tone": "light", "use": "공지·배너·강조", "desc": "음절 높이를 네모꼴로 묶는 단정한 조합."},
+  "jikgyeol": {"name": "직결식", "group": "system", "base": "sebul", "structure": "세벌식 타자기 — 초성·중성·종성이 어느 글자에서나 같은 자리·크기", "stroke": "원소 (CSS 선·원)", "tone": "light", "use": "타자기 느낌의 제목·레트로 공지", "desc": "세벌식 타자기처럼 초성·중성·종성을 어느 글자에서나 같은 자리·같은 크기로 찍습니다. 0.1.3까지의 기본 배치입니다."},
   "malang": {"name": "말랑", "group": "system", "base": "sebul", "structure": "세벌 짜임에 자리마다 다른 기울기", "stroke": "원소 (CSS 선·원)", "tone": "light", "seed": true, "use": "카페·디저트·귀여운 공지", "desc": "세벌 짜임에 자리마다 다른 기울기를 줘 손으로 오려 붙인 듯 흔들리는 리듬. 같은 글은 언제나 같은 모양입니다."},
   "sprite-system": {"name": "그림 자소", "group": "sprite", "structure": "네모꼴 실측 — 자소판 6행 93칸", "stroke": "곧은 획", "texture": "plain", "tone": "light", "use": "그림 자소의 기본 뼈대", "desc": "직접 그린 6행 SVG 자소판(자모 93칸)에 실측 적합한 배치. 필기·둥근·붓 획과 도트·도장·분필·크레용·자수 획 표현이 이 짜임을 씁니다.", "jamoSet": "sprite-system"},
   "pilgi": {"name": "필기", "group": "sprite", "base": "sprite-system", "structure": "그림 자소 짜임", "stroke": "필기 획 — 획마다 정해진 흔들림, 살짝 휜 획, 오른쪽으로 기운 글씨", "texture": "plain", "tone": "light", "mask": true, "use": "손글씨 메모·카드·일기", "desc": "획마다 정해진 흔들림, 살짝 휜 획, 오른쪽으로 기운 글씨. 같은 글은 언제나 같은 모양이고, 색은 CSS로 칠합니다."},
@@ -116,6 +117,7 @@
   "saekdong": {"name": "색동", "font": "gothic", "look": "saekdong", "tone": "light", "shortcut": "saekdong", "use": "어린이·한글 교육·명절", "summary": "역할마다 색동 저고리 색 — 고딕에 색동 꾸밈"},
   "riso": {"name": "리소", "font": "gothic", "look": "riso", "tone": "paper", "shortcut": "riso", "use": "독립출판·포스터·전시", "summary": "두 잉크를 겹쳐 찍은 리소 인쇄 — 고딕에 리소 꾸밈"},
   "blueprint": {"name": "도면", "font": "gothic", "look": "blueprint", "tone": "blueprint", "shortcut": "blueprint", "use": "개발·건축·교육", "summary": "역할마다 선 색이 다른 설계도 — 고딕에 도면 꾸밈"},
+  "jikgyeol": {"name": "직결식", "font": "jikgyeol", "tone": "light", "use": "타자기 느낌의 제목·레트로 공지", "summary": "초성·중성·종성이 늘 같은 자리 — 세벌식 타자기"},
   "malang": {"name": "말랑", "font": "malang", "tone": "light", "use": "카페·디저트·귀여운 공지", "summary": "자리마다 다른 기울기로 오려 붙인 듯한 리듬"},
   "pixel": {"name": "도트", "font": "pixel", "tone": "light", "use": "게임·레트로 IT", "summary": "그림 자소 획을 도트로 찍은 획 표현"},
   "dojang": {"name": "도장", "font": "dojang", "tone": "paper", "use": "인증·칭찬·전통", "summary": "그림 자소 획을 인주로 찍은 획 표현"},

@@ -15,7 +15,7 @@
  * 탭은 늦게 붙인다(그리기를 시작하거나 그린 세트가 디자인에 들어올 때) — 맨 작업실의 탭 줄·편집 기록·임시 등록은 그대로다.
  * 재료가 그림 세트가 아니면 디자인 칸에 들어가는 단추([data-draw-entry])를 보인다.
  *
- * 하지 않는 것(계획 밖): 위 자모를 따라가는 조각 보정(§5.5 — 떼어 낸 독립 그림에서만), 글꼴 낱자 → SVG(§6.6), 세벌 고정의
+ * 하지 않는 것(계획 밖): 위 자모를 따라가는 조각 보정(§5.5 — 떼어 낸 독립 그림에서만), 글꼴 낱자 → SVG(§6.6), 고정 배치의
  * 자모별 크기·자리(도장이 맡는다).
  *
  * FontStudio.draw = { start, doc, setCell, removeCell, importSvg, importCells, select, selection, movePart, scalePart, removePart, progress,

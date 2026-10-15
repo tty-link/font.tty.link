@@ -689,13 +689,13 @@
     rotate(var(--fy-rotate, 0deg));
 }
 
-/* 세벌 고정(ADR-026, 설계 v1.2 §10) — 배치 프로파일이 fixed-three이면 런타임이 자모 노드에 역할 도장(--fy-stamp-*, 역할·자모마다
- * 한 값)을 적고 data-fy-stamp(initial·medial·final)로 표시한다. 자리·크기·굵기는 그 도장 하나로 정하고, 글꼴 CSS의 자리(slot)·
+/* 세벌 고정·짜임 고정(ADR-026·028, 설계 v1.2 §10) — 배치 프로파일이 fixed-three(직결식)나 case-fixed(세벌식)이면 런타임이 자모
+ * 노드에 역할 도장(--fy-stamp-*, 역할·자모마다 — 짜임 고정은 짜임마다 — 한 값)을 적고 data-fy-stamp(initial·medial·final)로 표시한다. 자리·크기·굵기는 그 도장 하나로 정하고, 글꼴 CSS의 자리(slot)·
  * 역할·자모·문맥 보정과 자르기(clip)는 끈다 — 그 값들은 이웃 모음·받침(data-fy-pos, :has())에 따라 달라져 같은 자모가 음절마다
  * 다른 자리에 찍히게 한다.
  * 페이지 변수(--fy-top·--fy-left·--fy-scale-x 같은)는 그대로 받는다. 글자 칸은 아래 생성 구간이 프로파일마다 정한다.
  * 원소·그림 재료의 밀도 굵기 계수(--fy-el-density)도 도장 값이다 — 칠 그림이 든 노드는 런타임이 인라인 1로 덮는다. */
-:where(font-kku, .font-kku)[data-fy-layout-model="fixed-three"] [data-fy-stamp] {
+:where(font-kku, .font-kku):is([data-fy-layout-model="fixed-three"], [data-fy-layout-model="case-fixed"]) [data-fy-stamp] {
   --fy-slot-top: var(--fy-stamp-top);
   --fy-slot-left: var(--fy-stamp-left);
   --fy-slot-font-size: var(--fy-stamp-size);
@@ -724,11 +724,12 @@
 }
 
 /* 합자 모음 조각은 묶음(cluster) 안에 있다 — 조각 도장이 글자 몸통 기준이므로 글꼴 CSS의 묶음 변환도 끈다 */
-:where(font-kku, .font-kku)[data-fy-layout-model="fixed-three"] [part~="cluster"] {
+:where(font-kku, .font-kku):is([data-fy-layout-model="fixed-three"], [data-fy-layout-model="case-fixed"]) [part~="cluster"] {
   transform: none;
 }
 
 /* BEGIN GENERATED layouts: scripts/build_layout_profiles.js from spec/layout-profiles.json — do not edit by hand. */
+:where(font-kku, .font-kku):where([data-fy-layout="sebul-cases-v1"]) { --fy-glyph-width: 0.954em; --fy-glyph-height: 1.2266em; --fy-glyph-gap: 0em; --fy-space-width: 0.32em; }
 :where(font-kku, .font-kku):where([data-fy-layout="sebul-fixed-v1"]) { --fy-glyph-width: 0.9169em; --fy-glyph-height: 1.2037em; --fy-glyph-gap: 0em; --fy-space-width: 0.32em; }
 /* END GENERATED layouts */
 

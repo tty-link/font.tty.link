@@ -923,6 +923,17 @@
       "declaredBy": "font"
     },
     {
+      "name": "--fy-font-layout",
+      "status": "stable",
+      "kind": "author",
+      "type": "keyword",
+      "default": null,
+      "surfaces": ["runtime"],
+      "level": "font",
+      "scope": "host",
+      "declaredBy": "font"
+    },
+    {
       "name": "--fy-design",
       "status": "stable",
       "kind": "author",

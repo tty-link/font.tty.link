@@ -32,7 +32,7 @@ declare namespace FontKku {
     /**
      * 필요할 때 받기(ADR-019)의 기준 주소 — `profiles/<font>.css`·`profiles/<set>.jamo.js`가 그 아래에 있다.
      * 한 줄 설치(`<script src=".../font-kku.js" data-fonts=…>`)는 스크립트 주소에서 스스로 정한다.
-     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/").
+     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/").
      */
     fontBase?: string;
     /** false면 아직 받지 않은 글꼴·자소 세트를 스스로 받지 않는다(기본 true). */
@@ -45,18 +45,25 @@ declare namespace FontKku {
     readonly revision: string;
     /** 이 프로파일이 받아 지금 도장으로 그리는 이전 revision(디자인 진단 `DESIGN_LAYOUT_REVISION_ACCEPTED`). 적지 않은 revision은 거부한다 */
     readonly accepts: readonly string[];
-    readonly model: "fixed-three" | "adaptive-square";
-    /** 디자인 규칙 match가 쓸 수 있는 필드. 세벌 고정은 jamo·role뿐 */
+    /** `case-fixed`는 세벌식(짜임마다 도장, ADR-028), `fixed-three`는 직결식(세벌 고정, ADR-026), `adaptive-square`는 네모 문맥 */
+    readonly model: "case-fixed" | "fixed-three" | "adaptive-square";
+    /** 디자인 규칙 match가 쓸 수 있는 필드. 고정 배치(세벌식·직결식)는 jamo·role뿐 */
     readonly match: readonly string[];
     /** 자리마다 달라지는 변주(display.variationScope: occurrence)를 받는지 */
     readonly occurrence: boolean;
     /** 글자 칸(em) — 폭·높이·간격, space는 낱말 사이(빈칸 하나) 폭(있으면 `--fy-space-width`) */
     readonly cell?: { readonly width: number; readonly height: number; readonly gap: number; readonly space?: number };
     readonly depth?: { readonly vowel: "split"; readonly coda: "whole" };
-    readonly draw?: { readonly initial?: "cho" | "bar" };
-    /** 세벌 고정 도장의 밀도 굵기 계수를 셈한 원소 굵기(바탕 em, sebul 0.1). 페이지 `--fy-element-width`가 다르면 런타임이 그 굵기로 다시 셈한다 */
+    /** 그림 문맥 — 직결식은 초성(`bar`), 세벌식은 받침(`sebeol` 겹받침 뼈대). 세벌식 초성은 짜임의 모음 모양을 따른다 */
+    readonly draw?: { readonly initial?: "cho" | "bar"; readonly final?: "sebeol" };
+    /** 고정 배치 도장의 밀도 굵기 계수를 셈한 원소 굵기(바탕 em, sebul 0.1). 페이지 `--fy-element-width`가 다르면 런타임이 그 굵기로 다시 셈한다 */
     readonly stroke?: number;
-    readonly stamps?: Readonly<Record<string, LayoutStamp | readonly [LayoutStamp, LayoutStamp]>>;
+    /**
+     * 조합용 자모마다 도장(합자 모음은 조각 도장 둘). 세벌식(`case-fixed`)은 `{ 짜임 열쇠: 도장 }` — 열쇠는 모음 모양 `v`·`h`·`c`
+     * (세로·가로·합자) + 받침 `0`·`1`·`2`(`"v1"`), 받침과 관계없으면 모양 열쇠 하나(`"v"`). 짜임 열쇠, 모양 열쇠 차례로 찾는다
+     */
+    readonly stamps?: Readonly<Record<string, LayoutStamp | readonly [LayoutStamp, LayoutStamp]
+      | Readonly<Record<string, LayoutStamp | readonly [LayoutStamp, LayoutStamp]>>>>;
   }
 
   interface FontInfo {
@@ -79,11 +86,12 @@ declare namespace FontKku {
     /** 디자인을 고르지 못한 까닭(`data-fy-design-status`와 같다). 없으면 null */
     designStatus: DesignStatus | null;
     /**
-     * 배치 프로파일(ADR-026). 글꼴을 밝히지 않은 바탕 요소는 기본 세벌 고정(`sebul-fixed-v1`), 1.2 디자인은 자기 `layout`을 쓴다.
-     * 글꼴을 밝힌 바탕 요소·배치를 적지 않은 이전 디자인·`--fy-design: legacy`는 지금 배치라 null. 디자인이 프로파일이 받아들이는
+     * 배치 프로파일(ADR-026·028). 글꼴을 밝히지 않은 바탕 요소는 기본 세벌식(`sebul-cases-v1`), 글꼴 CSS가 `--fy-font-layout`을
+     * 밝히면 그 배치(`jikgyeol` → 직결식 `sebul-fixed-v1`), 1.2 디자인은 자기 `layout`을 쓴다(디자인이 이긴다).
+     * 그 밖의 글꼴을 밝힌 바탕 요소·배치를 적지 않은 이전 디자인·`--fy-design: legacy`는 지금 배치라 null. 디자인이 프로파일이 받아들이는
      * 이전 revision(`accepts`)을 적었으면 `requested`가 그 revision이다 — 그리는 도장은 `revision`이다.
      */
-    layout: { profile: string; revision: string; model: "fixed-three" | "adaptive-square"; requested?: string } | null;
+    layout: { profile: string; revision: string; model: "case-fixed" | "fixed-three" | "adaptive-square"; requested?: string } | null;
     /** 요청한 font의 CSS가 host에 도달했는지 (`id === font`), 그리고 바탕 CSS(`font-kku.css`)가 그 host의 root에 닿는지 */
     loaded: boolean;
   }
@@ -305,7 +313,7 @@ declare namespace FontKku {
 
   /**
    * 디자인 검증 오류 코드(ADR-025 §2). `validateDesign`이 모으고 `registerDesign`이 첫 오류를 던진다 — 규칙은 한 벌이다.
-   * 세벌 고정(`sebul-fixed-v1`) 거부는 `DESIGN_FIXED_*`(문맥 규칙·통짜 합자 모음·자리마다 변주).
+   * 고정 배치(세벌식 `sebul-cases-v1`·직결식 `sebul-fixed-v1`) 거부는 `DESIGN_FIXED_*`(문맥 규칙·통짜 합자 모음·자리마다 변주).
    */
   type DesignErrorCode =
     | "DESIGN_NOT_OBJECT"
@@ -541,14 +549,15 @@ declare namespace FontKku {
     readonly placementTable: PlacementTable;
     readonly placementTables: PlacementTables;
     /**
-     * 배치 프로파일 표(ADR-026, spec/layout-profiles.json에서 생성, 얼린 사본). 세벌 고정은 `stamps`에 조합용 자모마다 역할 도장
+     * 배치 프로파일 표(ADR-026·028, spec/layout-profiles.json에서 생성, 얼린 사본). 고정 배치는 `stamps`에 조합용 자모마다 역할 도장
      * `[left %, top %, 글자 크기 em, scale-x, scale-y, 역할, font-weight, text-stroke em, 밀도 굵기 계수 0.75–1]`(합자 모음은 조각 도장 둘)을
-     * 둔다. 밀도 굵기 계수는 원소·그림 재료의 획 굵기에 곱한다(ADR-024 §3).
+     * 둔다 — 세벌식은 짜임마다(`LayoutProfile.stamps`). 밀도 굵기 계수는 원소·그림 재료의 획 굵기에 곱한다(ADR-024 §3).
      */
     readonly layoutProfiles: Readonly<Record<string, LayoutProfile>>;
     /**
-     * 세벌 고정이 그려진 결과에서도 지켜지는가(설계 v1.2 L22) — 같은 역할·자모 노드의 계산된 자리·크기·변환이 모두 같으면 stable true.
-     * 페이지 CSS가 문맥 선택자로 자모를 옮기면 false와 어긋난 열쇠(drifted). 세벌 고정이 아니면 stable null.
+     * 고정 배치가 그려진 결과에서도 지켜지는가(설계 v1.2 L22) — 같은 역할·자모(세벌식은 같은 짜임까지) 노드의 계산된 자리·크기·변환이
+     * 모두 같으면 stable true. 페이지 CSS가 문맥 선택자로 자모를 옮기면 false와 어긋난 열쇠(drifted — `"initial ᄀ"`, 세벌식
+     * `"initial ᄀ v1"`). 고정 배치가 아니면 stable null.
      */
     layoutStability(host: HTMLElement): { layout: string | null; stable: boolean | null; keys: number; nodes: number; drifted: string[] };
     define(): void;

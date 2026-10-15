@@ -747,17 +747,18 @@
     return where + " · " + plan.variable + " — " + verb;
   }
 
-  // ── 세벌 고정 배치 (ADR-026) ───────────────────────────────────────────
-  /* 디자인이 세벌 고정(fixed-three)을 고르면 런타임이 자모 노드에 역할 도장(--fy-stamp-*)을 적고, 코어 CSS가 그 도장으로
+  // ── 고정 배치 (ADR-026·028) ─────────────────────────────────────────────
+  /* 디자인이 고정 배치(세벌식 case-fixed·직결식 fixed-three)를 고르면 런타임이 자모 노드에 역할 도장(--fy-stamp-*)을 적고, 코어 CSS가 그 도장으로
    * 글꼴 CSS의 자리(slot)·역할·자모·문맥 값을 덮는다(font-kku.css). 그 노드를 편집하면 원문은 바뀌어도 화면은 그대로다 —
    * 편집을 받지 않고 까닭과 "네모 문맥으로 / 디자인 끄고 글꼴 CSS로"를 보인다. */
   var STAMP_PROPERTIES = ["left", "top", "size", "scale-x", "scale-y", "weight", "stroke", "density"];
   var STAMP_ROLE_LABELS = { initial: "초성", medial: "중성", final: "종성" };
-  /* 세벌 고정에서 프로파일·도장이 정해 꺼지는 바탕 요소 변수(글자 칸, 깊이, 합자·겹받침 묶음 변환) */
+  /* 고정 배치에서 프로파일·도장이 정해 꺼지는 바탕 요소 변수(글자 칸, 깊이, 합자·겹받침 묶음 변환) */
   var FIXED_INERT = /^--fy-(glyph-(width|height|gap)|font-(jamo|vowel|coda)-depth|(jung|jong)-cluster-)/;
 
   function fixedLayout() {
-    return host.dataset.fyLayoutModel === "fixed-three";
+    var model = host.dataset.fyLayoutModel;
+    return model === "fixed-three" || model === "case-fixed";
   }
 
   function stamped(node) {
@@ -771,7 +772,7 @@
   }
 
   function fixedNotice() {
-    return "세벌 고정(" + layoutLabel() + ")에서는 역할 도장이 자리·크기를 정해 글꼴 CSS의 자리·자모·문맥 값이 꺼집니다";
+    return "고정 배치(" + layoutLabel() + ")에서는 역할 도장이 자리·크기를 정해 글꼴 CSS의 자리·자모·문맥 값이 꺼집니다";
   }
 
   function refuseFixed() {
@@ -927,7 +928,7 @@
     var meta = document.createElement("span");
     meta.textContent = "자리 " + pos + " · 역할 " + node.getAttribute("data-fy-role") + " · 깊이 " +
       host.dataset.fyVowelDepth + "/" + host.dataset.fyCodaDepth +
-      (fixed ? " · 배치 세벌 고정 · 도장 " + (STAMP_ROLE_LABELS[node.getAttribute("data-fy-stamp")] || node.getAttribute("data-fy-stamp")) : "");
+      (fixed ? " · 고정 배치 · 도장 " + (STAMP_ROLE_LABELS[node.getAttribute("data-fy-stamp")] || node.getAttribute("data-fy-stamp")) : "");
     selection.appendChild(title);
     selection.appendChild(meta);
     if (fixed) {
@@ -935,7 +936,7 @@
       stampRows(node, tbody);
       renderTarget(node, null);
       var note = document.createElement("li");
-      note.textContent = "세벌 고정 — 이 자소의 자리·크기·굵기는 역할 도장이 정합니다. 글꼴 CSS의 자리·자모·문맥 규칙은 꺼져 있습니다.";
+      note.textContent = "고정 배치 — 이 자소의 자리·크기·굵기는 역할 도장이 정합니다. 글꼴 CSS의 자리·자모·문맥 규칙은 꺼져 있습니다.";
       rulesList.appendChild(note);
       return;
     }
@@ -1196,7 +1197,7 @@
       var fieldset = document.createElement("fieldset");
       var legend = document.createElement("legend");
       var inert = fixed ? group.names.filter(function (name) { return FIXED_INERT.test(name); }) : [];
-      legend.textContent = group.label + (inert.length ? " — 세벌 고정: " + (inert.length === group.names.length
+      legend.textContent = group.label + (inert.length ? " — 고정 배치: " + (inert.length === group.names.length
         ? "배치 프로파일이 정해 꺼짐" : "글자 칸·깊이는 배치 프로파일이 정함") : "");
       if (inert.length === group.names.length) {
         fieldset.dataset.inert = "fixed-layout";
@@ -1207,7 +1208,7 @@
         var label = document.createElement("label");
         if (inert.indexOf(name) >= 0) {
           label.dataset.inert = "fixed-layout";
-          label.title = "세벌 고정(" + layoutLabel() + ")에서는 배치 프로파일이 이 값을 정합니다 — 고쳐도 화면이 바뀌지 않습니다";
+          label.title = "고정 배치(" + layoutLabel() + ")에서는 배치 프로파일이 이 값을 정합니다 — 고쳐도 화면이 바뀌지 않습니다";
         }
         var caption = document.createElement("span");
         caption.textContent = name.replace(/^--fy-/, "") + (winner ? " · L" + winner.line : "");
@@ -1409,7 +1410,7 @@
     if (style.backgroundImage && style.backgroundImage !== "none") {
       return { x0: rect.left, x1: rect.right, y0: rect.top, y1: rect.bottom };
     }
-    /* 원소 재료(ADR-024)는 획이 CSS 상자다 — 글자 측정 대신 그린 획 상자를 합친다(세벌 고정의 좁은 글자 칸에서 글자 측정
+    /* 원소 재료(ADR-024)는 획이 CSS 상자다 — 글자 측정 대신 그린 획 상자를 합친다(고정 배치의 좁은 글자 칸에서 글자 측정
      * 근사가 이웃과 겹쳐 보이던 것) */
     var strokes = node.querySelectorAll('[part="element"]');
     if (strokes.length) {
@@ -1631,7 +1632,7 @@
         if (overlapX > 1 && overlapY > 1) {
           findings.push({ kind: "collision", glyph: index, text: glyph.dataset.source + nextGlyph.dataset.source +
             " — 이웃 음절과 잉크 상자가 " + Math.round(overlapX) + "px 겹침" + (fixedLayout()
-              ? " (세벌 고정 글자 칸은 이웃과 겹치게 짜여 있어 글자 측정 근사일 수 있음 — 판정은 겹침 감사 --layout fixed)" : "") });
+              ? " (고정 배치 글자 칸은 이웃과 겹치게 짜여 있어 글자 측정 근사일 수 있음 — 판정은 겹침 감사 --layout fixed)" : "") });
         }
       }
     });
@@ -2118,7 +2119,7 @@
     /* 같은 글꼴 시트를 받는 미리보기 root 더하기(디자인 비교 칸) — chrome은 글꼴 시트 앞에 붙는 그 root 전용 시트 */
     addPreviewRoot: addPreviewRoot,
     coreHref: function () { return coreLink.href; },
-    /* 미리보기 바탕 요소의 배치 모델(fixed-three · adaptive-square), 배치 프로파일을 쓰지 않으면 null */
+    /* 미리보기 바탕 요소의 배치 모델(case-fixed · fixed-three · adaptive-square), 배치 프로파일을 쓰지 않으면 null */
     layoutModel: function () { return host.dataset.fyLayoutModel || null; },
     shadowRoot: shadow,
     host: host

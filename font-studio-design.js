@@ -1,10 +1,10 @@
 /* font-studio-design.js — 작업실 디자인 패널 (설계 v1.2 §13.1–13.2, ADR-025 F, ADR-026)
  *
- * 첫 화면은 세벌 고정 디자인이다: 주소에 글꼴(?font·?src)이나 재료 탭(#studio-material)을 밝히지 않고 들어오면 미리보기 바탕
- * 요소에 기본 디자인(1.2, sebul-fixed-v1, 선·원 재료)을 건다. 밝히고 들어오면 글꼴 CSS 그대로 보이고 디자인은 비교 칸에만 있다.
+ * 첫 화면은 세벌식 디자인이다: 주소에 글꼴(?font·?src)이나 재료 탭(#studio-material)을 밝히지 않고 들어오면 미리보기 바탕
+ * 요소에 기본 디자인(1.2, sebul-cases-v1 세벌식, 선·원 재료)을 건다. 밝히고 들어오면 글꼴 CSS 그대로 보이고 디자인은 비교 칸에만 있다.
  * 시작 선택지 셋(선·원 / 직접 그려 / 기존 글꼴)은 재료만 바꾸고 배치를 지킨다. 대표 비교 칸(가 고 과 각 곽 · 가 나 간 난)은
  * 미리보기와 같은 글꼴 시트를 받는 따로 된 shadow root에서 늘 지금 디자인으로 그려, 고정 초성 ㄱ·중성 ㅏ가 몇 가지 자리에
- * 찍히는지 잰다. 고급(배치·문맥·JSON)에서 네모 문맥으로 바꾸면 문맥 규칙 탭이 열리고, 문맥 규칙이 있는 디자인을 세벌 고정으로
+ * 찍히는지 잰다. 고급(배치·문맥·JSON)에서 네모 문맥으로 바꾸면 문맥 규칙 탭이 열리고, 문맥 규칙이 있는 디자인을 고정 배치로
  * 되돌리려 하면 충돌을 보이고 고를 때까지 적용하지 않는다.
  *
  * 디자인은 먼저 FontKku.validateDesign으로 검사해 오류를 모두 보이고(코드는 영어 그대로, 흔한 코드는 한국어 설명), 통과하면
@@ -644,11 +644,11 @@
       fold(true);
       advanced.open = true;
       syncForm();
-      note("세벌 고정은 역할·자모로만 고릅니다 — 아래 충돌을 정리하기 전에는 배치를 바꾸지 않습니다.", "warn");
+      note("고정 배치는 역할·자모로만 고릅니다 — 아래 충돌을 정리하기 전에는 배치를 바꾸지 않습니다.", "warn");
       return false;
     }
     return commit(result.design, { label: "배치: " + Design.layoutLabel(profile), note: Design.layoutLabel(profile) + " 배치로 바꿨습니다" +
-      (profiles[profile].model === "fixed-three" ? "." : " — 문맥 규칙 탭이 열렸습니다. 자리·자모·문맥 편집은 살펴보기에서 그대로 합니다.") });
+      (Design.FIXED_MODELS[profiles[profile].model] ? "." : " — 문맥 규칙 탭이 열렸습니다. 자리·자모·문맥 편집은 살펴보기에서 그대로 합니다.") });
   }
 
   function resolveConflicts(kind) {
@@ -731,7 +731,7 @@
       label: historyLabel || "JSON 적용",
       cause: "json",
       note: (label || "디자인 JSON을 적용했습니다") +
-        (legacy ? " — 배치를 적지 않은 " + (parsed.design.version || "1.0") + " 디자인이라 지금 배치로 그립니다(세벌 고정으로 바꾸지 않음)." : ".")
+        (legacy ? " — 배치를 적지 않은 " + (parsed.design.version || "1.0") + " 디자인이라 지금 배치로 그립니다(고정 배치로 바꾸지 않음)." : ".")
     });
   }
 
@@ -1208,7 +1208,7 @@
         target.value = "";
       }
     });
-    /* 살펴보기의 세벌 고정 안내 단추(font-studio.js renderFixedTarget) */
+    /* 살펴보기의 고정 배치 안내 단추(font-studio.js renderFixedTarget) */
     studioRoot.addEventListener("click", function (event) {
       if (event.target.closest("[data-studio-design-square]")) {
         state.applied = true;

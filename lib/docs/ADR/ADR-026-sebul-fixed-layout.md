@@ -3,6 +3,8 @@
 ## Status
 Accepted (2026-10-12) — 최종 설계 v1.2(`docs/PLAN/ponkku-final-design-v1.2/`)의 배치 계약(§10)을 저장소에 들였다.
 [ADR-025](ADR-025-hangul-composition-design.md)(디자인·해석기)의 디자인 형식에 배치를 더한다.
+기본 배치는 [ADR-028](ADR-028-sebeol-cases-and-jikgyeol.md)(2026-10-14, Proposed)이 세벌식 `sebul-cases-v1`로 바꾼다 — 이 문서의 세벌 고정
+`sebul-fixed-v1`@3은 값 그대로 '직결식'(글꼴 `jikgyeol`)으로 남고, 배치 프로파일·도장·디자인 `layout`·정적 렌더러의 틀은 그대로 쓴다.
 
 ## Date
 2026-10-12
@@ -226,6 +228,7 @@ revision 2(2026-10-13)부터 도장은 sebul의 네모 문맥에서 재지 않�
   [ADR-024](ADR-024-hangul-principle-rendering.md), [ADR-023](ADR-023-device-face-fit.md), [ADR-008](ADR-008-font-contract-v2.md)
 
 ## Change Log
+- 2026-10-14: ADR-028 — 기본 배치를 세벌식(짜임 고정)으로, 이 세벌 고정은 직결식(글꼴 `jikgyeol`, `--fy-font-layout`)으로 남김. 값·revision 그대로
 - 2026-10-13: revision 3 — 0.1.2 공개 뒤 런타임 검수에서 ㅗ·ㅜ 꼭지·다리가 0.08em라 24–32px에서 고/그·우/으가 같아 보였다(0.1.1보다
   나빠진 회귀). 가로 모음 띠 0.18 → 0.26em(꼭지 0.16em), 초성 0.41 → 0.36em, 받침 0.35 → 0.315em·받침 위 틈 0.05em, 글자 칸 높이
   1.204em. 밀도 계수에 낱자 틈(병서·겹받침 — ㄲ이 ㅠ처럼 붙던 것, `letterKeep`)과 최소 틈(`minGap` 0.3t, `hardFloor` 0.5)을 더하고,

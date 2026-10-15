@@ -83,9 +83,11 @@ ADR-024(재료 축·원소·뼈대)와 ADR-025(제안 — 디자인·조립식·
 | 원형 8 · 기본 24 · 확장 40 | origin8 · basic24 · full40 — 그림 제작 안내(렌더링 모드가 아니다) | 디자인 `editor.authoringTarget` |
 | 글꼴 팔레트 | font palette (여러 글꼴을 역할·자모·조각별로) | 디자인 `sources`(글꼴 인스턴스) |
 | 배치 프로파일 | layout profile (ADR-026) | `spec/layout-profiles.json`, 디자인 `layout`, `data-fy-layout` |
-| 세벌 고정 | fixed-three, sebul fixed — 초성·중성·종성을 역할·자모마다 정해진 자리와 크기로 찍는 배치(타자기형 세벌). 글꼴을 밝히지 않은 바탕 요소의 기본 | `sebul-fixed-v1` |
+| 세벌식 | sebeol cases, case-fixed — 초성·중성·종성을 짜임(모음 모양 세로·가로·합자 × 받침 없음·홑·겹)마다 정해진 자리와 크기로 찍는 배치(ADR-028). 받침 없는 글자는 아래를 비우고 받침 있는 글자는 칸 높이를 다 쓴다. 글꼴을 밝히지 않은 바탕 요소의 기본 | `sebul-cases-v1` |
+| 짜임 | case — 세벌식 도장을 고르는 열쇠: 모음 모양 `v`·`h`·`c` + 받침 `0`·`1`·`2`(`"v1"`), 받침과 관계없으면 모양 열쇠 하나(`"v"`) | 글자 칸 `data-jung-layout`·`data-jong-layout` |
+| 직결식 · 세벌 고정 | jikgyeol, fixed-three — 초성·중성·종성을 역할·자모마다 어느 음절에서나 같은 자리와 크기로 찍는 배치(타자기형 세벌, ADR-026). 0.1.1–0.1.3의 기본, 지금은 글꼴 `jikgyeol` | `sebul-fixed-v1`, `--fy-font-layout` |
 | 네모 문맥 | adaptive-square — 모음 짜임·받침 유무에 따라 자리를 바꾸는 배치(글꼴 CSS의 slot) | `square-context-v1` |
-| 역할 도장 | role stamp — 세벌 고정에서 역할·자모 하나의 자리·크기·굵기 | `data-fy-stamp`, `--fy-stamp-*` |
+| 역할 도장 | role stamp — 고정 배치에서 역할·자모 하나(세벌식은 짜임마다)의 자리·크기·굵기 | `data-fy-stamp`, `--fy-stamp-*` |
 | 밀도 굵기 계수 | density factor — 평행 획이 촘촘한 자모(ㄹ·ㅌ·ㅋ)와 꼭지 틈을 다 못 연 ㅎ·ㅊ의 원소·그림 획을 0.75–1배로 가늘게 하는 노드 값(ADR-024 §3) | `--fy-el-density`, `--fy-stamp-density` |
 | 꼭지 틈 | cap gap — ㅎ·ㅊ 꼭지(점 획)와 가로획 사이. 굵기 보정이 가로획 너머 획을 0.8배까지 눌러 굵기의 0.6배로 연다(ADR-024 §3) | `dotShifts`, 스모크 `element-cap-gap` |
 

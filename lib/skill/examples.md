@@ -11,7 +11,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>가을 신메뉴</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js" data-fonts="neon sticker"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="neon sticker"></script>
   <style>
     body { margin: 0; font-family: system-ui, sans-serif; background: #fff7ed; color: #1f2937; }
     header { background: #12121c; padding: 48px 24px; text-align: center; }
@@ -38,7 +38,7 @@
 
 | 파일 | 무엇 | 쓴 글꼴 | 볼거리 |
 |---|---|---|---|
-| `house-warming-note.html` | 집들이 쪽지 (AI 첫 답) | 세벌 고정 + AI가 그린 8칸 · `gothic` | 요청 글 하나로 받은 페이지, 제목 글꼴도 AI가 8칸으로 그림, 씨앗 변주 |
+| `house-warming-note.html` | 집들이 쪽지 (AI 첫 답) | 세벌식 + AI가 그린 8칸 · `gothic` | 요청 글 하나로 받은 페이지, 제목 글꼴도 AI가 8칸으로 그림, 씨앗 변주 |
 | `bakery-board.html` | 빵집 칠판 (AI 첫 답) | `chalk` `pilgi` | 요청 글 하나로 받은 페이지, 자모 조립 제목, 입력한 한마디를 다시 그리기 |
 | `wedding-invitation.html` | 모바일 청첩장 | `geumbak` `malang` | 이름이 금박 자모로 날아와 조립, 달력·약도·계좌 복사 |
 | `neon-sign.html` | 네온 간판 | `neon` | 받침 ㅂ 관 하나만 고장 나 깜빡임, 간판 스위치 |
@@ -55,4 +55,4 @@
 | `game-notice.html` | 게임 공지 | `pixel` `retro` | 도트 창 테두리 공지, 레트로 강조 띠 |
 | `certificate.html` | 칭찬 상장 | `gothic` `dojang` | A4 상장, '참 잘했어요' 도장 |
 
-템플릿 소스는 저장소 안에서 런타임을 상대 경로로 부를 수 있다. 가져다 쓸 때는 런타임 `<script>`를 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js`로 바꾼다.
+템플릿 소스는 저장소 안에서 런타임을 상대 경로로 부를 수 있다. 가져다 쓸 때는 런타임 `<script>`를 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js`로 바꾼다.

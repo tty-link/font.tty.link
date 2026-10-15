@@ -16,12 +16,12 @@ description: 웹페이지·블로그·포스터·발표 화면·초대장 같은
 
 이 파일은 목차다. 전체 그림과 꼭 지킬 것은 여기 있고, 자세한 내용은 할 일에 맞는 파일을 하나둘 더 열어 읽는다. 모든 파일은 이 파일과 같은 폴더에 있다.
 
-설명서 폴더: `https://font.tty.link/lib/skill/` (늘 최신). 판에 고정된 사본은 npm 패키지 안 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/skills/font-kku-use/`
+설명서 폴더: `https://font.tty.link/lib/skill/` (늘 최신). 판에 고정된 사본은 npm 패키지 안 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/skills/font-kku-use/`
 
 | 파일 | 담은 것 | 이럴 때 읽는다 |
 |---|---|---|
 | [setup.md](https://font.tty.link/lib/skill/setup.md) | 스크립트 한 줄 설치, 두 가지 쓰는 법, 속성 표(글꼴·크기·간격·줄바꿈·움직임·씨앗…), 읽기·복사(접근성), 필요할 때 받기, 동적 변경·재시도·이벤트 | 웹 페이지에 붙일 때 늘 |
-| [fonts.md](https://font.tty.link/lib/skill/fonts.md) | 기본 배치 세벌 고정과 `font="sebul"`의 문맥 배치, 재료(원소 획·기기 글꼴·그림 세트), 기본 제공 글꼴 표(분위기·필요한 바탕·어울리는 곳), 꾸러미 글꼴, 글꼴별 색 | 글꼴을 고를 때 |
+| [fonts.md](https://font.tty.link/lib/skill/fonts.md) | 기본 배치 세벌식·직결식(`jikgyeol`)과 `font="sebul"`의 문맥 배치, 재료(원소 획·기기 글꼴·그림 세트), 기본 제공 글꼴 표(분위기·필요한 바탕·어울리는 곳), 꾸러미 글꼴, 글꼴별 색 | 글꼴을 고를 때 |
 | [compose.md](https://font.tty.link/lib/skill/compose.md) | 꾸밈 `kku-look-*` · 변주 `kku-vary-*` · 움직임 `animate` · 상호작용 `data-kku-fx` · 이름 있는 조합(테마) | 움직임·효과, "고딕인데 네온처럼" 같은 조합 |
 | [styling.md](https://font.tty.link/lib/skill/styling.md) | 페이지 CSS로 초성·중성·받침 색 바꾸기, 네온 색·빛, 씨앗(매번 다르게 · 언제나 같게), 고르기와 복사(자모 단위 강조, 원문 복사, 강조 색) | 색을 바꾸거나 자모마다 다르게 할 때, 고르기·복사가 궁금할 때 |
 | [custom-font.md](https://font.tty.link/lib/skill/custom-font.md) | 기반 글꼴 위에 꾸밈 CSS 한 파일로 만드는 나만의 글꼴, 재료 표(기본 원소 획과 기기 글꼴에서 각각 듣는 속성) | "우리 브랜드 글꼴", "나만의 글꼴" |
@@ -44,7 +44,7 @@ description: 웹페이지·블로그·포스터·발표 화면·초대장 같은
 링크를 더 열 수 없으면 이것만으로 제목을 꾸민다. `<head>`나 `<body>` 끝에 스크립트 한 줄을 넣고, `data-fonts`에 첫 화면에 보이는 글꼴을 공백으로 나열한다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js" data-fonts="sebul neon sticker"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sebul neon sticker"></script>
 
 <!-- 의미 있는 제목: 태그를 그대로 두고 class="font-kku" + data-* (검색·스크린리더에 좋다) -->
 <h1 class="font-kku" data-font="neon" data-size="64">가을 신메뉴</h1>
@@ -52,11 +52,11 @@ description: 웹페이지·블로그·포스터·발표 화면·초대장 같은
 <!-- 장식용 문구: 전용 태그 -->
 <font-kku font="sticker" size="40">오늘만 1+1</font-kku>
 
-<!-- 글꼴을 밝히지 않으면 기본 배치 '세벌 고정' -->
+<!-- 글꼴을 밝히지 않으면 기본 배치 '세벌식' -->
 <font-kku size="48">한글 제목</font-kku>
 ```
 
-- 글꼴을 밝히지 않으면 **세벌 고정**이다 — 세벌 타자기처럼 초성·중성·종성을 역할마다 같은 자리·크기로 찍는다(`data-fonts`에는 `sebul`로 적는다). `font="sebul"`을 밝히면 같은 세벌 글꼴을 모음·받침에 따라 자리가 바뀌는 문맥 배치로 그린다(0.1.0의 기본 배치). 0.1.0은 자모를 기기 한글 글꼴로 그렸다 — 0.1.0 페이지의 모양까지 지키려면 `font="sebul"`에 `style="--fy-face: device"`를 더한다(fonts.md「배치」).
+- 글꼴을 밝히지 않으면 **세벌식**이다 — 초성·중성·종성을 짜임(모음 모양·받침)마다 정해진 자리·크기로 찍고, 받침 없는 글자는 아래를 비우고 받침 있는 글자는 칸을 다 쓴다(`data-fonts`에는 `sebul`로 적는다). `font="jikgyeol"`(직결식)은 세벌 타자기처럼 같은 자모를 어느 글자에서나 같은 자리·크기로 찍는다 — 0.1.1–0.1.3에서 글꼴을 비운 글의 모양이다. `font="sebul"`을 밝히면 같은 세벌 글꼴을 모음·받침에 따라 자리가 바뀌는 문맥 배치로 그린다(0.1.0의 기본 배치). 0.1.0은 자모를 기기 한글 글꼴로 그렸다 — 0.1.0 페이지의 모양까지 지키려면 `font="sebul"`에 `style="--fy-face: device"`를 더한다(fonts.md「배치」).
 - 자주 쓰는 글꼴: `sebul`(둥근 탈네모꼴, 문맥 배치) · `gothic`(단정한 네모꼴) · `neon`(어두운 바탕) · `sticker`(색 바탕) · `malang`(손맛) · `saekdong`(자모마다 다른 색) · `pixel`(도트) · `dojang`(붉은 인주) · `chalk`(칠판 바탕) — 전체 표와 바탕 조건은 fonts.md.
 - 크기는 `size`/`data-size`에 px 숫자나 길이(`3rem`, `clamp(…)`)로 준다. 기본 24px.
 - 움직임은 `animate="rise"`(`fade`·`stagger`·`bounce`·`wiggle`·`drift`). 자모 단위 움직임과 효과는 compose.md.
@@ -77,11 +77,11 @@ description: 웹페이지·블로그·포스터·발표 화면·초대장 같은
 
 ## 주소
 
-- 런타임: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/font-kku.min.js` — jsDelivr가 즉석으로 만든 압축본이다. 기본 CSS와 글꼴 CSS(`profiles/<글꼴>.css`)·확장은 런타임이 이 주소를 기준으로 `.min` 압축본으로 받는다. 스크립트 주소를 바꾸지 않는다. 소스를 읽을 때만 `.min`을 뺀 `font-kku.js`를 연다.
+- 런타임: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js` — jsDelivr가 즉석으로 만든 압축본이다. 기본 CSS와 글꼴 CSS(`profiles/<글꼴>.css`)·확장은 런타임이 이 주소를 기준으로 `.min` 압축본으로 받는다. 스크립트 주소를 바꾸지 않는다. 소스를 읽을 때만 `.min`을 뺀 `font-kku.js`를 연다.
 - npm 패키지: `@tty.link/font-kku` — 번들러를 쓰는 프로젝트(React·Vue 등)는 `npm install @tty.link/font-kku` 뒤 setup.md의 '번들러·ESM에서'를 따른다. 위 주소는 같은 패키지의 파일이다.
 - 확장: 꾸밈·자모 움직임·상호작용은 `data-addons="looks motion fx"`로 붙인다. 입력기 `font-kku-ime.js`, 글꼴 파일 내보내기 `font-kku-export.js`는 스크립트를 따로 넣는다.
 - 정본 데이터: 테마 목록 `spec/themes.json`, 그림 자소 칸 자리 `spec/sprite-layout.json`, 획순 `spec/strokes.json`, 글꼴 목록 `spec/fonts.json`, 조립식 `spec/jamo-recipes.json`, 디자인 JSON 형식 `spec/design.schema.json` (모두 런타임과 같은 폴더 아래).
-- 전체 설명서(README): `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.3/README.md`
+- 전체 설명서(README): `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/README.md`
 - 데모와 사례: `https://font.tty.link/` — 글꼴 보기 `fonts.html`, 사례 `showcase.html`, 효과 `effects.html`, 문서 `docs.html`, 글꼴 작업실 `font-studio.html`(첫 화면의 "디자인" 칸에서 선·원/직접 그린 그림/기존 글꼴로 디자인을 만들고 페이지용 코드를 복사한다 — draw-jamo.md).
 
 ## 결과를 낼 때
