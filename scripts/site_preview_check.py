@@ -164,7 +164,7 @@ def run_chunk(chunk: list[dict], shots: Path, lib: Path) -> list[dict]:
                 while info["notReady"] and time.time() < deadline:
                     page.wait_for_timeout(400)
                     info = host_info(page)
-                for frame in page.frames:
+                for frame in loaded_frames(page):
                     frame.evaluate(SPRITES_JS, 6000)
                 page.wait_for_timeout(700)
                 info = host_info(page)
@@ -189,9 +189,15 @@ def run_chunk(chunk: list[dict], shots: Path, lib: Path) -> list[dict]:
     return rows
 
 
+def loaded_frames(page):
+    """Lazy iframe placeholders have no execution context before navigation."""
+    return [frame for frame in page.frames
+            if frame is page.main_frame or frame.url not in ("", "about:blank")]
+
+
 def host_info(page) -> dict:
     """Include packaged studio and example frames in the rendering readiness check."""
-    frames = [frame.evaluate(HOSTS_JS) for frame in page.frames]
+    frames = [frame.evaluate(HOSTS_JS) for frame in loaded_frames(page)]
     return {"hosts": sum(info["hosts"] for info in frames),
             "notReady": sum(info["notReady"] for info in frames),
             "sample": [sample for info in frames for sample in info["sample"]][:3],

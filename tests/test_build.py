@@ -187,6 +187,21 @@ class PreviewConsumers(unittest.TestCase):
         self.assertEqual({job["side"] for job in jobs}, {"before", "after"})
         self.assertTrue(all(job["url"] == "https://lol.tty.link/pages/joke.html" for job in jobs))
 
+    def test_unloaded_lazy_frames_do_not_block_loaded_document_checks(self):
+        from types import SimpleNamespace
+
+        def unloaded(_script):
+            raise AssertionError("the lazy frame has no document execution context yet")
+
+        main = SimpleNamespace(url="about:blank", evaluate=lambda _script: {
+            "hosts": 1, "notReady": 0, "sample": [], "version": "candidate"})
+        pending = SimpleNamespace(url="about:blank", evaluate=unloaded)
+        loaded = SimpleNamespace(url="about:srcdoc", evaluate=lambda _script: {
+            "hosts": 2, "notReady": 1, "sample": ["unfinished child glyph"], "version": "candidate"})
+        page = SimpleNamespace(main_frame=main, frames=[main, pending, loaded])
+        self.assertEqual(P.host_info(page), {
+            "hosts": 3, "notReady": 1, "sample": ["unfinished child glyph"], "version": "candidate"})
+
 
 class PackageUpgrade(unittest.TestCase):
     def setUp(self):
