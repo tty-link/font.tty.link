@@ -41,6 +41,8 @@ FONT_KKU_JOBS=1 .venv/bin/python -m pytest tests/test_site_smoke.py -q -n 1
 
 전후 화면 검수는 `scripts/site_preview_check.py`가 맡는다. 공개 사이트에 접속하는 선택형 점검이므로 오프라인 시험과 별도로 실행한다. Chromium·WebKit·Firefox와 Pillow가 필요하다.
 
+기본 범위는 폰꾸의 모든 페이지, `tty.link` 홈, `lol.tty.link` 홈과 공개 카탈로그의 전체 페이지다. 외부 사이트는 `/lib/` 요청만 후보 패키지로 바꿔 비교한다. `--only tty`는 tty.link 홈과 이전된 LOL 페이지를 모두 고른다. 공개 카탈로그도 실제 브라우저로 읽는다.
+
 ```sh
 FONT_KKU_JOBS=2 .venv/bin/python scripts/site_preview_check.py \
   --package-tarball /path/to/font-kku-candidate.tgz --only font --match font-studio
@@ -52,17 +54,15 @@ FONT_KKU_JOBS=2 .venv/bin/python scripts/site_preview_check.py \
 
 패키지 판을 바꿀 때는 `python3 scripts/update_package.py 0.1.5-rc.1`을 실행한다. 이 도구는 `package.json`의 정확한 의존 버전과 `src/`에 있는 CDN 주소·tarball 이름·`data-fk-version`을 함께 고친다. 과거 변경을 설명하는 일반 본문과 저장소 기록은 바꾸지 않는다. `python3 scripts/update_package.py --check`는 불일치를 찾으며, 기존 주소가 이미 섞여 있으면 갱신 전에 멈춘다. 바꾼 버전의 패키지를 설치하거나 로컬 tarball로 전달한 뒤 사이트를 다시 빌드하고 시험한다. npm 레지스트리에 접속하거나 라이브러리 checkout을 읽지 않는다.
 
-후보 tarball 빌드는 로컬 미리보기다. 후보를 시험했다고 npm 공개본과 같아지는 것은 아니다. 외부로 복사하는 예제 주소는 `@tty.link/font-kku@0.1.4-rc.1`의 jsDelivr 주소를 유지하므로, 실제 배포는 그 버전이 npm에 공개된 다음 진행한다.
+후보 tarball 빌드는 로컬 미리보기다. 후보를 시험했다고 npm 공개본과 같아지는 것은 아니다. 외부로 복사하는 예제는 `package.json`의 정확한 의존 버전에 고정된 jsDelivr 주소를 사용하므로, 실제 배포는 그 버전이 npm에 공개된 다음 진행한다.
 
-배포할 때는 npm 레지스트리에서 별도로 받은 동일 버전 tarball을 보관하고 다음처럼 바이트를 대조한다. `--require-published`는 별도 공개본이 없으면 멈추며, 런타임·CSS·글꼴·작업실의 파일 추가·삭제·수정이 하나라도 다르면 실패한다. 문서만 바뀐 패키지 디렉터리를 넣는 것은 허용해 npm 공개 없이 설명서를 갱신하는 기존 흐름을 유지한다.
+배포할 때는 npm 레지스트리에서 별도로 받은 동일 버전 tarball을 보관하고 다음처럼 바이트를 대조한다. `--require-published`는 별도 공개본이 없으면 멈추며, 런타임·CSS·글꼴·선택 모듈(작업실 HTML 포함)의 파일 추가·삭제·수정이 하나라도 다르면 실패한다. 문서만 바뀐 패키지 디렉터리를 넣는 것은 허용해 npm 공개 없이 설명서를 갱신하는 기존 흐름을 유지한다.
 
 ```sh
 python3 scripts/build.py --package-tarball /path/to/font-kku-candidate.tgz \
-  --published-tarball /path/to/registry/font-kku-0.1.4-rc.1.tgz --require-published
+  --published-tarball /path/to/registry/font-kku-published.tgz --require-published
 ```
 
-사이트 소스와 배포 결과는 별도 git 브랜치·checkout으로 관리한다. 소스 브랜치는 이 트리를 유지하고, GitHub Pages는 생성물 전용 `gh-pages` 브랜치의 루트를 제공하도록 이전한다. 기존 Pages 브랜치 변경은 사용자 승인 뒤 한 번 수행한다. `src/`를 포함한 소스 checkout을 빌드 출력 대상으로 사용하지 않는다. 원격 CI는 사용하지 않는다.
+사이트 소스와 배포 결과는 별도 git 브랜치·checkout으로 관리한다. 소스 `main`은 이 트리를 유지하고, GitHub Pages는 생성물 전용 `gh-pages` 브랜치의 루트를 제공한다. 최초 Pages 브랜치 변경은 사용자 승인 뒤 한 번 수행한다. 생성물 `gh-pages`를 먼저 push하고 Pages 제공 브랜치를 전환해 새 생성물을 확인한 다음 소스 `main`을 push한다. `src/`를 포함한 소스 checkout을 빌드 출력 대상으로 사용하지 않는다. 원격 CI는 사용하지 않는다.
 
 승인받은 배포 때만 `dist/` 내용을 생성물 전용 checkout에 동기화하고, 변경 내용을 검토해 커밋·push한다. 예를 들어 별도로 만든 배포 checkout에 `rsync -a --delete --exclude .git --exclude .cloudflare --exclude .claude dist/ /path/to/deploy-checkout/`를 쓴다. **배포 checkout이 생성물 전용인지 먼저 확인한다.** 이 단계는 소스와 다른 위치에서 수행하며 빌드 스크립트는 git 작업이나 배포를 자동 실행하지 않는다.
-
-2026-10-16 사용자 승인으로 분리 구현을 로컬 `main`에 병합했다. 작업실 모듈과 패키지 소비 경계는 확정했고, 새 버전 npm 공개·원격 push·배포·Pages 브랜치 변경은 별도 승인 후 진행한다. 현재 원격 사이트와 npm 공개판은 기존 상태다.
