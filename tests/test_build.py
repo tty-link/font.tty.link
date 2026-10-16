@@ -151,10 +151,11 @@ class PackageBoundary(unittest.TestCase):
         self.assertEqual(B.check(files, package, B.SITE_URL), [])
 
     def test_published_comparison_rejects_runtime_changes_additions_and_removals(self):
-        published = {"font-kku.js": b"released", "README.md": b"old docs"}
+        published = {"font-kku.js": b"released", "studio/index.html": b"<main>released UI</main>", "README.md": b"old docs"}
         B.compare_published({**published, "README.md": b"new docs"}, published)
         for package in ({**published, "font-kku.js": b"candidate"},
                         {**published, "studio/mount.js": b"new UI"},
+                        {**published, "studio/index.html": b"<main>unpublished UI</main>"},
                         {"README.md": b"docs only"}):
             with self.subTest(package=package), self.assertRaisesRegex(ValueError, "runtime differs"):
                 B.compare_published(package, published)

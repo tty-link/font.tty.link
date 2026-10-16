@@ -31,7 +31,7 @@ PUBLIC_DIRS = {"profiles", "spec", "authoring", "studio", "skills", "docs", "bin
 PUBLIC_FILES = {"package.json", "README.md", "LICENSE", "THIRD_PARTY_NOTICES.md", "TESTING.md"}
 REQUIRED = {"font-kku.js", "font-kku.css", "authoring/themes-data.js", "studio/mount.js", "studio/index.html", "skills/font-kku-use/SKILL.md"}
 KEEP_IN_OUT = {".cloudflare", ".claude"}
-RUNTIME_SUFFIXES = {".js", ".mjs", ".cjs", ".css", ".svg", ".png", ".webp", ".jpg", ".woff", ".woff2", ".ttf", ".otf"}
+RUNTIME_SUFFIXES = {".html", ".js", ".mjs", ".cjs", ".css", ".svg", ".png", ".webp", ".jpg", ".woff", ".woff2", ".ttf", ".otf"}
 JSDELIVR = re.compile(r"cdn\.jsdelivr\.net/npm/((?:@[^/\s\"'<`]+/)?font-kku)@([^/\s\"'<`)]+)/?([^\s\"'<`)\]]*)")
 SAMPLE = re.compile(r"<(pre|code|textarea)\b.*?</\1>", re.S)
 LOCAL_REF = re.compile(r"""(?:src|href)=["']([^"'#?]+)""", re.I)
