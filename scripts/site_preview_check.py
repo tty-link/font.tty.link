@@ -7,8 +7,8 @@
 
 - 지금(after): `scripts/build.py --package-tarball <candidate.tgz>`로 빌드한 사본을 127.0.0.1에서 내준다(끝나면 닫는다).
   font.tty.link 모든 쪽(`*.html`, `examples/*.html`)을 Chromium 데스크톱·휴대폰, WebKit 데스크톱·휴대폰, Firefox 데스크톱으로 연다.
-  tty.link(홈과 `pages/index.json`의 모든 쪽)는 공개 사이트를 그대로 열되 `https://font.tty.link/lib/**`만 이 사본으로 돌린다.
-- 전(before): 공개 https://font.tty.link, https://tty.link를 Chromium 데스크톱·휴대폰으로 연다.
+  tty.link 홈과 lol.tty.link(홈·`pages/index.json`의 모든 쪽)는 공개 사이트를 그대로 열되 `https://font.tty.link/lib/**`만 이 사본으로 돌린다.
+- 전(before): 공개 font.tty.link·tty.link·lol.tty.link를 Chromium 데스크톱·휴대폰으로 연다.
 - 쪽마다 끝까지 훑어 내린 뒤 바탕 요소가 다 그려졌는지(`notReady`), 콘솔 오류·페이지 오류, 실패한 요청(4xx·5xx·끊김), 런타임 판을 적고
   찍는다. 전후 짝을 나란히 둔 시트와 표(index.html)를 만든다 — 승인 요청 ②에서 사용자가 본다.
 - 판정(끝 코드 1): 지금 쪽에 오류·실패 요청·예외가 있거나, 덜 그려진 바탕 요소가 공개판의 같은 쪽보다 많다. 모양은 판정하지 않는다.
@@ -28,13 +28,13 @@ import subprocess
 import sys
 import threading
 import time
-import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LIVE = "https://font.tty.link/"
 TTY = "https://tty.link/"
+LOL = "https://lol.tty.link/"
 VIEWPORTS = {"desktop": dict(viewport={"width": 1366, "height": 657}, device_scale_factor=1),
              "mobile": dict(viewport={"width": 390, "height": 844}, device_scale_factor=2, is_mobile=True, has_touch=True)}
 AFTER_FONT = (("chromium", "desktop"), ("chromium", "mobile"), ("webkit", "desktop"), ("webkit", "mobile"), ("firefox", "desktop"))
@@ -101,16 +101,34 @@ def lib_route(lib: Path):
     return handle
 
 
-def plan(only: str | None, match: str, font_pages: list[str], tty_pages: list[str], local: str) -> list[dict]:
+def lol_pages() -> list[str]:
+    """Read the public catalog with the same browser used for page checks."""
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch()
+        try:
+            page = browser.new_page()
+            response = page.goto(LOL + "pages/index.json", wait_until="load", timeout=45000)
+            if response is None or not response.ok:
+                raise RuntimeError(f"public LOL catalog failed: {response.status if response else 'no response'}")
+            index = response.json()
+        finally:
+            browser.close()
+    items = index["pages"] if isinstance(index, dict) and "pages" in index else index
+    return [""] + ["pages/" + item.get("file", f"{item['id']}.html") for item in items]
+
+
+def plan(only: str | None, match: str, font_pages: list[str], consumer_pages: list[str], local: str) -> list[dict]:
     jobs = []
     if only in (None, "font"):
         for page in font_pages:
             jobs += [dict(site="font", page=page, engine=e, vp=v, side="after", url=local + page) for e, v in AFTER_FONT]
             jobs += [dict(site="font", page=page, engine=e, vp=v, side="before", url=LIVE + page) for e, v in BEFORE]
     if only in (None, "tty"):
-        for page in tty_pages:
-            jobs += [dict(site="tty", page=page, engine=e, vp=v, side="after", url=TTY + page) for e, v in AFTER_TTY]
-            jobs += [dict(site="tty", page=page, engine=e, vp=v, side="before", url=TTY + page) for e, v in BEFORE]
+        for site, base, pages in (("tty", TTY, [""]), ("lol", LOL, consumer_pages)):
+            for page in pages:
+                jobs += [dict(site=site, page=page, engine=e, vp=v, side="after", url=base + page) for e, v in AFTER_TTY]
+                jobs += [dict(site=site, page=page, engine=e, vp=v, side="before", url=base + page) for e, v in BEFORE]
     return [job for job in jobs if match in job["page"]]
 
 
@@ -127,7 +145,7 @@ def run_chunk(chunk: list[dict], shots: Path, lib: Path) -> list[dict]:
             if engine == "firefox":
                 opts.pop("is_mobile", None)
             ctx = browsers[engine].new_context(**opts)
-            if job["site"] == "tty" and job["side"] == "after":
+            if job["site"] in ("tty", "lol") and job["side"] == "after":
                 ctx.route("https://font.tty.link/lib/**", lib_route(lib))
             page = ctx.new_page()
             errors, failed = [], []
@@ -267,7 +285,7 @@ def main() -> int:
     parser.add_argument("--out", help="결과 폴더(기본 tmp/site-preview/<버전>-<커밋>)")
     parser.add_argument("--port", type=int, default=8494, help="사본을 내줄 127.0.0.1 포트(기본 8494)")
     parser.add_argument("--jobs", type=int, default=int(os.environ.get("FONT_KKU_JOBS") or 3))
-    parser.add_argument("--only", choices=["font", "tty"])
+    parser.add_argument("--only", choices=["font", "tty"], help="tty: tty.link home and the LOL consumer pages")
     parser.add_argument("--match", default="", help="쪽 경로에 이 글이 든 것만")
     parser.add_argument("--reuse", help="이미 찍은 폴더(report.json)로 시트·판정만 다시")
     package = parser.add_mutually_exclusive_group()
@@ -288,12 +306,8 @@ def main() -> int:
         built = build(site, args.port, package_args)
         print(f"build package {built.get('package')} files {built.get('files')} → {site}", flush=True)
         font_pages = sorted(p.name for p in site.glob("*.html")) + sorted("examples/" + p.name for p in (site / "examples").glob("*.html"))
-        tty_pages = []
-        if args.only in (None, "tty"):
-            index = json.loads(urllib.request.urlopen(TTY + "pages/index.json", timeout=20).read())
-            items = index["pages"] if isinstance(index, dict) and "pages" in index else index
-            tty_pages = [""] + [f"pages/{item['id']}.html" for item in items]
-        jobs = plan(args.only, args.match, font_pages, tty_pages, f"http://127.0.0.1:{args.port}/")
+        consumer_pages = lol_pages() if args.only in (None, "tty") else []
+        jobs = plan(args.only, args.match, font_pages, consumer_pages, f"http://127.0.0.1:{args.port}/")
         by_engine: dict[str, list[dict]] = {}
         for job in jobs:
             by_engine.setdefault(job["engine"], []).append(job)
@@ -301,7 +315,7 @@ def main() -> int:
         for engine_jobs in by_engine.values():
             n = max(1, min(args.jobs, len(engine_jobs) // 20 + 1))
             chunks += [engine_jobs[i::n] for i in range(n)]
-        print(f"pages font {len(font_pages)} tty {len(tty_pages)} · opens {len(jobs)} · chunks {len(chunks)} · jobs {args.jobs}", flush=True)
+        print(f"pages font {len(font_pages)} tty {int(args.only in (None, 'tty'))} lol {len(consumer_pages)} · opens {len(jobs)} · chunks {len(chunks)} · jobs {args.jobs}", flush=True)
         httpd = serve(site, args.port)
         try:
             with ThreadPoolExecutor(max(1, args.jobs)) as pool:

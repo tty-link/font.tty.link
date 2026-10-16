@@ -18,6 +18,9 @@ spec.loader.exec_module(B)
 version_spec = importlib.util.spec_from_file_location("site_version", ROOT / "scripts/update_package.py")
 V = importlib.util.module_from_spec(version_spec)
 version_spec.loader.exec_module(V)
+preview_spec = importlib.util.spec_from_file_location("site_preview", ROOT / "scripts/site_preview_check.py")
+P = importlib.util.module_from_spec(preview_spec)
+preview_spec.loader.exec_module(P)
 
 
 def built(files):
@@ -159,6 +162,30 @@ class PackageBoundary(unittest.TestCase):
                         {"README.md": b"docs only"}):
             with self.subTest(package=package), self.assertRaisesRegex(ValueError, "runtime differs"):
                 B.compare_published(package, published)
+
+
+class PreviewConsumers(unittest.TestCase):
+    def jobs(self, only=None, match=""):
+        return P.plan(only, match, ["index.html", "font-studio.html"], ["", "pages/joke.html"], "http://127.0.0.1:8494/")
+
+    def test_moved_catalog_keeps_all_pages_and_adds_the_brand_home(self):
+        from collections import Counter
+        jobs = self.jobs()
+        self.assertEqual(Counter(job["site"] for job in jobs), {"font": 14, "tty": 5, "lol": 10})
+        self.assertEqual({job["url"] for job in jobs}, {
+            "http://127.0.0.1:8494/index.html", "http://127.0.0.1:8494/font-studio.html",
+            "https://font.tty.link/index.html", "https://font.tty.link/font-studio.html",
+            "https://tty.link/", "https://lol.tty.link/", "https://lol.tty.link/pages/joke.html"})
+
+    def test_only_tty_covers_both_external_consumers(self):
+        self.assertEqual({job["site"] for job in self.jobs("tty")}, {"tty", "lol"})
+        self.assertEqual({job["site"] for job in self.jobs("font")}, {"font"})
+
+    def test_match_retains_before_and_after_for_the_moved_page(self):
+        jobs = self.jobs(match="pages/joke.html")
+        self.assertEqual(len(jobs), 5)
+        self.assertEqual({job["side"] for job in jobs}, {"before", "after"})
+        self.assertTrue(all(job["url"] == "https://lol.tty.link/pages/joke.html" for job in jobs))
 
 
 class PackageUpgrade(unittest.TestCase):
