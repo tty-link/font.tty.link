@@ -386,5 +386,5 @@ document.addEventListener("font-kku:render", (event) => {
 
 - 브라우저 런타임 자체의 서버 DOM 그리기·hydration API. 서버 정적 HTML은 다른 언어 구현의 `render_html`이 공식 경로다.
 - Canvas/WebGL 그리기 엔진
-- 런타임 내부 편집기 API. 브라우저 저작 도구인 글꼴 작업실(`site/font-studio.html`)은 공개 API만 쓰는 별도 사이트 도구로 제공한다.
+- 런타임 내부 편집기 API. 브라우저 저작 도구인 글꼴 작업실(`studio/index.html`)은 공개 API만 쓰는 별도 사이트 도구로 제공한다.
 - 별도 변주 규칙 엔진/DSL

@@ -448,8 +448,8 @@ font CSS가 하지 않는 것: 코어 소유 속성(`margin`, `inset`, `transfor
 - `spec/css-variables.json`은 공개 `--fy-*` surface의 기계 판독 정본이다. 현재 variable/slot 규모는 `node scripts/check_css_contract.js --check` 출력으로 확인한다.
 - 각 variable은 `status`, `kind`, `type`, terminal `default`, 적용 surface와 레벨 메타데이터 `level`(font·slot·role·jamo·context·page·runtime·dispatch), `scope`(host·node·page), `declaredBy`(font·page·runtime·core)를 가진다. 폰트는 `declaredBy: font`인 변수만 선언한다. slot은 `role`, `parent`, `status`, `type`, `emitted`, suffix별 default를 추가로 가진다.
 - `node scripts/check_css_contract.js --check`는 base CSS 변수 집합/기본값, slot selector dispatch, placement spec의 emitted token, runtime/sprite source(Font Studio sprite 템플릿 포함), skill 문서의 변수명을 검사한다. 이 검사는 `tests/asset_sync.test.js`를 통해 `npm test`에도 포함된다.
-- `--check`는 `profiles/*.css`에 폰트 계약 v2 린트(`site/font-kku-lint.js`, 문법 정본 ADR-008 §9 — 구조·scope·레이어 = 레벨·변수 선언 주체와 scope·속성 허용 목록·타입 있는 값과 단위 없는 0·상대 자산·메타데이터)도 적용한다. Font Studio도 같은 린트를 돌린다.
-- registry slot을 바꾸면 `node scripts/check_css_contract.js --write`로 `site/font-studio-model.js`의 studio slot-contract marker, `site/font-kku-lint.js`의 lint-registry marker와 `font-kku.css`의 dispatch marker를 갱신한다. marker 밖 Font Studio 코드와 `font-kku.css`의 나머지는 생성하지 않는다.
+- `--check`는 `profiles/*.css`에 폰트 계약 v2 린트(`authoring/font-kku-lint.js`, 문법 정본 ADR-008 §9 — 구조·scope·레이어 = 레벨·변수 선언 주체와 scope·속성 허용 목록·타입 있는 값과 단위 없는 0·상대 자산·메타데이터)도 적용한다. Font Studio도 같은 린트를 돌린다.
+- registry slot을 바꾸면 `node scripts/check_css_contract.js --write`로 `authoring/font-studio-model.js`의 studio slot-contract marker, `authoring/font-kku-lint.js`의 lint-registry marker와 `font-kku.css`의 dispatch marker를 갱신한다. marker 밖 Font Studio 코드와 `font-kku.css`의 나머지는 생성하지 않는다.
 - 따라서 `font-kku.css`(marker 밖)와 font CSS는 계속 직접 저작한다. registry를 CSS 전체 생성기로 오해하거나 marker 안을 손으로 편집하지 않는다.
 
 ### 9.4 확장이 쓰는 이름 (data-kku-*, --kku-*)

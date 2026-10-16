@@ -9,7 +9,7 @@
 포스터, 제목, 배너, 짧은 강조 문구처럼 조형성과 상호작용이 중요한 글에 잘 맞습니다. 글자마다 관리 DOM을 만들기 때문에 일반 웹 글꼴이나 장문 본문 렌더러를 대신하지는 않습니다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul neon"></script>
 <font-kku font="neon" size="64">을지로 네온</font-kku>
 ```
 
@@ -18,7 +18,7 @@
 글꼴 하나에 꾸밈·변주·움직임·상호작용을 클래스와 속성으로 얹어 **조합**할 수도 있습니다. 네온 칠은 세벌에도, 고딕에도, 도트 그림 자소에도 같은 클래스로 걸립니다([조합 — 여섯 축과 테마](#조합--여섯-축과-테마)).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
 <font-kku font="gothic" class="kku-look-neon" animate="flicker" size="64">을지로 네온</font-kku>
 ```
 
@@ -70,7 +70,7 @@
 
 ### 한 줄 설치
 
-`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/" }`로 자리를 알려 줍니다.
+`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/" }`로 자리를 알려 줍니다.
 
 공개 페이지에는 jsDelivr의 `font-kku.min.js`를 씁니다. jsDelivr는 `.min`을 붙인 주소에 원본에서 즉석으로 만든 압축본(소스 맵 포함)을 보내고, 런타임은 그 이름을 보고 CSS·글꼴·확장·자소 모듈도 `.min` 압축본으로 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md) §2). 소스를 읽거나 오류를 따라갈 때는 `.min`을 뺀 `font-kku.js`를 씁니다(CSS·확장도 원본으로 받습니다). unpkg는 압축본을 만들지 않으므로 unpkg에서는 `font-kku.js`를 씁니다. 즉석 압축본에는 SRI(`integrity`)를 걸지 않습니다.
 
@@ -79,7 +79,7 @@
 <script src="./font-kku.js" data-fonts="sebul neon"></script>
 
 <!-- jsDelivr의 npm 패키지 주소 — .min이면 CSS·글꼴·확장도 .min으로 (unpkg는 .min 없이 font-kku.js) -->
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul neon"></script>
 ```
 
 `data-addons`를 더하면 같은 자리의 확장도 함께 붙습니다([조합](#조합--여섯-축과-테마)). `data-fonts` 없이 `data-addons`만 써도 됩니다.
@@ -130,7 +130,7 @@ named export), TypeScript 선언, CSS·글꼴·spec 서브패스 export를 제�
 
 ```bash
 npm install @tty.link/font-kku
-# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.4-rc.1.tgz
+# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.4-rc.2.tgz
 ```
 
 ```js
@@ -161,7 +161,7 @@ CDN 없이 파일을 직접 제공하려면 npm 패키지의 파일을 프로젝
 
 ```bash
 npm pack @tty.link/font-kku
-tar -xzf tty.link-font-kku-0.1.4-rc.1.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
+tar -xzf tty.link-font-kku-0.1.4-rc.2.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
 ```
 
 한 줄 설치 대신 CSS를 직접 연결하려면 `font-kku.js`, base CSS, 사용할 글꼴 CSS를 같은 폴더 구조로 둡니다.
@@ -192,11 +192,11 @@ ES module로 쓰려면 classic script 대신 `font-kku.mjs`를 import합니다. 
 </script>
 ```
 
-저장소의 전체 데모는 정적 서버에서 확인하는 편이 안전합니다. 일부 브라우저는 `file://`에서 자소판 그림을 제한합니다.
+패키지의 독립 작업실은 정적 서버에서 확인합니다. 일부 브라우저는 `file://`에서 자소판 그림을 제한합니다.
 
 ```bash
 python3 -m http.server 8000
-# http://127.0.0.1:8000/site/index.html
+# http://127.0.0.1:8000/studio/index.html
 ```
 
 ## 두 가지 바탕 요소
@@ -454,12 +454,30 @@ Python, Go, Rust, Ruby 구현은 JavaScript 코어를 감싼 것이 아니라 `s
 
 레지스트리에는 npm 패키지만 공개했습니다. Python·Go·Rust·Ruby 렌더러는 아직 PyPI·Go 모듈 프록시·crates.io·RubyGems에 없으므로 저장소에서 로컬 package와 path dependency로 설치합니다. JavaScript/Python/Rust/Ruby package는 `package.json`의 버전 하나를 함께 쓰고, Go 모듈 버전은 release tag로 부여합니다. 번호 규칙은 [ADR-022](docs/ADR/ADR-022-npm-name-and-versioning.md)를 따릅니다. 설치·패키징과 언어별 한계는 [Multi-language Renderers](docs/PLAN/multi-language-renderers.md)와 [TESTING.md](TESTING.md)를 확인하세요.
 
+## 선택형 제작 도구
+
+제작 모델은 `@tty.link/font-kku/authoring`에서 불러옵니다. CSS 편집·글꼴 검사·디자인·그림 문서 모델은 DOM이나 런타임을 초기화하지 않습니다. 런타임이 필요한 제작 연산에만 `FontKku`를 전달합니다.
+
+완성된 작업실은 선택형 UI로 붙일 수 있습니다.
+
+```js
+import { mount } from "@tty.link/font-kku/studio";
+
+const studio = mount(document.querySelector("#editor"), { font: "gothic" });
+await studio.ready;
+const project = await studio.exportProject();
+// 사용을 마치면 이벤트와 작업실 문서를 해제합니다.
+studio.destroy();
+```
+
+작업실은 자체 문서 안에서 실행돼 호스트의 스타일·전역 상태와 분리됩니다. 정적 classic script 사용, 프로젝트 열기와 별도 초안 키는 [작업실 구조](docs/ARCHITECTURE/font-studio.md)를 참고하세요. 런타임만 쓰는 페이지에는 제작 도구를 추가로 불러오지 않습니다.
+
 ## 데모 사이트
 
-공개 사이트는 [https://font.tty.link/](https://font.tty.link/)입니다. 저장소에서는 `site/index.html`을 정적 서버로 엽니다(`python3 -m http.server 8000` → `http://127.0.0.1:8000/site/index.html`). 공개 메뉴는 여섯입니다.
+공개 사이트는 [https://font.tty.link/](https://font.tty.link/)입니다. 사이트 원본·페이지 시험·빌드는 별도 `font.tty.link` 저장소에서 관리하며, 이 저장소의 패키지를 가져다 씁니다. 이 저장소에서는 `studio/index.html`을 독립적으로 실행할 수 있습니다. 공개 메뉴는 여섯입니다.
 
 - [소개](https://font.tty.link/): **8칸만 그리면, 세상에 없던 한글 글꼴** — AI가 그린 8칸이 획순대로 그어지고 그 8칸으로 문장이 조립되는 데모(칸을 눌러 직접 그으면 그 자모가 든 글자가 모두 바뀌고 바뀐 글자 수를 센다), 만들어야 하는 양 비교·자모 지도·11,172자 모두 그려 보기, AI에게 맡기는 프롬프트와 실제로 받은 답(고치지 않음), 자모마다 다른 씨앗 변주, 아무 문장이나 자모 단위로 칠하고 움직이기, 내 페이지에 쓰는 코드, 한계와 무게
-- [사례](https://font.tty.link/showcase.html): 포스터·블로그·발표 표지·메뉴판·학습지·게임 공지·상장·청첩장·네온 간판·예능 자막·RPG 대화창·그림일기·개발자 밋업 포스터·공방 클래스, 요청 글 하나로 AI에게 받은 집들이 쪽지·빵집 칠판(고치지 않은 첫 답) 완성 페이지(`site/examples/`) — 그대로 쓰기(열어 보기, HTML 복사·내려받기, 런타임 주소는 jsDelivr로 바뀜), 고쳐 쓰기(글씨를 AI가 그린 8칸이나 내가 그린 8칸으로 갈아 끼운 HTML), 새로 만들기(AI에게 줄 요청 글 만들기, 사례마다 템플릿을 고쳐 달라는 요청 글)
+- [사례](https://font.tty.link/showcase.html): 포스터·블로그·발표 표지·메뉴판·학습지·게임 공지·상장·청첩장·네온 간판·예능 자막·RPG 대화창·그림일기·개발자 밋업 포스터·공방 클래스, 요청 글 하나로 AI에게 받은 집들이 쪽지·빵집 칠판(고치지 않은 첫 답) 완성 페이지(사이트 저장소의 `src/examples/`) — 그대로 쓰기(열어 보기, HTML 복사·내려받기, 런타임 주소는 jsDelivr로 바뀜), 고쳐 쓰기(글씨를 AI가 그린 8칸이나 내가 그린 8칸으로 갈아 끼운 HTML), 새로 만들기(AI에게 줄 요청 글 만들기, 사례마다 템플릿을 고쳐 달라는 요청 글)
   - 웹 앱: [전광판](https://font.tty.link/sign.html)·[메모장](https://font.tty.link/memo.html) — 한글 글꼴·입력기 없는 기기에서 영문 자판으로 두벌식·세벌식 한글을 쓴다
 - [글꼴](https://font.tty.link/fonts.html): 여섯 축(글꼴·꾸밈·변주·움직임·상호작용·바탕)으로 나눈 **테마 갤러리**(축을 섞은 테마 21가지, 꾸밈 하나·글꼴 하나만 고른 14가지는 접어 둠, 조합 배지와 코드 복사)와 축을 하나씩 고르는 **조합기**, 글꼴 견본(기본 제공 12종, AI가 그린 8칸 그림 세트 3종, 출발용 뼈대)과 문장·크기·바탕·씨앗 시험대, 글꼴별 **꾸미기**(색·외곽선·그림자·변주·움직임을 얹어 꾸밈 CSS로 가져가기), **내 글꼴 만들기**(8칸 그리기·AI에게 맡기기·작업실·씨앗 변주·꾸미기·글꼴 뽑기·자소판 40칸과 TTF)
 - [움직임](https://font.tty.link/effects.html): 자모 단위 움직임(조립·받침 톡·물결·깜빡임·색 순환·반짝·스크롤 조립과 코어 글자 움직임)과 상호작용(두벌식 타자·흩어졌다 모이기·커서 자석·씨앗 섞기) — 카드마다 `data-addons`로 붙이는 짧은 코드

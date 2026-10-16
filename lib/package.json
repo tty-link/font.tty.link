@@ -1,6 +1,6 @@
 {
   "name": "@tty.link/font-kku",
-  "version": "0.1.4-rc.1",
+  "version": "0.1.4-rc.2",
   "description": "Browser library for decomposing Korean Hangul syllables into jamo and rendering them as stylable, repositionable glyph parts",
   "license": "MIT",
   "homepage": "https://font.tty.link/",
@@ -109,7 +109,25 @@
     "./spec/tables.json": "./spec/tables.json",
     "./spec/test-cases.json": "./spec/test-cases.json",
     "./spec/themes.json": "./spec/themes.json",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./authoring": {
+      "import": "./authoring/index.mjs",
+      "require": "./authoring/index.js",
+      "default": "./authoring/index.js"
+    },
+    "./authoring/*": "./authoring/*",
+    "./studio": {
+      "import": {
+        "types": "./studio/mount.d.mts",
+        "default": "./studio/mount.mjs"
+      },
+      "require": {
+        "types": "./studio/mount.d.ts",
+        "default": "./studio/mount.js"
+      },
+      "default": "./studio/mount.js"
+    },
+    "./studio/*": "./studio/*"
   },
   "sideEffects": true,
   "engines": {
@@ -160,10 +178,21 @@
     "spec/themes.json",
     "README.md",
     "THIRD_PARTY_NOTICES.md",
-    "LICENSE"
+    "LICENSE",
+    "authoring/",
+    "studio/",
+    "docs/ADR/",
+    "docs/ARCHITECTURE/",
+    "docs/GLOSSARY.md",
+    "docs/images/",
+    "docs/PLAN/multi-language-renderers.md",
+    "skills/font-kku/references/dom-contract.md",
+    "TESTING.md",
+    "tests/baselines/darwin-chromium/gothic-sentence-1.png",
+    "tests/baselines/darwin-chromium/sebul-sentence-1.png"
   ],
   "scripts": {
-    "test": "node --test tests/font_kku.test.js tests/spec_parity.test.js tests/asset_sync.test.js tests/font_lint.test.js tests/font_studio_model.test.js tests/font_studio_design.test.js tests/font_studio_f.test.js tests/font_kku_ime.test.js tests/font_kku_export.test.js tests/font_kku_fx.test.js tests/resolver_cases.test.js tests/layout_cases.test.js tests/element_table.test.js tests/element_boundary.test.js tests/landing_sets.test.js",
+    "test": "node --test tests/font_kku.test.js tests/spec_parity.test.js tests/asset_sync.test.js tests/font_lint.test.js tests/font_studio_model.test.js tests/font_studio_design.test.js tests/font_studio_f.test.js tests/font_kku_ime.test.js tests/font_kku_export.test.js tests/font_kku_fx.test.js tests/resolver_cases.test.js tests/layout_cases.test.js tests/element_table.test.js tests/element_boundary.test.js tests/studio_mount.test.js",
     "test:docs": "node scripts/check_markdown_links.js && node scripts/check_document_contracts.js",
     "verify": ".venv/bin/python scripts/verify.py",
     "verify:release": ".venv/bin/python scripts/verify.py --release",

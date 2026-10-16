@@ -6,7 +6,7 @@
  * 않는 글꼴은 속성을 줘도 모양이 그대로라 그 사실을 행 표시(씨앗 반응)와 시험대 안내 한 줄로 밝힌다
  * (다른 글꼴은 조합기의 변주로 흔든다). 코드 복사(attrs)는 씨앗에 반응하는 글꼴에만 속성을 붙인다.
  *
- * AI 카드의 문장은 소개와 같은 글이다 — FontKkuLandingSets.prompt(8칸, site/landing-ai-sets.js).
+ * AI 카드의 문장은 소개와 같은 글이다 — FontKkuLandingSets.prompt(8칸, src/landing-ai-sets.js).
  *
  * 글꼴 뽑기: FontKkuCustomizer.draw(seed)가 뽑기 씨앗 하나로 꾸미기 상태를 결정론적으로 정해 꾸미기
  * 창을 연다. 기능 모음의 뽑기 카드는 같은 상태를 창 밖에서 미리 그린다(cssFor·seedFor).

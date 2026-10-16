@@ -1,6 +1,6 @@
 /* 글꼴 페이지의 여섯 축 — 축 그림, 테마 갤러리, 조합기 (ADR-017).
  *
- * 자료는 site/themes-data.js의 window.FontKkuThemes다(spec/themes.json에서 scripts/build_looks.js가
+ * 자료는 lib/authoring/themes-data.js의 window.FontKkuThemes다(spec/themes.json에서 scripts/build_looks.js가
  * 만든다). 글꼴·꾸밈·변주·움직임·상호작용·바탕 여섯 축의 목록과 테마, 테마마다 풀어 둔 조합법
  * (recipes: font, classes, seed, jamoSeeds, animate, fx, addons, tone)이 들어 있다. 이 파일은 그 자료만
  * 읽어 화면을 그리므로 정본에 글꼴·꾸밈·테마가 늘면 페이지에도 저절로 는다.

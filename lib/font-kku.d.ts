@@ -32,7 +32,7 @@ declare namespace FontKku {
     /**
      * 필요할 때 받기(ADR-019)의 기준 주소 — `profiles/<font>.css`·`profiles/<set>.jamo.js`가 그 아래에 있다.
      * 한 줄 설치(`<script src=".../font-kku.js" data-fonts=…>`)는 스크립트 주소에서 스스로 정한다.
-     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/").
+     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/").
      */
     fontBase?: string;
     /** false면 아직 받지 않은 글꼴·자소 세트를 스스로 받지 않는다(기본 true). */

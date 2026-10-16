@@ -17,6 +17,12 @@
 날짜가 붙은 과거 수치는 `CHANGELOG.md`, `docs/REVIEW/`, `archive/`의 당시 기록일 뿐
 현재 통과 증거가 아니다. 현재 증거가 필요하면 아래 명령을 다시 실행한다.
 
+## 라이브러리와 사이트 시험의 경계
+
+라이브러리 브라우저 회귀 시험은 `tests/fixtures/runtime/`의 최소 호스트와 `studio/index.html`을 사용한다. 선택형 작업실 삽입 시험은 `tests/test_studio_mount.py`에서 HTTP·로컬 파일·ESM·다른 출처·인스턴스 격리를 확인한다. 사이트 원본과 실제 페이지의 메뉴·사례·웹 앱·문서·비교 화면 시험은 사이트 저장소로 이전했다. 기존 판정과 기준선은 유지한다.
+
+빠른 층의 `Distribution assets`는 실제 npm 파일 목록에서 선택형 제작 모듈·독립 작업실·공개 문서와 상대 참조를 확인한다. 사이트의 링크 검사와 생성 폴더 보호는 사이트 저장소의 `npm test`·`npm run test:browser`가 담당한다. 라이브러리에서 종료한 `build_pages.py`의 무쓰기 보호는 계속 시험한다. 독립 저장소 전환의 근거는 [ADR-029](docs/ADR/ADR-029-library-authoring-and-site.md)다.
+
 ## Bootstrap
 
 ```bash
@@ -93,7 +99,7 @@ PASS"다. 릴리스 판정은 필요한 환경(macOS)에서 생략 없이 통과
 | 2 | CLI syntax | fast·everyday·release | `node --check bin/font-kku-text.js` | `bin/font-kku-text.js`가 파싱됨 |
 | 3 | Node tests | fast·everyday·release | `npm test` | 런타임/명세/패키지/자산/CSS/글꼴 작업실 모델 계약 통과 |
 | 4 | Markdown links | fast·everyday·release | `npm run test:docs` | 현행+보관 문서의 로컬 링크와 현행 문서 계약 통과 — 이 표가 `--list-stages --markdown` 출력과 같은지도 본다 |
-| 5 | Pages build links | fast·everyday·release | `python3 scripts/build_pages.py --check` | font.tty.link 배포 트리(루트 `site/`, `lib/` 패키지 파일, `lib/skill/` AI 설명서)의 상대 링크와 공개 주소 링크가 모두 실제 파일을 가리키고, jsDelivr 주소가 지금 이름·버전으로 패키지에 든 파일을 가리킴. 배포 빌드(`--check` 없이)는 npm 공개본과 패키지 파일이 같아야 한다(ADR-022 §6) |
+| 5 | Distribution assets | fast·everyday·release | `python3 scripts/check_distribution.py` | npm pack 목록의 제작·작업실 자산과 독립 UI의 상대 참조가 모두 패키지에 포함되고, 비공개 기록·사이트 소스가 제외됨 |
 | 6 | CSS contract | fast·everyday·release | `node scripts/check_css_contract.js --check` | 레지스트리/기본 CSS/런타임/글꼴/작업실/문서 정합 (별도 단계 — `npm test`도 부른다) |
 | 7 | Vendored asset sync | fast·everyday·release | `python3 scripts/sync_assets.py --check` | 정본→사본 바이트 어긋남 없음 |
 | 8 | Version copies | fast·everyday·release | `python3 scripts/bump_version.py --check` | 패키지 매니페스트 7곳과 문서·사이트·AI 설명서의 CDN 주소가 `package.json` 버전과 같음(ADR-022) |
@@ -102,19 +108,19 @@ PASS"다. 릴리스 판정은 필요한 환경(macOS)에서 생략 없이 통과
 | 11 | Element boundary | fast·everyday·release | `node scripts/element_edition.js --check --report` | 원소 재료 경로(순수 코어 + 원소 출력)가 Canvas·FontFace·SVG 준비에 닿지 않음(설계 v1.2 §15.4). 매니페스트 `scripts/element-edition.json`의 자르는 자리로 잘라 본 원소 판이 구문 검사·document 없는 실행·순수 코어 값 대조를 넘고, 원소 판 크기(배포하지 않음)를 전체 판과 따로 보고한다. 브라우저 호출 수는 스모크 `element-boundary` |
 | 12 | Python renderer tests | everyday·release | `.venv/bin/python -m pytest renderers/python/tests -q` | 평문/HTML/명세/글꼴 메타데이터 정합 |
 | 13 | Static parity tolerance unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_static_html_parity.py -q` | 비교 허용오차 규칙 통과 |
-| 14 | Tooling unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_glyph_tools.py tests/test_font_export.py tests/test_verify_tools.py tests/test_confusable_audit.py tests/test_matrix_probe.py tests/test_build_pages.py tests/test_playwright_smoke.py::test_smoke_registration_in_sync tests/test_playwright_smoke.py::test_missing_engine_policy -q` | 글자 측정 도구 import/`--help`/순수 도우미/겹침 정책 판정, `font-kku-export.js`가 쓴 TTF·WOFF를 fontTools가 읽는지(복합 글리프·cmap·lsb·WOFF2 재저장), verify·공개 관문의 순수 도우미(`tests/test_verify_tools.py`), 헷갈리는 짝 감사·매트릭스 탐침의 순수 도우미, 기계 슬롯·공유 캐시, font.tty.link 배포 폴더 보호(`tests/test_build_pages.py`), 스모크 등록 어긋남 없음과 엔진 요구 정책 |
+| 14 | Tooling unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_glyph_tools.py tests/test_font_export.py tests/test_verify_tools.py tests/test_confusable_audit.py tests/test_matrix_probe.py tests/test_build_pages.py tests/test_playwright_smoke.py::test_smoke_registration_in_sync tests/test_playwright_smoke.py::test_missing_engine_policy -q` | 글자 측정 도구 import/`--help`/순수 도우미/겹침 정책 판정, `font-kku-export.js`가 쓴 TTF·WOFF를 fontTools가 읽는지(복합 글리프·cmap·lsb·WOFF2 재저장), verify·공개 관문의 순수 도우미(`tests/test_verify_tools.py`), 헷갈리는 짝 감사·매트릭스 탐침의 순수 도우미, 기계 슬롯·공유 캐시, 종료한 사이트 내보내기의 소스 폴더 보호(`tests/test_build_pages.py`), 스모크 등록 어긋남 없음과 엔진 요구 정책 |
 | 15 | Go vet | everyday·release | `(cd renderers/go && go vet ./...)` | vet 통과 |
 | 16 | Go tests | everyday·release | `(cd renderers/go && go test -count=1 ./...)` | test 통과 (`-count=1`: 시험 캐시가 모듈 밖 `spec/*.json` 변경을 보지 않는다) |
 | 17 | Rust format | everyday·release | `(cd renderers/rust && cargo fmt --check)` | `cargo fmt` 형식 그대로 |
 | 18 | Rust tests | everyday·release | `(cd renderers/rust && cargo test)` | test 통과 |
 | 19 | Ruby tests | everyday·release | `(cd renderers/ruby && ruby -I lib -e 'Dir["test/test_*.rb"].sort.each { \|file\| require_relative file }')` | 평문/HTML/명세·사용자 글꼴 정합 (`.ruby-version`의 Ruby로 — 아래 gem 스모크와 같은 Ruby) |
-| 20 | Package smoke (npm) | everyday·release | `.venv/bin/python scripts/verify.py --package-smoke npm` | npm tarball을 격리 소비자에 설치: CommonJS/ESM, TypeScript, CSS/글꼴/명세 subpath, notice, 터미널 명령 |
+| 20 | Package smoke (npm) | everyday·release | `.venv/bin/python scripts/verify.py --package-smoke npm` | npm tarball을 격리 소비자에 설치: CommonJS/ESM, TypeScript, CSS/글꼴/명세·제작·작업실 subpath, notice, 터미널 명령 |
 | 21 | Package smoke (python) | everyday·release | `.venv/bin/python scripts/verify.py --package-smoke python` | wheel을 새 venv에 격리 설치: 평문/HTML/자산, 글꼴을 밝히지 않은 기본 출력의 도장·원소 획과 `face="device"`·밝힌 글꼴의 원소 층 없음(ADR-027) |
 | 22 | Package smoke (ruby) | everyday·release | `.venv/bin/python scripts/verify.py --package-smoke ruby` | gem payload와 격리 `GEM_HOME` 설치 — 호환 점검·설치·실행이 같은 cwd·env의 같은 Ruby(`.ruby-version`). 기본 출력 계약은 wheel과 같음 |
 | 23 | Package smoke (rust) | everyday·release | `.venv/bin/python scripts/verify.py --package-smoke rust` | crate에 실린 자산·생성 표와 외부 오프라인 소비자. 기본 출력 계약은 wheel과 같음 |
 | 24 | JS-derived spec regeneration | everyday·release | `node scripts/generate_spec_cases.js` | 생성 전후 `tables.json`/`test-cases.json` hash 동일 |
 | 25 | Browser-derived HTML spec regeneration | everyday·release | `.venv/bin/python scripts/generate_html_cases.py` | 생성 전후 `html-cases.json` hash 동일 |
-| 26 | Browser smoke | everyday·release | `[공개 층: FONT_KKU_SMOKE_MODES=both FONT_KKU_REQUIRE_ENGINES=1] .venv/bin/python -m pytest tests/test_playwright_smoke.py -q --durations=15 -n <jobs>` | server 런타임과 데모 화면 통과 — file:// 갈림이 있는 검사(`FILE_DIFFERS`, 7개)만 file 모드도 (`pytest-xdist`가 있으면 일꾼 여럿 — 일꾼마다 세션 브라우저·정적 서버). 공개 층은 모든 검사를 두 모드로, 다른 엔진이 꼭 있어야 한다(`FONT_KKU_SMOKE_MODES=both`, `FONT_KKU_REQUIRE_ENGINES=1`). 느린 검사 15개를 함께 보인다(`--durations=15`) |
+| 26 | Browser smoke | everyday·release | `[공개 층: FONT_KKU_SMOKE_MODES=both FONT_KKU_REQUIRE_ENGINES=1] .venv/bin/python -m pytest tests/test_playwright_smoke.py tests/test_studio_mount.py -q --durations=15 -n <jobs>` | server 런타임과 데모 화면 통과 — file:// 갈림이 있는 검사(`FILE_DIFFERS`, 7개)만 file 모드도 (`pytest-xdist`가 있으면 일꾼 여럿 — 일꾼마다 세션 브라우저·정적 서버). 공개 층은 모든 검사를 두 모드로, 다른 엔진이 꼭 있어야 한다(`FONT_KKU_SMOKE_MODES=both`, `FONT_KKU_REQUIRE_ENGINES=1`). 느린 검사 15개를 함께 보인다(`--durations=15`) |
 | 27 | Static HTML parity | everyday·release | `.venv/bin/python tests/static_html_parity.py` | 커밋된 HTML 케이스 전체의 DOM/style/geometry 정합 — 글꼴을 밝히지 않은 사례는 원소 획(`[part=hoek]`·`[part=element]`, 정체·마디 변수와 노드의 `--fy-face-width`·`--fy-el-density` 1e-4)까지 (ADR-027) |
 | 28 | Element layer oracle | everyday·release | `.venv/bin/python scripts/record_element_layer.py --check` | 글꼴을 밝히지 않은 바탕 요소(세벌식, 원소 재료)를 런타임이 64px로 그린 획과 노드 밀도 굵기 계수(`--fy-el-density`)가 `spec/element-layer.json`과 같음 — 같은 열쇠(짜임까지)는 어느 음절에서든 같은 값(고정 배치 불변식), 숫자는 tolerance 안. 승인된 변경만 `--write` |
 | 29 | Sprite cell coverage | everyday·release | `.venv/bin/python tests/sprite_cell_coverage.py` | sprite-system과 파생 그림 자소 글꼴마다 11,172자가 고르는 자소판 칸(`r<행>-<자모>`)이 SVG에 모두 있음 — 빈칸은 겹침·획 굵기 감사가 잡지 못한다 |
@@ -179,10 +185,10 @@ JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실�
 - 작업실 디자인 모델(`tests/font_studio_design.test.js`): 기본 디자인(1.2 세벌식, 런타임 revision)·재료 바꾸기·배치 바꾸기가 만든 디자인을 실제 `registerDesign`으로 등록해 보고, 고정 배치 충돌(문맥 규칙·통짜 합자 모음·자리 변주)이 런타임 거부와 같은지, 확정 뒤 남는 충돌은 합치지 않는지, 내용 주소 이름, JSON 오류 줄·칸, 비교 칸 자리 세기, 스키마 맨 위 키
 - 작업실 F 묶음(`tests/font_studio_f.test.js`가 `tests/studio_f/*.test.js`를 이름 차례로 싣는다 — 새 묶음은 package.json을 고치지 않는다): F0 편집 기록(되돌리기·다시·건너뛰기·한도·참가자 상태 복사본)·묶음 편집(취소하면 기록 없음, commit은 한 줄)·검사 결과 모양 맞추기·임시 등록(`studio-tmp-<n>`을 실제 런타임 `planJamo`로 풀고 `unregisterDesign`으로 지운다, 남의 번호는 건너뜀, 없으면 내용 주소 이름) · F1 조립식 목록 거울(정본 투영·런타임 생성 구간·`--check`)과 규칙 모델(모드 × 배치 × 역할 × 자모 × 방법 전수가 `registerDesign`과 같은 판정, 무작위 300단계 뒤 같은 구체성 충돌 없음, 잠금·씨앗 섞기·소스 빼기, 영향 목록이 ㄱ 칸 지우기에서 ㄱ·ㅋ·ㄲ만) · F2 출처 모델(디자인 31 × 자모 51 × 역할 4 × 짜임 3 × 받침 2의 요청 약 11만에서 Q3 = `planJamo` trace.rules) · F4 그림 문서(실제 `registerJamo`, `sanitizeSvg` 시험 그림 둘, 떼어 내기) · F7 팔레트(준비 상태·기록 셈, `pal-*`가 `withMode`에서 살아남음) · F8 묶음(왕복, 해로운 묶음의 칸마다 거부, 이름 겹침, 사전 검사, `.jamo.js`를 VM으로) · F9 영향 확인을 언제 묻는가
 - 한글 입력기(`tests/font_kku_ime.test.js`): 두벌식 표준·세벌식 390·세벌식 최종의 키 표(행 단위 골든), 손으로 친 문장, 합자 모음·겹받침·두벌식 받침 넘김·세벌식 겹초성, 자모 단위 Backspace, 가짜 입력 칸으로 `attach()` 키 경로·한/영 전환·초점 없는 칸 캐럿, 패키지 `exports`/`files`
-- 조합 체계(ADR-017, `tests/asset_sync.test.js`): `node scripts/build_looks.js --check`와 같은 대조 — `font-kku-looks.css`·`site/themes-data.js`가 `spec/themes.json`과 꾸러미 글꼴 꾸밈 구간에서 다시 만든 것과 같은지, 레이어 순서 문(`font-kku.look`, `font-kku.motion`), 정본의 깨진 참조·분류 안 된 글꼴·꾸러미 테마 규칙·없는 움직임 훅·변주 목록 불일치 거부, 꾸밈이 칠 속성만 옮기는지와 씨앗 조건 유지, 조합법의 확장 목록, 패키지 `files`/`exports`(`./fx`, 확장 CSS, `spec/themes.json`)
+- 조합 체계(ADR-017, `tests/asset_sync.test.js`): `node scripts/build_looks.js --check`와 같은 대조 — `font-kku-looks.css`·`authoring/themes-data.js`가 `spec/themes.json`과 꾸러미 글꼴 꾸밈 구간에서 다시 만든 것과 같은지, 레이어 순서 문(`font-kku.look`, `font-kku.motion`), 정본의 깨진 참조·분류 안 된 글꼴·꾸러미 테마 규칙·없는 움직임 훅·변주 목록 불일치 거부, 꾸밈이 칠 속성만 옮기는지와 씨앗 조건 유지, 조합법의 확장 목록, 패키지 `files`/`exports`(`./fx`, 확장 CSS, `spec/themes.json`)
 - 한 줄 설치 확장(`tests/font_kku.test.js`): `data-addons`가 `font-kku-looks.css`·`font-kku-motion.css`를 글꼴 뒤에 붙이고 `font-kku-fx.js`를 순서 있는 스크립트로 붙이는지, 이름 접기·중복·모르는 이름 경고, `data-addons`만 있을 때
 - 상호작용(`tests/font_kku_fx.test.js`): `typingFrames`·`transitionFrames` 순수 함수, `type`의 지웠다 다시 치기·커서·한 번 도는 움직임 끄기·여러 바탕 요소 줄 나누기·멈춤·움직임 줄이기, `shuffle`의 `jamo-seeds` 켜기·누르기·주기·되돌리기, `scatter`·`magnet`·`replay`, 선언형 `bind`/`unbind`, CommonJS·ESM·타입 선언
-- 글꼴 계약 v2 검사(`tests/font_lint.test.js`, `site/font-kku-lint.js`): 기본 제공 글꼴·별칭 shim·작업실 fixture 통과, 텍스트 검사 우회로(중첩 속 규칙, 범위 밖 선택자, 부분 문자열 레이어 판정, 속성 누수, 단위 없는 0 변형, `@import` 면제, 디스패치·런타임 변수, `!important`)가 코드별로 실패, 생성된 레지스트리 요약 최신성
+- 글꼴 계약 v2 검사(`tests/font_lint.test.js`, `authoring/font-kku-lint.js`): 기본 제공 글꼴·별칭 shim·작업실 fixture 통과, 텍스트 검사 우회로(중첩 속 규칙, 범위 밖 선택자, 부분 문자열 레이어 판정, 속성 누수, 단위 없는 0 변형, `@import` 면제, 디스패치·런타임 변수, `!important`)가 코드별로 실패, 생성된 레지스트리 요약 최신성
 
 - 배치 프로파일(ADR-026, `tests/layout_cases.test.js`): 설계 v1.2 사례 28개를 모두 node·browser·audit·deferred로 분류하고 node 사례를 실행 — 정본 생성기
   `--check`와 깨진 정본 거부, 디자인 1.2 `layout` 검증(누락·없는 프로파일·revision·고정 배치의 문맥 규칙·자리 변주), 도장 표(67키, 조합용 자모만,
@@ -232,7 +238,7 @@ file 모드도 돈다(아래 '모드').
 음절 안 잉크 겹침 판정(canvas 다시 그리기)을 같은 세션·같은 페이지에서 감사와 같은 스크린샷 방식으로 잰
 참조값과 ±6%p 안에서 대조하고(플랫폼 상수 없음), 모의 `showSaveFilePicker`로 첫 저장만 파일을 고르고
 다음 저장은 같은 핸들을 덮어쓰며 이 글꼴로 새 글꼴을 시작한(`data-studio-rename`) 뒤에는 새 파일을 고르는지 확인한다.
-`assert_font_studio_lint`는 작업실이 같은 검사기(`site/font-kku-lint.js`)를 불러오기·편집·저장·내보내기 때 돌리는지 본다:
+`assert_font_studio_lint`는 작업실이 같은 검사기(`authoring/font-kku-lint.js`)를 불러오기·편집·저장·내보내기 때 돌리는지 본다:
 계약을 깨는 편집이 경고 목록에 코드·줄과 함께 뜨고, 저장·내보내기는 막지 않되 경고하며, 작업실과
 `check_css_contract.js`의 판정 코드가 같다.
 `assert_font_studio_material_tools`는 옛 Sprite Editor 페이지에서 옮긴 재료 탭 기능(사각형·직선, 동작 단위 되돌리기·다시하기와 자소판 작업

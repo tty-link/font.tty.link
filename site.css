@@ -782,7 +782,7 @@ code {
 }
 
 /* ── 소개·사례 공용 ─────────────────────────────────── */
-/* 소개 페이지만 쓰는 것은 site/landing.css에 있다. */
+/* 소개 페이지만 쓰는 것은 src/landing.css에 있다. */
 .k-hero-actions {
   display: flex;
   flex-wrap: wrap;

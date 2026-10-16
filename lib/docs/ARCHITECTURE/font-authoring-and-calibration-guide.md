@@ -444,7 +444,7 @@ python3 scripts/build_sprite.py --from-font /path/to/font.ttf --out my-sprite.pn
 ### CSS 글꼴
 
 - 새 CSS 파일이 `font-kku.css` 계약 위에서만 동작한다(런타임 JS 수정 없음).
-- `node scripts/check_css_contract.js --check` 통과 — 글꼴 계약 v2 검사(`site/font-kku-lint.js`, 문법 정본 [ADR-008 §9](../ADR/ADR-008-font-contract-v2.md): 레이어 순서 선언과 레이어 밖 규칙·중첩·`!important`, 모든 선택자의 소문자 적용 범위(scope), 선택자로 판정한 레이어 = 레벨, 속성 허용 목록, 글꼴이 선언하면 안 되는 변수(레지스트리 `declaredBy`가 page·runtime·core)와 변수 범위(scope), 레지스트리 type과 길이 변수의 단위 없는 `0`, 상대 자산, 메타데이터(그림 자소 글꼴은 `--fy-sprite-url`·`--fy-sprite-kinds`까지))와 `profiles/*.css`·`spec/fonts.json`의 양방향 대응(목록에 없는 글꼴 파일·`@import` 외 내용이 있는 별칭 파일 거부)을 검사한다.
+- `node scripts/check_css_contract.js --check` 통과 — 글꼴 계약 v2 검사(`authoring/font-kku-lint.js`, 문법 정본 [ADR-008 §9](../ADR/ADR-008-font-contract-v2.md): 레이어 순서 선언과 레이어 밖 규칙·중첩·`!important`, 모든 선택자의 소문자 적용 범위(scope), 선택자로 판정한 레이어 = 레벨, 속성 허용 목록, 글꼴이 선언하면 안 되는 변수(레지스트리 `declaredBy`가 page·runtime·core)와 변수 범위(scope), 레지스트리 type과 길이 변수의 단위 없는 `0`, 상대 자산, 메타데이터(그림 자소 글꼴은 `--fy-sprite-url`·`--fy-sprite-kinds`까지))와 `profiles/*.css`·`spec/fonts.json`의 양방향 대응(목록에 없는 글꼴 파일·`@import` 외 내용이 있는 별칭 파일 거부)을 검사한다.
 - `animate`와 `seed` 없이 기준선 비교가 된다.
 - 고정 샘플 세트(최소 스모크 세트 또는 일반 글꼴 고위험 세트)를 **교정 전/후 같은 페이지·같은 크기로 스크린샷을 찍어 나란히 비교**한다. 낱글자 한 장 + 문장 한 장, 총 2장 이상이 기본이다.
 - `. .venv/bin/activate && python -m pytest tests/test_playwright_smoke.py -q` 통과.

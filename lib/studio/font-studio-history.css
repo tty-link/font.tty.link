@@ -26,8 +26,8 @@
 .studio-history-summary::before {
   content: "▸";
   display: inline-block;
-  color: var(--demo-muted);
-  transition: transform 120ms var(--demo-ease);
+  color: var(--studio-muted);
+  transition: transform 120ms var(--studio-ease);
 }
 
 .studio-history-fold[open] > .studio-history-summary::before {
@@ -35,27 +35,27 @@
 }
 
 .studio-history-summary:focus-visible {
-  outline: 2px solid var(--demo-accent);
+  outline: 2px solid var(--studio-accent);
   outline-offset: 2px;
 }
 
 .studio-history-title {
-  font: 600 12px/1.3 var(--demo-sans);
-  color: var(--demo-ink-soft);
+  font: 600 12px/1.3 var(--studio-sans);
+  color: var(--studio-ink-soft);
 }
 
 .studio-history-count {
   padding: 0 7px;
-  border: 1px solid var(--demo-border);
+  border: 1px solid var(--studio-border);
   border-radius: 999px;
-  font: 11px/1.5 var(--demo-mono);
-  color: var(--demo-ink-soft);
-  background: var(--demo-surface-muted);
+  font: 11px/1.5 var(--studio-mono);
+  color: var(--studio-ink-soft);
+  background: var(--studio-surface-muted);
 }
 
 .studio-history-now {
   min-inline-size: 0;
-  color: var(--demo-muted);
+  color: var(--studio-muted);
   overflow-wrap: anywhere;
 }
 
@@ -75,12 +75,12 @@
 .studio-history-buttons button,
 .studio-impact-buttons button,
 .studio-impact-info-head button {
-  font: 12px/1.2 var(--demo-sans);
+  font: 12px/1.2 var(--studio-sans);
   padding: 5px 10px;
-  border: 1px solid var(--demo-border-strong);
+  border: 1px solid var(--studio-border-strong);
   border-radius: 8px;
-  background: var(--demo-surface);
-  color: var(--demo-ink);
+  background: var(--studio-surface);
+  color: var(--studio-ink);
   cursor: pointer;
 }
 
@@ -93,7 +93,7 @@
 .studio-impact-buttons button:focus-visible,
 .studio-impact-info-head button:focus-visible,
 .studio-history-jump:focus-visible {
-  outline: 2px solid var(--demo-accent);
+  outline: 2px solid var(--studio-accent);
   outline-offset: 2px;
 }
 
@@ -101,13 +101,13 @@
   margin: 0;
   font-size: 12px;
   line-height: 1.45;
-  color: var(--demo-seal);
+  color: var(--studio-seal);
 }
 
 .studio-history-empty {
   margin: 0;
   font-size: 12px;
-  color: var(--demo-muted);
+  color: var(--studio-muted);
 }
 
 .studio-history-list {
@@ -128,27 +128,27 @@
   inline-size: 100%;
   padding: 4px 8px;
   border: 1px solid transparent;
-  border-radius: var(--demo-radius-sm);
+  border-radius: var(--studio-radius-sm);
   background: none;
-  font: 12px/1.4 var(--demo-sans);
-  color: var(--demo-ink);
+  font: 12px/1.4 var(--studio-sans);
+  color: var(--studio-ink);
   text-align: start;
   cursor: pointer;
 }
 
 .studio-history-jump:hover {
-  background: var(--demo-surface-muted);
+  background: var(--studio-surface-muted);
 }
 
 .studio-history-entry[data-current="true"] .studio-history-jump {
-  border-color: var(--demo-accent);
-  background: var(--demo-accent-soft);
-  color: var(--demo-accent);
+  border-color: var(--studio-accent);
+  background: var(--studio-accent-soft);
+  color: var(--studio-accent);
   cursor: default;
 }
 
 .studio-history-entry[data-undone] .studio-history-jump {
-  color: var(--demo-muted);
+  color: var(--studio-muted);
 }
 
 .studio-history-entry[data-history-start] .studio-history-label {
@@ -163,7 +163,7 @@
 .studio-history-time {
   flex: none;
   font-size: 11px;
-  color: var(--demo-muted);
+  color: var(--studio-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -172,11 +172,11 @@
   inline-size: min(40rem, calc(100vw - 32px));
   max-block-size: calc(100vh - 48px);
   padding: 16px;
-  border: 1px solid var(--demo-border-strong);
-  border-radius: var(--demo-radius-lg);
-  background: var(--demo-surface);
-  color: var(--demo-ink);
-  box-shadow: var(--demo-shadow-lg);
+  border: 1px solid var(--studio-border-strong);
+  border-radius: var(--studio-radius-lg);
+  background: var(--studio-surface);
+  color: var(--studio-ink);
+  box-shadow: var(--studio-shadow-lg);
 }
 
 .studio-impact[open] {
@@ -190,7 +190,7 @@
 
 .studio-impact-title {
   margin: 0;
-  font: 600 15px/1.35 var(--demo-sans);
+  font: 600 15px/1.35 var(--studio-sans);
   overflow-wrap: anywhere;
 }
 
@@ -198,7 +198,7 @@
   margin: 0;
   font-size: 13px;
   line-height: 1.5;
-  color: var(--demo-ink-soft);
+  color: var(--studio-ink-soft);
 }
 
 .studio-impact-buttons {
@@ -206,8 +206,8 @@
 }
 
 .studio-impact-buttons [data-impact-accept] {
-  border-color: var(--demo-seal);
-  color: var(--demo-seal);
+  border-color: var(--studio-seal);
+  color: var(--studio-seal);
 }
 
 .studio-impact-list {
@@ -226,31 +226,31 @@
   grid-template-columns: auto minmax(0, 1fr);
   gap: 2px 8px;
   padding-block: 5px;
-  border-block-start: 1px solid var(--demo-border);
+  border-block-start: 1px solid var(--studio-border);
   font-size: 12px;
   line-height: 1.45;
 }
 
 .studio-impact-more {
   display: block;
-  color: var(--demo-muted);
+  color: var(--studio-muted);
 }
 
 .studio-impact-effect {
   align-self: start;
   padding: 0 7px;
-  border: 1px solid var(--demo-border);
+  border: 1px solid var(--studio-border);
   border-radius: 999px;
   font-size: 11px;
-  color: var(--demo-ink-soft);
-  background: var(--demo-surface-muted);
+  color: var(--studio-ink-soft);
+  background: var(--studio-surface-muted);
   white-space: nowrap;
 }
 
 .studio-impact-row:is([data-effect="error"], [data-effect="primitive"], [data-effect="lost-original"]) .studio-impact-effect {
-  border-color: var(--demo-seal);
-  color: var(--demo-seal);
-  background: var(--demo-seal-soft);
+  border-color: var(--studio-seal);
+  color: var(--studio-seal);
+  background: var(--studio-seal-soft);
 }
 
 .studio-impact-target {
@@ -260,12 +260,12 @@
 .studio-impact-change {
   grid-column: 2;
   min-inline-size: 0;
-  color: var(--demo-muted);
+  color: var(--studio-muted);
   overflow-wrap: anywhere;
 }
 
 .studio-impact-side[data-side="after"] {
-  color: var(--demo-ink);
+  color: var(--studio-ink);
 }
 
 /* 막지 않는 알림 칸 — 디자인 알림 줄 바로 아래 */
@@ -273,14 +273,14 @@
   display: grid;
   gap: 6px;
   padding: 8px 10px;
-  border: 1px solid var(--demo-border);
-  border-inline-start: 3px solid var(--demo-accent-2);
-  border-radius: var(--demo-radius-sm);
-  background: var(--demo-panel);
+  border: 1px solid var(--studio-border);
+  border-inline-start: 3px solid var(--studio-accent-2);
+  border-radius: var(--studio-radius-sm);
+  background: var(--studio-panel);
 }
 
 .studio-impact-info[data-blocking="true"] {
-  border-inline-start-color: var(--demo-seal);
+  border-inline-start-color: var(--studio-seal);
 }
 
 .studio-impact-info-head {

@@ -265,7 +265,7 @@ python3 scripts/build_sprite.py \
 - `--fy-sprite-cell`(기본 `1em`)을 `em` 기반으로 두면 바탕 요소의 `--fy-size` 변화에 자동으로 비례한다.
 - 코어 그림 자소 재료 규칙은 `inline-size` / `block-size`를 `--fy-sprite-cell`로 고정해 투명 텍스트의 글자 메트릭이 PNG 표시 영역을 자르지 않게 한다.
 - `scripts/build_sprite.py --scale 1 --scale 2 --scale 3`는 `out.png`, `out@2x.png`, `out@3x.png`를 만들고 CSS에는 등록 URL 변수 세 개와 `--fy-sprite-image: image-set(var(--fy-sprite-url) 1x, …)`를 기록한다.
-- 글꼴 작업실 재료 탭(`site/font-studio.html`, 메뉴 "자소판 그리기")은 불러온 자소판을 그 해상도 그대로 원본 캔버스로 편집한다. 내보내기는 PNG 칸 크기(원본·64·128·192·256px)를 고르거나 1x·2x·3x 배율 세트(`build_sprite.py --scale 1 2 3`과 같은 `@2x`/`@3x` 이름)를 내려받고 글꼴에 `--fy-sprite-url-2x/-3x`·`--fy-sprite-image: image-set(...)`을 연결한다. 래스터 품질은 `--fy-sprite-rendering`과 다시 샘플링 방식을 함께 정한다. 작은 글씨 보정은 글꼴 수준 사전 설정(`--fy-sprite-zoom/crop-*/dilate`)과 페이지 전용 `--fy-optical-sprite-*`(미리보기에만 덧씌움, 페이지 CSS 복사)로 나뉜다. 구조는 [글꼴 작업실](./font-studio.md)의 재료 탭 절을 본다.
+- 글꼴 작업실 재료 탭(`studio/index.html`, 메뉴 "자소판 그리기")은 불러온 자소판을 그 해상도 그대로 원본 캔버스로 편집한다. 내보내기는 PNG 칸 크기(원본·64·128·192·256px)를 고르거나 1x·2x·3x 배율 세트(`build_sprite.py --scale 1 2 3`과 같은 `@2x`/`@3x` 이름)를 내려받고 글꼴에 `--fy-sprite-url-2x/-3x`·`--fy-sprite-image: image-set(...)`을 연결한다. 래스터 품질은 `--fy-sprite-rendering`과 다시 샘플링 방식을 함께 정한다. 작은 글씨 보정은 글꼴 수준 사전 설정(`--fy-sprite-zoom/crop-*/dilate`)과 페이지 전용 `--fy-optical-sprite-*`(미리보기에만 덧씌움, 페이지 CSS 복사)로 나뉜다. 구조는 [글꼴 작업실](./font-studio.md)의 재료 탭 절을 본다.
 - 작은 글씨 가독성 보정은 글꼴 수준 그림 자소 표시 변수(`--fy-sprite-zoom`, `--fy-sprite-crop-x/y`, `--fy-sprite-dilate`)로 글꼴 CSS에 선언하고, 글꼴 작업실 전역 변수 패널의 그림 자소 항목에서 편집한다. 페이지 전용 `--fy-optical-sprite-*` 사전 설정과 `--fy-sprite-filter`는 글꼴 값을 항상 이긴다.
 - SVG 자소판은 배율 세트가 필요 없다 — 브라우저가 표시 크기에 맞춰 다시 그린다. 래스터 품질(`--fy-sprite-rendering`)은 PNG에만 뜻이 있다.
 - 고해상도 PNG(2× / 3×)를 쓰더라도 `background-size`는 논리 칸 크기(`em`)와 선택적 crop/zoom 변수로 계산하므로 자연스러운 배율이 보장된다.
@@ -296,8 +296,8 @@ python3 scripts/build_sprite.py \
   # missing-jamo를 에러로 취급
   python3 scripts/build_sprite.py --from-dir ./glyphs --out my-sprite.png --fail-on-missing
   ```
-- **그림 자소 보기** — [`site/sprite-demo.html`](../../site/sprite-demo.html): 기기 글꼴과 `sprite-example`/`sprite-system` 그림 자소 경로를 비교한다.
-- **브라우저 저작 도구** — [글꼴 작업실](./font-studio.md) 재료 탭([`site/font-studio.html`](../../site/font-studio.html)): 자소판을 원본 캔버스로 편집(펜·지우개·채우기·직선, 칸 복사·붙여넣기, 기기 글꼴로 칸 채우기), 미리보기 자소 클릭으로 칸 선택, blob 덮어쓰기로 즉시 미리보기, 행별 사용 칸 기준 빈 칸 진단, PNG·CSS·프로젝트 JSON v2 내보내기, ADR-006 v1 프로젝트 가져오기.
+- **그림 자소 보기** — [`site/sprite-demo.html`](https://font.tty.link/sprite-demo.html): 기기 글꼴과 `sprite-example`/`sprite-system` 그림 자소 경로를 비교한다.
+- **브라우저 저작 도구** — [글꼴 작업실](./font-studio.md) 재료 탭([`studio/index.html`](https://font.tty.link/font-studio.html)): 자소판을 원본 캔버스로 편집(펜·지우개·채우기·직선, 칸 복사·붙여넣기, 기기 글꼴로 칸 채우기), 미리보기 자소 클릭으로 칸 선택, blob 덮어쓰기로 즉시 미리보기, 행별 사용 칸 기준 빈 칸 진단, PNG·CSS·프로젝트 JSON v2 내보내기, ADR-006 v1 프로젝트 가져오기.
 
 ## 향후 개선안
 

@@ -1,6 +1,6 @@
 /* 소개의 '8칸 만들기' — 히어로 데모와, 그 세트를 따라 그리는 '하나 · 직접 만드는 한글 글꼴'·'다섯 · 내 페이지에 쓰기'.
  *
- * 세트는 site/landing-ai-sets.js가 AI 답 HTML 그대로 등록한 칸 계약 그림 세트(frame: "box")다. 히어로에서 세트를 고르거나
+ * 세트는 src/landing-ai-sets.js가 AI 답 HTML 그대로 등록한 칸 계약 그림 세트(frame: "box")다. 히어로에서 세트를 고르거나
  * 칸을 직접 그으면(직접 그리기 = 고른 세트를 복사한 'landing-draw' 세트를 registerJamo로 다시 등록) [data-follow-set]
  * 바탕 요소(히어로 제목 둘째 줄 포함)가 모두 그 세트로 다시 그려진다.
  *
@@ -633,7 +633,7 @@
   }
 
   function runtimeUrl() {
-    return site && site.RUNTIME ? site.RUNTIME : "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js";
+    return site && site.RUNTIME ? site.RUNTIME : "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js";
   }
 
   /* 등록 코드 — 스크립트 두 줄(런타임 · registerJamo). 끝 모양은 히어로에서 고른 것 */

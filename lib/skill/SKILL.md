@@ -16,7 +16,7 @@ description: 웹페이지·블로그·포스터·발표 화면·초대장 같은
 
 이 파일은 목차다. 전체 그림과 꼭 지킬 것은 여기 있고, 자세한 내용은 할 일에 맞는 파일을 하나둘 더 열어 읽는다. 모든 파일은 이 파일과 같은 폴더에 있다.
 
-설명서 폴더: `https://font.tty.link/lib/skill/` (늘 최신). 판에 고정된 사본은 npm 패키지 안 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/skills/font-kku-use/`
+설명서 폴더: `https://font.tty.link/lib/skill/` (늘 최신). 판에 고정된 사본은 npm 패키지 안 `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/skills/font-kku-use/`
 
 | 파일 | 담은 것 | 이럴 때 읽는다 |
 |---|---|---|
@@ -44,7 +44,7 @@ description: 웹페이지·블로그·포스터·발표 화면·초대장 같은
 링크를 더 열 수 없으면 이것만으로 제목을 꾸민다. `<head>`나 `<body>` 끝에 스크립트 한 줄을 넣고, `data-fonts`에 첫 화면에 보이는 글꼴을 공백으로 나열한다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sebul neon sticker"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul neon sticker"></script>
 
 <!-- 의미 있는 제목: 태그를 그대로 두고 class="font-kku" + data-* (검색·스크린리더에 좋다) -->
 <h1 class="font-kku" data-font="neon" data-size="64">가을 신메뉴</h1>
@@ -77,11 +77,11 @@ description: 웹페이지·블로그·포스터·발표 화면·초대장 같은
 
 ## 주소
 
-- 런타임: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js` — jsDelivr가 즉석으로 만든 압축본이다. 기본 CSS와 글꼴 CSS(`profiles/<글꼴>.css`)·확장은 런타임이 이 주소를 기준으로 `.min` 압축본으로 받는다. 스크립트 주소를 바꾸지 않는다. 소스를 읽을 때만 `.min`을 뺀 `font-kku.js`를 연다.
+- 런타임: `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js` — jsDelivr가 즉석으로 만든 압축본이다. 기본 CSS와 글꼴 CSS(`profiles/<글꼴>.css`)·확장은 런타임이 이 주소를 기준으로 `.min` 압축본으로 받는다. 스크립트 주소를 바꾸지 않는다. 소스를 읽을 때만 `.min`을 뺀 `font-kku.js`를 연다.
 - npm 패키지: `@tty.link/font-kku` — 번들러를 쓰는 프로젝트(React·Vue 등)는 `npm install @tty.link/font-kku` 뒤 setup.md의 '번들러·ESM에서'를 따른다. 위 주소는 같은 패키지의 파일이다.
 - 확장: 꾸밈·자모 움직임·상호작용은 `data-addons="looks motion fx"`로 붙인다. 입력기 `font-kku-ime.js`, 글꼴 파일 내보내기 `font-kku-export.js`는 스크립트를 따로 넣는다.
 - 정본 데이터: 테마 목록 `spec/themes.json`, 그림 자소 칸 자리 `spec/sprite-layout.json`, 획순 `spec/strokes.json`, 글꼴 목록 `spec/fonts.json`, 조립식 `spec/jamo-recipes.json`, 디자인 JSON 형식 `spec/design.schema.json` (모두 런타임과 같은 폴더 아래).
-- 전체 설명서(README): `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/README.md`
+- 전체 설명서(README): `https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/README.md`
 - 데모와 사례: `https://font.tty.link/` — 글꼴 보기 `fonts.html`, 사례 `showcase.html`, 효과 `effects.html`, 문서 `docs.html`, 글꼴 작업실 `font-studio.html`(첫 화면의 "디자인" 칸에서 선·원/직접 그린 그림/기존 글꼴로 디자인을 만들고 페이지용 코드를 복사한다 — draw-jamo.md).
 
 ## 결과를 낼 때

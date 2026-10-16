@@ -4,10 +4,10 @@
   "generatedTargets": [
     { "path": "font-kku.css", "block": "cluster" },
     { "path": "font-kku.css", "block": "dispatch" },
-    { "path": "site/font-studio-model.js", "block": "studio-slot-contract" },
-    { "path": "site/font-kku-lint.js", "block": "lint-registry" }
+    { "path": "authoring/font-studio-model.js", "block": "studio-slot-contract" },
+    { "path": "authoring/font-kku-lint.js", "block": "lint-registry" }
   ],
-  "surfaceSources": ["font-kku.css", "font-kku.js", "profiles/sprite-example.css", "site/font-studio-sheet.js"],
+  "surfaceSources": ["font-kku.css", "font-kku.js", "profiles/sprite-example.css", "authoring/font-studio-sheet.js"],
   "documentationPaths": [
     "docs/ARCHITECTURE/font-authoring-and-calibration-guide.md",
     "skills/font-kku/references/authoring.md",

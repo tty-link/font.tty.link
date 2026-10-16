@@ -7,7 +7,7 @@
 `<head>`나 `<body>` 끝에 넣는다. `data-fonts`에 첫 화면에 보이는 글꼴 이름을 공백으로 나열하면 런타임이 기본 CSS와 그 글꼴 CSS를 처음부터 불러온다. 나열하지 않은 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다(필요할 때 받기).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="neon sticker"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="neon sticker"></script>
 ```
 
 | 스크립트 속성 | 하는 일 |
@@ -97,7 +97,7 @@ import FontKkuFx from "@tty.link/font-kku/fx";     // 상호작용을 쓸 때
 import하지 않은 글꼴을 필요할 때 받게 하려면 런타임에 글꼴 파일의 자리를 알려 준다.
 
 ```js
-globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/" };
+globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/" };
 ```
 
 ## 인터넷이 막힌 곳
