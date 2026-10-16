@@ -159,15 +159,16 @@ def run_chunk(chunk: list[dict], shots: Path, lib: Path) -> list[dict]:
                 page.goto(job["url"], wait_until="load", timeout=45000)
                 page.wait_for_timeout(800)
                 page.evaluate(SCROLL_JS)
+                for frame in loaded_frames(page):
+                    frame.evaluate(SPRITES_JS, 6000)
+                page.wait_for_timeout(700)
+                # Child documents and assets may finish after the initial load.
+                # Apply the readiness wait to the final state used for the verdict.
                 deadline = time.time() + 10
                 info = host_info(page)
                 while info["notReady"] and time.time() < deadline:
                     page.wait_for_timeout(400)
                     info = host_info(page)
-                for frame in loaded_frames(page):
-                    frame.evaluate(SPRITES_JS, 6000)
-                page.wait_for_timeout(700)
-                info = host_info(page)
                 name = f"{job['site']}-{job['page'].replace('/', '_') or 'index'}-{engine}-{job['vp']}-{job['side']}.png"
                 shot = shots / name
                 if engine == "chromium" and job["vp"] == "desktop":
