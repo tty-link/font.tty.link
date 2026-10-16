@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import re
 import tarfile
 import tempfile
 import unittest
@@ -97,12 +98,12 @@ class PackageBoundary(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.package = Path(self.temp.name) / "package"
         self.package.mkdir()
-        meta = {"name": "@tty.link/font-kku", "version": "0.1.4-rc.1"}
+        self.meta = {"name": "@tty.link/font-kku", "version": V.current_version(ROOT)}
         for name in B.REQUIRED:
             path = self.package / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("")
-        (self.package / "package.json").write_text(json.dumps(meta))
+        (self.package / "package.json").write_text(json.dumps(self.meta))
 
     def test_package_directory_and_tarball_work_without_source_checkout(self):
         (self.package / "tests").mkdir()
@@ -117,9 +118,9 @@ class PackageBoundary(unittest.TestCase):
 
     def test_wrong_version_and_missing_public_ui_are_rejected(self):
         (self.package / "package.json").write_text('{"name":"@tty.link/font-kku","version":"0.1.3"}')
-        with self.assertRaisesRegex(ValueError, "expected @tty.link/font-kku@0.1.4-rc.1"):
+        with self.assertRaisesRegex(ValueError, re.escape(f"expected @tty.link/font-kku@{self.meta['version']}")):
             B.package_files(self.package, None)
-        (self.package / "package.json").write_text('{"name":"@tty.link/font-kku","version":"0.1.4-rc.1"}')
+        (self.package / "package.json").write_text(json.dumps(self.meta))
         (self.package / "studio/mount.js").unlink()
         with self.assertRaisesRegex(ValueError, "missing required distribution files"):
             B.package_files(self.package, None)
@@ -139,9 +140,9 @@ class PackageBoundary(unittest.TestCase):
         files = {"index.html": b'<script src="lib/font-kku.js"></script><a href="./missing.html">broken</a>',
                  **{B.lib_target(name): data for name, data in package.items()}}
         self.assertEqual(B.check(files, package, B.SITE_URL), ["index.html: ./missing.html -> missing missing.html"])
-        files["index.html"] = b'<pre>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js"&gt;</pre>'
+        files["index.html"] = (f'<pre>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@{self.meta["version"]}/font-kku.min.js"&gt;</pre>').encode()
         self.assertEqual(B.check(files, package, B.SITE_URL), [])
-        files["index.html"] = files["index.html"].replace(b"0.1.4-rc.1", b"0.1.3")
+        files["index.html"] = files["index.html"].replace(self.meta["version"].encode(), b"0.1.3")
         self.assertTrue(any("unexpected jsDelivr" in p for p in B.check(files, package, B.SITE_URL)))
 
     def test_site_root_links_resolve_to_index(self):

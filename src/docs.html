@@ -68,7 +68,7 @@
 
     <div class="k-prose">
       <header class="d-intro">
-        <span class="k-kicker">폰꾸 font-kku · 버전 <span data-fk-version>0.1.4-rc.1</span></span>
+        <span class="k-kicker">폰꾸 font-kku · 버전 <span data-fk-version>0.1.4-rc.2</span></span>
         <h1 class="font-kku k-h1 k-mark" data-font="sebul" data-size="clamp(40px, 6vw, 64px)">문서</h1>
         <p class="k-lead">
           폰꾸는 한글 음절을 초성·중성·종성으로 나눠 다시 조립해 그리는 브라우저 런타임입니다. 이 문서는 스크립트 한 줄로
@@ -100,7 +100,7 @@
         </p>
         <div class="k-code k-code--wrap">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-oneline">복사</button></div>
-          <pre id="c-oneline"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sebul neon"&gt;&lt;/script&gt;
+          <pre id="c-oneline"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul neon"&gt;&lt;/script&gt;
 
 &lt;font-kku font="neon" size="64"&gt;을지로 네온&lt;/font-kku&gt;</code></pre>
         </div>
@@ -114,7 +114,7 @@
           <li>칠만 다른 글꼴(네온·금박 …)은 <code>font="sebul" class="kku-look-neon"</code>처럼 꾸밈 클래스로 쓰면 CSS를 덜 받습니다.</li>
           <li>주소의 <code>font-kku.min.js</code>는 jsDelivr가 원본에서 즉석으로 만든 압축본(소스 맵 포함)입니다. 런타임은 그 이름을 보고 CSS·글꼴·확장도 <code>.min</code> 압축본으로 받습니다. 소스를 읽거나 오류를 따라갈 때는 <code>.min</code>을 뺀 <code>font-kku.js</code>를 씁니다. unpkg는 압축본을 만들지 않으므로 <code>font-kku.js</code>를 쓰고, 즉석 압축본에는 SRI(<code>integrity</code>)를 걸지 않습니다.</li>
           <li>CSS가 도착할 때까지(늦어도 3초) 조립 전 자소가 보이지 않게 가려 둡니다.</li>
-          <li>파일 이름이 없는 CDN 짧은 주소(<code>https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1</code>)도 패키지 폴더로 보고 같은 방식으로 풉니다.</li>
+          <li>파일 이름이 없는 CDN 짧은 주소(<code>https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2</code>)도 패키지 폴더로 보고 같은 방식으로 풉니다.</li>
           <li><code>data-addons="looks motion fx"</code>를 더하면 조합 확장(꾸밈 <code>kku-look-*</code>·변주 <code>kku-vary-*</code>, 자모 움직임, 상호작용)도 함께 붙습니다 — <a href="#compose-addons">확장 붙이기</a>.</li>
           <li><code>data-fonts</code>·<code>data-addons</code>·<code>data-jamo-sets</code> 가운데 하나만 있어도 한 줄 설치로 동작합니다(바탕 CSS를 붙이고 필요할 때 받기를 켭니다). <code>&lt;link&gt;</code>로 CSS를 붙인 페이지도 <code>data-jamo-sets</code>로 세트 모듈을 받습니다.</li>
           <li>글·위젯마다 한 줄 설치를 붙여 한 페이지에 태그가 여럿이어도 런타임은 하나입니다. 뒤 태그의 <code>data-fonts</code>·<code>data-addons</code>·<code>data-jamo-sets</code>도 먼저 실린 런타임이 받습니다(이미 받은 것은 다시 받지 않고, 판이 다르면 먼저 실린 판 자리에서 받습니다).</li>
@@ -140,7 +140,7 @@
 
 # 저장소 checkout에서 시험할 때: tarball을 만들어 설치
 npm pack
-npm install /path/to/tty.link-font-kku-0.1.4-rc.1.tgz</code></pre>
+npm install /path/to/tty.link-font-kku-0.1.4-rc.2.tgz</code></pre>
         </div>
         <p>
           번들러에는 스크립트 태그가 없으므로 한 줄 설치(<code>data-fonts</code>)가 동작하지 않습니다. 바탕 CSS와 글꼴 CSS를 직접
@@ -215,11 +215,11 @@ FontKku.renderText("안녕하세요").forEach((line) =&gt; console.log(line));</
         <h3 id="start-version">버전 — 0.1.x는 작게 올립니다</h3>
         <p>
           폰꾸는 0.1.x 동안 페이지 모양이 바뀌는 변경도 패치(0.1.0 → 0.1.1)로 올립니다. 그래서 이 문서의 CDN 주소는 범위(<code>@0.1</code>)가
-          아닌 정확한 판(<code>@<span data-fk-version>0.1.4-rc.1</span></code>)으로 적습니다 — 모양은 주소를 직접 올릴 때만 바뀝니다. npm은 <code>^0.1.0</code>으로 받으면 다음 0.1.x를 저절로 받으므로, 모양을 묶어 두려면 정확한 판으로 설치합니다.
+          아닌 정확한 판(<code>@<span data-fk-version>0.1.4-rc.2</span></code>)으로 적습니다 — 모양은 주소를 직접 올릴 때만 바뀝니다. npm은 <code>^0.1.0</code>으로 받으면 다음 0.1.x를 저절로 받으므로, 모양을 묶어 두려면 정확한 판으로 설치합니다.
         </p>
         <div class="k-code k-code--wrap">
           <div class="k-code-bar"><span>터미널</span><button type="button" data-copy="#c-exact">복사</button></div>
-          <pre id="c-exact"><code>npm install --save-exact @tty.link/font-kku@0.1.4-rc.1</code></pre>
+          <pre id="c-exact"><code>npm install --save-exact @tty.link/font-kku@0.1.4-rc.2</code></pre>
         </div>
         <p>판을 올릴 때 보이는 차이와 예전 모양을 지키는 법입니다(0.1.0 → 0.1.1, 0.1.1 → 0.1.2, 0.1.3 → 0.1.4).</p>
         <div class="k-table-scroll">
@@ -764,7 +764,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
         </p>
         <div class="k-code k-code--wrap">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-addons">복사</button></div>
-          <pre id="c-addons"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sebul gothic chalk" data-addons="looks motion fx"&gt;&lt;/script&gt;
+          <pre id="c-addons"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul gothic chalk" data-addons="looks motion fx"&gt;&lt;/script&gt;
 
 &lt;!-- 고장 난 네온: 세벌 + 네온 꾸밈 + 깜빡임 (어두운 바탕) --&gt;
 &lt;font-kku font="sebul" class="kku-look-neon" animate="flicker"&gt;을지로 네온&lt;/font-kku&gt;
@@ -1321,7 +1321,7 @@ render_html("광화문", mode="fragment")  # &lt;font-kku&gt; 요소만 (기본�
         </p>
         <div class="k-code">
           <div class="k-code-bar"><span>HTML — 글꼴 없는 기기면 원소 획으로</span><button type="button" data-copy="#c-nofont">복사</button></div>
-          <pre id="c-nofont"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sebul neon"&gt;&lt;/script&gt;
+          <pre id="c-nofont"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul neon"&gt;&lt;/script&gt;
 &lt;script&gt;
   // 런타임 바로 뒤, 바탕 요소를 그리기 전에
   if (FontKku.hasHangulFont() === false) {
@@ -1357,7 +1357,7 @@ render_html("광화문", mode="fragment")  # &lt;font-kku&gt; 요소만 (기본�
         </div>
         <div class="k-code">
           <div class="k-code-bar"><span>JavaScript</span><button type="button" data-copy="#c-ime">복사</button></div>
-          <pre id="c-ime"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku-ime.js"&gt;&lt;/script&gt;
+          <pre id="c-ime"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku-ime.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   FontKkuIme.convert("dkssudgktpdy");                // "안녕하세요"
   FontKkuIme.convert("jfsheamfncj4", "sebeol-final"); // "안녕하세요"
@@ -1538,7 +1538,7 @@ cp -R skills/font-kku-use ~/.claude/skills/</code></pre>
         </ul>
         <div class="k-code">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-register-jamo">복사</button></div>
-          <pre id="c-register-jamo"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sprite-system"&gt;&lt;/script&gt;
+          <pre id="c-register-jamo"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sprite-system"&gt;&lt;/script&gt;
 &lt;script&gt;
   FontKku.registerJamo("brush", {
     "r0-ㄱ": "M5 12 H45 V28 Q45 54 11 65",        // 획 중심선(칸 0–100)
@@ -1592,8 +1592,8 @@ cp -R skills/font-kku-use ~/.claude/skills/</code></pre>
         </div>
         <div class="k-code">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-font-file">복사</button></div>
-          <pre id="c-font-file"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sprite-system"&gt;&lt;/script&gt;
-&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku-export.js"&gt;&lt;/script&gt;
+          <pre id="c-font-file"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sprite-system"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku-export.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   const { ttf, woff, report } = await FontKkuExport.exportFont({
     font: "sprite-system",          // 그림 자소 배치 글꼴
@@ -1671,7 +1671,7 @@ npm test</code></pre>
         </p>
         <div class="k-code">
           <div class="k-code-bar"><span>HTML</span><button type="button" data-copy="#c-design">복사</button></div>
-          <pre id="c-design"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.1/font-kku.min.js" data-fonts="sebul"&gt;&lt;/script&gt;
+          <pre id="c-design"><code>&lt;script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul"&gt;&lt;/script&gt;
 &lt;script&gt;
   FontKku.registerDesign("hand", {
     version: "1.2",
@@ -1800,7 +1800,7 @@ FontKku.designs();                <span class="d-out">// 등록된 이름들</sp
               <tr><td><code>hasHangulFont(options?)</code></td><td data-label="돌려줌" class="d-sig"><code>boolean | null</code></td><td data-label="하는 일">기기 글꼴이 한글을 그릴 수 있는지(<a href="#nofont">글꼴·입력기 없는 기기</a>). 판단할 수 없으면 <code>null</code>.</td></tr>
               <tr><td><code>placementTables</code></td><td data-label="돌려줌" class="d-sig"><code>Record&lt;JamoDepth, PlacementTable&gt;</code></td><td data-label="하는 일">자모 깊이(<code>atomic</code>·<code>composite</code>·<code>syllable</code>)별 배치 표(짜임 키 9가지). 동결된 사본.</td></tr>
               <tr><td><code>placementTable</code></td><td data-label="돌려줌" class="d-sig"><code>PlacementTable</code></td><td data-label="하는 일"><code>atomic</code> 배치 표. 예전 이름 호환용.</td></tr>
-              <tr><td><code>version</code></td><td data-label="돌려줌" class="d-sig"><code>string</code></td><td data-label="하는 일">런타임 버전 (지금 <code>"<span data-fk-version>0.1.4-rc.1</span>"</code>).</td></tr>
+              <tr><td><code>version</code></td><td data-label="돌려줌" class="d-sig"><code>string</code></td><td data-label="하는 일">런타임 버전 (지금 <code>"<span data-fk-version>0.1.4-rc.2</span>"</code>).</td></tr>
             </tbody>
           </table>
         </div>
