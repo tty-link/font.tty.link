@@ -1,0 +1,1241 @@
+/* 폰꾸 공개 사이트(소개·사례·글꼴·문서) 디자인 시스템.
+ *
+ * 흰 종이 위의 먹색 글자, 오방색(적·청·황·녹)을 강조색으로 쓰고, 원고지 칸과 도장을
+ * 모티프로 둔다. 큰 제목과 강조 문구는 폰꾸로 그린다 — 제목은 꾸밈 클래스
+ * `<h2 class="font-kku k-h2" data-font="sebul" data-size="…">`로 쓰고, 한 낱말을 돋보이게
+ * 할 때는 `.k-mark`(초성을 적색으로)를 붙인다. 개발 도구 페이지는 demo.css를 쓴다. */
+
+:root {
+  --k-paper: #ffffff;
+  --k-paper-2: #faf8f4;
+  --k-ink: #141414;
+  --k-ink-2: #3a3a3a;
+  --k-muted: #6b6864;
+  --k-line: #ebe6dd;
+  --k-red: #d62839;   /* 적 — 도장 */
+  --k-blue: #1f4fd1;  /* 청 */
+  --k-yellow: #f2b705;/* 황 */
+  --k-green: #12965f; /* 녹 */
+  --k-grid: rgba(214, 40, 57, 0.16); /* 원고지 줄 */
+  --k-code-bg: #17161c;
+  --k-code-ink: #f1ede4;
+  --k-code-muted: #a8a39a;
+  --k-radius: 14px;
+  --k-radius-sm: 8px;
+  --k-max: 1180px;
+  --k-gutter: 24px;
+  --k-sans: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --k-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
+  --k-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* hidden 속성은 컴포넌트의 display 규칙(.k-mock-font 등)보다 이긴다. */
+[hidden] {
+  display: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font: 16px/1.7 var(--k-sans);
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+a {
+  color: var(--k-blue);
+  text-underline-offset: 0.2em;
+}
+
+code {
+  padding: 0.08em 0.38em;
+  border-radius: 5px;
+  background: #f3f0ea;
+  color: #8a1f2b;
+  font-family: var(--k-mono);
+  font-size: 0.86em;
+}
+
+.k-wrap {
+  max-width: var(--k-max);
+  margin: 0 auto;
+  padding-inline: var(--k-gutter);
+}
+
+/* 폰꾸로 그린 바탕 요소는 줄 안에서 자기 상자를 갖는다 */
+.k-h1,
+.k-h2,
+.k-h3 {
+  display: block;
+  margin: 0;
+  color: var(--k-ink);
+  line-height: 1.15;
+}
+
+/* 한 낱말 강조: 초성(와 완성형 head)을 적색으로 — 자소 단위로 칠하는 폰꾸만의 강조 */
+.k-mark :is([part~="choseong"], [part~="head"]) {
+  color: var(--k-red);
+}
+
+/* ── 머리 ─────────────────────────────────────────────── */
+.k-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid var(--k-line);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: saturate(1.4) blur(10px);
+}
+
+.k-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  min-block-size: 64px;
+}
+
+.k-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--k-ink);
+  text-decoration: none;
+}
+
+.k-stamp {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: 7px;
+  background: var(--k-red);
+  color: #fff;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35);
+  transform: rotate(-4deg);
+  /* 도장 안 '꾸'의 자모 노드는 글자를 숨기려고 멀리 밀어 둔 상자(text-indent)를 갖는다. 노드가 기울면 그 상자가
+   * 아래로 쏠려 문서 높이를 2,000px 가까이 늘렸다(바닥글 아래 빈 화면) — 도장 밖으로 넘치는 것은 자른다. */
+  overflow: clip;
+}
+
+.k-brand-name {
+  display: grid;
+  line-height: 1.15;
+}
+
+.k-brand-name strong {
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+}
+
+.k-brand-name span {
+  color: var(--k-muted);
+  font-family: var(--k-mono);
+  font-size: 0.7rem;
+}
+
+.k-nav {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.k-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.k-nav a {
+  position: relative;
+  flex: none;
+  padding: 0.45rem 0.8rem;
+  color: var(--k-ink-2);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.k-nav a:hover {
+  color: var(--k-ink);
+}
+
+/* 지금 페이지: 붓으로 그은 듯한 적색 밑줄 */
+.k-nav a[aria-current="page"] {
+  color: var(--k-ink);
+}
+
+.k-nav a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0.65rem;
+  inset-block-end: 0.15rem;
+  block-size: 3px;
+  border-radius: 3px;
+  background: var(--k-red);
+  transform: rotate(-1deg);
+}
+
+.k-nav a[data-demo-category="Create"] {
+  margin-inline-start: 0.4rem;
+  border: 1px solid var(--k-ink);
+  border-radius: 999px;
+}
+
+.k-nav a[data-demo-category="Create"][aria-current="page"]::after {
+  display: none;
+}
+
+/* AI 에이전트용 설명서 — 페이지가 아니라 문서라 점선 알약으로 구분한다 */
+.k-nav a[data-demo-nav-ai] {
+  margin-inline-start: 0.4rem;
+  border: 1px dashed var(--k-ink-2);
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+/* ── 공통 부품 ────────────────────────────────────────── */
+.k-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-block-size: 2.9rem;
+  padding: 0.7rem 1.35rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 160ms var(--k-ease), background-color 160ms var(--k-ease);
+}
+
+.k-btn:hover {
+  transform: translateY(-2px);
+}
+
+.k-btn--primary {
+  background: var(--k-ink);
+  color: #fff;
+}
+
+.k-btn--red {
+  border-color: var(--k-red);
+  background: var(--k-red);
+  color: #fff;
+}
+
+.k-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.k-chips button,
+.k-chip {
+  min-block-size: 2.2rem;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid var(--k-line);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink-2);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.k-chips button[aria-pressed="true"],
+.k-chips button[aria-selected="true"] {
+  border-color: var(--k-ink);
+  background: var(--k-ink);
+  color: #fff;
+}
+
+.k-input {
+  min-block-size: 2.7rem;
+  padding: 0 1rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: 999px;
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font: inherit;
+}
+
+.k-input:focus-visible,
+.k-btn:focus-visible,
+.k-chips button:focus-visible {
+  outline: 3px solid var(--k-yellow);
+  outline-offset: 2px;
+}
+
+.k-note {
+  margin: 0;
+  color: var(--k-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.k-lead {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.k-card {
+  border: 1px solid var(--k-line);
+  border-radius: var(--k-radius);
+  background: var(--k-paper);
+}
+
+/* 견본 바탕 — 글꼴이 요구하는 바탕(네온·분필은 어두운 바탕, 스티커는 색 바탕) */
+[data-tone="dark"] { --k-tone: #12121c; }
+[data-tone="pink"] { --k-tone: #ffd6e5; }
+[data-tone="paper"] { --k-tone: #f7f0e1; }
+[data-tone="board"] { --k-tone: #24392f; }
+[data-tone="blueprint"] { --k-tone: #0f3d7a; }
+[data-tone="linen"] { --k-tone: #efe6d4; }
+
+/* 도면은 옅은 격자, 리넨은 씨실·날실 결을 바탕에 깐다 */
+[data-tone="blueprint"].k-stage,
+[data-tone="blueprint"] > .k-stage {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 13%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 13%) 1px, transparent 1px),
+    linear-gradient(rgb(255 255 255 / 6%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 6%) 1px, transparent 1px);
+  background-size: 48px 48px, 48px 48px, 12px 12px, 12px 12px;
+  background-position: -1px -1px;
+}
+
+[data-tone="linen"].k-stage,
+[data-tone="linen"] > .k-stage {
+  background-image:
+    repeating-linear-gradient(0deg, rgb(120 92 52 / 7%) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgb(120 92 52 / 6%) 0 1px, transparent 1px 4px);
+}
+
+/* 어두운 바탕에서 색을 정하지 않는 글꼴(세벌·고딕)은 밝은 먹으로 */
+[data-tone="dark"].k-stage,
+[data-tone="dark"] > .k-stage,
+[data-tone="board"].k-stage,
+[data-tone="board"] > .k-stage,
+[data-tone="blueprint"].k-stage,
+[data-tone="blueprint"] > .k-stage {
+  color: #f4f1ea;
+}
+
+/* 원고지: 칸과 붉은 줄 */
+.k-manuscript {
+  background-color: var(--k-paper);
+  background-image:
+    linear-gradient(var(--k-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: -1px -1px;
+}
+
+/* ── 코드 상자 ────────────────────────────────────────── */
+.k-code {
+  min-inline-size: 0;
+  overflow: hidden;
+  border-radius: var(--k-radius);
+  background: var(--k-code-bg);
+  color: var(--k-code-ink);
+}
+
+.k-code-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0.6rem 0.5rem 1rem;
+  border-bottom: 1px solid rgba(241, 237, 228, 0.1);
+  color: var(--k-code-muted);
+  font-size: 0.8rem;
+}
+
+.k-code-bar button,
+.k-copy {
+  padding: 0.25rem 0.8rem;
+  border: 1px solid rgba(241, 237, 228, 0.28);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--k-code-ink);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.k-code pre {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-family: var(--k-mono);
+  font-size: 0.86rem;
+  line-height: 1.7;
+  white-space: pre;
+}
+
+.k-code pre code {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+
+.k-code--wrap pre {
+  white-space: pre-wrap;
+  /* 낱말 가운데서 끊지 않는다 — 한글은 음절 사이에서, 주소·이름은 한 줄에 못 들어갈 때만 끊는다 */
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* 글 속 링크 단추 — 소개 히어로·글꼴 머리말 */
+.k-textlink {
+  color: var(--k-blue);
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.k-textlink:hover {
+  text-decoration: underline;
+}
+
+/* ── 구획 ─────────────────────────────────────────────── */
+.k-section {
+  padding-block: clamp(4rem, 9vw, 7rem);
+  scroll-margin-top: 64px;
+}
+
+.k-section + .k-section {
+  border-top: 1px solid var(--k-line);
+}
+
+.k-section-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.4rem 1.5rem;
+  align-items: start;
+  margin-bottom: 2.5rem;
+}
+
+/* 구획 번호: 원고지 칸 안의 한글 수사 */
+.k-num {
+  grid-row: span 3;
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 3.4rem;
+  min-block-size: 3.4rem;
+  padding: 0.3rem;
+  border: 1.5px solid var(--k-red);
+  color: var(--k-red);
+  font-size: 0.95rem;
+  font-weight: 800;
+  writing-mode: vertical-rl;
+  letter-spacing: 0.15em;
+  background-image:
+    linear-gradient(var(--k-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+  background-size: 50% 50%;
+}
+
+.k-kicker {
+  color: var(--k-red);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.k-section-head .k-lead {
+  margin-top: 0.75rem;
+}
+
+/* ── 레이아웃 격자 ────────────────────────────────────── */
+.k-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.k-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--k-col, 250px), 1fr));
+  gap: 1.25rem;
+}
+
+.k-stack {
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+}
+
+/* 번호 단계 */
+.k-steps {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: k-step;
+}
+
+.k-steps li {
+  position: relative;
+  padding-inline-start: 2.6rem;
+  color: var(--k-ink-2);
+  line-height: 1.65;
+  counter-increment: k-step;
+}
+
+.k-steps li::before {
+  content: counter(k-step);
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  display: grid;
+  place-items: center;
+  inline-size: 1.85rem;
+  block-size: 1.85rem;
+  border: 1.5px solid var(--k-red);
+  color: var(--k-red);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.k-steps strong {
+  display: block;
+  color: var(--k-ink);
+}
+
+/* 견본 무대 */
+.k-stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  min-block-size: 7rem;
+  padding: 1.25rem;
+  overflow: hidden;
+  border: 1px solid var(--k-line);
+  border-radius: var(--k-radius);
+  background: var(--k-tone, var(--k-paper));
+  transition: background-color 220ms var(--k-ease);
+}
+
+[data-tone] > .k-stage,
+.k-stage[data-tone] {
+  border-color: transparent;
+}
+
+/* 브라우저 틀 */
+.k-browser {
+  overflow: hidden;
+  border: 1px solid var(--k-line);
+  border-radius: var(--k-radius);
+  background: var(--k-paper);
+  box-shadow: 0 18px 40px rgba(20, 20, 20, 0.08);
+}
+
+.k-browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--k-line);
+  background: var(--k-paper-2);
+}
+
+.k-browser-bar > span {
+  inline-size: 0.62rem;
+  block-size: 0.62rem;
+  border-radius: 50%;
+  background: #dcd6cc;
+}
+
+.k-browser-bar em {
+  margin-inline-start: 0.6rem;
+  overflow: hidden;
+  color: var(--k-muted);
+  font-family: var(--k-mono);
+  font-size: 0.76rem;
+  font-style: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 터미널 */
+.k-terminal {
+  min-inline-size: 0;
+  overflow: hidden;
+  border-radius: var(--k-radius);
+  background: #0f1117;
+  color: #e7e5e0;
+}
+
+.k-terminal-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid rgba(231, 229, 224, 0.12);
+  font-size: 0.82rem;
+}
+
+.k-terminal-bar input[type="text"] {
+  flex: 1 1 10rem;
+  min-block-size: 2.2rem;
+  padding: 0 0.8rem;
+  border: 1px solid rgba(231, 229, 224, 0.28);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font: inherit;
+  font-size: 0.98rem;
+}
+
+.k-terminal-bar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(231, 229, 224, 0.75);
+}
+
+.k-terminal-bar button {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgba(231, 229, 224, 0.3);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.k-terminal pre {
+  min-block-size: 8rem;
+  margin: 0;
+  padding: 1.3rem 1.1rem;
+  overflow-x: auto;
+  font-family: var(--k-mono);
+  font-size: 1.4rem;
+  line-height: 1.45;
+  white-space: pre;
+}
+
+/* ── 문서 ─────────────────────────────────────────────── */
+.k-docs {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 3rem;
+  padding-block: 2.5rem 6rem;
+}
+
+.k-docs-nav {
+  position: sticky;
+  top: 88px;
+  align-self: start;
+  max-block-size: calc(100vh - 110px);
+  overflow-y: auto;
+  font-size: 0.92rem;
+}
+
+.k-docs-nav summary {
+  display: none;
+}
+
+.k-docs-nav ol,
+.k-docs-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.k-docs-nav li {
+  margin: 0;
+}
+
+.k-docs-nav a {
+  display: block;
+  padding: 0.3rem 0.75rem;
+  border-inline-start: 2px solid var(--k-line);
+  color: var(--k-ink-2);
+  text-decoration: none;
+}
+
+.k-docs-nav a:hover {
+  color: var(--k-ink);
+}
+
+.k-docs-nav a[aria-current="true"] {
+  border-inline-start-color: var(--k-red);
+  color: var(--k-ink);
+  font-weight: 700;
+}
+
+.k-docs-nav .k-docs-group {
+  margin: 1.1rem 0 0.35rem;
+  color: var(--k-muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.k-prose {
+  min-inline-size: 0;
+  max-width: 78ch;
+}
+
+.k-prose > section {
+  padding-block: 0 3.5rem;
+  scroll-margin-top: 84px;
+}
+
+.k-prose h2.k-h2 {
+  margin-bottom: 1rem;
+}
+
+.k-prose h3 {
+  margin: 2rem 0 0.6rem;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  scroll-margin-top: 84px;
+}
+
+.k-prose p,
+.k-prose li {
+  color: var(--k-ink-2);
+}
+
+.k-prose p {
+  margin: 0 0 1rem;
+}
+
+.k-prose ul,
+.k-prose ol {
+  margin: 0 0 1rem;
+  padding-inline-start: 1.3rem;
+}
+
+.k-prose .k-code,
+.k-prose .k-stage {
+  margin: 0 0 1.25rem;
+}
+
+.k-table {
+  inline-size: 100%;
+  margin: 0 0 1.25rem;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.k-table-scroll {
+  margin: 0 0 1.25rem;
+  overflow-x: auto;
+}
+
+.k-table-scroll .k-table {
+  margin: 0;
+}
+
+.k-table th,
+.k-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--k-line);
+  text-align: start;
+  vertical-align: top;
+}
+
+.k-table th {
+  border-bottom: 1.5px solid var(--k-ink);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.k-callout {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border-inline-start: 3px solid var(--k-yellow);
+  border-radius: 0 var(--k-radius-sm) var(--k-radius-sm) 0;
+  background: #fffaeb;
+  color: var(--k-ink-2);
+  font-size: 0.94rem;
+}
+
+/* ── 소개·사례 공용 ─────────────────────────────────── */
+/* 소개 페이지만 쓰는 것은 src/landing.css에 있다. */
+.k-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.k-section--tint {
+  background: var(--k-paper-2);
+}
+
+.k-tabs {
+  margin-bottom: 1.25rem;
+}
+
+.k-after {
+  margin-top: 1.5rem;
+}
+
+/* 예시 꾸밈 글꼴 — AI 설명서 §5의 kku-berry */
+.kku-berry { --fy-weight: 800; }
+.kku-berry :is([part~="choseong"], [part~="head"]) { color: #c2185b; }
+.kku-berry [part~="jungseong"] { color: #7b1fa2; }
+.kku-berry [part~="jongseong"] { color: #f06292; }
+.kku-berry [part~="jamo"] { text-shadow: 0.04em 0.04em 0 #ffd1e3; }
+
+/* 사례 썸네일 — 실제 템플릿을 줄여 보인다 */
+.k-cases {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.k-case {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  color: var(--k-ink);
+  text-decoration: none;
+}
+
+.k-case-frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: 4px;
+  background: var(--k-paper);
+  box-shadow: 6px 6px 0 var(--k-ink);
+  transition: transform 160ms var(--k-ease), box-shadow 160ms var(--k-ease);
+}
+
+.k-case:hover .k-case-frame {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--k-red);
+}
+
+.k-case-frame iframe {
+  position: absolute;
+  inset: 0;
+  inline-size: 400%;
+  block-size: 400%;
+  border: 0;
+  transform: scale(0.25);
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+
+.k-case strong {
+  font-size: 1.05rem;
+}
+
+.k-case > span:last-child {
+  color: var(--k-muted);
+  font-size: 0.9rem;
+}
+
+/* ── 글꼴·사례 페이지 ─────────────────────────────────── */
+.k-page-head {
+  display: grid;
+  gap: 1.25rem;
+  padding-block: clamp(3rem, 6vw, 5rem) 2rem;
+}
+
+.k-btn--small {
+  min-block-size: 2.1rem;
+  padding: 0.3rem 0.75rem;
+  border-width: 1.2px;
+  font-size: 0.82rem;
+}
+
+.k-tester {
+  position: sticky;
+  top: 64px;
+  z-index: 10;
+  border-block: 1.5px solid var(--k-ink);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+}
+
+.k-tester-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  padding-block: 0.8rem;
+}
+
+.k-tester .k-input {
+  flex: 1 1 14rem;
+  max-inline-size: 22rem;
+}
+
+.k-tester-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.k-tester-size input {
+  accent-color: var(--k-red);
+}
+
+.k-tester-size output {
+  min-inline-size: 3.2rem;
+  color: var(--k-muted);
+  font-family: var(--k-mono);
+  font-size: 0.82rem;
+}
+
+.k-font-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 3.5rem 0 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1.5px solid var(--k-ink);
+  font-size: 1.3rem;
+}
+
+.k-font-group span {
+  color: var(--k-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.k-fontlist {
+  display: grid;
+}
+
+.k-fontrow {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding-block: 1.25rem;
+  border-bottom: 1px solid var(--k-line);
+  scroll-margin-top: 140px;
+}
+
+.k-fontrow:target .k-fontrow-meta h3 {
+  color: var(--k-red);
+}
+
+.k-fontrow-meta {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.k-fontrow-meta h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.k-fontrow-meta p {
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 0.92rem;
+}
+
+.k-fontrow-meta .k-btn {
+  justify-self: start;
+}
+
+.k-fontrow-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.k-fontrow-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.k-fontrow-tags li {
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--k-line);
+  border-radius: 999px;
+  color: var(--k-muted);
+  font-size: 0.78rem;
+}
+
+.k-fontrow-tags a {
+  text-decoration: none;
+}
+
+.k-fontrow-stage {
+  min-block-size: 8rem;
+}
+
+.k-font-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-block: 4rem 5rem;
+  padding: 1.75rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: 4px;
+  background-image:
+    linear-gradient(var(--k-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.k-font-more > div:first-child {
+  display: grid;
+  gap: 0.5rem;
+  max-inline-size: 40rem;
+}
+
+.k-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 2.5rem 2rem;
+  padding-block: 1rem 5rem;
+}
+
+.k-showcase-card {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  min-inline-size: 0;
+}
+
+.k-showcase-card .k-case-frame {
+  margin: 0;
+}
+
+.k-showcase-body {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.k-showcase-body h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.k-showcase-body p {
+  margin: 0;
+  color: var(--k-ink-2);
+  font-size: 0.93rem;
+}
+
+.k-showcase-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.k-h3 {
+  display: block;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* 나란히 견주기(소개·글꼴 페이지) */
+.k-vs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* 셋을 나란히(글꼴 페이지의 기본 배치 비교) — 좁은 화면은 아래 .k-vs 한 줄 규칙이 이긴다(같은 무게, 뒤에 온다) */
+.k-vs--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.k-vs-side {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.k-vs-side figcaption {
+  color: var(--k-ink-2);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+/* ── 꼬리 ─────────────────────────────────────────────── */
+.k-footer {
+  border-top: 1px solid var(--k-line);
+  background: var(--k-paper-2);
+}
+
+.k-footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 2rem;
+  color: var(--k-muted);
+  font-size: 0.9rem;
+}
+
+.k-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.k-footer a {
+  color: var(--k-ink-2);
+}
+
+/* ── 좁은 화면 ────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .k-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .k-docs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .k-docs-nav {
+    position: static;
+    max-block-size: none;
+    border: 1px solid var(--k-line);
+    border-radius: var(--k-radius-sm);
+  }
+
+  .k-docs-nav summary {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .k-docs-nav > div {
+    padding: 0 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --k-gutter: 16px;
+  }
+
+  .k-header-inner {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding-block: 0.5rem;
+  }
+
+  /* 메뉴는 줄을 바꿔 다 보인다 — 옆으로 밀면 끝의 'AI 설명서'가 화면 밖에 숨었다 */
+  .k-nav {
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.15rem 0.1rem;
+    overflow: visible;
+  }
+
+  .k-nav a {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.9rem;
+  }
+
+  .k-nav a[data-demo-category="Create"],
+  .k-nav a[data-demo-nav-ai] {
+    margin-inline-start: 0.2rem;
+  }
+
+  .k-section-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .k-num {
+    grid-row: auto;
+    writing-mode: horizontal-tb;
+    justify-self: start;
+    min-block-size: 2.4rem;
+  }
+
+  .k-terminal pre {
+    font-size: 1.05rem;
+  }
+
+  .k-fontrow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .k-tester {
+    top: 0;
+    position: static;
+  }
+
+  .k-showcase {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .k-vs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 좁은 화면의 머리말은 두 줄이다 — 앵커가 그 밑으로 숨지 않게 */
+  .k-section { scroll-margin-top: 104px; }
+  .k-prose > section,
+  .k-prose h2.k-h2 { scroll-margin-top: 112px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .k-btn,
+  .k-stage,
+  .k-case-frame {
+    transition: none;
+  }
+}
