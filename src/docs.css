@@ -735,6 +735,13 @@ a.d-card:hover {
 .paint :is([part~="jungseong"], [data-fy-head-part="medial"]) { color: #1f4fd1; }
 .paint [part~="jongseong"] { color: #12965f; }
 
+/* #fonts-composition: 짓는 방식 견본 — 덩이(자모 노드)마다 다른 색 */
+.d-pieces :is([part~="choseong"], [part~="head"]) { color: #d62839; }
+.d-pieces [part~="jungseong"] { color: #1f4fd1; }
+.d-pieces [part~="jungseong-tail"] { color: #8a3ffc; }
+.d-pieces [part~="jongseong"] { color: #12965f; }
+.d-pieces [part~="jongseong-right"] { color: #c77700; }
+
 /* #customize: 나만의 꾸밈 글꼴 — AI 설명서 custom-font.md의 kku-berry. 원소 획(기본)의 굵기는 --fy-element-width,
  * 그림자는 글자 칸 filter(자모의 text-shadow는 원소 획에서 보이지 않는다). */
 .kku-berry { --fy-element-width: 0.13em; }
