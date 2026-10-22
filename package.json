@@ -10,6 +10,6 @@
     "test:browser": "python3 -m pytest tests/test_site_smoke.py -q -n 1"
   },
   "dependencies": {
-    "@tty.link/font-kku": "0.1.4-rc.2"
+    "@tty.link/font-kku": "0.1.4-rc.4"
   }
 }
