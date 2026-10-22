@@ -9,7 +9,7 @@
 포스터, 제목, 배너, 짧은 강조 문구처럼 조형성과 상호작용이 중요한 글에 잘 맞습니다. 글자마다 관리 DOM을 만들기 때문에 일반 웹 글꼴이나 장문 본문 렌더러를 대신하지는 않습니다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="sebul neon"></script>
 <font-kku font="neon" size="64">을지로 네온</font-kku>
 ```
 
@@ -18,7 +18,7 @@
 글꼴 하나에 꾸밈·변주·움직임·상호작용을 클래스와 속성으로 얹어 **조합**할 수도 있습니다. 네온 칠은 세벌에도, 고딕에도, 도트 그림 자소에도 같은 클래스로 걸립니다([조합 — 여섯 축과 테마](#조합--여섯-축과-테마)).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
 <font-kku font="gothic" class="kku-look-neon" animate="flicker" size="64">을지로 네온</font-kku>
 ```
 
@@ -70,7 +70,7 @@
 
 ### 한 줄 설치
 
-`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/" }`로 자리를 알려 줍니다.
+`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/" }`로 자리를 알려 줍니다.
 
 공개 페이지에는 jsDelivr의 `font-kku.min.js`를 씁니다. jsDelivr는 `.min`을 붙인 주소에 원본에서 즉석으로 만든 압축본(소스 맵 포함)을 보내고, 런타임은 그 이름을 보고 CSS·글꼴·확장·자소 모듈도 `.min` 압축본으로 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md) §2). 소스를 읽거나 오류를 따라갈 때는 `.min`을 뺀 `font-kku.js`를 씁니다(CSS·확장도 원본으로 받습니다). unpkg는 압축본을 만들지 않으므로 unpkg에서는 `font-kku.js`를 씁니다. 즉석 압축본에는 SRI(`integrity`)를 걸지 않습니다.
 
@@ -79,7 +79,7 @@
 <script src="./font-kku.js" data-fonts="sebul neon"></script>
 
 <!-- jsDelivr의 npm 패키지 주소 — .min이면 CSS·글꼴·확장도 .min으로 (unpkg는 .min 없이 font-kku.js) -->
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="sebul neon"></script>
 ```
 
 `data-addons`를 더하면 같은 자리의 확장도 함께 붙습니다([조합](#조합--여섯-축과-테마)). `data-fonts` 없이 `data-addons`만 써도 됩니다.
@@ -130,7 +130,7 @@ named export), TypeScript 선언, CSS·글꼴·spec 서브패스 export를 제�
 
 ```bash
 npm install @tty.link/font-kku
-# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.4-rc.2.tgz
+# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.4-rc.4.tgz
 ```
 
 ```js
@@ -161,7 +161,7 @@ CDN 없이 파일을 직접 제공하려면 npm 패키지의 파일을 프로젝
 
 ```bash
 npm pack @tty.link/font-kku
-tar -xzf tty.link-font-kku-0.1.4-rc.2.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
+tar -xzf tty.link-font-kku-0.1.4-rc.4.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
 ```
 
 한 줄 설치 대신 CSS를 직접 연결하려면 `font-kku.js`, base CSS, 사용할 글꼴 CSS를 같은 폴더 구조로 둡니다.
@@ -381,7 +381,7 @@ FontKku.bootstrap(document.querySelector("#poster"));
 | `stagePreview(set, stage)` · `authoringProgress(set)` | 그림 세트를 원형 8·기본 24·확장 40까지만 그린 셈 치는 미리보기 디자인 · 단계마다 그린 자모 |
 
 - `mode`는 `primitive`(원소 획)·`svg`(그림 세트)·`font`(글꼴 팔레트 — 페이지가 실어 둔 글꼴을 역할·자모·조각마다)입니다. 조립식(`double-bieup`, ㅎ = ㆍ + ㅡ + ㅇ의 `hieut-added-lines` …)은 `spec/jamo-recipes.json`에 있습니다.
-- 고정 배치(세벌식·직결식) 디자인은 자모·역할로만 고릅니다. 짜임별 규칙(`DESIGN_FIXED_CONTEXT`), 합자 모음 통째 그리기(`DESIGN_FIXED_COMPOUND`), 자리마다 변주(`DESIGN_FIXED_VARIATION`)는 거부합니다. `layout`을 적지 않은 디자인은 문맥 배치로 그립니다.
+- 고정 배치(세벌식·직결식)는 같은 역할·자모를 한 가지로 그린다는 원칙을 밝힙니다(`FontKku.layoutProfiles[프로파일].match`·`occurrence`). 짜임별 규칙(`DESIGN_FIXED_CONTEXT`)과 자리마다 변주(`DESIGN_FIXED_VARIATION`)는 받아서 그대로 지키되 원칙을 깬다고 알립니다(`warnings`, 등록 때 콘솔 경고). 그릴 수 없는 합자 모음 통째 그리기(`DESIGN_FIXED_COMPOUND`)만 거부합니다. `layout`을 적지 않은 디자인은 문맥 배치로 그립니다.
 - 고르지 못하면 지금 설정으로 그리고 바탕 요소의 `data-fy-design-status`로 알립니다: `DESIGN_NOT_REGISTERED`(미등록 이름 — 등록하면 다시 그림), `DESIGN_TOKEN_INVALID`(이름 문법), `DESIGN_UNSUPPORTED_FONT`(그림 자소 글꼴처럼 디자인을 받지 않는 글꼴).
 - 브라우저에서 만들려면 [글꼴 작업실](https://font.tty.link/font-studio.html)의 디자인 칸을 씁니다 — 선·원/직접 그린 그림/기존 글꼴 세 가지로 시작하고, 원형 8 → 24 → 40 그리기, 조립식 비교, 출처, 글꼴 팔레트를 거쳐 디자인 JSON·페이지용 코드·묶음 파일로 가져갑니다([글꼴 작업실 설계](docs/ARCHITECTURE/font-studio.md)).
 
@@ -441,7 +441,7 @@ font-kku-text --version
 
 Python, Go, Rust, Ruby 구현은 JavaScript 코어를 감싼 것이 아니라 `spec/` 계약을 독립적으로 구현한 보조 렌더러입니다. 모두 2줄 평문과 정적 HTML 출력을 제공합니다. 기본 번들에는 `sebul`·`gothic`이 들어 있고, 호출별 `FontDefinition`으로 사용자 system 글꼴 CSS와 기본 깊이를 전달할 수 있습니다. sprite/vector 재료와 그림 세트, 디자인(`registerDesign`), 자동 URL 로딩, 상호작용은 정적 렌더러에서 지원하지 않습니다.
 
-글꼴을 밝히지 않은 호출(`render_html(text)`, 빈 이름)은 브라우저의 `<font-kku>`처럼 기본 배치 세벌식(`sebul-cases-v1`, [ADR-028](docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md))으로 그리고, 자모 노드에 런타임과 같은 역할 도장을 씁니다. 자모는 런타임 기본처럼 원소 획으로 그려([ADR-027](docs/ADR/ADR-027-static-element-face.md)) 브라우저·JS 없이도, 읽는 기기에 어떤 한글 글꼴이 있든 같은 모양입니다. 세벌식 배치는 두고 기기 글꼴 글자로 그리려면 `face="device"`(Ruby `face: "device"`, Go `WithFace("device")`, Rust `face: "device"`), 0.1.0의 기본값처럼 글꼴의 문맥 배치로 그리려면 `font="sebul"`을 넘기세요.
+글꼴을 밝히지 않은 호출(`render_html(text)`, 빈 이름)은 브라우저의 `<font-kku>`처럼 기본 배치 세벌식(`sebul-cases-v1`, [ADR-028](docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md))으로 그리고, 자모 노드에 런타임과 같은 역할 도장을 씁니다. 자모는 런타임 기본처럼 원소 획으로 그려([ADR-027](docs/ADR/ADR-027-static-element-face.md)) 브라우저·JS 없이도, 읽는 기기에 어떤 한글 글꼴이 있든 같은 모양입니다. 세벌식 배치는 두고 기기 글꼴 글자로 그리려면 `face="device"`(Ruby `face: "device"`, Go `WithFace("device")`, Rust `face: "device"`), 0.1.0의 기본값처럼 글꼴의 문맥 배치로 그리려면 `font="sebul"`을 넘기세요. 짓는 방식([ADR-034](docs/ADR/ADR-034-composition-modes.md))은 고르지 않아도 되고, 고르려면 `composition="syllable"`(Ruby `composition:`, Go `WithComposition`, Rust `HtmlOptions.composition`)을 넘깁니다 — 나누기 부분을 그리고, 조각 깊이(`pieces`·`origins`)는 `COMPOSITION_UNSUPPORTED` 진단만 남깁니다.
 
 네 언어 모두 호출별 `FontDefinition`으로 사용자 system 글꼴 CSS와 기본 깊이를 전달할 수 있습니다. Unicode 정책·지원 범위는 [capabilities.json](spec/capabilities.json), API 예제와 생성 절차는 [언어 공통 렌더 계약](docs/ARCHITECTURE/renderer-contracts.md)을 참고하세요.
 

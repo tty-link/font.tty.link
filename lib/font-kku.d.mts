@@ -13,6 +13,7 @@ export declare const placementTable: API["placementTable"];
 export declare const placementTables: API["placementTables"];
 export declare const layoutProfiles: API["layoutProfiles"];
 export declare const layoutStability: API["layoutStability"];
+export declare const splitFit: API["splitFit"];
 export declare const define: API["define"];
 export declare const bootstrap: API["bootstrap"];
 export declare const render: API["render"];
@@ -40,6 +41,8 @@ export declare const planJamo: API["planJamo"];
 export declare const traceOf: API["traceOf"];
 export declare const stagePreview: API["stagePreview"];
 export declare const authoringProgress: API["authoringProgress"];
+export declare const compositionPresets: API["compositionPresets"];
+export declare const resolveComposition: API["resolveComposition"];
 export declare const sourceRange: API["sourceRange"];
 
 export type {
@@ -47,10 +50,15 @@ export type {
   AuthoringProgress,
   AuthoringStageProgress,
   CodaDepth,
+  CompositionInput,
+  CompositionPieces,
+  CompositionPreset,
+  CompositionResult,
   Config,
   DepthInput,
   Design,
   DesignApply,
+  DesignComposition,
   DesignError,
   DesignErrorCode,
   DesignLock,
@@ -59,9 +67,14 @@ export type {
   DesignSource,
   DesignStatus,
   DesignValidation,
+  DesignWarning,
+  DesignWarningCode,
   DisplayTriple,
   ExpressionMode,
   FontInfo,
+  FontGlyphMapping,
+  GlyphSelection,
+  GlyphMappingResult,
   FontName,
   HangulFontProbeOptions,
   JamoBoxCell,
@@ -72,6 +85,7 @@ export type {
   JamoTraceEntry,
   HostTrace,
   JamoSetOptions,
+  JamoSetStatus,
   JamoShape,
   Glyph,
   GlyphKind,

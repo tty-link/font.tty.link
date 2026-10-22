@@ -29,7 +29,7 @@ Accepted
 - `spec/themes.json`이 축의 목록(`fonts`·`textures`·`looks`·`variations`·`motions`·`interactions`·`tones`)과 `themes`의 정본이다.
 - `scripts/build_looks.js --write`가 이 파일로 두 가지를 만든다. `--check`는 `npm test`가 돈다.
   - `font-kku-looks.css` — 꾸밈·변주 클래스
-  - `site/themes-data.js` — 데모 사이트용 미러. `file://`에서는 JSON을 fetch할 수 없어서 둔다. 테마마다 풀어 둔 조합법(`recipes`: 글꼴·클래스·씨앗·animate·fx·필요한 확장)이 들어 있다.
+  - `authoring/themes-data.js` — 데모 사이트용 미러. `file://`에서는 JSON을 fetch할 수 없어서 둔다. 테마마다 풀어 둔 조합법(`recipes`: 글꼴·클래스·씨앗·animate·fx·필요한 확장)이 들어 있다.
 - 정본 대조:
   - `spec/fonts.json`의 모든 글꼴은 글꼴 축(`fonts`)에 있거나 어떤 테마의 `shortcut`이어야 한다.
   - 테마가 가리키는 글꼴·꾸밈·변주·움직임·상호작용·바탕은 모두 있어야 한다.

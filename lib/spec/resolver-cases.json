@@ -270,7 +270,7 @@
     },
     {
       "id": "DESIGN-VALIDATE-FIXED", "phase": "F", "harness": "node",
-      "description": "세벌 고정이 받지 않는 것(자리마다 변주·문맥 조건 둘·통짜 합자 모음)을 하나씩 모두 알린다 — revision만 틀렸으면 그 프로파일로 규칙을 마저 본다",
+      "description": "세벌 고정이 그릴 수 없는 통짜 합자 모음은 오류로, 원칙을 깨는 자리마다 변주·문맥 조건 둘은 경고로(ADR-030 §5) 하나씩 모두 알린다 — revision만 틀렸으면 그 프로파일로 규칙을 마저 본다",
       "design": { "version": "1.2", "layout": { "profile": "sebul-fixed-v1", "revision": "0" }, "mode": "primitive",
         "sources": { "g": { "kind": "primitive" } }, "defaults": { "source": "g" }, "display": { "detail": "jamo", "variationScope": "occurrence" },
         "rules": [
@@ -279,8 +279,10 @@
         ] },
       "throws": "has revision",
       "validate": {
-        "codes": ["DESIGN_LAYOUT_REVISION", "DESIGN_FIXED_VARIATION", "DESIGN_FIXED_CONTEXT", "DESIGN_FIXED_CONTEXT", "DESIGN_FIXED_COMPOUND"],
-        "paths": ["layout.revision", "display.variationScope", "rules[0].match.vowelLayout", "rules[0].match.hasFinal", "rules[1].apply.method"]
+        "codes": ["DESIGN_LAYOUT_REVISION", "DESIGN_FIXED_COMPOUND"],
+        "paths": ["layout.revision", "rules[1].apply.method"],
+        "warnings": ["DESIGN_FIXED_VARIATION", "DESIGN_FIXED_CONTEXT", "DESIGN_FIXED_CONTEXT"],
+        "warningPaths": ["display.variationScope", "rules[0].match.vowelLayout", "rules[0].match.hasFinal"]
       }
     },
     {

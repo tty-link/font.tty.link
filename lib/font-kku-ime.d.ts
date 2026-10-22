@@ -113,7 +113,8 @@ declare namespace FontKkuIme {
      * 초점이 있는 칸에는 `document.execCommand("insertText" | "delete")`로 써서 브라우저 되돌리기 기록에 남는다 —
      * Cmd/Ctrl+Z·Shift+Z가 듣는다(Chromium·Firefox는 키 하나씩, WebKit은 이어 친 글을 한 번에). 초점이 없는 칸(화면
      * 키보드)이나 명령이 듣지 않으면 `setRangeText`로 쓰고, 그때는 브라우저가 되돌리기 기록을 비운다. 어느 쪽이든
-     * 키 하나에 `input` 이벤트는 한 번이다(`event.fontKkuIme === true`). */
+     * 키 하나에 `input` 이벤트는 한 번이다(`event.fontKkuIme === true`). 표시는 창(window) 캡처 단계에서 달아 attach 전에 단
+     * 듣개와 조상 캡처 듣개도 본다(페이지가 창에 먼저 단 캡처 듣개만 앞선다). */
     attach(field: HTMLInputElement | HTMLTextAreaElement, options?: AttachOptions): Controller;
   }
 }

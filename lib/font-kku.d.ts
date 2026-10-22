@@ -32,14 +32,15 @@ declare namespace FontKku {
     /**
      * 필요할 때 받기(ADR-019)의 기준 주소 — `profiles/<font>.css`·`profiles/<set>.jamo.js`가 그 아래에 있다.
      * 한 줄 설치(`<script src=".../font-kku.js" data-fonts=…>`)는 스크립트 주소에서 스스로 정한다.
-     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/").
+     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/").
      */
     fontBase?: string;
     /** false면 아직 받지 않은 글꼴·자소 세트를 스스로 받지 않는다(기본 true). */
     autoload?: boolean;
   }
 
-  type LayoutStamp = readonly [number, number, number, number, number, "initial" | "medial" | "final", number, number, number];
+  type LayoutStamp = readonly [number, number, number, number, number, "initial" | "medial" | "final" | "head", number, number, number];
+  type LayoutStampCases<T> = T | Readonly<Record<string, T>>;
 
   interface LayoutProfile {
     readonly revision: string;
@@ -53,7 +54,8 @@ declare namespace FontKku {
     readonly occurrence: boolean;
     /** 글자 칸(em) — 폭·높이·간격, space는 낱말 사이(빈칸 하나) 폭(있으면 `--fy-space-width`) */
     readonly cell?: { readonly width: number; readonly height: number; readonly gap: number; readonly space?: number };
-    readonly depth?: { readonly vowel: "split"; readonly coda: "whole" };
+    /** 이 글꼴 모양의 기본 음절 나누기 — 페이지 깊이 변수와 글꼴 CSS `@layer font-kku.tune`의 `--fy-font-*-depth`가 덮는다(ADR-030 §4) */
+    readonly depth?: { readonly vowel: "split" | "whole" | "syllable"; readonly coda: "split" | "whole" };
     /** 그림 문맥 — 직결식은 초성(`bar`), 세벌식은 받침(`sebeol` 겹받침 뼈대). 세벌식 초성은 짜임의 모음 모양을 따른다 */
     readonly draw?: { readonly initial?: "cho" | "bar"; readonly final?: "sebeol" };
     /** 고정 배치 도장의 밀도 굵기 계수를 셈한 원소 굵기(바탕 em, sebul 0.1). 페이지 `--fy-element-width`가 다르면 런타임이 그 굵기로 다시 셈한다 */
@@ -64,9 +66,26 @@ declare namespace FontKku {
      */
     readonly stamps?: Readonly<Record<string, LayoutStamp | readonly [LayoutStamp, LayoutStamp]
       | Readonly<Record<string, LayoutStamp | readonly [LayoutStamp, LayoutStamp]>>>>;
+    /**
+     * 기본이 아닌 음절 나누기의 값(ADR-030 §4) — `whole` 통짜 모음 노드(ᅪ…ᅴ, 역할 medial), `head` 머리 음절 노드(받침 없는 완성형 머리
+     * 글자 57 — 고·구·그…, 역할 head), `coda` 겹받침 낱(겹받침마다 [왼쪽 낱자, 오른쪽 낱자], 역할 final). 짜임 열쇠는 `stamps`와 같다.
+     * 합친 노드 안 자모(머리의 초성·모음, 통짜 모음의 두 조각)는 낱 나누기와 같은 자리에 그린다
+     */
+    readonly splits?: {
+      readonly whole: Readonly<Record<string, LayoutStampCases<LayoutStamp>>>;
+      readonly head: Readonly<Record<string, LayoutStampCases<LayoutStamp>>>;
+      readonly coda: Readonly<Record<string, LayoutStampCases<readonly [LayoutStamp, LayoutStamp]>>>;
+    };
+  }
+
+  interface GlyphMappingResult {
+    mapped: number;
+    diagnostics: Array<{jamo: string; code: string}>;
   }
 
   interface FontInfo {
+    /** 문자 매핑을 요청한 경우의 측정·지원 진단. 모두 none으로 끄면 생략한다. */
+    glyphMapping?: GlyphMappingResult;
     /** 요청(정규화)된 font 이름 */
     font: string;
     /** font CSS가 선언한 `--fy-font-id`. CSS가 아직 없으면 null */
@@ -81,17 +100,36 @@ declare namespace FontKku {
      * 페이지 `--fy-ink-boxes: none`) null.
      */
     face: "element" | "device" | "svg" | null;
+    /** `--fy-face: svg`에 frame="box" 세트가 없으면 element + SVG_REQUIRES_BOX_SET.
+     * 그림 자소 재료 또는 잉크 상자를 쓰지 않는 글꼴에 페이지 재료를 명시하면 FACE_UNSUPPORTED_FONT.
+     * 알 수 없는 재료 이름은 FACE_TOKEN_INVALID로 알리고 아래 수준의 유효한 선택을 쓴다. */
+    faceStatus: "SVG_REQUIRES_BOX_SET" | "FACE_UNSUPPORTED_FONT" | "FACE_TOKEN_INVALID" | null;
     /** 적용된 디자인 이름(ADR-025, `--fy-design`·`--fy-font-design`). 없거나 고르지 못했으면 null */
     design: string | null;
     /** 디자인을 고르지 못한 까닭(`data-fy-design-status`와 같다). 없으면 null */
     designStatus: DesignStatus | null;
+    /** 걸린 그림 세트를 쓰지 못한 까닭(`data-fy-jamo-set-status`와 같다). 없으면 null */
+    jamoSetStatus: JamoSetStatus | null;
     /**
-     * 배치 프로파일(ADR-026·028). 글꼴을 밝히지 않은 바탕 요소는 기본 세벌식(`sebul-cases-v1`), 글꼴 CSS가 `--fy-font-layout`을
-     * 밝히면 그 배치(`jikgyeol` → 직결식 `sebul-fixed-v1`), 1.2 디자인은 자기 `layout`을 쓴다(디자인이 이긴다).
-     * 그 밖의 글꼴을 밝힌 바탕 요소·배치를 적지 않은 이전 디자인·`--fy-design: legacy`는 지금 배치라 null. 디자인이 프로파일이 받아들이는
+     * 배치 프로파일(ADR-026·028). 페이지 디자인 layout > `--fy-layout` > 글꼴 디자인 layout > `--fy-font-layout` > 기본 배치.
+     * 디자인이 배치를 생략하면 낮은 수준의 배치를 물려받고 `--fy-design: legacy`는 디자인만 끊는다.
+     * 기본 배치는 글꼴 생략 시 `sebul-cases-v1`, 명시 시 문맥 배치(null). `--fy-layout: sebul-cases-v1`로 세벌식을 명시하고,
+     * `square-context-v1`로 문맥 배치를 명시할 수 있다. 디자인이 프로파일이 받아들이는
      * 이전 revision(`accepts`)을 적었으면 `requested`가 그 revision이다 — 그리는 도장은 `revision`이다.
      */
     layout: { profile: string; revision: string; model: "case-fixed" | "fixed-three" | "adaptive-square"; requested?: string } | null;
+    /** 알 수 없는 --fy-layout/--fy-font-layout은 아래 수준 배치 + LAYOUT_NOT_REGISTERED.
+     * 알려진 배치를 그림 자소 재료 또는 잉크 상자를 쓰지 않는 글꼴에 명시하면 LAYOUT_UNSUPPORTED_FONT. */
+    layoutStatus: "LAYOUT_NOT_REGISTERED" | "LAYOUT_UNSUPPORTED_FONT" | null;
+    /** 짓는 방식(ADR-034) — 페이지 `--fy-composition`·디자인 `composition`·글꼴 `--fy-font-composition` 가운데 하나라도 고르면 있다.
+     * 고르지 않은 바탕 요소에는 없다(지금 출력 그대로). `status`는 `data-fy-composition-status`와 같다 */
+    composition?: {
+      preset: CompositionPreset | "custom" | null;
+      vowel: "split" | "whole" | "syllable";
+      coda: "split" | "whole";
+      pieces: CompositionPieces;
+      status: string | null;
+    };
     /** 요청한 font의 CSS가 host에 도달했는지 (`id === font`), 그리고 바탕 CSS(`font-kku.css`)가 그 host의 root에 닿는지 */
     loaded: boolean;
   }
@@ -277,6 +315,11 @@ declare namespace FontKku {
   interface JamoBoxCell {
     box: [number, number, number, number];
     shapes: readonly JamoShape[];
+    /**
+     * 병서 칸(ㄲ·ㄸ·ㅃ·ㅆ·ㅉ, 문맥 변형 포함)만: 두 낱자 각각의 획 중심선 범위(칸 좌표, 첫 낱자 먼저). 도형이 획순으로 획마다
+     * 하나면 런타임이 그림을 낱자 둘로 갈라 낱자 틈을 맞춘다 — 없으면 그림 한 장 그대로(좁은 자리에서 두 낱자가 붙을 수 있다).
+     */
+    parts?: readonly [[number, number, number, number], [number, number, number, number]];
   }
 
   /**
@@ -303,17 +346,27 @@ declare namespace FontKku {
   }
 
   /**
-   * 바탕 요소가 고른 디자인을 쓰지 못한 까닭(ADR-025 §2, `data-fy-design-status`). 셋 다 지금 설정으로 그린다.
+   * 바탕 요소가 고른 디자인을 쓰지 못한 까닭(ADR-025 §2, `data-fy-design-status`). 남은 설정으로 그린다.
    * - `DESIGN_TOKEN_INVALID`: `--fy-design` 값이 이름 문법이 아니다(소문자·숫자·`-`, `legacy`·CSS 전역 키워드 아님)
    * - `DESIGN_NOT_REGISTERED`: 등록되지 않은 이름 — 등록되는 순간 다시 그린다
+   * - `DESIGN_OVERRIDDEN_BY_PAGE`: 페이지 `--fy-face`·`jamo-set`이 글꼴 디자인의 재료·조립식을 대체했다. 배치 상속은 유지한다
    * - `DESIGN_UNSUPPORTED_FONT`: 이 글꼴은 디자인을 받지 않는다 — 그림 자소 재료(`--fy-material: sprite`)이거나 표준 잉크 상자
    *   (`--fy-font-ink-boxes`)를 밝히지 않았거나 페이지가 `--fy-ink-boxes: none`으로 껐다. 등록해도 바뀌지 않는다
    */
-  type DesignStatus = "DESIGN_TOKEN_INVALID" | "DESIGN_NOT_REGISTERED" | "DESIGN_UNSUPPORTED_FONT";
+  type DesignStatus = "DESIGN_TOKEN_INVALID" | "DESIGN_NOT_REGISTERED" | "DESIGN_UNSUPPORTED_FONT" | "DESIGN_OVERRIDDEN_BY_PAGE";
+
+  /**
+   * 걸린 그림 세트(`jamo-set`)를 이 재료가 쓰지 못한 까닭(`data-fy-jamo-set-status`). 지금 설정으로 그린다.
+   * - `JAMO_SET_FRAME_MISMATCH`: 세트의 칸 계약이 재료 계열과 맞지 않는다 — 그림 자소 재료는 `frame: "sprite"` 세트만(벡터),
+   *   표준 잉크 상자를 밝힌 글꼴은 `frame: "box"` 세트만(그림 재료) 쓴다. 디자인이 걸리면 디자인이 그림을 정하므로 묻지 않고,
+   *   아직 등록되지 않은 세트는 등록되는 순간 다시 그린다
+   */
+  type JamoSetStatus = "JAMO_SET_FRAME_MISMATCH";
 
   /**
    * 디자인 검증 오류 코드(ADR-025 §2). `validateDesign`이 모으고 `registerDesign`이 첫 오류를 던진다 — 규칙은 한 벌이다.
-   * 고정 배치(세벌식 `sebul-cases-v1`·직결식 `sebul-fixed-v1`) 거부는 `DESIGN_FIXED_*`(문맥 규칙·통짜 합자 모음·자리마다 변주).
+   * 고정 글꼴 모양(세벌식 `sebul-cases-v1`·직결식 `sebul-fixed-v1`)이 거부하는 것은 통짜 합자 모음(`DESIGN_FIXED_COMPOUND`)뿐이다 —
+   * 문맥 규칙·자리마다 변주는 받아 지키고 진단으로 알린다(`DesignWarningCode`, ADR-030 §5).
    */
   type DesignErrorCode =
     | "DESIGN_NOT_OBJECT"
@@ -322,8 +375,6 @@ declare namespace FontKku {
     | "DESIGN_LAYOUT_MISSING"
     | "DESIGN_LAYOUT_UNKNOWN"
     | "DESIGN_LAYOUT_REVISION"
-    | "DESIGN_FIXED_VARIATION"
-    | "DESIGN_FIXED_CONTEXT"
     | "DESIGN_FIXED_COMPOUND"
     | "DESIGN_SOURCES_EMPTY"
     | "DESIGN_SOURCE_INVALID"
@@ -339,7 +390,9 @@ declare namespace FontKku {
     | "DESIGN_APPLY_INVALID"
     | "DESIGN_RECIPE_INVALID"
     | "DESIGN_BINDING_INVALID"
-    | "DESIGN_FALLBACK_INVALID";
+    | "DESIGN_FALLBACK_INVALID"
+    | "DESIGN_GLYPHS_INVALID"
+    | "DESIGN_COMPOSITION_INVALID";
 
   interface DesignError {
     code: DesignErrorCode;
@@ -353,12 +406,18 @@ declare namespace FontKku {
     ok: boolean;
     /** registerDesign이 보는 차례 — `errors[0]`이 registerDesign이 던질 오류다 */
     errors: DesignError[];
-    /** 받아들이지만 알리는 것 — 지금은 이전 배치 revision(`DESIGN_LAYOUT_REVISION_ACCEPTED`, 지금 도장으로 그린다) */
+    /** 받아들이지만 알리는 것 — 이전 배치 revision, 모양의 원칙을 깨는 문맥 규칙·자리 변주(`DesignWarningCode`) */
     warnings: DesignWarning[];
   }
 
-  /** 디자인 진단 코드 — 받아들이지만 알린다(`validateDesign().warnings`, `registerDesign().warnings`, 등록 때 콘솔 경고) */
-  type DesignWarningCode = "DESIGN_LAYOUT_REVISION_ACCEPTED";
+  /**
+   * 디자인 진단 코드 — 받아들이지만 알린다(`validateDesign().warnings`, `registerDesign().warnings`, 등록 때 콘솔 경고).
+   * - `DESIGN_LAYOUT_REVISION_ACCEPTED`: 이전 배치 revision — 지금 모양 값으로 그린다
+   * - `DESIGN_FIXED_CONTEXT`: 모양이 밝힌 원칙(`layoutProfiles[id].match`) 밖의 규칙 조건(`match.vowelLayout`·`match.hasFinal`) —
+   *   규칙은 지키므로 같은 역할·자모가 짜임에 따라 다르게 그려진다(세벌식·직결식, ADR-030 §5 — 그 전에는 오류였다)
+   * - `DESIGN_FIXED_VARIATION`: 자리마다 변주(`display.variationScope: "occurrence"`)를 막는다고 밝힌 모양(`occurrence: false`)
+   */
+  type DesignWarningCode = "DESIGN_LAYOUT_REVISION_ACCEPTED" | "DESIGN_FIXED_CONTEXT" | "DESIGN_FIXED_VARIATION";
 
   interface DesignWarning {
     code: DesignWarningCode;
@@ -378,6 +437,22 @@ declare namespace FontKku {
   }
 
   /** 디자인의 원소(primitive)·그림(svg, 등록한 칸 계약 세트)·글꼴 글자(font) 소스(ADR-025). 모드와 같은 종류만 둔다. */
+  interface FontGlyphMapping {
+    jamo: string;
+    role?: "initial" | "medial" | "final" | "standalone";
+    candidates: Array<{id: string; text: string}>;
+    /** 씨앗 변주가 없을 때의 기본 후보. 생략하면 첫 후보. */
+    selected?: string;
+    /** 잠그면 selected가 필수이며 씨앗 변주보다 우선한다. */
+    locked?: boolean;
+  }
+
+  interface GlyphSelection {
+    text: string;
+    candidate: string | null;
+    selection: "default" | "selected" | "locked" | "seed" | "css";
+  }
+
   type DesignSource =
     | { kind: "primitive"; builtin?: string }
     | {
@@ -387,7 +462,7 @@ declare namespace FontKku {
         /** 보이는 자모 칸(미리보기 — 원형 8·기본 24만 그린 셈 치기). 원소 그림(@…)은 늘 보인다. 없으면 모두 */
         cells?: string[];
       }
-    | { kind: "font"; family: string; weight?: number; style?: string; stretch?: string; sourceMode?: string };
+    | { kind: "font"; family: string; weight?: number; style?: string; stretch?: string; sourceMode?: string; variationSettings?: Record<string, number>; glyphs?: FontGlyphMapping[] };
 
   /** 규칙·조각 binding의 적용값. method·recipe·bindings는 한 묶음(더 구체적인 쪽이 통째로 이긴다), source는 따로 고른다. */
   interface DesignApply {
@@ -423,6 +498,34 @@ declare namespace FontKku {
     part?: string;
   }
 
+  /** 짓는 방식 프리셋(ADR-034): auto 모양대로 · syllable 음절로(호+ㅏ) · whole 겹모음 통째로(ㅎ+ㅘ) · jamo 자모로(ㅎ+ㅗ+ㅏ) ·
+   * pieces 조각으로((ㅗ+ㅇ)+ㅗ+ㅏ) · origins 원형으로(원형 8·천지인까지) */
+  type CompositionPreset = "auto" | "syllable" | "whole" | "jamo" | "pieces" | "origins";
+  /** 조각 깊이: none 자모 그대로 · pieces 맨 위 자모를 다른 자모로 한 번 · origins 원형 8·천지인까지 */
+  type CompositionPieces = "none" | "pieces" | "origins";
+  /** 디자인의 짓는 방식 — 프리셋 하나, 또는 축마다(빠진 축은 프리셋 값, 프리셋도 없으면 아래 수준) */
+  type DesignComposition = CompositionPreset | {
+    preset?: CompositionPreset;
+    vowel?: "split" | "whole" | "syllable";
+    coda?: "split" | "whole";
+    pieces?: CompositionPieces;
+  };
+  /** FontKku.resolveComposition 입력·결과(ADR-034 §3 차례) */
+  interface CompositionInput {
+    page?: { preset?: CompositionPreset | null; vowel?: string | null; coda?: string | null };
+    design?: { preset?: CompositionPreset | null; vowel?: string | null; coda?: string | null; pieces?: CompositionPieces | null } | null;
+    font?: { preset?: CompositionPreset | null; vowel?: string | null; coda?: string | null };
+    shape?: { vowel?: string | null; coda?: string | null };
+  }
+  interface CompositionResult {
+    vowel: "split" | "whole" | "syllable";
+    coda: "split" | "whole";
+    pieces: CompositionPieces;
+    /** 고른 프리셋(결과가 그 프리셋과 같을 때), 깊이 변수가 일부를 바꾸면 "custom", 아무 수준도 고르지 않으면 null */
+    preset: CompositionPreset | "custom" | null;
+    source: "page" | "design" | "font" | null;
+  }
+
   /** 디자인(ADR-025 §2): 팔레트·규칙·조립식 선택. `registerDesign`으로 등록하고 CSS `--fy-design`으로 고른다. */
   interface Design {
     version?: string;
@@ -442,11 +545,17 @@ declare namespace FontKku {
       unverifiedFont?: "allow-with-warning" | "reject";
     };
     /** 작업실 정보(제작 안내 origin8·basic24·full40, 잠금) — 그리기에는 쓰지 않는다 */
-    editor?: { authoringTarget?: "origin8" | "basic24" | "full40"; locks?: DesignLock[] };
+    editor?: { authoringTarget?: "origin8" | "basic24" | "full40"; locks?: DesignLock[]; glyphPreview?: {seed: string; jamoSeeds: boolean} };
     display?: { detail?: "jamo" | "parts" | "stroke"; seed?: string; variationScope?: "jamo" | "occurrence" };
+    /** 짓는 방식(ADR-034) — 고르지 않아도 된다. 페이지 CSS가 이기고, 자모마다 고른 규칙(`rules`)이 늘 이긴다 */
+    composition?: DesignComposition;
   }
 
   interface JamoPlanOptions {
+    /** 기존 자모 씨앗의 0..1 값. 잠기지 않은 후보 선택에만 쓴다. */
+    seedValue?: number;
+    /** 맨 위 자모 매핑의 후보 id를 명시한다. */
+    candidate?: string;
     /** 등록한 디자인 이름 */
     design?: string;
     /** 디자인 없을 때의 칸 계약 그림 세트 */
@@ -457,9 +566,14 @@ declare namespace FontKku {
     hasFinal?: boolean;
     /** 디자인 없을 때 보이는 자모 칸(미리보기). 없으면 모두 */
     cells?: string[];
+    /** 조각 깊이(ADR-034). `composition`보다 먼저 본다 */
+    pieces?: CompositionPieces;
+    /** 짓는 방식 프리셋의 조각 깊이로 계획한다(없으면 디자인의 composition) */
+    composition?: CompositionPreset;
   }
 
   interface JamoPlanItem {
+    glyph?: GlyphSelection;
     /** 조립식 조각 경로(맨 위 자모면 빈 배열) */
     path: string[];
     source: string;
@@ -476,6 +590,7 @@ declare namespace FontKku {
   }
 
   interface JamoTraceEntry {
+    glyph?: GlyphSelection;
     path: string[];
     jamo: string;
     role: string | null;
@@ -488,6 +603,8 @@ declare namespace FontKku {
     status: "ok" | "pending" | "degraded" | "error";
     diagnostic: string | null;
     effectiveSource?: string;
+    /** 짓는 방식의 조각 깊이가 고른 조립식이면 그 깊이(ADR-034). 지을 재료가 없어 자모 그대로 두면 diagnostic이 COMPOSITION_UNSUPPORTED */
+    composition?: "pieces" | "origins";
   }
 
   interface JamoPlan {
@@ -552,6 +669,7 @@ declare namespace FontKku {
      * 배치 프로파일 표(ADR-026·028, spec/layout-profiles.json에서 생성, 얼린 사본). 고정 배치는 `stamps`에 조합용 자모마다 역할 도장
      * `[left %, top %, 글자 크기 em, scale-x, scale-y, 역할, font-weight, text-stroke em, 밀도 굵기 계수 0.75–1]`(합자 모음은 조각 도장 둘)을
      * 둔다 — 세벌식은 짜임마다(`LayoutProfile.stamps`). 밀도 굵기 계수는 원소·그림 재료의 획 굵기에 곱한다(ADR-024 §3).
+     * 같은 값이 코어 CSS의 모양 값 규칙(`@layer font-kku.shape`, `--fy-shape-*`)으로 그려진다 — 런타임은 자모 노드에 값을 적지 않는다(ADR-030).
      */
     readonly layoutProfiles: Readonly<Record<string, LayoutProfile>>;
     /**
@@ -560,6 +678,12 @@ declare namespace FontKku {
      * `"initial ᄀ v1"`). 고정 배치가 아니면 stable null.
      */
     layoutStability(host: HTMLElement): { layout: string | null; stable: boolean | null; keys: number; nodes: number; drifted: string[] };
+    /**
+     * 네모꼴 나누기 맞춤(ADR-034 §5)이 지금 이 자모 노드를 옮겼으면 그 두 잉크 상자(노드 em `[x0, y0, x1, y1]`) — `from`은 CSS 자리
+     * 그대로 그릴 상자, `to`는 맞춤이 그린 상자. 자리를 밝힌 노드나 맞추지 않은 노드는 null. 작업실이 그 노드의 자리를 처음 적을 때
+     * 지금 보이는 자리에서 시작하려고 읽는다(ADR-035).
+     */
+    splitFit(node: Element): { kind: string; from: [number, number, number, number]; to: [number, number, number, number] } | null;
     define(): void;
     bootstrap(root?: ParentNode): HTMLElement[];
     /**
@@ -660,6 +784,13 @@ declare namespace FontKku {
     stagePreview(set: string, stage: "full40" | "basic24" | "origin8" | "elements"): Design;
     /** 그림 세트가 원형 8 → 기본 24 → 확장 40 단계마다 그린 자모·남은 자모·단계 밖에 그린 자모(ADR-025 §7) */
     authoringProgress(target: string | string[]): AuthoringProgress;
+    /** 짓는 방식(ADR-034): 프리셋 표와 조각 깊이마다 자모 → 조립식(spec/jamo-recipes.json levels). 얼린 사본 */
+    readonly compositionPresets: {
+      presets: Readonly<Record<CompositionPreset, { vowel: string; coda: string; pieces: CompositionPieces } | null>>;
+      levels: Readonly<Record<"pieces" | "origins", Readonly<Record<string, string>>>>;
+    };
+    /** 짓는 방식 차례 풀기(순수 함수, ADR-034 §3): 페이지(깊이 변수 > 프리셋) > 디자인 > 글꼴(깊이 변수 > 프리셋) > 모양의 기본 */
+    resolveComposition(input: CompositionInput): CompositionResult;
     /**
      * 범위(`Range`·`StaticRange`)가 바탕 요소에서 고른 원문(ADR-003). 복사·잘라내기는 런타임이 문서마다 알아서 이 대응으로
      * 원문을 넣는다 — 이 함수는 "고른 글 복사" 단추처럼 페이지가 직접 원문을 꺼낼 때 쓴다. 고른 것이 없거나 그린 적 없는 요소면 null.

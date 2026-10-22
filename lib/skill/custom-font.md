@@ -14,7 +14,7 @@
 ```
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="sebul"></script>
 <link rel="stylesheet" href="./my-font.css" />
 <font-kku font="sebul" class="kku-berry" size="56">딸기 우유</font-kku>
 ```
@@ -43,7 +43,7 @@
 
 - 자모 위치(`--fy-top`, `--fy-left`)와 크기는 바꾸지 않는다 — 조립이 무너진다.
 - 기울기는 변주 클래스에 맡긴다. 직접 기울일 때는 ±3° 이하, 세로 모음 옆 초성부터 준다 — 자모가 이웃 자모에 쉽게 닿는다(겹침 검사에서 ±3°로도 '꽤'·'셊'의 자모가 15% 넘게 포개졌다).
-- 굵기·외곽선은 작은 크기(24px)에서도 획이 뭉치지 않는지 본다. 원소 획은 `--fy-element-width`를 올리면 런타임이 ㄹ·ㅌ·겹받침처럼 획이 촘촘한 자모만 가늘게 해 획 사이를 굵기의 0.3배 넘게 연다(0.13em에서 ㄹ 틈 0.039em) — 그래서 굵게 할수록 그 자모가 다른 획보다 가벼워 보인다. 0.15em를 넘기면 16px과 24px로 그려 본다.
+- 굵기·외곽선은 작은 크기(24px)에서도 획이 뭉치지 않는지 본다. 원소 획은 `--fy-element-width`를 올리면 런타임이 ㄹ·ㅌ·겹받침·세로 모음 옆 ㄲ처럼 획이 촘촘한 자모만 가늘게 해 획 사이를 굵기의 0.3배 넘게 연다(0.13em에서 ㄹ 틈 0.039em) — 그래서 굵게 할수록 그 자모가 다른 획보다 가벼워 보인다. 0.15em를 넘기면 16px과 24px로 그려 본다.
 - 넓은 빛번짐은 `text-shadow`가 아니라 `--fy-glow`로 준다. 기기 글꼴에서 `text-shadow`는 글자와 함께 잘려, 모음 일부를 잘라 그리는 세벌·고딕 배치에서 자른 선에 곧게 끊겨 보인다(원소 획에는 아예 듣지 않는다). `--fy-glow`는 자른 뒤에 빛을 그린다.
 
 ## 결과 내기

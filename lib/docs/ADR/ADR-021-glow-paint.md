@@ -27,8 +27,11 @@ Accepted
    목록)로 주면 런타임이 바탕 요소에 `data-fy-glow="filter"`를 찍는다(`--fy-sprite-paint` → `data-fy-sprite-paint`와
    같은 길, 꾸밈 class가 바뀌면 다시 읽는다). 코어는 기기 글꼴(`:not([data-fy-material])`) 자모에서
    - 글자를 `::before { content: attr(data-jamo) }`가 그리고 slot clip(`--fy-clip`·slot·role 체인)도 `::before`가 받는다.
-   - 자모 노드는 자기 글자를 `visibility: hidden`으로 숨기고 clip 없이 `filter: var(--fy-glow, var(--fy-font-glow))`로
-     빛만 그린다 — `filter`는 자른 뒤의 `::before` 모양을 둘러싼다. 숨긴 노드 안에서 다시 보이는 것은
+   - 자모 노드는 자기 글자를 숨기고 clip 없이 `filter: var(--fy-glow, var(--fy-font-glow))`로
+     빛만 그린다 — `filter`는 자른 뒤의 `::before` 모양을 둘러싼다. 기기 글꼴 맞춤(`data-fy-face="device"`, ADR-023)이면 노드
+     글자는 이미 `::first-letter { font-size: 0 }`이라 노드를 숨기지 않는다(2026-10-21 — WebKit은 그림자 트리에 선택이 가 닿을
+     보이는 글자가 하나도 없으면 범위를 버린다, 탐침 api-25. 숨긴 노드의 잎(통짜 나누기·글꼴 팔레트)도 숨김을 물려받아
+     사라졌다, matrix-15). `visibility: hidden`은 잉크 상자가 없는 빛 칠(`--fy-ink-boxes: none`)에만 남는다. 숨긴 노드 안에서 다시 보이는 것은
      `visibility`뿐이라(`::first-line`으로 노드 글자만 지우는 길은 WebKit이 `::before`까지 지워 막혔다) `::before`는
      `visibility: var(--fy-ink-visibility, visible)`이다. 글자를 가리는 쪽 — 글꼴 받는 동안의 root(`data-fy-font-pending`,
      첫 로드 가림막)와 측정 도구 — 은 `--fy-ink-visibility: hidden`도 함께 내린다.

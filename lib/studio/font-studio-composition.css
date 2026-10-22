@@ -1,0 +1,193 @@
+/* 짓는 방식(ADR-034, PLAN-COMPOSE-001 C3) — 디자인 칸의 접힌 고르기. 단추는 재료 셋(.studio-design-start)과 같은 꼴 */
+
+.studio-composition {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--studio-border);
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+/* 디자인 머리 바로 아래(본문 밖) — 디자인을 접어도 보인다 */
+.studio-design > .studio-composition {
+  margin-block: 8px;
+}
+
+.studio-composition > summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--studio-muted);
+  min-block-size: 24px;
+  line-height: 24px;
+}
+
+.studio-composition > summary:focus-visible {
+  outline: 2px solid var(--studio-accent);
+  outline-offset: 2px;
+}
+
+.studio-composition-current {
+  margin-inline-start: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--studio-accent-soft);
+  color: var(--studio-ink);
+  font-weight: 600;
+}
+
+.studio-composition > summary small {
+  margin-inline-start: 6px;
+  font-weight: 400;
+}
+
+.studio-composition-where {
+  margin: 6px 0 8px;
+  color: var(--studio-muted);
+  font-size: 12px;
+}
+
+.studio-composition-presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.studio-composition-preset {
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  padding: 8px 10px;
+  border: 1px solid var(--studio-border-strong);
+  border-radius: 10px;
+  background: var(--studio-surface);
+  color: var(--studio-ink);
+  font: 12px/1.4 var(--studio-sans);
+  text-align: start;
+  cursor: pointer;
+}
+
+.studio-composition-preset strong {
+  font-size: 13px;
+}
+
+.studio-composition-hint {
+  color: var(--studio-muted);
+}
+
+.studio-composition-preset[aria-pressed="true"] {
+  border-color: var(--studio-accent);
+  box-shadow: inset 0 0 0 1px var(--studio-accent);
+  background: var(--studio-accent-soft);
+}
+
+.studio-composition-preset:focus-visible {
+  outline: 2px solid var(--studio-accent);
+  outline-offset: 2px;
+}
+
+.studio-composition-preset:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.studio-composition-reason {
+  color: var(--studio-seal, #b4232c);
+}
+
+.studio-composition-sample {
+  display: block;
+  min-block-size: 40px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 접힌 칸([hidden])은 그리지 않는다 — 위의 display가 [hidden]을 이기지 않게 */
+.studio-composition-presets[hidden],
+.studio-composition-precise[hidden] {
+  display: none;
+}
+
+.studio-composition-precise {
+  display: grid;
+  gap: 8px;
+  margin-block-start: 10px;
+  padding-block-start: 10px;
+  border-block-start: 1px dashed var(--studio-border);
+}
+
+.studio-composition-axes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.studio-composition-axes label {
+  display: grid;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--studio-muted);
+}
+
+.studio-composition-now {
+  font-size: 12px;
+  color: var(--studio-muted);
+}
+
+.studio-composition-recipes {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.studio-composition-support {
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.studio-composition-support caption {
+  text-align: start;
+  color: var(--studio-muted);
+  padding-block-end: 4px;
+}
+
+.studio-composition-support th,
+.studio-composition-support td {
+  padding: 3px 8px;
+  border: 1px solid var(--studio-border);
+  text-align: center;
+}
+
+.studio-composition-support th[scope="row"] {
+  text-align: start;
+}
+
+.studio-composition-support td[data-composition-support="blocked"] {
+  color: var(--studio-seal, #b4232c);
+}
+
+/* 지원표의 시험 그림(진단만 읽는다) — 화면 밖 */
+.studio-composition-support-stage {
+  position: absolute;
+  inset-inline-start: -10000px;
+  inset-block-start: 0;
+  inline-size: 200px;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .studio-composition-presets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .studio-composition-preset {
+    min-block-size: 44px;
+  }
+
+  .studio-composition-support {
+    display: block;
+    overflow-x: auto;
+  }
+}

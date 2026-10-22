@@ -633,7 +633,7 @@
   }
 
   function runtimeUrl() {
-    return site && site.RUNTIME ? site.RUNTIME : "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js";
+    return site && site.RUNTIME ? site.RUNTIME : "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js";
   }
 
   /* 등록 코드 — 스크립트 두 줄(런타임 · registerJamo). 끝 모양은 히어로에서 고른 것 */

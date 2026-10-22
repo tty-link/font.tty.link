@@ -8,7 +8,7 @@
 어떤 글자가 어떤 짜임에 속하고 어디를 고쳐야 하는지 바로 찾게 하는 것이다.
 
 `profiles/gothic.css`는 의도적으로 이 문서보다 훨씬 단순하다.
-그 파일은 `sebul.css`와 같이 바탕 요소 한 블록 + 자리 변수만 사용하고, 여기 적힌 bucket·짜임 키 그룹은 CSS 선택자 표라기보다 현재 구조를 읽는 조회 기준에 가깝다. `profiles/gothic2.css`는 이제 `gothic.css`를 그대로 불러오는 별칭이다.
+그 파일은 `sebul.css`와 같이 글꼴 레이어의 바탕 요소 블록(자리 변수)이 뼈대이고, 자모 레이어·문맥 레이어가 자모별·이웃 조건별 보정만 더한다. bucket·짜임 키 선택자는 쓰지 않으므로 여기 적힌 bucket·짜임 키 그룹은 CSS 선택자 표라기보다 현재 구조를 읽는 조회 기준에 가깝다. `profiles/gothic2.css`는 이제 `gothic.css`를 그대로 불러오는 별칭이다.
 
 핵심 원칙은 단순하다.
 
@@ -38,11 +38,11 @@
 
 | bucket | 뜻 | 대표 예시 | bucket이 직접 소유하는 자리 |
 | --- | --- | --- | --- |
-| `right-open` | 세로모음 · 민글자 | `가`, `저`, `비` | `tl`, `tr` |
-| `right-closed` | 세로모음 · 받침 있음 | `한`, `길`, `장`, `밟`, `읽`, `닭` | `tl`, `tr` |
+| `right-open` | 세로모음 · 민글자 | `가`, `저`, `비` | `tlo`, `tro` |
+| `right-closed` | 세로모음 · 받침 있음 | `한`, `길`, `장`, `밟`, `읽`, `닭` | `tlc`, `trc` |
 | `bottom-open` | 가로모음 · 민글자 | `오`, `우`, `그` | `t`, `m` |
 | `bottom-closed` | 가로모음 · 받침 있음 | `울`, `늘`, `글`, `은`, `웅`, `뜻`, `흙` | `tt`, `mt` |
-| `split-open` | 섞임모음 · 민글자 | `과`, `왜`, `외`, `의` | `tl`, `ml`, `tr`, `jung-cluster` |
+| `split-open` | 섞임모음 · 민글자 | `과`, `왜`, `외`, `의` | `tls`, `ml`, `trs`, `jung-cluster` |
 | `split-closed` | 섞임모음 · 받침 있음 | `왕`, `권`, `획`, `원`, `월`, `횔`, `괅`, `괆` | `ttl`, `mtl`, `ttr`, `jung-cluster` |
 
 중요한 점:
@@ -59,14 +59,14 @@
 | 짜임 키 | 뜻 | 대표 예시 | 추가로 봐야 하는 자리 | 메모 |
 | --- | --- | --- | --- | --- |
 | `right:none` | 세로모음 · 민글자 | `가`, `저`, `비` | 없음 | `right-open`만 보면 된다 |
-| `right:single` | 세로모음 · 홑받침 | `한`, `길`, `장` | `br` | 종성 자리 하나 |
-| `right:double` | 세로모음 · 겹받침 | `닭`, `밟`, `읽`, `없` | `bl`, `br`, `jong-cluster` | 받침 두 부분 |
+| `right:single` | 세로모음 · 홑받침 | `한`, `길`, `장` | `brs` | 종성 자리 하나 |
+| `right:double` | 세로모음 · 겹받침 | `닭`, `밟`, `읽`, `없` | `blr`, `brd`, `jong-cluster` | 받침 두 부분 |
 | `bottom:none` | 가로모음 · 민글자 | `오`, `우`, `그` | 없음 | `bottom-open`만 보면 된다 |
 | `bottom:single` | 가로모음 · 홑받침 | `울`, `늘`, `글`, `은`, `웅`, `뜻`, `곡`, `독` | `b` | `울/늘/글`은 같은 짜임 |
 | `bottom:double` | 가로모음 · 겹받침 | `흙`, `긁`, `훑` | `bl`, `br`, `jong-cluster` | 하단 겹받침 |
 | `split-right:none` | 섞임모음 · 민글자 | `과`, `왜`, `외`, `의` | 없음 | `split-open`만 보면 된다 |
-| `split-right:single` | 섞임모음 · 홑받침 | `왕`, `권`, `획`, `원`, `월`, `횔` | `bbr` | 하단 오른쪽 받침 |
-| `split-right:double` | 섞임모음 · 겹받침 | `괅`, `괆` | `bbl`, `bbr`, `jong-cluster` | 가장 복잡한 짜임 |
+| `split-right:single` | 섞임모음 · 홑받침 | `왕`, `권`, `획`, `원`, `월`, `횔` | `bbrs` | 하단 오른쪽 받침 |
+| `split-right:double` | 섞임모음 · 겹받침 | `괅`, `괆` | `bbl`, `bbrd`, `jong-cluster` | 가장 복잡한 짜임 |
 
 실무적으로는 아래처럼 보면 된다.
 
@@ -88,7 +88,7 @@
 
 ## 빠른 조회
 
-아래 표는 `site/shape-comparison.html`의 짜임 견본을 실제로 그려진 DOM의 data 속성 기준으로 나눈 것이다.
+아래 표는 짜임 비교 페이지(사이트 저장소의 `src/shape-comparison.html`, 공개판 `https://font.tty.link/shape-comparison.html`)의 짜임 견본을 실제로 그려진 DOM의 data 속성 기준으로 나눈 것이다.
 즉 사람 손으로 붙인 섹션 제목이 아니라 실제 `data-fy-layout-bucket`과 `data-layout-key`를 기준으로 본다.
 
 | 글자 | bucket | 짜임 키 | 먼저 볼 곳 | 그다음 볼 곳 | 메모 |

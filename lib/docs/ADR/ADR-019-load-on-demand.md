@@ -51,18 +51,10 @@ Accepted
 - 일직선 위의 점은 Ramer–Douglas–Peucker(칸 100의 0.06)로 덜어낸다.
 - 붓 자소판: 원본 353KB → 251KB, gzip 93KB → 47KB. 전후 렌더 IoU는 0.991이다(차이는 가장자리 안티에일리어싱).
 
-### 5. 크기 예산
-`tests/asset_sync.test.js`가 조각마다 gzip 상한을 둔다. 넘치면 같은 변경에서 사유를 적고 상한을 고친다.
+### 5. 크기 측정 — 필요할 때 최적화 목표를 정한다
+2026-10-18 사용자 결정으로 상시 gzip 상한을 없앴다. `tests/asset_sync.test.js`는 런타임·CSS·글꼴·자소판의 gzip -9 바이트를 보고만 한다. 크기가 늘어도 검증을 실패시키지 않으며, 상한 인상 사유도 요구하지 않는다.
 
-| 조각 | 상한 |
-|---|---|
-| 런타임 | 40KB |
-| 바탕 CSS | 10KB |
-| 꾸밈·움직임 | 6KB |
-| 상호작용 | 12KB |
-| 글꼴 CSS | 15KB |
-| 자소판 | 60KB |
-| 벡터 자소 모듈 | 20KB |
+기능 개발 중에는 크기에 맞추기 위한 변경을 하지 않는다. 추후 최적화가 필요할 때 측정값을 바탕으로 그 작업의 목표 크기와 대상 자산을 정한다.
 
 ### 결과(소개 페이지, Chromium 실측)
 | | 전 | 후 |
@@ -95,9 +87,10 @@ Accepted
 ## Related
 - [ADR-010](./ADR-010-derived-fonts-and-script-loader.md) 파생 글꼴과 한 줄 설치
 - [ADR-017](./ADR-017-composition-axes-and-themes.md) 조합 체계(꾸밈 클래스)
-- `font-kku.js` Autoload 절, `font-kku.css` `[data-fy-font-pending]`, `tests/asset_sync.test.js` 크기 예산
+- `font-kku.js` Autoload 절, `font-kku.css` `[data-fy-font-pending]`, `tests/asset_sync.test.js` 크기 측정
 
 ## Change Log
+- 2026-10-18: 사용자 지시에 따라 gzip 강제 한도를 제거하고 측정 보고만 유지. 목표 크기는 추후 최적화 작업에서 정한다.
 - 2026-10-12: 문서·사이트·AI 설명서의 복사 주소 기본값을 `font-kku.min.js`로 바꿨다(사용자 승인 "모두 진행"). 0.1.1을 jsDelivr와 같은 판(Terser 5.48.0·clean-css 5.3.3)으로 흉내 낸 실측(`scripts/check_cdn_min.py --simulate`): 런타임 gzip 78,329 → 40,812 B, `profiles/sebul.css` 11,804 → 2,825 B, 첫 화면 `data-fonts="sebul neon"`(런타임·바탕 CSS·두 글꼴) 107,496 → 60,152 B(−44%). 바탕 `font-kku.css`와 `font-kku-motion.css`는 clean-css 5.3.3이 `@property` 서술자(`syntax`·`inherits`·`initial-value`)를 몰라 경고하므로 jsDelivr가 원본을 보낸다(안전, 0.1.0도 같다). 원소·기기 글꼴·그림 자소·필요할 때 받기·자소 모듈·확장의 DOM과 화소가 원본과 같다. 공개 뒤에는 같은 스크립트를 네트워크로 돌린다(ADR-022 §6). unpkg는 압축본을 만들지 않고, 즉석 압축본에는 SRI를 걸지 않는다.
 - 2026-10-13: 한 줄 설치 시작 조건에 `data-jamo-sets`를 더했다 — 셋(`data-fonts`·`data-addons`·`data-jamo-sets`) 가운데 하나만 있어도 바탕 CSS·세트
   모듈을 붙이고 필요할 때 받기를 켠다(`<link>`로 CSS를 붙인 페이지도). 받을 곳이 없는데 등록되지 않은 `jamo-set`을 쓴 바탕 요소는 `load` 뒤 세트 이름마다

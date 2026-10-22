@@ -1,4 +1,5 @@
-/* 편집 기록·영향 목록(font-studio-history.js, 설계 v1.2 §13.6, PLAN-HANGUL-001 F9). 칸은 F 껍데기가 [hidden]으로만 가린다.
+/* 편집 기록·영향 목록(font-studio-history.js, 설계 v1.2 §13.6, PLAN-HANGUL-001 F9, 하나의 기록 PLAN-STUDIO-002 S2). 칸은 F 껍데기가
+ * [hidden]으로만 가린다. 기록 칸은 디자인 본문 밖(모든 페이지)이다.
  * 기록 칸: 접힌 한 줄(개수 · 지금 항목) 아래 항목 목록 — 지금 자리는 강조, 되돌린 항목은 흐리게. 영향 목록: 묻는 dialog와 막지 않는
  * 알림 칸이 같은 줄 모양(영향 · 자모 역할 · 전 → 후)을 쓰고, 오류·원소로 떨어짐·그린 원본을 잃음은 도장색. */
 
@@ -156,8 +157,31 @@
 }
 
 .studio-history-label {
+  flex: 1 1 auto;
   min-inline-size: 0;
   overflow-wrap: anywhere;
+}
+
+/* 하나의 기록(PLAN-STUDIO-002 S2): 갈래(CSS·디자인·그림·자소판·검수) 꼬리표와 에이전트 행위자 */
+.studio-history-kind {
+  flex: none;
+  padding: 0 6px;
+  border: 1px solid var(--studio-border);
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--studio-ink-soft);
+  background: var(--studio-surface-muted);
+}
+
+.studio-history-actor {
+  flex: none;
+  font-size: 11px;
+  color: var(--studio-accent);
+}
+
+.studio-history-entry[data-locked] .studio-history-jump {
+  cursor: default;
 }
 
 .studio-history-time {
@@ -307,4 +331,12 @@
   .studio-history-summary::before {
     transition: none;
   }
+}
+
+/* 모든 페이지에 보이는 기록 칸(디자인 본문 밖) — 본문 안 F 칸과 같은 틀 */
+.studio > .studio-f-panel.studio-history {
+  padding: 8px 12px;
+  border: 1px solid var(--studio-border);
+  border-radius: var(--studio-radius);
+  background: var(--studio-surface);
 }

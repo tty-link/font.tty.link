@@ -13,10 +13,12 @@ Accepted
 
 ## Decision
 - 글꼴이나 페이지가 바탕 요소에 `--fy-sprite-paint: mask`를 주면(기본 `image`), 런타임이 그림 자소 글꼴의 바탕 요소에 `data-fy-sprite-paint="mask"`를 찍는다. 값은 렌더할 때 읽고, 바뀌면 다시 그린다(재료·종류와 같은 구조 값). 벡터 자소(`jamo-set`)가 걸리면 쓰지 않는다.
+  - 정정(2026-10-17): 2026-10-11 [ADR-020](./ADR-020-rendering-boundaries-and-recovery.md)의 부분 벡터 세트 대체 표시부터는 벡터 자소가 걸려도 `data-fy-sprite-paint="mask"`를 찍는다. 마스크는 벡터 SVG를 그린 칸(`data-fy-vector-cell`)에만 걸리지 않고, 세트에 없어 기반 자소판으로 그리는 칸에는 그대로 걸린다(코어 규칙 `:not([data-fy-vector-cell])`, 스모크 `assert_design_regressions`의 `maskFallback`).
 - 코어 규칙은 그 바탕 요소의 자소 노드에서 자소판을 마스크로 쓴다. `mask-image`·`mask-size`·`mask-position`은 배경 칸 계산과 같은 식이다(`-webkit-` 접두 포함). 칠은 `background-image: var(--fy-sprite-fill, linear-gradient(currentColor, currentColor))`다.
   - 자소판의 알파만 모양으로 쓰므로 색은 CSS가 정한다. 기본은 글자 색이라 페이지가 기기 글꼴처럼 자모마다 `color`를 준다.
   - `--fy-sprite-fill`(글꼴·페이지, `<image>`)로 그라데이션·무늬·그림을 준다.
 - 글자는 `-webkit-text-fill-color: transparent`로 숨긴다. 시트 규칙의 `color: transparent`는 마스크가 아닌 바탕 요소에만 걸리도록 떼어 냈다.
+  - 정정(2026-10-21): 칠만 투명하게 두면 글자 모양대로 그리는 것이 남는다 — 꾸밈의 글자 획(outline·neon `-webkit-text-stroke`)이 마스크 안에 숨은 기기 글꼴 자모를 비치고, 이미지 칠에서는 페이지 `text-shadow`·`--fy-stroke`가 기기 글꼴 자모의 그림자·윤곽을 그렸다. 그림이 칠하는 노드(이미지·마스크 칠)의 자기 글자는 모든 엔진에서 `::first-letter { font-size: 0 }`이다(탐침 matrix-16). 강제 색에서는 칠 그라디언트가 지워지므로 마스크 칠을 `CanvasText`로 칠한다.
 - 레지스트리 `--fy-sprite-paint`(font·host, keyword `image|mask`, 런타임이 읽음), `--fy-sprite-fill`(font·host, image). 701(644).
 
 ## Alternatives Considered
@@ -51,3 +53,4 @@ Accepted
   깐다. 기본 자소판은 칸 가장자리 1%가 비어 있어(측정: pilgi·dunggeun·butgeul·crayon·jasu·pixel·sprite-system) 큰 글자에서는 잉크가 그대로이고,
   작은 글자(노드 상자 100 화면 화소 미만)에서는 상자 가장자리 한 화소 안의 잉크 끝만 빠진다. `--fy-sprite-fill` 이미지도 같은 안쪽 상자에 맞는다.
   스모크 `sprite-mask-seams`(시험 판 — 칸 가운데 점, 마스크 칠 대 보통 칠, 배율 1·2, Firefox·WebKit도)
+- 2026-10-17: 문서 정정 — "벡터 자소가 걸리면 쓰지 않는다"는 2026-10-11(ADR-020, 커밋 `0d8103a`) 뒤로 사실이 아니다. 런타임은 벡터 자소가 있어도 마스크 칠을 찍고(`font-kku.js` 바탕 요소 상태), 코어 마스크 규칙은 벡터로 그린 칸만 뺀다(`font-kku.css` `:not([data-fy-vector-cell])`). 결정은 그대로이고 Decision 첫 항목에 정정 문장을 붙였다

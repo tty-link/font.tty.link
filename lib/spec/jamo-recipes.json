@@ -52,7 +52,16 @@
     { "id": "rieul-lines", "target": "ㄹ", "operation": "place", "parts": [{ "id": "h1", "jamo": "ㅡ", "at": { "segments": ["hv.0"] } }, { "id": "v1", "jamo": "ㅣ", "at": { "segments": ["hv.1"] } }, { "id": "h2", "jamo": "ㅡ", "at": { "segments": ["h.0"] } }, { "id": "v2", "jamo": "ㅣ", "at": { "segments": ["vh.0"] } }, { "id": "h3", "jamo": "ㅡ", "at": { "segments": ["vh.1"] } }] },
     { "id": "pieup-lines", "target": "ㅍ", "operation": "place", "parts": [{ "id": "top", "jamo": "ㅡ", "at": { "strokes": ["h1"] } }, { "id": "left", "jamo": "ㅣ", "at": { "strokes": ["v1"] } }, { "id": "right", "jamo": "ㅣ", "at": { "strokes": ["v2"] } }, { "id": "bottom", "jamo": "ㅡ", "at": { "strokes": ["h2"] } }] },
     { "id": "bieup-lines", "target": "ㅂ", "operation": "place", "parts": [{ "id": "left", "jamo": "ㅣ", "at": { "strokes": ["v1"] } }, { "id": "right", "jamo": "ㅣ", "at": { "strokes": ["v2"] } }, { "id": "middle", "jamo": "ㅡ", "at": { "strokes": ["h1"] } }, { "id": "bottom", "jamo": "ㅡ", "at": { "strokes": ["h2"] } }] },
-    { "id": "bieup-raised", "target": "ㅂ", "operation": "place", "parts": [{ "id": "lower", "jamo": "ㅁ", "at": { "box": [0, 0.46, 1, 1] } }, { "id": "leftExtension", "jamo": "ㅣ", "at": { "box": [0, 0, 0, 0.46] } }, { "id": "rightExtension", "jamo": "ㅣ", "at": { "box": [1, 0, 1, 0.46] } }] }
+    { "id": "bieup-raised", "target": "ㅂ", "operation": "place", "parts": [{ "id": "lower", "jamo": "ㅁ", "at": { "box": [0, 0.46, 1, 1] } }, { "id": "leftExtension", "jamo": "ㅣ", "at": { "box": [0, 0, 0, 0.46] } }, { "id": "rightExtension", "jamo": "ㅣ", "at": { "box": [1, 0, 1, 0.46] } }] },
+
+    { "id": "cheonjiin-a", "target": "ㅏ", "operation": "place", "parts": [{ "id": "stem", "jamo": "ㅣ", "at": { "strokes": ["v"] } }, { "id": "dot", "jamo": "ㆍ", "at": { "strokes": ["dot"] } }] },
+    { "id": "cheonjiin-ya", "target": "ㅑ", "operation": "place", "parts": [{ "id": "stem", "jamo": "ㅣ", "at": { "strokes": ["v"] } }, { "id": "dot1", "jamo": "ㆍ", "at": { "strokes": ["dot1"] } }, { "id": "dot2", "jamo": "ㆍ", "at": { "strokes": ["dot2"] } }] },
+    { "id": "cheonjiin-eo", "target": "ㅓ", "operation": "place", "parts": [{ "id": "dot", "jamo": "ㆍ", "at": { "strokes": ["dot"] } }, { "id": "stem", "jamo": "ㅣ", "at": { "strokes": ["v"] } }] },
+    { "id": "cheonjiin-yeo", "target": "ㅕ", "operation": "place", "parts": [{ "id": "dot1", "jamo": "ㆍ", "at": { "strokes": ["dot1"] } }, { "id": "dot2", "jamo": "ㆍ", "at": { "strokes": ["dot2"] } }, { "id": "stem", "jamo": "ㅣ", "at": { "strokes": ["v"] } }] },
+    { "id": "cheonjiin-o", "target": "ㅗ", "operation": "place", "parts": [{ "id": "dot", "jamo": "ㆍ", "at": { "strokes": ["dot"] } }, { "id": "ground", "jamo": "ㅡ", "at": { "strokes": ["h"] } }] },
+    { "id": "cheonjiin-yo", "target": "ㅛ", "operation": "place", "parts": [{ "id": "dot1", "jamo": "ㆍ", "at": { "strokes": ["dot1"] } }, { "id": "dot2", "jamo": "ㆍ", "at": { "strokes": ["dot2"] } }, { "id": "ground", "jamo": "ㅡ", "at": { "strokes": ["h"] } }] },
+    { "id": "cheonjiin-u", "target": "ㅜ", "operation": "place", "parts": [{ "id": "ground", "jamo": "ㅡ", "at": { "strokes": ["h"] } }, { "id": "dot", "jamo": "ㆍ", "at": { "strokes": ["dot"] } }] },
+    { "id": "cheonjiin-yu", "target": "ㅠ", "operation": "place", "parts": [{ "id": "ground", "jamo": "ㅡ", "at": { "strokes": ["h"] } }, { "id": "dot1", "jamo": "ㆍ", "at": { "strokes": ["dot1"] } }, { "id": "dot2", "jamo": "ㆍ", "at": { "strokes": ["dot2"] } }] }
   ],
   "defaults": {
     "ㄲ": "double-giyeok", "ㄸ": "double-digeut", "ㅃ": "double-bieup", "ㅆ": "double-siot", "ㅉ": "double-jieut",
@@ -67,6 +76,24 @@
   },
   "history": {
     "ㅎ": "hieut-added"
+  },
+  "levels": {
+    "note": "짓는 방식의 조각 깊이(ADR-034 §2) — 자모마다 그 깊이에서 쓸 조립식. pieces(조각으로)는 맨 위 자모 하나만 한 번 다른 자모로 나눈다(ㅎ = ㅗ + ㅇ, ㄲ = ㄱ + ㄱ, ㅋ = ㄱ + 획). origins(원형으로)는 조각 안에서도 되풀이해 원형 8(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)과 천지인까지 내려간다(ㅎ = ㆍ + ㅡ + ㅇ, ㅏ = ㅣ + ㆍ). 표에 없는 자모는 그 깊이에서 자모 그대로다. 디자인 규칙이 자모마다 고른 조립식이 늘 이긴다. 옛자모 조립식도 같은 꼴로 더한다(ADR-034 §7)",
+    "pieces": {
+      "ㅎ": "hieut-circle-o",
+      "ㄲ": "double-giyeok", "ㄸ": "double-digeut", "ㅃ": "double-bieup", "ㅆ": "double-siot", "ㅉ": "double-jieut",
+      "ㄳ": "final-giyeok-siot", "ㄵ": "final-nieun-jieut", "ㄶ": "final-nieun-hieut", "ㄺ": "final-rieul-giyeok", "ㄻ": "final-rieul-mieum", "ㄼ": "final-rieul-bieup", "ㄽ": "final-rieul-siot", "ㄾ": "final-rieul-tieut", "ㄿ": "final-rieul-pieup", "ㅀ": "final-rieul-hieut", "ㅄ": "final-bieup-siot",
+      "ㅐ": "vowel-ae", "ㅒ": "vowel-yae", "ㅔ": "vowel-e", "ㅖ": "vowel-ye", "ㅘ": "vowel-wa", "ㅙ": "vowel-wae", "ㅚ": "vowel-oe", "ㅝ": "vowel-wo", "ㅞ": "vowel-we", "ㅟ": "vowel-wi", "ㅢ": "vowel-ui",
+      "ㅋ": "kieuk-added", "ㄷ": "digeut-added", "ㅌ": "tieut-added", "ㅈ": "jieut-added", "ㅊ": "chieut-added"
+    },
+    "origins": {
+      "ㅎ": "hieut-added-lines", "ㄹ": "rieul-lines", "ㅂ": "bieup-lines", "ㅍ": "pieup-lines",
+      "ㅋ": "kieuk-added", "ㄷ": "digeut-added", "ㅌ": "tieut-added", "ㅈ": "jieut-added", "ㅊ": "chieut-added",
+      "ㄲ": "double-giyeok", "ㄸ": "double-digeut", "ㅃ": "double-bieup", "ㅆ": "double-siot", "ㅉ": "double-jieut",
+      "ㄳ": "final-giyeok-siot", "ㄵ": "final-nieun-jieut", "ㄶ": "final-nieun-hieut", "ㄺ": "final-rieul-giyeok", "ㄻ": "final-rieul-mieum", "ㄼ": "final-rieul-bieup", "ㄽ": "final-rieul-siot", "ㄾ": "final-rieul-tieut", "ㄿ": "final-rieul-pieup", "ㅀ": "final-rieul-hieut", "ㅄ": "final-bieup-siot",
+      "ㅐ": "vowel-ae", "ㅒ": "vowel-yae", "ㅔ": "vowel-e", "ㅖ": "vowel-ye", "ㅘ": "vowel-wa", "ㅙ": "vowel-wae", "ㅚ": "vowel-oe", "ㅝ": "vowel-wo", "ㅞ": "vowel-we", "ㅟ": "vowel-wi", "ㅢ": "vowel-ui",
+      "ㅏ": "cheonjiin-a", "ㅑ": "cheonjiin-ya", "ㅓ": "cheonjiin-eo", "ㅕ": "cheonjiin-yeo", "ㅗ": "cheonjiin-o", "ㅛ": "cheonjiin-yo", "ㅜ": "cheonjiin-u", "ㅠ": "cheonjiin-yu"
+    }
   },
   "derivationOnly": {
     "ㅂ": "ㅁ에서 세로획을 위로 솟게 한 가획 — 획 하나로 떼어지지 않아 add 조립식이 없다. 기본은 선 조립식(place)",

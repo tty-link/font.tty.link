@@ -73,7 +73,7 @@
     --fy-ttl-top: -17.52%;  --fy-ttl-left: -5.3%; --fy-ttl-size: 0.766em; --fy-ttl-scale-x: 1.042; --fy-ttl-scale-y: 0.834; /* ttl: split-closed 초성. 곽/관/괌/괵 ㄱ 기준 끝 0.31~0.37, 권/귄 0.39~0.41 → ㄱ [0.06,0.37] (TRK-033: 이전 1.04는 0.447까지 내려와 ㅗ bar와 포갬) */
     /* Jungseong — 세로 모음은 stem x[0.63,0.715] 고정을 기준으로 산출 (ᅡ stem 소스 0.38 기준) */
     --fy-tro-top: -14%;  --fy-tro-left: 35%; --fy-tro-size: 1em;    --fy-tro-scale-x: 0.8; --fy-tro-scale-y: 1.009; /* tro: right-open 중성. 예: 가의 ㅏ. 소스 ᅡ의 곁줄기가 native보다 길어(잉크폭 0.28 vs 0.22em) 가로 압축 — left/scale-x는 짝으로 산출(좌표하강으로는 못 찾는 결합 이동) */
-    --fy-trc-top: -14.3%;  --fy-trc-left: 26.2%; --fy-trc-size: 0.958em;    --fy-trc-scale-x: 0.95; --fy-trc-scale-y: 0.769; /* trc: right-closed 중성. 한의 ㅏ 기둥 끝 0.640 실측 정합 (0.69는 0.553으로 과단축) */
+    --fy-trc-top: -14.3%;  --fy-trc-left: 35%; --fy-trc-size: 0.958em;    --fy-trc-scale-x: 0.835; --fy-trc-scale-y: 0.769; /* trc: right-closed 중성. 한의 ㅏ 기둥 끝 0.640 실측 정합 (0.69는 0.553으로 과단축). 가로 매핑은 tro와 같다(left 35%, scale-x 0.8 ÷ 크기 0.958) — 예전 26.2%·0.95는 x = 0.257 + 0.910u라 닫힌 음절 기둥이 열린 음절보다 0.04em 왼쪽(각 0.607 대 가 0.640)이고 왼쪽 획이 초성에 붙었다(2026-10-20, tlc×trc 겹침 4% 넘는 쌍 174 → 0) */
     --fy-trs-top: -13.7%;  --fy-trs-left: 27.5%;   --fy-trs-size: 0.938em;    --fy-trs-scale-x: 1.028;  --fy-trs-scale-y: 1.081;    /* trs: split-open tail. 예: 의/과의 ㅣ/ㅏ */
     --fy-ttr-top: -13.71%;  --fy-ttr-left: 38.24%; --fy-ttr-size: 0.96em;    --fy-ttr-scale-x: 0.733; --fy-ttr-scale-y: 0.688; /* ttr: split-closed tail. 곽/왕의 ㅏ 기준 x[0.633,0.847] 끝 0.51~0.58 → [-0.007,0.57] (TRK-033: 이전 값은 0.05em 왼쪽·끝 0.627로 받침 머리를 뚫었다. ᅢ/ᅥ/ᅦ/ᅵ는 자모 규칙) */
     --fy-m-top: 8%;       --fy-m-left: -0.5%;      --fy-m-size: 0.992em;      --fy-m-scale-x: 1.011;    --fy-m-scale-y: 0.762;   /* m: bottom-open 중성. 예: 고의 ㅗ bar y[0.63,0.68] */
@@ -125,25 +125,14 @@
     --fy-bbrd-weight: 800;
     --fy-tt-weight: 600;
   }
-  /* --- composite / syllable depth 전용 슬롯 -----------------------------------
-   * atomic depth에서는 emit되지 않는다. 값은 실측 적합 대상이며 시드값에서 출발한다. */
-  :where([data-fy-font="gothic"]) {
-    --fy-mw-top: 8%; --fy-mw-left: 8%; --fy-mw-size: 0.62em; --fy-mw-scale-x: 1; --fy-mw-scale-y: 1;
-    --fy-mtw-top: 6%; --fy-mtw-left: 8%; --fy-mtw-size: 0.58em; --fy-mtw-scale-x: 1; --fy-mtw-scale-y: 1;
-    --fy-bw-top: 40.6%; --fy-bw-left: 6.9%; --fy-bw-size: 0.42em; --fy-bw-scale-x: 1.011; --fy-bw-scale-y: 0.804;
-    --fy-brw-top: 40.3%; --fy-brw-left: 6.9%; --fy-brw-size: 0.412em; --fy-brw-scale-x: 1.305; --fy-brw-scale-y: 0.821;
-    --fy-bbw-top: 51%; --fy-bbw-left: 10%; --fy-bbw-size: 0.52em; --fy-bbw-scale-x: 1; --fy-bbw-scale-y: 1;
-    --fy-hs-top: -11.51%; --fy-hs-left: 0.07%; --fy-hs-size: 0.942em; --fy-hs-scale-x: 0.774; --fy-hs-scale-y: 0.958;
-    --fy-hts-top: -12.63%; --fy-hts-left: -0.01%; --fy-hts-size: 0.852em; --fy-hts-scale-x: 0.846; --fy-hts-scale-y: 0.827;
-  }
-  /* syllable depth 전용 미세 보정 — head가 초성+base를 대신하므로 tail과 받침의
-   * 최적 위치가 atomic과 다르다. 공유 slot을 건드리지 않도록 depth로 게이트한다. */
-  :where([data-fy-font="gothic"][data-fy-vowel-depth="syllable"]) {
-    --fy-trs-top: -13.7%; --fy-trs-left: 29.5%; --fy-trs-size: 0.938em; --fy-trs-scale-x: 0.972; --fy-trs-scale-y: 1.081;
-    --fy-ttr-top: -13%; --fy-ttr-left: 29.5%; --fy-ttr-size: 0.892em; --fy-ttr-scale-x: 0.97; --fy-ttr-scale-y: 0.865;
-    --fy-bbrs-top: 24.8%; --fy-bbrs-left: -4.6%; --fy-bbrs-size: 0.778em; --fy-bbrs-scale-x: 1.455; --fy-bbrs-scale-y: 0.806;
-    --fy-bbw-top: 42.1%; --fy-bbw-left: 14.4%; --fy-bbw-size: 0.392em; --fy-bbw-scale-x: 1.266; --fy-bbw-scale-y: 0.81;
-  }
+  /* --- composite / syllable depth 전용 슬롯(mw·mtw·bw·brw·bbw·hs·hts) ------------------------
+   * 이 글꼴의 기본 나누기(모음·받침 낱)에서는 쓰지 않는 자리다. 값을 밝히지 않는다 — 페이지가 이 나누기를 고르면 런타임이 같은 음절을
+   * 기본 나누기로 그린 조각 자리에 그린다(ADR-034 §5 나누기 맞춤, 끄기 --fy-font-split-fit: none). 예전 시드값(mw·mtw·bbw는 코어
+   * 기본과 같았고 bw·brw·hs·hts는 덜 맞춘 값 — ㄺ이 작았다)은 2026-10-18 지웠다. 이 자리를 손으로 정하려면 여기(또는 font-kku.tune)에
+   * --fy-<slot>-top·left·size·scale-x·scale-y를 쓴다 — 밝힌 값이 이긴다(맞춤은 그 노드를 옮기지 않는다). */
+  /* 머리 음절(syllable depth)의 꼬리 모음·받침은 기본 나누기(atomic)와 같은 값이다 — 맞춤이 머리를 기본 나누기의 초성+모음 자리에
+   * 그리므로(ADR-034 §5) 꼬리·받침의 제자리도 같다. 예전 머리 시드값에 맞춰 둔 syllable 전용 값(trs·ttr·bbrs·bbw)과 자모 규칙의
+   * :not([data-fy-vowel-depth="syllable"]) 게이트는 2026-10-18 거뒀다(시드 머리와 함께 낡았다 — 획/권 받침이 머리와 겹쳤다). */
 }
 
 @layer font-kku.jamo {
@@ -175,7 +164,7 @@
     --fy-jamo-dx: -0.048em;
   }
   :where([data-fy-font="gothic"]) [data-fy-pos="trc"][data-jamo="ᅨ"] {
-    --fy-jamo-dx: -0.034em;
+    --fy-jamo-dx: -0.048em; /* trc 가로 매핑이 tro와 같아져 tro ᅨ와 같은 값(2026-10-20) */
   }
   :where([data-fy-font="gothic"]) [data-jamo="ᅵ"] {
     --fy-jamo-dx: -0.019em;
@@ -204,9 +193,15 @@
     --fy-m-clip: inset(35% -1em -1em -1em);
   }
   :where([data-fy-font="gothic"]) [data-fy-pos="m"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
-    --fy-m-top: 2.85%;
+    --fy-m-top: -2.15%;
     --fy-m-scale-y: 0.914;
-    --fy-m-clip: inset(-1em -1em 22.2% -1em);
+    --fy-m-clip: inset(-1em -1em 18% -1em);
+  }
+  /* 받침 없는 ㅜ·ㅠ 막대 0.500·내림획 끝 0.873(기준 수·누·두 0.487–0.500, 끝 0.860–0.873 — 예전 0.560·0.893). 위 초성은 context 레이어가
+   * ㅜ 문맥으로 줄인다. ᅲ 글리프는 막대가 0.013em 높아 따로 내려 ㅜ와 같은 자리에 둔다(2026-10-21). */
+  :where([data-fy-font="gothic"]) [data-fy-pos="m"][data-jamo="ᅲ"] {
+    --fy-m-top: -1.05%;
+    --fy-m-clip: inset(-1em -1em 19.4% -1em);
   }
   /* 받침 있는 ㅜ/ㅠ — 이전 값(0.36, weight 800)은 막대가 0.037em으로 ㅡ(글 0.067em)의 절반이고
    * 내림획만 0.11em으로 굵었다(획 굵기 감사 B 54%). 다른 가로모음과 같은 weight로 두고 막대를
@@ -340,6 +335,18 @@
     --fy-tls-scale-x: 1.14;
     --fy-tls-scale-y: 1.164;
   }
+  /* split-open ㅎ(화·회·희) — tls 기본 상자는 ㄱ·ㅇ(과·의)에 맞춘 것이라 ㅎ이 x[0.060,0.533] y[0.053,0.493]으로 기준(희·회
+   * x[0.067,0.593] y[0.040,0.570])보다 0.06em 좁고 0.08em 짧았다. 가로는 기준대로, 세로는 링 끝 0.533까지만 키운다 — 기준 높이(0.570)로
+   * 키우면 회의 ㅗ 꼭지가 0.073em(예전 0.134)으로 짧아져 24–32px에서 회·희가 갈리지 않았다(헷갈리는 짝 감사 tol 0.06–0.11 → 0.00–0.05).
+   * 기기 글꼴 재료는 배율만큼 획이 굵어지므로(세로획 0.087 → 0.097em — ㅎ의 자리 중앙값이 올라 한·헌의 tlc ㅎ이 획 굵기 감사 A 73%로
+   * 떨어졌다) weight를 400으로 둔다(2026-10-21). ㅜ 문맥(휘·훠·훼)과 ㅙ(홰)는 context 레이어가 가로를 되돌린다. */
+  :where([data-fy-font="gothic"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+    --fy-tls-top: -20.72%;
+    --fy-tls-left: -7.55%;
+    --fy-tls-scale-x: 1.268;
+    --fy-tls-scale-y: 1.255;
+    --fy-tls-weight: 400; /* 잉크 x[0.067,0.593] y[0.040,0.533] */
+  }
   /* 받침 ㅇ (split-right: 왕/횡) — 일반 bbrs보다 크고 납작한 타원으로, 중앙 정렬. */
   :where([data-fy-font="gothic"]) [data-fy-pos="bbrs"][data-jamo="ᆼ"] {
     --fy-bbrs-top: 26.1%;
@@ -369,7 +376,7 @@
     --fy-mtl-weight: 700;
     --fy-mtl-clip: inset(51.8% -1em -1em -1em); /* 잉크 bar [0.405,0.476], 기둥 0.36~ */
   }
-  :where([data-fy-font="gothic"]:not([data-fy-vowel-depth="syllable"])) [data-fy-pos="ttr"][data-jamo="ᅵ"] {
+  :where([data-fy-font="gothic"]) [data-fy-pos="ttr"][data-jamo="ᅵ"] {
     --fy-ttr-top: -13.21%;
     --fy-ttr-left: 43.48%;
     --fy-ttr-scale-x: 0.719;
@@ -384,7 +391,7 @@
   }
   /* 꼬리 ㅓ(권/원/월) — 기준 x[0.54,0.76](기둥 [0.68,0.76]). 조합은 x[0.40,0.68]로 0.1em 왼쪽이라
    * 곁줄기가 초성(ㄱ/ㅅ/ㅈ) 오른쪽 끝에 박혔다(숸 15%, 권 13%). */
-  :where([data-fy-font="gothic"]:not([data-fy-vowel-depth="syllable"])) [data-fy-pos="ttr"][data-jamo="ᅥ"] {
+  :where([data-fy-font="gothic"]) [data-fy-pos="ttr"][data-jamo="ᅥ"] {
     --fy-ttr-top: -13.21%;
     --fy-ttr-left: 44.29%;
     --fy-ttr-scale-x: 0.753;
@@ -392,19 +399,30 @@
   }
   /* 꼬리 ㅐ(괜/왠/됐) — 기준 x[0.54,0.78]. 조합은 x[0.46,0.75]로 왼기둥이 ㅗ bar 끝과
    * 초성 ㄱ에 박혔다(괜 ttl×ttr 35%). */
-  :where([data-fy-font="gothic"]:not([data-fy-vowel-depth="syllable"])) [data-fy-pos="ttr"][data-jamo="ᅢ"] {
+  :where([data-fy-font="gothic"]) [data-fy-pos="ttr"][data-jamo="ᅢ"] {
     --fy-ttr-top: -13.16%;
     --fy-ttr-left: 37.71%;
     --fy-ttr-scale-x: 0.785;
+    --fy-ttr-weight: 700; /* 닫힌 음절 기둥이 tro 가로 배율로 가늘어져(기기 글꼴 재료 기둥 중앙값 0.073em) 이 꼬리(0.093)가 획 굵기 감사의 25%를 넘었다(2026-10-20) */
     --fy-ttr-scale-y: 0.681; /* 잉크 x[0.54,0.78] y[-0.007,0.57] */
   }
   /* 꼬리 ㅐ(split-open ㅙ: 괘/꽤/왜/돼) — 기준 x[0.527,0.78]. 조합은 x[0.507,0.793]로 0.02em 왼쪽·
    * 0.03em 넓어 왼기둥이 초성 오른끝에 박혔다(꽤 ᄁ×ᅢ 19%, 괘 9%). */
-  :where([data-fy-font="gothic"]:not([data-fy-vowel-depth="syllable"])) [data-fy-pos="trs"][data-jamo="ᅢ"] {
+  /* 꼬리 ㅣ·ㅓ(split-open ㅚ·ㅟ·ㅢ·ㅝ: 괴/뒤/의/궈) — split-closed(ttr)와 같은 가로 매핑. 예전 trs 공용 값(27.5%·1.028)은 기둥이 0.640으로
+   * 기준(0.673–0.680)보다 왼쪽이고 기기 글꼴 재료 획이 두꺼웠다(2026-10-20, 0.640 → 0.673–0.680) */
+  :where([data-fy-font="gothic"]) [data-fy-pos="trs"][data-jamo="ᅵ"] {
+    --fy-trs-left: 43.48%;
+    --fy-trs-scale-x: 0.736;
+  }
+  :where([data-fy-font="gothic"]) [data-fy-pos="trs"][data-jamo="ᅥ"] {
+    --fy-trs-left: 44.29%;
+    --fy-trs-scale-x: 0.771;
+  }
+  :where([data-fy-font="gothic"]) [data-fy-pos="trs"][data-jamo="ᅢ"] {
     --fy-trs-left: 32.87%;
     --fy-trs-scale-x: 0.909;
   }
-  :where([data-fy-font="gothic"]:not([data-fy-vowel-depth="syllable"])) [data-fy-pos="ttr"][data-jamo="ᅦ"] {
+  :where([data-fy-font="gothic"]) [data-fy-pos="ttr"][data-jamo="ᅦ"] {
     --fy-ttr-top: -13.18%;
     --fy-ttr-left: 44.48%;
     --fy-ttr-scale-x: 0.655;
@@ -412,13 +430,13 @@
   }
   /* 받침 ㄹ(월/궐/괄) — 기준 x[0.14~0.16,0.75~0.79] y[0.52~0.55,0.867]. 조합은 오른쪽 반칸
    * x[0.37,0.77] y[0.513,]이라 두꺼워진 ㅝ bar([0.47,0.537])와 15% 포갰다. */
-  :where([data-fy-font="gothic"]:not([data-fy-vowel-depth="syllable"])) [data-fy-pos="bbrs"][data-jamo="ᆯ"] {
+  :where([data-fy-font="gothic"]) [data-fy-pos="bbrs"][data-jamo="ᆯ"] {
     --fy-bbrs-top: 27.47%;
     --fy-bbrs-left: -3.37%;
     --fy-bbrs-scale-x: 1.55;
     --fy-bbrs-scale-y: 0.814; /* 잉크 x[0.15,0.77] y[0.585,0.867] — 꼬리 끝 0.57 아래 */
   }
-  :where([data-fy-font="gothic"]:not([data-fy-vowel-depth="syllable"])) [data-fy-pos="bbrs"][data-jamo="ᆨ"] {
+  :where([data-fy-font="gothic"]) [data-fy-pos="bbrs"][data-jamo="ᆨ"] {
     --fy-bbrs-top: 27.08%;
     --fy-bbrs-left: -1.62%;
     --fy-bbrs-scale-x: 1.518;
@@ -508,22 +526,52 @@
   /* ㅗ/ㅛ 기둥 — 초성이 둥근 자모(ㅇ/ㅎ)면 기둥이 링 내부(counter)까지 침투하므로
    * 링 하단 접점에서 멈추도록 압축하고 weight로 bar 두께를 보상한다 (오/호).
    * ㄱ/ㄴ 등 개방형 초성은 기둥이 빈 중앙을 채우므로 기본값(관통 없음)을 유지한다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄋ"], [data-jamo="ᄒ"])) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄋ"], [data-fy-jamos~="ᄒ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     /* 막대는 다른 ㅗ와 같은 0.068em(이전 0.542는 0.044em) — 길어진 꼭지는 위쪽만 잘라 링 아랫선(0.37em)에서 시작 */
     --fy-m-top: 6.98%;
     --fy-m-scale-y: 0.851;
     --fy-m-weight: 700;
     --fy-m-clip: inset(33.9% -1em -1em -1em);
   }
-  /* split 슬롯도 같은 이유다. ml은 ㅇ/ㅎ 공통, mtl은 초성별로 나눈다 — 같은 레이어·같은
+  /* ㄲ 초성 + 받침 없는 ㅗ/ㅛ — 앞 ㄱ 내림획(x 0.35–0.45em)이 꼭지와 같은 열에서 0.42em까지 내려와(막대 0.525em) 꼭지가
+   * 내림획에 이어 붙었다 — 24px에서 꼬가 끄로 읽혔다(헷갈리는 짝 감사 rel 0.05, 끄는 내림획과 막대 사이 0.065em뿐).
+   * ㄲ은 ㄱ처럼 꼭지와 엇갈려 설 수 없으니 내림획 아래쪽을 다른 초성 밑선(ㅂ 0.335em)에서 자르고, 꼭지는 0.04em 띄운
+   * 0.375em에서 시작한다(막대 위 0.15em — 기본 배치 records-2 문턱 0.14em과 같은 원칙). 끄·꾸의 ㄲ은 그대로다. */
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄁ"] {
+    --fy-t-clip: inset(-1em -1em 42% -1em);
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"] [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-m-clip: inset(39.5% -1em -1em -1em);
+  }
+  /* split 슬롯도 같은 이유다. ml·mtl 모두 초성별로 나눈다 — 같은 레이어·같은
    * 특이도의 두 규칙이 한 노드에서 값을 나눠 갖지 않도록 초성 조건을 서로 배타적으로 쓴다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄋ"], [data-jamo="ᄒ"])) [data-fy-pos="ml"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄋ"] [data-fy-pos="ml"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-ml-top: 3.79%;
     --fy-ml-scale-y: 1.061;
     --fy-ml-weight: 700;
-    --fy-ml-clip: inset(38.5% -1em -1em -1em); /* 막대 0.068em(이전 0.52는 0.033em), 꼭지는 링 밑 0.343em부터 */
+    --fy-ml-clip: inset(38.5% -1em -1em -1em); /* 막대 0.068em(이전 0.52는 0.033em), 꼭지는 링 밑 0.487em부터 */
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"][data-jamo="ᄋ"]) [data-fy-pos="mtl"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  /* ㅎ + split-open ㅗ·ㅡ(화·회·희) — 예전에는 ㅇ과 한 규칙이라 막대가 와·외 높이([0.627,0.693])로 기준(화·회 [0.653,0.720], 희 ㅡ
+   * [0.640,0.707])보다 0.03em 높았다. 기준 높이로 내리고 꼭지는 키운 ㅎ의 링 밑(0.533) 0.539em부터(2026-10-21). */
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄒ"] [data-fy-pos="ml"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-ml-top: 6.01%;
+    --fy-ml-scale-y: 1.061;
+    --fy-ml-weight: 700;
+    --fy-ml-clip: inset(41.3% -1em -1em -1em);
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄒ"] [data-fy-pos="ml"][data-jamo="ᅳ"] {
+    --fy-ml-top: -0.95%;
+  }
+  /* split-open ㅗ 막대의 가로(모든 초성) — ml ㅗ 자모 규칙은 ㅘ·ㅙ·ㅚ에 한 값(x[0.007,0.567])이라 ㅘ는 기준([0.027,0.587])보다
+   * 0.02em 왼쪽이었다(2026-10-21). ㅚ(기준 [0.040,0.627], 꼬리 ㅣ와 0.106em 떨어짐)는 예전 그대로 둔다 — 막대를 ㅣ 쪽으로 늘이자
+   * 외/의·뇌/늬·되/듸가 덜 갈렸다(헷갈리는 짝 rel: gothic 외/의 16px 배율 2 0.72 → 0.21, retro 뇌/늬·되/듸 24–32px 배율 2 0.28–0.35 → 0.11–0.15;
+   * 늘인 쪽이 나은 곳은 retro 24px 배율 1 뇌/늬·되/듸 0.15–0.16 → 0.25–0.27 정도뿐).
+   * ㅙ(기준 [0.027,0.500])도 그대로 둔다 — 막대를 줄이면 꼭지가 왼쪽으로 옮겨 초성 다리에 닿았다(쐐·쫴 tls×ml 9–10% → 14%,
+   * ㅐ 왼기둥과 닿는 ml×trs 5–6%보다 나쁘다). */
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-trs][data-fy-at-trs="ᅡ"] [data-fy-pos="ml"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-ml-left: -0.26%;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄋ"] [data-fy-pos="mtl"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mtl-top: -12.55%;
     --fy-mtl-scale-y: 1.073;
     --fy-mtl-weight: 700;
@@ -534,7 +582,7 @@
    * 두께를 맞추려고 세로로 늘린 소스 ᅩ는 기둥이 0.31em이라 링(ttl ㅎ, 끝 0.445)을
    * 뚫고 가로획까지 올라갔다(획 19% — TRK-033). 기둥 윗부분만 slot clip으로 잘라
    * 링 밑동(0.43)에서 멈춘다: inset 비율 = (0.43 - 노드 원점 0.036em) / (1.135 × 0.74em). */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"][data-jamo="ᄒ"]) [data-fy-pos="mtl"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄒ"] [data-fy-pos="mtl"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mtl-top: -9.54%;
     --fy-mtl-scale-y: 1.135;
     --fy-mtl-weight: 700;
@@ -542,34 +590,44 @@
   }
   /* ㅎ 초성 + split-closed ㅡ(흰/흴) — 링이 0.445까지 내려오므로 bar를 [0.49,0.563]으로
    * 내린다(기준 흰 [0.533,0.607]; 받침 머리 0.585~0.60 위에서 멈춘다). */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"][data-jamo="ᄒ"]) [data-fy-pos="mtl"][data-jamo="ᅳ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄒ"] [data-fy-pos="mtl"][data-jamo="ᅳ"] {
     --fy-mtl-top: -14.11%;
   }
-  /* split-open ㅜ 문맥의 초성(뒤/웨/위/궈/쉬) — ㅜ bar가 ㅗ/ㅡ보다 높은 [0.455,0.53]에
+  /* 아래 문맥 규칙들은 이웃이 통짜 꼴(통짜 모음 mw·mtw, 통짜 받침 brw)이어도 같다 — 페이지가 통짜 나누기를 고르면 그 노드는 기본
+   * 나누기(낱) 자리에 그려지므로(ADR-034 §5) 초성·모음도 같은 보정을 받는다(2026-10-18).
+   * split-open ㅜ 문맥의 초성(뒤/웨/위/궈/쉬) — ㅜ bar가 ㅗ/ㅡ보다 높은 [0.455,0.53]에
    * 오므로 초성은 기준처럼 0.36~0.41에서 끝나야 한다(뒤 ㄷ [0.04,0.36], 웨 ㅇ ~0.38,
    * 위 ㅇ 0.413). tls 기본값은 과/의(bar 0.46~0.61) 기준이라 초성이 0.46까지 내려와
    * bar와 포갰다. 세로만 줄인다. ㅇ은 자모 규칙 값을 대체하므로 따로 준다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="ml"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="tls"] {
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-ml]:is([data-fy-at-ml="ᅮ"], [data-fy-at-ml="ᅲ"]), [data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅰ"], [data-fy-at-mw="ᅱ"])) [data-fy-pos="tls"] {
     --fy-tls-top: -19.5%;
     --fy-tls-scale-y: 0.96;
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="ml"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-ml]:is([data-fy-at-ml="ᅮ"], [data-fy-at-ml="ᅲ"]), [data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅰ"], [data-fy-at-mw="ᅱ"])) [data-fy-pos="tls"][data-jamo="ᄋ"] {
     --fy-tls-top: -19.9%;
     --fy-tls-scale-y: 1.014;
   }
   /* ㅎ은 예외 — 기준 휘/훼는 ㅎ을 크게 두고(링 끝 0.45~0.50) ㅜ bar를 내린다
    * (휘 [0.547,..], 훼 [0.48,0.55]). ㅎ [0,0.465], ㅜ [0.505,0.85]로 둔다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="ml"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-ml]:is([data-fy-at-ml="ᅮ"], [data-fy-at-ml="ᅲ"]), [data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅰ"], [data-fy-at-mw="ᅱ"])) [data-fy-pos="tls"][data-jamo="ᄒ"] {
     --fy-tls-top: -22.57%;
+    --fy-tls-left: -6.8%;
+    --fy-tls-scale-x: 1.14;
     --fy-tls-scale-y: 1.162;
+    --fy-tls-weight: 600; /* 가로·weight는 tls 기본값 — 자모 규칙이 화·회·희의 ㅎ을 키운 것을 되돌린다(훼의 ㅔ에 닿지 않게) */
+  }
+  /* ㅙ 앞 ㅎ(홰) — 기준은 ㅎ을 ㅐ 왼기둥 앞에서 좁게 그린다(x[0.040,0.487]). 세로는 화·회처럼 키운 그대로, 가로만 [0.050,0.490]. */
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-trs][data-fy-at-trs="ᅢ"], [data-fy-at-mw][data-fy-at-mw="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+    --fy-tls-left: -6.92%;
+    --fy-tls-scale-x: 1.061;
   }
   /* ㄱ/ㅋ은 반대로 짧아서 기준이 ㅜ bar를 올려 ㄱ 기둥 끝에 붙인다(궈/궤/뀌 [0.40,0.47],
    * 귀 [0.433,0.507]). ㅜ [0.41,0.82]. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) [data-fy-pos="ml"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-tls]:is([data-fy-at-tls="ᄀ"], [data-fy-at-tls="ᄁ"], [data-fy-at-tls="ᄏ"]) [data-fy-pos="ml"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
     --fy-ml-top: -9.21%;
     --fy-ml-scale-y: 1.276;
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="tls"][data-jamo="ᄒ"]) [data-fy-pos="ml"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-tls][data-fy-at-tls="ᄒ"] [data-fy-pos="ml"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
     --fy-ml-top: 3.6%;
     --fy-ml-scale-y: 1.074;
   }
@@ -577,26 +635,108 @@
    * 기준의 세로모음 기둥은 0.467~0.487에서 끝난다(한 0.640). trc 기본값(끝 0.620)을
    * 그대로 쓰면 기둥이 겹받침 오른칸(ㅅ/ㄱ) 머리를 16% 관통했다(TRK-033).
    * 기둥 끝만 0.475로 줄인다 — 가로 위치는 홑받침 음절과 같은 trc 값을 유지한다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="brd"]) [data-fy-pos="trc"] {
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-brd], [data-fy-at-brw]) [data-fy-pos="trc"] {
     --fy-trc-top: -14.11%;
     --fy-trc-scale-y: 0.593;
   }
-  /* ㅎ 초성 + 받침 없는 ㅜ/ㅠ(후·휴) — ㅎ이 0.59em까지 내려와 ㅜ 막대(0.55em~)와 11%, 도면 외곽선에서
-   * 15.3% 포갰다. 기준(Apple SD Gothic Neo) 후는 ㅜ 막대를 구(0.415)보다 낮은 [0.570,0.670]에 두고
-   * ㅎ을 그 위에서 끝낸다. 같은 방식으로 ㅎ을 줄이고 막대를 내리되, 내림획 끝(0.89em)은 아래 clip으로 유지한다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="m"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="t"][data-jamo="ᄒ"] {
-    --fy-t-scale-y: 0.78;
+  /* 받침 없는 ㅜ/ㅠ 위 초성(구·누·두·수·우·주…) — 초성 자리 상자(위 자모별 t 보정)는 ㅡ 음절(그·느·드)에 맞춘 것이라 ㅜ 위에서도
+   * 그 키로 내려와, ㅜ 막대가 모든 초성을 비키려고 0.56em에 있었다(기준 수 0.487·누 0.493·두 0.500 — 0.06–0.07em 낮고 내림획이
+   * 짧았다). 초성 밑과 막대 틈도 0.013(루·투)–0.12em(누·수)으로 고르지 않았다. 기준(Apple SD Gothic Neo)은 ㅜ 위 초성을 ㅡ 위보다
+   * 0.03em쯤 올리고 짧게 그린다. 막대를 0.500에 두고(위 ㅜ·ㅠ 자모 규칙, 내림획 끝 0.873) 초성마다 윗끝을 기준 쪽으로 0.025em까지 올리고
+   * 밑을 기준의 틈(0.075–0.11em, 밑이 납작한 ㄴ·ㄷ·ㅁ·ㅂ은 넓게, 끝이 뾰족한 ㅅ·ㅈ·ㅊ·ㅇ은 좁게)만큼 막대 위에서 끝낸다(2026-10-21).
+   * ㄱ·ㄲ·ㅋ은 기준이 다리를 막대에 잇지만 조합은 두 노드가 포개지고(구·쿠 겹침 5–8%) ㄲ 두 다리가 막대에 닿으면 ㅍ처럼 읽혀(꾸≈푸)
+   * 다리 끝을 막대 위 0.05em에서 멈춘다. */
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄀ"] {
+    --fy-t-top: -21.06%;
+    --fy-t-scale-y: 0.690;
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="t"][data-jamo="ᄒ"]) [data-fy-pos="m"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
-    --fy-m-top: 4.6%;
-    --fy-m-clip: inset(-1em -1em 24.2% -1em);
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄁ"] {
+    --fy-t-top: -22.45%;
+    --fy-t-scale-y: 0.712;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄏ"] {
+    --fy-t-top: -20.58%;
+    --fy-t-scale-y: 0.681;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄂ"] {
+    --fy-t-top: -21.68%;
+    --fy-t-scale-y: 0.623;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"]:is([data-jamo="ᄃ"], [data-jamo="ᄄ"]) {
+    --fy-t-top: -20.17%;
+    --fy-t-scale-y: 0.605;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄅ"] {
+    --fy-t-top: -22.11%;
+    --fy-t-scale-y: 0.637;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄆ"] {
+    --fy-t-top: -20.80%;
+    --fy-t-scale-y: 0.618;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"]:is([data-jamo="ᄇ"], [data-jamo="ᄈ"]) {
+    --fy-t-top: -22.24%;
+    --fy-t-scale-y: 0.640;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄉ"] {
+    --fy-t-top: -24.01%;
+    --fy-t-scale-y: 0.679;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄊ"] {
+    --fy-t-top: -23.65%;
+    --fy-t-scale-y: 0.689;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄌ"] {
+    --fy-t-top: -19.95%;
+    --fy-t-scale-y: 0.641;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄍ"] {
+    --fy-t-top: -20.44%;
+    --fy-t-scale-y: 0.639;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄎ"] {
+    --fy-t-top: -22.05%;
+    --fy-t-scale-y: 0.637;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄐ"] {
+    --fy-t-top: -21.78%;
+    --fy-t-scale-y: 0.650;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄑ"] {
+    --fy-t-top: -22.37%;
+    --fy-t-scale-y: 0.646;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄋ"] {
+    --fy-t-top: -22.45%;
+    --fy-t-scale-y: 0.685;
+  }
+  /* 기기 글꼴 재료는 세로 배율만큼 가로획이 가늘어진다 — 위 초성 줄임(세로 0.60–0.69배)으로 두·푸 0.070·0.067 → 0.053em, 루·투 0.080·0.073
+   * → 0.060em(ㅜ 막대 0.067em). 다른 압축 자리처럼 weight 한 단계로 보상한다(원소·그림 재료는 런타임이 획을 되돌려 그대로). ㄱ·ㄲ·ㅋ은 가로획이
+   * 막대와 같은 0.067em에 머물고 굵히면 ㄲ 두 다리가 ㅍ 기둥처럼 짙어져(retro 꾸/푸 16px rel 0.41 → 0.33) 빼고, ㅎ(후·휴)은 거의 줄이지 않아
+   * 뺀다(2026-10-21). */
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄒ"]) {
+    --fy-t-weight: 600;
+  }
+  /* ㅎ 초성 + 받침 없는 ㅜ/ㅠ(후·휴) — ㅎ은 키가 커서 기준도 막대를 낮게 둔다(후 0.553·휴 0.547). 막대 0.553, ㅎ [0.012,0.499],
+   * 내림획 끝은 다른 ㅜ·ㅠ와 같은 0.873(예전 0.893 — 막대만 내리고 끝을 clip으로 지켰다). */
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅮ"], [data-fy-at-m="ᅲ"]) [data-fy-pos="t"][data-jamo="ᄒ"] {
+    --fy-t-top: -24.22%;
+    --fy-t-scale-y: 0.760;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-t][data-fy-at-t="ᄒ"] [data-fy-pos="m"][data-jamo="ᅮ"] {
+    --fy-m-top: 2.27%;
+    --fy-m-clip: inset(-1em -1em 23.7% -1em);
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-t][data-fy-at-t="ᄒ"] [data-fy-pos="m"][data-jamo="ᅲ"] {
+    --fy-m-top: 3.37%;
+    --fy-m-clip: inset(-1em -1em 25.2% -1em);
   }
   /* ㅎ/ㅊ 초성 + bottom-closed(흙/흘/츨) — 소스가 커서 링이 슬릿으로 짜부라지므로
    * ㅎ 압축을 완화하고(아래 tt 규칙, 잉크 [0,0.38]) ㅡ를 링 아래로 내린다.
    * 기준(Apple SD Gothic Neo) 흙/흘: 링 끝 0.40, ㅡ [0.44,0.51], 받침 0.56~.
    * TRK-033: 이전 값 -17.7%는 mt scale-y를 0.839→0.646으로 줄인 round8b 뒤에 갱신되지
    * 않아 ㅡ가 0.30em(링 하단)에 올라가 링과 40% 포개졌다. 지금 ㅡ 잉크 [0.428,0.501]. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])) [data-fy-pos="mt"][data-jamo="ᅳ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"]) [data-fy-pos="mt"][data-jamo="ᅳ"] {
     --fy-mt-top: -7.03%;
   }
   /* 홑받침(b)이면 기준은 받침을 [0.56~0.62,0.86]으로 줄이고 ㅎ과 ㅡ를 더 내린다
@@ -604,46 +744,46 @@
    * 원래 0.53에서 시작하므로 위 값을 쓰고, 홑받침만 ㅡ [0.455,0.528]·ㅎ/ㅊ [0,0.405]·
    * 받침 [0.575,0.86]으로 나눈다. 특이도가 위 규칙보다 높아 홑받침에서 이긴다.
    * ᆼ 받침은 자모 규칙([0.58,0.91])이 이미 ㅡ 아래라 받침 규칙에서 뺀다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])):has([data-fy-pos="b"]) [data-fy-pos="mt"][data-jamo="ᅳ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"])[data-fy-at-b] [data-fy-pos="mt"][data-jamo="ᅳ"] {
     --fy-mt-top: -4.78%;
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])):has([data-fy-pos="mt"][data-jamo="ᅳ"]):has([data-fy-pos="b"]) [data-fy-pos="tt"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"])[data-fy-at-mt][data-fy-at-mt="ᅳ"][data-fy-at-b] [data-fy-pos="tt"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"]) {
     --fy-tt-top: -21.4%;
     --fy-tt-scale-y: 0.708;
   }
   /* bottom-closed ㅗ의 초성별 기둥 — ㅇ 링은 0.327, ㅎ/ㅊ은 0.38까지 내려오므로 자르는
    * 높이를 그 밑동에 맞춘다(기둥이 링을 뚫지 않고 밑동에 닿는다). */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"][data-jamo="ᄋ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄋ"] [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-clip: inset(42.7% -1em -1em -1em); /* (0.315 + 0.061em) / 0.88em */
   }
   /* ㅎ/ㅊ + bottom-closed ㅗ(혹/홍/촌) — 기준은 ㅎ을 [0,0.44]로 크게 두고 bar [0.50,0.567],
    * 받침 0.62~로 내린다. ㅎ/ㅊ [0,0.43], bar [0.49,0.56], 받침 [0.615,0.86]. */
   /* 홑받침에서만 — 겹받침(bl/br)은 0.527부터라 bar를 내릴 자리가 없어 기본 bar를 쓴다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])):has([data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"])):has([data-fy-pos="b"]:not([data-jamo="ᆯ"])) [data-fy-pos="tt"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"])[data-fy-at-mt]:is([data-fy-at-mt="ᅩ"], [data-fy-at-mt="ᅭ"])[data-fy-at-b]:not([data-fy-at-b="ᆯ"]) [data-fy-pos="tt"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"]) {
     --fy-tt-top: -21.9%;
     --fy-tt-scale-y: 0.75;
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-clip: inset(49% -1em -1em -1em); /* 겹받침·받침 없음: (0.37 + 0.061em) / 0.88em */
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])):has([data-fy-pos="b"]:not([data-jamo="ᆯ"])) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"])[data-fy-at-b]:not([data-fy-at-b="ᆯ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-top: -13.87%;
     --fy-mt-clip: inset(49% -1em -1em -1em); /* 홑받침: (0.415 + 0.016em) / 0.88em */
   }
   /* ㅎ/ㅊ + ㄹ 받침(홀/촐) — 기준 bar 홀 [0.447,0.513]·촐 [0.407,0.473], ㄹ은 0.53~0.56부터.
    * ㅎ/ㅊ은 키우지 않고 bar [0.425,0.495], ㄹ [0.535,0.86]. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])):has([data-fy-pos="b"][data-jamo="ᆯ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"])[data-fy-at-b][data-fy-at-b="ᆯ"] [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-top: -19.29%;
     --fy-mt-clip: inset(51.3% -1em -1em -1em); /* (0.37 + 0.081em) / 0.88em */
   }
   /* ㄹ 받침(골/놀/돌/올) — 기준은 ㄹ을 [0.49,0.86]로 길게 두고 ㅗ bar를 [0.36~0.38,0.42~0.45]로
    * 올린다. bar [0.37,0.44], 받침은 기본 b 그대로(아래 ㅗ 문맥 받침 규칙에서 ᆯ을 뺀다).
    * ㅎ/ㅊ(홀/촐)은 위 홑받침 규칙이 특이도로 이긴다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="b"][data-jamo="ᆯ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-b][data-fy-at-b="ᆯ"] [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-top: -23.87%;
     --fy-mt-clip: inset(46.7% -1em -1em -1em); /* (0.275 + 0.136em) / 0.88em */
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"][data-jamo="ᄋ"]):has([data-fy-pos="b"][data-jamo="ᆯ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄋ"][data-fy-at-b][data-fy-at-b="ᆯ"] [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-clip: inset(51.3% -1em -1em -1em); /* 올: (0.315 + 0.136em) / 0.88em */
   }
   /* ㄹ 받침 위 ㅜ/ㅠ(울/율/귤/휼) — 기준은 내림획 끝을 ㄹ 윗획에 용접한다(율 다리 [0.433,0.527],
@@ -651,41 +791,41 @@
    * ㅜ 11%). 내림획만 ㄹ 윗획 한 픽셀 아래(0.495)에서 자른다 — 윗변(0.487)에 딱 맞추면 AA 이음매가
    * 회색 줄로 남는다. 2026-10 막대 두께를 ㅡ에 맞추며(배율 0.36 → 0.816) 내림획 끝(0.346em)을
    * 지키도록 다시 셈했다: 1 - (0.346 + 0.107em) / 0.816. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="b"][data-jamo="ᆯ"]) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-b][data-fy-at-b="ᆯ"] [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
     --fy-mt-clip: inset(-1em -1em 44.5% -1em);
   }
   /* ㅠ + 꼭지 있는 받침(ㅊ·ㅎ·ㅈ) — 내림획 둘이 받침 꼭지(0.465em~)까지 내려와 윷·귳 14.3%·윻 13.2%
    * (레트로 외곽선에서 15.1%) 포갰다. 내림획을 꼭지 위에서 멈춘다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="b"]:is([data-jamo="ᆾ"], [data-jamo="ᇂ"], [data-jamo="ᆽ"])) [data-fy-pos="mt"][data-jamo="ᅲ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-b]:is([data-fy-at-b="ᆾ"], [data-fy-at-b="ᇂ"], [data-fy-at-b="ᆽ"]) [data-fy-pos="mt"][data-jamo="ᅲ"] {
     --fy-mt-clip: inset(-1em -1em 43% -1em);
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])):has([data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"])) [data-fy-pos="b"]:not([data-jamo="ᆼ"], [data-jamo="ᆯ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"])[data-fy-at-mt]:is([data-fy-at-mt="ᅩ"], [data-fy-at-mt="ᅭ"]) [data-fy-pos="b"]:not([data-jamo="ᆼ"], [data-jamo="ᆯ"]) {
     --fy-b-top: 31%;
     --fy-b-scale-y: 0.447;
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])):has([data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"])) [data-fy-pos="b"][data-jamo="ᆯ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"])[data-fy-at-mt]:is([data-fy-at-mt="ᅩ"], [data-fy-at-mt="ᅭ"]) [data-fy-pos="b"][data-jamo="ᆯ"] {
     --fy-b-top: 21.81%;
     --fy-b-scale-y: 0.5925;
     --fy-b-weight: 700;
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])):has([data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"])) [data-fy-pos="b"][data-jamo="ᆼ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"])[data-fy-at-mt]:is([data-fy-at-mt="ᅩ"], [data-fy-at-mt="ᅭ"]) [data-fy-pos="b"][data-jamo="ᆼ"] {
     --fy-b-top: 29.37%;
     --fy-b-scale-y: 0.81; /* 홍/총 ㅇ [0.60,0.87] — 기준 홍 [0.600,0.873] */
   }
   /* bottom-closed ㅗ 문맥 홑받침 — 기준은 ㅗ 음절에서 받침을 0.57~0.62부터 그린다(곡 0.573,
    * 혹 0.62). bar [0.445,0.515] 밑으로 [0.575,0.86]에 줄인다. ᆼ은 자모 규칙([0.555,])이, ᆯ은
    * 위 ㄹ 받침 규칙(bar를 올리고 받침은 그대로)이 맡는다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"])) [data-fy-pos="b"]:not([data-jamo="ᆼ"], [data-jamo="ᆯ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-mt]:is([data-fy-at-mt="ᅩ"], [data-fy-at-mt="ᅭ"]) [data-fy-pos="b"]:not([data-jamo="ᆼ"], [data-jamo="ᆯ"]) {
     --fy-b-top: 26.4%;
     --fy-b-scale-y: 0.52;
     --fy-b-weight: 700;
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])):has([data-fy-pos="mt"][data-jamo="ᅳ"]) [data-fy-pos="b"]:not([data-jamo="ᆼ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"])[data-fy-at-mt][data-fy-at-mt="ᅳ"] [data-fy-pos="b"]:not([data-jamo="ᆼ"]) {
     --fy-b-top: 26.4%;
     --fy-b-scale-y: 0.52;
     --fy-b-weight: 700;
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"])) [data-fy-pos="tt"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"]) {
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄒ"], [data-fy-jamos~="ᄎ"]) [data-fy-pos="tt"]:is([data-jamo="ᄒ"], [data-jamo="ᄎ"]) {
     --fy-tt-top: -20.9%;
     --fy-tt-scale-y: 0.67;
   }
@@ -693,12 +833,82 @@
    * 오른끝이 0.55em까지 가서 둘째 ㄱ이 ㅐ 왼기둥(0.523em)·ㅔ 짧은 획에 묻혔다 — 꽤·꿰가 괘·궤처럼 읽혔고
    * 칸 계약 세트(dunggeun-box)를 걸면 꿰 18%로 임계를 넘었다. 기준 ㄲ도 이 자리에서는 좁다(꿰 x[0.03,0.40]).
    * 왼끝을 두고 가로만 좁혀 오른끝을 ㄱ과 같은 0.483em에 둔다. */
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="trs"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="tls"][data-jamo="ᄁ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-trs]:is([data-fy-at-trs="ᅢ"], [data-fy-at-trs="ᅦ"]), [data-fy-at-mw]:is([data-fy-at-mw="ᅫ"], [data-fy-at-mw="ᅰ"])) [data-fy-pos="tls"][data-jamo="ᄁ"] {
     --fy-tls-left: -5.2%;
     --fy-tls-scale-x: 0.982; /* 잉크 x[0.047,0.483] */
   }
-  :where([data-fy-font="gothic"]) [part="glyph"]:has([data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-ttr]:is([data-fy-at-ttr="ᅢ"], [data-fy-at-ttr="ᅦ"]), [data-fy-at-mtw]:is([data-fy-at-mtw="ᅫ"], [data-fy-at-mtw="ᅰ"])) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
     --fy-ttl-left: -3.8%;
     --fy-ttl-scale-x: 0.905; /* 잉크 x[0.060,0.483] */
+  }
+  /* ㅐㅒㅔㅖ 옆 쌍자음(2026-10-19, collide-8 남은 몫) — ㅆ·ㅉ·ㄲ의 오른 낱자가 ㅐ 왼기둥에 겹치고(쌔 −0.031·째 −0.044·깨 −0.025em,
+   * 기기 글꼴 재료 쌔 −0.050em) ㄸ·ㅃ은 기둥에 닿았다(때·빼 0.000). ㅙ·ㅞ 규칙처럼 왼끝을 두고 가로만 좁힌다(자리 배율에 ㅆ·ㅉ 0.87,
+   * ㄲ 0.9, ㄸ·ㅃ 0.93, 받침 있는 자리 0.865–0.92). */
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄊ"] {
+    --fy-tlo-left: -7.81%;
+    --fy-tlo-scale-x: 0.785;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄍ"] {
+    --fy-tlo-left: -7.9%;
+    --fy-tlo-scale-x: 0.785;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄁ"] {
+    --fy-tlo-left: -7.73%;
+    --fy-tlo-scale-x: 0.812;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"]:is([data-jamo="ᄄ"], [data-jamo="ᄈ"]) {
+    --fy-tlo-left: -7.99%;
+    --fy-tlo-scale-x: 0.839;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄊ"] {
+    --fy-tlc-left: -6.53%;
+    --fy-tlc-scale-x: 0.817;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄍ"] {
+    --fy-tlc-left: -6.48%;
+    --fy-tlc-scale-x: 0.821;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄁ"] {
+    --fy-tlc-left: -6.45%;
+    --fy-tlc-scale-x: 0.85;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"]:is([data-jamo="ᄄ"], [data-jamo="ᄈ"]) {
+    --fy-tlc-left: -6.55%;
+    --fy-tlc-scale-x: 0.868;
+  }
+  /* ㅙ·ㅞ 위 ㄸ·ㅃ·ㅆ·ㅉ(2026-10-19, collide-8) — 위 ㄲ 규칙과 같은 결함: 넓은 쌍자음의 오른 낱자가 ㅐ 왼기둥·ㅔ 짧은 획에
+   * 겹쳤다(뙈 −0.006·뽸 −0.019·쐐 −0.044·쫴 −0.056em, 기기 글꼴 재료 쐐 −0.062·쐔 −0.069em — 0.1.2부터). 왼끝을 두고
+   * 가로를 좁혀(자리 배율에 ㅆ·ㅉ 0.84–0.85, ㄸ·ㅃ 0.89–0.91, 받침 있는 자리 0.85·0.905) 원소·기기 두 재료 모두 기둥 앞에서 끝낸다. */
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-trs]:is([data-fy-at-trs="ᅢ"], [data-fy-at-trs="ᅦ"]), [data-fy-at-mw]:is([data-fy-at-mw="ᅫ"], [data-fy-at-mw="ᅰ"])) [data-fy-pos="tls"][data-jamo="ᄊ"] {
+    --fy-tls-left: -5.64%;
+    --fy-tls-scale-x: 0.958;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-trs]:is([data-fy-at-trs="ᅢ"], [data-fy-at-trs="ᅦ"]), [data-fy-at-mw]:is([data-fy-at-mw="ᅫ"], [data-fy-at-mw="ᅰ"])) [data-fy-pos="tls"][data-jamo="ᄍ"] {
+    --fy-tls-left: -5.68%;
+    --fy-tls-scale-x: 0.963;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-trs]:is([data-fy-at-trs="ᅢ"], [data-fy-at-trs="ᅦ"]), [data-fy-at-mw]:is([data-fy-at-mw="ᅫ"], [data-fy-at-mw="ᅰ"])) [data-fy-pos="tls"][data-jamo="ᄄ"] {
+    --fy-tls-left: -5.7%;
+    --fy-tls-scale-x: 1.037;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-trs]:is([data-fy-at-trs="ᅢ"], [data-fy-at-trs="ᅦ"]), [data-fy-at-mw]:is([data-fy-at-mw="ᅫ"], [data-fy-at-mw="ᅰ"])) [data-fy-pos="tls"][data-jamo="ᄈ"] {
+    --fy-tls-left: -5.46%;
+    --fy-tls-scale-x: 1.015;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-ttr]:is([data-fy-at-ttr="ᅢ"], [data-fy-at-ttr="ᅦ"]), [data-fy-at-mtw]:is([data-fy-at-mtw="ᅫ"], [data-fy-at-mtw="ᅰ"])) [data-fy-pos="ttl"][data-jamo="ᄊ"] {
+    --fy-ttl-left: -4.22%;
+    --fy-ttl-scale-x: 0.886;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-ttr]:is([data-fy-at-ttr="ᅢ"], [data-fy-at-ttr="ᅦ"]), [data-fy-at-mtw]:is([data-fy-at-mtw="ᅫ"], [data-fy-at-mtw="ᅰ"])) [data-fy-pos="ttl"][data-jamo="ᄍ"] {
+    --fy-ttl-left: -4.13%;
+    --fy-ttl-scale-x: 0.886;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-ttr]:is([data-fy-at-ttr="ᅢ"], [data-fy-at-ttr="ᅦ"]), [data-fy-at-mtw]:is([data-fy-at-mtw="ᅫ"], [data-fy-at-mtw="ᅰ"])) [data-fy-pos="ttl"][data-jamo="ᄄ"] {
+    --fy-ttl-left: -4.07%;
+    --fy-ttl-scale-x: 0.943;
+  }
+  :where([data-fy-font="gothic"]) [part="glyph"]:is([data-fy-at-ttr]:is([data-fy-at-ttr="ᅢ"], [data-fy-at-ttr="ᅦ"]), [data-fy-at-mtw]:is([data-fy-at-mtw="ᅫ"], [data-fy-at-mtw="ᅰ"])) [data-fy-pos="ttl"][data-jamo="ᄈ"] {
+    --fy-ttl-left: -4.2%;
+    --fy-ttl-scale-x: 0.943;
   }
 }

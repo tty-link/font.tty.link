@@ -34,7 +34,7 @@ Accepted
 ## Consequences
 ### Positive
 - 변수 이름, 기본값, surface와 slot lifecycle을 기계 검증한다.
-- 에디터의 slot 계약이 registry와 자동으로 동기화된다(현재 대상은 Font Studio의 `site/font-studio-model.js`).
+- 에디터의 slot 계약이 registry와 자동으로 동기화된다(현재 대상은 Font Studio의 `authoring/font-studio-model.js`).
 - deprecated `bb`, reserved `blb`/`brb`가 신규 authoring 대상으로 오인되지 않는다.
 
 ### Negative

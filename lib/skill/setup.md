@@ -7,7 +7,7 @@
 `<head>`나 `<body>` 끝에 넣는다. `data-fonts`에 첫 화면에 보이는 글꼴 이름을 공백으로 나열하면 런타임이 기본 CSS와 그 글꼴 CSS를 처음부터 불러온다. 나열하지 않은 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다(필요할 때 받기).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="neon sticker"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="neon sticker"></script>
 ```
 
 | 스크립트 속성 | 하는 일 |
@@ -97,11 +97,11 @@ import FontKkuFx from "@tty.link/font-kku/fx";     // 상호작용을 쓸 때
 import하지 않은 글꼴을 필요할 때 받게 하려면 런타임에 글꼴 파일의 자리를 알려 준다.
 
 ```js
-globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/" };
+globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/" };
 ```
 
 ## 인터넷이 막힌 곳
 
 런타임 주소 대신 파일(`font-kku.js`, `font-kku.css`, `profiles/`, 쓰는 확장 파일)을 같은 폴더 구조로 복사해 `src="./font-kku.js"`로 쓴다. 파일은 npm 패키지에 그대로 들어 있다 — `npm pack @tty.link/font-kku`로 받은 묶음의 `package/` 폴더나 `node_modules/@tty.link/font-kku/`에서 복사한다.
 
-파일을 페이지와 다른 주소(도메인·포트)에 올려 쓰면 그 서버가 `Access-Control-Allow-Origin` 헤더를 보내야 한다. `crayon`·`pilgi`·`dunggeun`·`butgeul`·`jasu`는 자소판 그림을 CSS 마스크로 칠하는데, 브라우저는 다른 주소의 마스크 그림을 이 헤더 없이는 쓰지 않는다.
+파일을 페이지와 다른 주소(도메인·포트)에 올려 쓰면 그 서버가 `Access-Control-Allow-Origin` 헤더를 보내야 한다. `crayon`·`pilgi`·`dunggeun`·`butgeul`(그리고 페이지가 `--fy-sprite-paint: mask`를 건 `jasu`)은 자소판 그림을 CSS 마스크로 칠하는데, 브라우저는 다른 주소의 마스크 그림을 이 헤더 없이는 쓰지 않는다. 같은 까닭으로 내 컴퓨터에서 파일로 연 페이지(`file://`)에서는 Chrome·Safari가 이 글꼴들을 그리지 않는다 — 정적 서버로 연다.

@@ -50,7 +50,8 @@ Accepted
      받지 않아 꾸밈이 채움 색을 주면 비쳤다.
    - 세벌 고정(ADR-026)의 도장 노드는 도장 text-stroke(획 굵기 보정)의 절반만큼 표준 상자를 안으로 줄여 맞춘다 — 획 넓힘까지 표준
      상자 안이라 원소 재료와 같은 잉크 자리다(`stampInset`, 뷁·쀍·꿩의 뭉침).
-   - 빛 칠(ADR-021)과 겹치면 숨김과 clip은 빛 칠대로 둔다(노드 `visibility`, `::before`의 clip).
+   - 빛 칠(ADR-021)과 겹치면 clip은 빛 칠대로 `::before`가 받고, 노드는 숨기지 않는다 — 자기 글자는 위 `::first-letter`로 이미 크기 0이다
+     (2026-10-21, 전에는 노드 `visibility` — WebKit 그림자 트리 선택·잎 숨김, ADR-021).
 4. **재는 법.** 잉크 상자는 캔버스에 400·100px로 그린 화소를 훑어 잰다(알파 절반 이상). WebKit의 `measureText`는
    actualBoundingBox의 좌우를 잉크가 아니라 전진폭으로 돌려준다. 기준선은 `line-height: 1` 줄 상자의 DOM 탐침으로 잰다(첫 글꼴의
    ascent·descent가 정한다). 결과는 글꼴 목록과 글자별로 캐시한다.

@@ -27,6 +27,16 @@
     "output": "Ordered per-role display slots; slot cardinality determines head folding and cluster splitting",
     "compiledBy": "scripts/generate_sidecar_tables.js"
   },
+  "glyphMaterials": {
+    "sourceKind": "font",
+    "designVersion": "2.0",
+    "browser": "runtime measurement and existing font leaf path; inspect fontInfo().glyphMapping diagnostics",
+    "cssAuthoring": "page > tune > context > jamo > slot > parent slot > role > font; core content does not consume authored text",
+    "staticCss": "original Hangul without JavaScript; arbitrary external CSS cannot be diagnosed by static renderers",
+    "structuredOutput": "authoring Glyphs.capability refuses unsupported targets; FontKkuExport refuses glyph mapping designs before output",
+    "semantics": "original text, semantic jamo nodes and seed indices preserved",
+    "oldHangul": "existing symbol fallback unchanged; no historical rendering support added"
+  },
   "implementations": {
     "browser": {
       "normalization": "engine NFC",
@@ -37,9 +47,41 @@
       "layouts": {
         "default": "sebul-cases-v1",
         "profiles": "spec/layout-profiles.json",
-        "appliesTo": "hosts that name no font (font/profile/data-font missing or empty) unless --fy-design is legacy; a registered 1.2 design selects its own layout; a named font whose CSS declares --fy-font-layout (jikgyeol: sebul-fixed-v1) uses that layout"
+        "appliesTo": "page design layout > page --fy-layout > font design layout > --fy-font-layout > implicit default; a design with no layout inherits; legacy disables only design; a named sebul keeps its context layout unless a layout is explicitly selected"
       },
-      "interactionEffects": true
+      "interactionEffects": true,
+      "htmlOptions": {
+        "vowelDepths": [
+          "split",
+          "whole",
+          "syllable"
+        ],
+        "codaDepths": [
+          "split",
+          "whole"
+        ],
+        "depthArgumentsApplied": true,
+        "quality": "font-and-size-dependent",
+        "layoutVariable": "--fy-layout",
+        "layoutProfiles": [
+          "sebul-cases-v1",
+          "sebul-fixed-v1",
+          "square-context-v1"
+        ],
+        "missingSvgSet": {
+          "face": "element",
+          "diagnostic": "SVG_REQUIRES_BOX_SET"
+        },
+        "compositions": [
+          "auto",
+          "syllable",
+          "whole",
+          "jamo",
+          "pieces",
+          "origins"
+        ],
+        "compositionPrecedence": "per-jamo design rules > page (--fy-vowel-depth/--fy-coda-depth > --fy-composition > --fy-jamo-depth) > design composition > font (longhand depth > --fy-font-composition > --fy-font-jamo-depth) > shape default (ADR-034 §3)"
+      }
     },
     "python": {
       "normalization": "unicodedata NFC (Python Unicode version)",
@@ -54,11 +96,63 @@
       "layouts": {
         "default": "sebul-cases-v1",
         "appliesTo": "calls that name no font (missing or empty) and pass no FontDefinition; any named font, including sebul, default and whitespace-only names, keeps its context layout",
-        "depth": "the fixed profile depth wins; depth arguments are still validated",
-        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the stamped jamo nodes and standalone compatibility jamo; the device option keeps device glyph text at the role stamps; named fonts and FontDefinition always draw device glyph text and reject element",
+        "depth": "caller longhand > caller shorthand > layout/font default; depth arguments are applied",
+        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the shaped jamo nodes (initial, medial and final nodes, placed by the bundled core CSS shape rules, ADR-030) and standalone compatibility jamo; the device option keeps device glyph text at the same shape values; named fonts and FontDefinition always draw device glyph text and reject element",
         "faceOption": "face=None|\"\"|\"element\"|\"device\""
       },
-      "interactionEffects": false
+      "interactionEffects": false,
+      "htmlOptions": {
+        "vowelDepths": [
+          "split",
+          "whole",
+          "syllable"
+        ],
+        "codaDepths": [
+          "split",
+          "whole"
+        ],
+        "depthArgumentsApplied": true,
+        "quality": "font-and-size-dependent",
+        "depthPrecedence": [
+          "longhand",
+          "composition",
+          "shorthand",
+          "default"
+        ],
+        "implicitFont": {
+          "faces": [
+            "element",
+            "device"
+          ],
+          "faceDefault": "element",
+          "vowelDepthDefault": "split",
+          "codaDepthDefault": "whole"
+        },
+        "namedFont": {
+          "faces": [
+            "device"
+          ],
+          "faceDefault": "device"
+        },
+        "compositions": [
+          "auto",
+          "syllable",
+          "whole",
+          "jamo",
+          "pieces",
+          "origins"
+        ],
+        "composition": {
+          "option": "composition=None",
+          "applies": "the split part (vowel, coda) through the depth path; the host gets data-fy-composition (the preset, or custom when a longhand changed an axis); none, \"\" and auto choose nothing",
+          "unsupported": [
+            "pieces",
+            "origins"
+          ],
+          "diagnostic": "data-fy-composition-status=\"COMPOSITION_UNSUPPORTED\" — the pieces levels keep the default strokes in static HTML",
+          "squareSplitFit": "not run — a named font's non-default split keeps its font CSS places (the runtime with --fy-split-fit: none)"
+        }
+      }
     },
     "go": {
       "normalization": "Hangul NFC only; other canonical sequences are preserved",
@@ -73,11 +167,63 @@
       "layouts": {
         "default": "sebul-cases-v1",
         "appliesTo": "calls that name no font (missing or empty) and pass no FontDefinition; any named font, including sebul, default and whitespace-only names, keeps its context layout",
-        "depth": "the fixed profile depth wins; depth arguments are still validated",
-        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the stamped jamo nodes and standalone compatibility jamo; the device option keeps device glyph text at the role stamps; named fonts and FontDefinition always draw device glyph text and reject element",
+        "depth": "caller longhand > caller shorthand > layout/font default; depth arguments are applied",
+        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the shaped jamo nodes (initial, medial and final nodes, placed by the bundled core CSS shape rules, ADR-030) and standalone compatibility jamo; the device option keeps device glyph text at the same shape values; named fonts and FontDefinition always draw device glyph text and reject element",
         "faceOption": "WithFace(\"\"|\"element\"|\"device\")"
       },
-      "interactionEffects": false
+      "interactionEffects": false,
+      "htmlOptions": {
+        "vowelDepths": [
+          "split",
+          "whole",
+          "syllable"
+        ],
+        "codaDepths": [
+          "split",
+          "whole"
+        ],
+        "depthArgumentsApplied": true,
+        "quality": "font-and-size-dependent",
+        "depthPrecedence": [
+          "longhand",
+          "composition",
+          "shorthand",
+          "default"
+        ],
+        "implicitFont": {
+          "faces": [
+            "element",
+            "device"
+          ],
+          "faceDefault": "element",
+          "vowelDepthDefault": "split",
+          "codaDepthDefault": "whole"
+        },
+        "namedFont": {
+          "faces": [
+            "device"
+          ],
+          "faceDefault": "device"
+        },
+        "compositions": [
+          "auto",
+          "syllable",
+          "whole",
+          "jamo",
+          "pieces",
+          "origins"
+        ],
+        "composition": {
+          "option": "WithComposition(preset)",
+          "applies": "the split part (vowel, coda) through the depth path; the host gets data-fy-composition (the preset, or custom when a longhand changed an axis); none, \"\" and auto choose nothing",
+          "unsupported": [
+            "pieces",
+            "origins"
+          ],
+          "diagnostic": "data-fy-composition-status=\"COMPOSITION_UNSUPPORTED\" — the pieces levels keep the default strokes in static HTML",
+          "squareSplitFit": "not run — a named font's non-default split keeps its font CSS places (the runtime with --fy-split-fit: none)"
+        }
+      }
     },
     "rust": {
       "normalization": "Hangul NFC only; other canonical sequences are preserved",
@@ -92,11 +238,63 @@
       "layouts": {
         "default": "sebul-cases-v1",
         "appliesTo": "calls that name no font (missing or empty) and pass no FontDefinition; any named font, including sebul, default and whitespace-only names, keeps its context layout",
-        "depth": "the fixed profile depth wins; depth arguments are still validated",
-        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the stamped jamo nodes and standalone compatibility jamo; the device option keeps device glyph text at the role stamps; named fonts and FontDefinition always draw device glyph text and reject element",
+        "depth": "caller longhand > caller shorthand > layout/font default; depth arguments are applied",
+        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the shaped jamo nodes (initial, medial and final nodes, placed by the bundled core CSS shape rules, ADR-030) and standalone compatibility jamo; the device option keeps device glyph text at the same shape values; named fonts and FontDefinition always draw device glyph text and reject element",
         "faceOption": "HtmlOptions.face \"\"|\"element\"|\"device\""
       },
-      "interactionEffects": false
+      "interactionEffects": false,
+      "htmlOptions": {
+        "vowelDepths": [
+          "split",
+          "whole",
+          "syllable"
+        ],
+        "codaDepths": [
+          "split",
+          "whole"
+        ],
+        "depthArgumentsApplied": true,
+        "quality": "font-and-size-dependent",
+        "depthPrecedence": [
+          "longhand",
+          "composition",
+          "shorthand",
+          "default"
+        ],
+        "implicitFont": {
+          "faces": [
+            "element",
+            "device"
+          ],
+          "faceDefault": "element",
+          "vowelDepthDefault": "split",
+          "codaDepthDefault": "whole"
+        },
+        "namedFont": {
+          "faces": [
+            "device"
+          ],
+          "faceDefault": "device"
+        },
+        "compositions": [
+          "auto",
+          "syllable",
+          "whole",
+          "jamo",
+          "pieces",
+          "origins"
+        ],
+        "composition": {
+          "option": "HtmlOptions.composition",
+          "applies": "the split part (vowel, coda) through the depth path; the host gets data-fy-composition (the preset, or custom when a longhand changed an axis); none, \"\" and auto choose nothing",
+          "unsupported": [
+            "pieces",
+            "origins"
+          ],
+          "diagnostic": "data-fy-composition-status=\"COMPOSITION_UNSUPPORTED\" — the pieces levels keep the default strokes in static HTML",
+          "squareSplitFit": "not run — a named font's non-default split keeps its font CSS places (the runtime with --fy-split-fit: none)"
+        }
+      }
     },
     "ruby": {
       "normalization": "engine NFC",
@@ -111,11 +309,63 @@
       "layouts": {
         "default": "sebul-cases-v1",
         "appliesTo": "calls that name no font (missing or empty) and pass no FontDefinition; any named font, including sebul, default and whitespace-only names, keeps its context layout",
-        "depth": "the fixed profile depth wins; depth arguments are still validated",
-        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the stamped jamo nodes and standalone compatibility jamo; the device option keeps device glyph text at the role stamps; named fonts and FontDefinition always draw device glyph text and reject element",
+        "depth": "caller longhand > caller shorthand > layout/font default; depth arguments are applied",
+        "face": "element strokes for calls that name no font, as the runtime default: the generated element table (spec/element-layer.json, ADR-027) adds data-fy-face=\"element\", --fy-face-width and [part=\"hoek\"] > [part=\"element\"] to the shaped jamo nodes (initial, medial and final nodes, placed by the bundled core CSS shape rules, ADR-030) and standalone compatibility jamo; the device option keeps device glyph text at the same shape values; named fonts and FontDefinition always draw device glyph text and reject element",
         "faceOption": "face: nil|\"\"|\"element\"|\"device\""
       },
-      "interactionEffects": false
+      "interactionEffects": false,
+      "htmlOptions": {
+        "vowelDepths": [
+          "split",
+          "whole",
+          "syllable"
+        ],
+        "codaDepths": [
+          "split",
+          "whole"
+        ],
+        "depthArgumentsApplied": true,
+        "quality": "font-and-size-dependent",
+        "depthPrecedence": [
+          "longhand",
+          "composition",
+          "shorthand",
+          "default"
+        ],
+        "implicitFont": {
+          "faces": [
+            "element",
+            "device"
+          ],
+          "faceDefault": "element",
+          "vowelDepthDefault": "split",
+          "codaDepthDefault": "whole"
+        },
+        "namedFont": {
+          "faces": [
+            "device"
+          ],
+          "faceDefault": "device"
+        },
+        "compositions": [
+          "auto",
+          "syllable",
+          "whole",
+          "jamo",
+          "pieces",
+          "origins"
+        ],
+        "composition": {
+          "option": "composition: nil",
+          "applies": "the split part (vowel, coda) through the depth path; the host gets data-fy-composition (the preset, or custom when a longhand changed an axis); none, \"\" and auto choose nothing",
+          "unsupported": [
+            "pieces",
+            "origins"
+          ],
+          "diagnostic": "data-fy-composition-status=\"COMPOSITION_UNSUPPORTED\" — the pieces levels keep the default strokes in static HTML",
+          "squareSplitFit": "not run — a named font's non-default split keeps its font CSS places (the runtime with --fy-split-fit: none)"
+        }
+      }
     }
   },
   "customFontDefinition": {

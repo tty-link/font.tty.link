@@ -15,7 +15,7 @@
  *                      있으면 그 값이 대체한다. --fy-sprite-filter는 페이지 전용이다
  * 실제 사용 시 --fy-sprite-url을 자기 자소판으로 바꾸고 행 규칙을 시트에 맞춘다.
  * 자소판은 SVG로 직접 그리면(칸 <g> 안에 0–100 좌표, scripts/build_jamo_svg.js 참고)
- * 어느 크기에서나 선명하다. PNG는 Font Studio(site/font-studio.html) 재료 탭에서
+ * 어느 크기에서나 선명하다. PNG는 글꼴 작업실(studio/index.html) 재료 탭에서
  * 그리고 내보낼 수 있다.
  *
  * 스프라이트 시트 가정 레이아웃 (셀 크기 1em 격자):

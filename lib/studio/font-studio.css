@@ -8,12 +8,79 @@
   padding-block-end: 48px;
 }
 
+/* 작업실 페이지(2026-10-17 — 디자인 · 고치기 · 자소판). [data-studio]의 data-page가 지금 페이지이고, 칸은 data-studio-pages에
+ * 자기가 보이는 페이지를 밝힌다(밝히지 않은 칸은 모든 페이지). 페이지를 바꿔도 같은 문서라 고친 것·되돌리기 기록이 이어진다. */
+[data-studio][data-page="design"] [data-studio-pages]:not([data-studio-pages~="design"]),
+[data-studio][data-page="edit"] [data-studio-pages]:not([data-studio-pages~="edit"]),
+[data-studio][data-page="sheet"] [data-studio-pages]:not([data-studio-pages~="sheet"]),
+[data-studio][data-page="review"] [data-studio-pages]:not([data-studio-pages~="review"]) {
+  display: none !important;
+}
+
 .studio-head {
+  display: grid;
+  gap: 8px;
+}
+
+.studio-head-top {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
+  align-items: center;
+  gap: 10px 18px;
+}
+
+.studio-pages {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--studio-border);
+  border-radius: 999px;
+  background: var(--studio-panel);
+}
+
+.studio-pages a {
+  padding: 5px 14px;
+  border-radius: 999px;
+  color: var(--studio-muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.studio-pages a:hover {
+  color: var(--studio-ink);
+}
+
+.studio-pages a[aria-current="page"] {
+  background: var(--studio-accent);
+  color: var(--studio-surface);
+}
+
+.studio-head-top .studio-status {
+  margin-inline-start: auto;
+}
+
+.studio-page-intro {
+  margin: 0;
+  color: var(--studio-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.studio-page-intro strong {
+  margin-inline-end: 6px;
+  color: var(--studio-ink);
+}
+
+/* 자소판 페이지는 살펴보기 칸이 없어 미리보기가 줄을 다 쓴다 */
+[data-studio][data-page="sheet"] .studio-workspace {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* 손잡이 틀·바뀔 곳 틀은 고치기 페이지에서만(다른 페이지에서는 누르면 고르기만 한다) */
+[data-studio]:not([data-page="edit"]) .studio-handles,
+[data-studio]:not([data-page="edit"]) .studio-affected-layer {
+  display: none;
 }
 
 .studio-status {
@@ -285,15 +352,16 @@
 }
 
 .studio-design-layout legend,
-.studio-design-context h3 {
+.studio-design-rules h3 {
   margin: 0;
   font-size: 12px;
   font-weight: 600;
   color: var(--studio-muted);
 }
 
-.studio-design-context,
-.studio-design-conflicts {
+.studio-design-rules,
+.studio-design-principle,
+.studio-design-mismatch-group {
   display: grid;
   gap: 6px;
   padding: 8px 10px;
@@ -302,29 +370,148 @@
   font-size: 12px;
 }
 
-.studio-design-conflicts {
+/* 이 모양과 맞지 않는 규칙(S5-B) — 막음은 오류색, 경고(원칙 안내, ADR-030 §5)는 막지 않는 알림이라 강조색 */
+.studio-design-mismatch {
+  display: grid;
+  gap: 6px;
+}
+
+.studio-design-mismatch[hidden],
+.studio-design-mismatch-group[hidden] {
+  display: none;
+}
+
+.studio-design-mismatch-title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--studio-muted);
+}
+
+.studio-design-mismatch-group[data-severity="block"] {
+  border-style: solid;
   border-color: var(--studio-seal);
   background: var(--studio-seal-soft);
 }
 
-.studio-design-context ul,
-.studio-design-conflicts ul {
+.studio-design-principle,
+.studio-design-mismatch-group[data-severity="warn"] {
+  border-style: solid;
+  border-color: var(--studio-accent);
+  background: var(--studio-accent-soft);
+}
+
+.studio-design-principle ul,
+.studio-design-mismatch-group ul,
+.studio-design-rules ul {
   margin: 0;
   padding-inline-start: 18px;
-  font: 12px/1.5 var(--studio-mono);
+  font-size: 12px;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
-.studio-design-context li {
+.studio-design-mismatch-group code,
+.studio-design-mismatch-detail,
+.studio-design-rules code {
+  font: 11px/1.5 var(--studio-mono);
+  color: var(--studio-muted);
+}
+
+.studio-design-principle p,
+.studio-design-mismatch-group p,
+.studio-design-rules p {
+  margin: 0;
+}
+
+/* 규칙 목록(S5-B — 문맥 규칙 탭을 합침) */
+.studio-design-rules ul {
+  padding-inline-start: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.studio-design-rules li {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 4px 8px;
+  padding: 3px 6px;
+  border-radius: 6px;
 }
 
-.studio-design-context p,
-.studio-design-conflicts p {
-  margin: 0;
+.studio-design-rules li[data-editing="true"] {
+  outline: 1.5px solid var(--studio-accent);
+}
+
+.studio-design-rule-kind {
+  padding: 0 6px;
+  border: 1px solid var(--studio-border-strong);
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--studio-muted);
+}
+
+.studio-design-rules li[data-rule-kind="context"] .studio-design-rule-kind {
+  border-color: var(--studio-accent);
+  color: var(--studio-accent);
+}
+
+.studio-design-rule-text {
+  flex: 1 1 14em;
+}
+
+.studio-design-rules-help {
+  color: var(--studio-muted);
+}
+
+.studio-design-rule-form {
+  display: grid;
+  gap: 6px;
+  padding-block-start: 6px;
+  border-block-start: 1px solid var(--studio-rule);
+}
+
+.studio-design-rule-form-title {
+  font-weight: 600;
+}
+
+.studio-design-rule-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5em, 1fr));
+  gap: 6px 8px;
+}
+
+.studio-design-rule-fields label {
+  display: grid;
+  gap: 2px;
+  color: var(--studio-muted);
+}
+
+.studio-design-rule-fields input,
+.studio-design-rule-fields select {
+  min-inline-size: 0;
+  font: 12px/1.3 var(--studio-sans);
+  padding: 4px 6px;
+  border: 1px solid var(--studio-border);
+  border-radius: 6px;
+  background: var(--studio-surface);
+  color: var(--studio-ink);
+}
+
+.studio-design-rule-note {
+  color: var(--studio-accent);
+}
+
+.studio-design-rule-note[hidden],
+.studio-design-rule-message:empty {
+  display: none;
+}
+
+.studio-design-rule-message[data-tone="error"],
+.studio-design-rule-message[data-tone="warn"] {
+  color: var(--studio-seal);
 }
 
 .studio-design-collision {
@@ -367,7 +554,7 @@
 
 .studio-design-buttons button,
 .studio-design-files button,
-.studio-design-context button {
+.studio-design-rules li button {
   font: 12px/1.2 var(--studio-sans);
   padding: 6px 10px;
   border: 1px solid var(--studio-border-strong);
@@ -377,8 +564,15 @@
   cursor: pointer;
 }
 
-.studio-design-context button {
+.studio-design-rules li button {
   padding: 2px 8px;
+}
+
+@media (pointer: coarse) {
+  .studio-design-rules li button,
+  .studio-design-mismatch-group button {
+    min-block-size: 44px;
+  }
 }
 
 .studio-design-buttons button:disabled {
@@ -448,10 +642,21 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* 그림(S3) 왼쪽, 이름·설명은 오른쪽 한 칸에(S5-B — 전에는 그림이 첫 칸을 잡아 이름이 25px 칸에 한 자씩 접혔다) */
   .studio-design-start button {
     grid-template-columns: auto minmax(0, 1fr);
-    align-items: baseline;
+    align-items: center;
     column-gap: 10px;
+  }
+
+  .studio-design-start button .studio-design-art {
+    grid-row: span 2;
+    margin-block-end: 0;
+  }
+
+  .studio-design-start button strong,
+  .studio-design-start button span {
+    grid-column: 2;
   }
 
   .studio-design-row {
@@ -463,23 +668,40 @@
   }
 }
 
+/* 파일 막대 — 모든 페이지 머리 아래 한 줄(불러오기 · 열기 · 새 글꼴 · 되돌리기 · 저장) */
 .studio-toolbar {
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
-  gap: 10px;
-  padding: 12px 14px;
+  align-items: center;
+  gap: 6px 8px;
+  padding: 8px 12px;
   border: 1px solid var(--studio-border);
   border-radius: 12px;
   background: var(--studio-panel);
 }
 
-.studio-toolbar label,
+.studio-toolbar > label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--studio-muted);
+}
+
 .studio-text {
   display: grid;
   gap: 4px;
   font-size: 12px;
   color: var(--studio-muted);
+}
+
+.studio-visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .studio-toolbar button,
@@ -502,9 +724,36 @@
   opacity: 0.45;
 }
 
+/* 파일 고르기는 단추 꼴 — 입력은 보이지 않게 두고(키보드 초점은 받는다) 이름표가 단추다 */
+.studio-toolbar > label.studio-file {
+  position: relative;
+  padding: 6px 10px;
+  border: 1px solid var(--studio-border-strong);
+  border-radius: 8px;
+  background: var(--studio-surface);
+  color: var(--studio-ink);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.studio-toolbar > label.studio-file:focus-within {
+  outline: 2px solid var(--studio-accent);
+  outline-offset: 1px;
+}
+
 .studio-file input {
   font-size: 12px;
   max-inline-size: 200px;
+}
+
+.studio-toolbar > label.studio-file input {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  max-inline-size: none;
+  block-size: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .studio-sep {
@@ -513,15 +762,80 @@
   background: var(--studio-border);
 }
 
-/* Fixed height: a longer message must not push the preview while dragging. */
+/* 알림 한 줄 — 두 줄 자리는 늘 비워 두어 짧은 알림이 미리보기를 밀지 않고, 긴 알림은 잘리지 않게 다 보인다(2026-10-18 검토:
+ * 높이 고정 2.6em이라 휴대폰에서 잘렸다). 변수·줄 번호 같은 원문은 접힌 '자세히'.
+ * S6: 머리 막대 안 되돌리기·다시 옆의 남는 자리를 쓴다(두 줄 자리 = 단추 높이라 막대가 높아지지 않는다). 휴대폰은 막대 아래 한 줄 */
 .studio-message {
-  flex-basis: 100%;
+  flex: 1 1 18em;
+  min-inline-size: 0;
   margin: 0;
-  block-size: 3.9em;
-  overflow-y: auto;
+  min-block-size: 2.6em;
   font-size: 12px;
   line-height: 1.3;
   color: var(--studio-muted);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .studio-message {
+    flex-basis: 100%;
+    order: 10;
+  }
+}
+
+.studio-message-detail {
+  display: inline;
+  color: var(--studio-muted);
+}
+
+.studio-message-detail summary {
+  display: inline;
+  cursor: pointer;
+  text-decoration: underline dotted;
+}
+
+.studio-message-detail[open] > span {
+  display: block;
+  margin-block-start: 2px;
+  font: 11px/1.4 var(--studio-mono);
+}
+
+/* 묻는 칸(다른 글꼴 열기·CSS만 내보내기의 빠지는 것·복사 대체 칸) — 막대 안에서 한 줄 차지 */
+.studio-ask {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--studio-seal);
+  border-radius: 8px;
+  background: var(--studio-seal-soft);
+  font-size: 12px;
+  color: var(--studio-ink);
+}
+
+.studio-ask p {
+  flex-basis: 100%;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.studio-copy-fallback {
+  border-color: var(--studio-border-strong);
+  background: var(--studio-surface-muted);
+}
+
+.studio-copy-fallback label {
+  flex: 1 1 100%;
+  display: grid;
+  gap: 4px;
+}
+
+.studio-copy-fallback textarea {
+  inline-size: 100%;
+  box-sizing: border-box;
+  font: 11px/1.4 var(--studio-mono);
 }
 
 .studio-message[data-tone="warn"],
@@ -529,6 +843,30 @@
 .studio-draft-status[data-tone="warn"],
 .studio-draft-status[data-tone="error"] {
   color: var(--studio-seal);
+}
+
+/* 파생 글꼴의 바탕(ADR-030 §8) — 불러오기·이름 바꾸기 때만 바뀌어 끌기 중에는 높이가 변하지 않는다 */
+.studio-derived {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--studio-ink);
+}
+
+[data-studio][data-derived="outdated"] .studio-derived {
+  color: var(--studio-seal);
+}
+
+/* 통째로 풀어 저장 — 체크 상자와 글을 한 줄에 */
+.studio-toolbar label[data-studio-flatten-option] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.studio-toolbar label[data-studio-flatten-option][hidden] {
+  display: none;
 }
 
 .studio-draft {
@@ -592,6 +930,30 @@
   gap: 4px 12px;
 }
 
+/* 글꼴 모양을 통째로 바꾸기 전에 묻는 칸(2026-10-18 검토 D5) */
+.studio-target-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--studio-seal);
+  border-radius: 8px;
+  background: var(--studio-seal-soft);
+}
+
+.studio-target-confirm p {
+  flex-basis: 100%;
+}
+
+/* 바뀔 곳 수(2026-10-18 검토 D4) */
+.studio-affected-count {
+  color: var(--studio-accent);
+}
+
+.studio-affected-count[data-hover="true"] {
+  font-weight: 600;
+}
+
 .studio-workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
@@ -619,8 +981,231 @@
     linear-gradient(var(--studio-grid-line) 1px, transparent 1px) 0 0 / 100% 24px,
     var(--studio-grid-bg);
   overflow-x: auto;
-  touch-action: none;
+  position: relative;
+  /* 쪽 넘기기는 된다 — 고른 자모의 글자 칸과 손잡이만 손가락 끌기를 받는다(미리보기 shadow의 [part="glyph"]:has(.studio-selected)) */
+  touch-action: pan-x pan-y;
   user-select: none;
+}
+
+/* 바뀔 곳(2026-10-18 검토 D4) — 지금 범위로 고치면 바뀌는 자모마다 잉크 상자에 점선 틀. 칠하지 않고 누르기를 받지 않는다 */
+.studio-affected-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.studio-affected-box {
+  position: absolute;
+  margin: -4.5px 0 0 -4.5px;
+  padding: 3px;
+  border: 1.5px dashed var(--studio-accent);
+  border-radius: 3px;
+  box-sizing: content-box;
+  opacity: 0.85;
+}
+
+/* 고른 자모의 손잡이 틀(잉크 상자) — 오른쪽 아래 크기, 위 회전 */
+/* 틀은 자모 위에 놓이므로 칠하지 않고, 손잡이는 틀 바깥에 둔다 — 고친 자모가 가려지지 않게.
+ * 손잡이 상자(누르는 곳)는 데스크톱 16px, 휴대폰(굵은 포인터) 44px이고, 보이는 꼭지(::before)는 그 가운데에 작게 그린다
+ * (PLAN-STUDIO-002 S4 '손잡이' — 검토 2026-10-18 §3: 12px·22px라 작았다). 꼭지 자리는 전과 같다 */
+.studio-handles {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  --studio-handle: 16px;
+  --studio-handle-knob: 12px;
+  --studio-handle-pad: 5px;
+  --studio-handle-stem: 16px;
+}
+
+.studio-handles-box {
+  position: absolute;
+  inset: calc(-1 * var(--studio-handle-pad));
+  border: 1.5px solid var(--studio-accent);
+  border-radius: 3px;
+}
+
+.studio-handles-stem {
+  position: absolute;
+  inset-inline-start: calc(50% - 0.75px);
+  inset-block-start: calc(-1 * var(--studio-handle-pad) - var(--studio-handle-stem));
+  inline-size: 1.5px;
+  block-size: var(--studio-handle-stem);
+  background: var(--studio-accent);
+}
+
+.studio-handle {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  inline-size: var(--studio-handle);
+  block-size: var(--studio-handle);
+  box-sizing: border-box;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.studio-handle::before {
+  content: "";
+  inline-size: var(--studio-handle-knob);
+  block-size: var(--studio-handle-knob);
+  box-sizing: border-box;
+  border: 2px solid var(--studio-accent);
+  background: var(--studio-surface, #fff);
+  border-radius: inherit;
+}
+
+/* 꼭지 가운데가 틀 모서리 밖 (꼭지/2 − 2px) — 누르는 상자는 그 가운데에 */
+.studio-handle[data-studio-handle="size"] {
+  inset-inline-end: calc(-1 * (var(--studio-handle-pad) + var(--studio-handle-knob) / 2 - 2px + var(--studio-handle) / 2));
+  inset-block-end: calc(-1 * (var(--studio-handle-pad) + var(--studio-handle-knob) / 2 - 2px + var(--studio-handle) / 2));
+  border-radius: 2px;
+  cursor: nwse-resize;
+}
+
+/* 꼭지 가운데가 줄기 끝에서 꼭지/2 위 */
+.studio-handle[data-studio-handle="rotate"] {
+  inset-inline-start: calc(50% - var(--studio-handle) / 2);
+  inset-block-start: calc(-1 * (var(--studio-handle-pad) + var(--studio-handle-stem) + var(--studio-handle-knob) / 2 + var(--studio-handle) / 2));
+  border-radius: 50%;
+  cursor: grab;
+}
+
+.studio-handles[data-flip="down"] .studio-handles-stem {
+  inset-block-start: auto;
+  inset-block-end: calc(-1 * var(--studio-handle-pad) - var(--studio-handle-stem));
+}
+
+.studio-handles[data-flip="down"] [data-studio-handle="rotate"] {
+  inset-block-start: auto;
+  inset-block-end: calc(-1 * (var(--studio-handle-pad) + var(--studio-handle-stem) + var(--studio-handle-knob) / 2 + var(--studio-handle) / 2));
+}
+
+.studio-handles[data-size="off"] [data-studio-handle="size"],
+.studio-handles[data-rotate="off"] [data-studio-handle="rotate"],
+.studio-handles[data-rotate="off"] .studio-handles-stem {
+  display: none;
+}
+
+/* 끄는 동안의 말풍선(각도·배율·옮긴 양) — 회전 꼭지 위(아래로 뒤집으면 틀 아래) */
+.studio-handle-tip {
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-end: calc(100% + var(--studio-handle-pad) + var(--studio-handle-stem) + var(--studio-handle-knob) + 6px);
+  transform: translateX(-50%);
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--studio-ink, #1c1a16);
+  color: var(--studio-surface, #fff);
+  font: 600 12px/1.4 system-ui, sans-serif;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.studio-handles[data-flip="down"] .studio-handle-tip {
+  inset-block-end: auto;
+  inset-block-start: calc(100% + var(--studio-handle-pad) + var(--studio-handle-stem) + var(--studio-handle-knob) + 6px);
+}
+
+.studio-handle-tip[hidden] {
+  display: none;
+}
+
+/* 머리 음절 안 조각(S4) — 조각 점선과 그 자리의 '낱으로 나눠 고치기' */
+.studio-piece {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 0;
+  block-size: 0;
+  overflow: visible;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.studio-piece[hidden],
+[data-studio]:not([data-page="edit"]) .studio-piece {
+  display: none;
+}
+
+.studio-piece-box {
+  position: absolute;
+  margin: -3px 0 0 -3px;
+  padding: 2px;
+  border: 1.5px dashed var(--studio-accent);
+  border-radius: 3px;
+  box-sizing: content-box;
+}
+
+.studio-piece-offer {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  inline-size: max-content;
+  max-inline-size: min(340px, calc(100vw - 32px));
+  padding: 6px 8px;
+  border: 1px solid var(--studio-accent);
+  border-radius: 6px;
+  background: var(--studio-surface, #fff);
+  color: var(--studio-ink, #1c1a16);
+  font: 13px/1.4 system-ui, sans-serif;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+  pointer-events: auto;
+}
+
+.studio-piece-offer[hidden] {
+  display: none;
+}
+
+/* 미리보기 안에 글자를 덮지 않는 자리가 없으면 말풍선은 미리보기 바로 아래 칸에 붙는다(S5-B) */
+.studio-piece-dock {
+  display: flex;
+  margin-block-start: -4px;
+}
+
+.studio-piece-dock[hidden],
+[data-studio]:not([data-page="edit"]) .studio-piece-dock {
+  display: none;
+}
+
+.studio-piece-offer[data-dock] {
+  position: static;
+  max-inline-size: 100%;
+  box-shadow: none;
+}
+
+.studio-piece-offer button {
+  min-block-size: 32px;
+}
+
+.studio-easy-piece {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.studio-easy-piece[hidden] {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .studio-piece-offer button,
+  .studio-easy-piece button {
+    min-block-size: 44px;
+  }
+}
+
+@media (pointer: coarse) {
+  .studio-handles {
+    --studio-handle: 44px;
+    --studio-handle-knob: 22px;
+    --studio-handle-stem: 20px;
+  }
 }
 
 .studio-preview:focus-visible {
@@ -697,6 +1282,13 @@
   margin-block-start: 4px;
 }
 
+/* 범위 사다리(ADR-035) — 단추 차례가 넓은 것에서 좁은 것으로, 좁은 범위가 이긴다 */
+.studio-scope-order {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--studio-muted);
+}
+
 .studio-props {
   inline-size: 100%;
   border-collapse: collapse;
@@ -709,6 +1301,11 @@
   border-block-end: 1px solid var(--studio-rule);
   text-align: start;
   vertical-align: top;
+}
+
+/* 속성 이름(한국어, S4)은 한 줄로 */
+.studio-props tbody th {
+  white-space: nowrap;
 }
 
 .studio-props input {
@@ -1044,4 +1641,65 @@
   padding: 3px 6px;
   border: 1px solid var(--studio-border-strong);
   border-radius: 6px;
+}
+
+.studio-reproducibility { border: 1px solid var(--studio-border); border-radius: 10px; padding: 10px 14px; font-size: 13px; }
+.studio-reproducibility p { margin: 0 0 8px; }
+.studio-reproducibility details { margin-top: 8px; }
+.studio-review { min-width: 0; }
+.studio-review h2 { margin-top: 0; }
+.studio-review-layout { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 20px; }
+[data-review-samples] { display: flex; flex-direction: column; gap: 8px; }
+[data-review-samples] button { text-align: left; white-space: normal; }
+[data-review-samples] button[aria-current="true"] { border: 2px solid var(--studio-accent); }
+.studio-review-specimens { background: var(--studio-panel); border: 1px solid var(--studio-border); border-radius: 10px; padding: 14px; overflow: auto; }
+.studio-review-size { margin: 8px 0 16px; }
+.studio-review-size small { display: block; color: var(--studio-muted); margin-bottom: 8px; }
+.studio-review-note, .studio-review-custom { display: grid; gap: 8px; margin-block: 16px; }
+.studio-review-note textarea { width: 100%; box-sizing: border-box; font: inherit; }
+.studio-review-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+[data-review-history] { color: var(--studio-muted); font-size: 13px; }
+@media (max-width: 600px) {
+  .studio-review-layout { grid-template-columns: minmax(0, 1fr); }
+  [data-review-samples] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .studio-pages { flex-wrap: wrap; border-radius: 14px; }
+}
+.studio-review button, .studio-reproducibility button,
+.studio-review input, .studio-review textarea {
+  border: 1px solid var(--studio-border-strong);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: 13px/1.5 var(--studio-sans);
+  color: var(--studio-ink);
+  background: var(--studio-surface);
+}
+.studio-review button, .studio-reproducibility button { cursor: pointer; min-height: 40px; }
+.studio-review button:focus-visible, .studio-review input:focus-visible, .studio-review textarea:focus-visible,
+.studio-reproducibility button:focus-visible { outline: 2px solid var(--studio-accent); outline-offset: 2px; }
+.studio-review h3 { margin-top: 0; }
+[data-review-samples] button[aria-current="true"] { background: var(--studio-accent-soft); }
+[data-review-status][data-state="stale"], [data-review-status][data-state="needs-fix"] { color: var(--studio-seal); }
+[data-studio][data-page="review"] .studio-toolbar > :is([data-studio-rename], [data-studio-rebase], [data-studio-undo], [data-studio-redo], [data-studio-open-handle], [data-studio-save], [data-studio-export-css], [data-studio-copy-css], [data-studio-flatten-option], .studio-sep),
+[data-studio][data-page="review"] .studio-toolbar > label:has([data-studio-new-name]) { display: none; }
+
+.studio-review-compare { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.studio-review-compare.has-baseline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.studio-review-compare h4 { margin: 8px 0; font-size: 13px; color: var(--studio-muted); }
+@media (max-width: 760px) { .studio-review-compare.has-baseline { grid-template-columns: minmax(0, 1fr); } }
+
+/* 두 모드(PLAN-STUDIO-002 S3) — 쉬운 모드는 정밀 전용 칸([data-studio-precise])을, 정밀 모드는 쉬운 전용 칸([data-studio-easy])을
+ * 감춘다. 모드는 작업실 뿌리의 data-studio-mode(S1, ?mode=·mount mode). 표시만 감추고 모듈은 수명 훅(f.mount mode)으로 멈춘다 */
+[data-studio][data-studio-mode="easy"] [data-studio-precise] { display: none !important; }
+[data-studio][data-studio-mode="precise"] [data-studio-easy] { display: none !important; }
+
+/* 첫 화면(S6, PLAN-STUDIO-002 Success Criteria) — 쉬운 모드 첫 화면의 조작은 15개 이하.
+ * 디자인 칸 '접기'는 펼친 동안 정밀 모드에서만(미리보기가 위라 접어도 얻는 것이 없다). 접힌 글꼴(디자인 끔)의 '펼치기'는 쉬운 모드에도 */
+[data-studio][data-studio-mode="easy"] .studio-design[data-design-folded="false"] [data-design-fold] { display: none; }
+
+/* 머리 막대 안 알림 — 데스크톱은 단추 줄 가운데에 맞춘다(두 줄까지는 막대 높이 그대로) */
+@media (min-width: 701px) {
+  .studio-bar > .studio-message {
+    align-self: center;
+    min-block-size: 0;
+  }
 }

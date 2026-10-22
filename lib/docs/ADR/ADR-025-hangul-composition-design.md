@@ -54,7 +54,8 @@ ADR-024(Accepted)까지 폰꾸는 기기 글꼴 배치(`sebul`·`gothic`과 파�
 - 검증 규칙은 한 벌이다. `FontKku.validateDesign(design)`이 같은 규칙으로 오류를 모두 모아 `{ ok, errors: [{ code, path, message }] }`를
   돌려주고(던지지 않고 등록하지 않는다), `registerDesign`은 그 `errors[0]`을 던진다(TypeError에 같은 `code`·`path`). 오류 하나가 다른
   규칙을 잇달아 넘어뜨리지 않게 틀린 소스도 선언된 이름으로 보고, 오류가 난 규칙은 충돌 비교에서 뺀다. 코드는 `font-kku.d.ts`의
-  `DesignErrorCode` 24개다(세벌 고정 거부는 `DESIGN_FIXED_CONTEXT`·`DESIGN_FIXED_COMPOUND`·`DESIGN_FIXED_VARIATION`).
+  `DesignErrorCode` 22개다(세벌 고정 거부는 `DESIGN_FIXED_COMPOUND` — ADR-030 §5부터 `DESIGN_FIXED_CONTEXT`·`DESIGN_FIXED_VARIATION`은
+  받아 지키는 진단 `DesignWarningCode`다. 그 전에는 24개였다).
 - 고르기: 글꼴 CSS는 `--fy-font-design`, 페이지는 `--fy-design`(ADR-008의 글꼴·페이지 레벨 관례 — 페이지가 이긴다). 바탕 요소의
   계산된 값을 trim해서 읽는다.
 
@@ -169,7 +170,7 @@ ADR-024(Accepted)까지 폰꾸는 기기 글꼴 배치(`sebul`·`gothic`과 파�
   긋는다. 세트에 그 종류의 원소 그림이 있으면 그것(출하 세트 출력 그대로), 없으면 **보이는 원형 그림**이다: 선은 ㅡ(마디마다 돌려
   놓는다), 점은 ㆍ(없으면 ㅡ), 동그라미는 ㅇ(문맥 변형이 먼저). 해석기가 보이는 칸(`cells`)으로 고른 그림 열쇠를 획 항목에 싣고
   (`planJamo` `items[].alias`), 그것도 없으면 CSS 상자다. 그래서 원형 8만 그린 세트도 CSS 상자 없이 한 손으로 보인다.
-- `site/faces.html`의 "깊이" 비교는 작업실 미리보기 프리셋이 된다 — 보이는 원본 집합을 잠시 줄인 스냅샷이나 명시적 `compose` 규칙을
+- 사이트 `src/faces.html`의 "깊이" 비교는 작업실 미리보기 프리셋이 된다 — 보이는 원본 집합을 잠시 줄인 스냅샷이나 명시적 `compose` 규칙을
   같은 해석기에 넘긴다.
 
 ### 8. `--fy-draw-depth` 없애기
@@ -286,6 +287,7 @@ v1.1 §25.16 절차(어댑터·진단·전환 기간 뒤 제거)를 따른다.
   [ADR-018](ADR-018-stroke-depth.md), [ADR-013](ADR-013-vector-jamo.md), [ADR-008](ADR-008-font-contract-v2.md), [ADR-003](ADR-003-accessibility-contract.md)
 
 ## Change Log
+- 2026-10-18: §5의 "규칙·binding이 고른 조립식은 재료 없이도 따른다"가 원소 재료 출력과 다름을 확인(ㅎ `hieut-circle-o`를 골라도 원소는 세 획 그대로, [노트](../NOTES/composition-options-2026-10-18.md)). 고침과 나누기·조립식을 묶어 고르는 프리셋은 [ADR-034](ADR-034-composition-modes.md)
 - 2026-10-13: §2 디자인은 JSON 데이터 — 자기를 가리키는 고리·BigInt는 `DESIGN_NOT_OBJECT`(path는 그 자리) 하나로, `validateDesign`과 `registerDesign`이
   같은 오류를 낸다(전에는 검증은 ok, 등록은 revision 직렬화에서 code 없는 스택 넘침). §12 줄 끝을 지나 끌어 놓기·묶음당 선택 한 번 읽기
   ([ADR-003](ADR-003-accessibility-contract.md) 2026-10-13 보강)

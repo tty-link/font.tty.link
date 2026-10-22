@@ -32,7 +32,7 @@
  *   이동·투명도 움직임은 재료와 무관하다.
  * - 조절 손잡이(페이지 CSS에서 바탕 요소에): --kku-motion-duration(한 바퀴 길이),
  *   --kku-motion-stagger(글자 사이 시차), --kku-cycle-1~4(cycle 색),
- *   --kku-shine-color(shine 빛 색), --kku-draw-stroke(draw 획 하나 긋는 시간),
+ *   --kku-shine-color(shine 빛 색 — 글꼴·꾸밈이 --kku-shine-tone으로 제 기본 빛 색을 줄 수 있다), --kku-draw-stroke(draw 획 하나 긋는 시간),
  *   --kku-draw-gap(draw 획 사이 시차).
  * - 조상(또는 바탕 요소)에 data-kku-paused를 두면 움직임이 그 자리에 선다 — 스크롤 조립은
  *   스크롤이 진행도라 서지 않는다. 사용자가 움직임 줄이기를 켜면 모두 끈다.
@@ -104,8 +104,9 @@
   }
 
   /* ── flicker: 깜빡임 ────────────────────────────────── */
+  /* 받침 없는 글자는 글자 칸의 data-fy-open으로 고른다 — 조상 자리 :has()는 Chromium에서 페이지 :has() 무효화에 묶인다 */
   :where(font-kku, .font-kku)[data-fy-animate="flicker"] :where([part="glyph"]:nth-child(3n+2)) :where([part~="jongseong"]),
-  :where(font-kku, .font-kku)[data-fy-animate="flicker"] :where([part="glyph"]:nth-child(3n+2):not(:has([part~="jongseong"]))) :where([part~="jungseong"]) {
+  :where(font-kku, .font-kku)[data-fy-animate="flicker"] :where([part="glyph"]:nth-child(3n+2):not([data-fy-open="closed"])) :where([part~="jungseong"]) {
     animation: kku-flicker var(--kku-motion-duration, 4.2s) linear infinite;
     animation-delay: calc(var(--fy-glyph-index, 0) * -0.9s);
   }
@@ -125,21 +126,45 @@
   :where(font-kku, .font-kku)[data-fy-animate="shine"] :where([part~="jamo"]) {
     --kku-shine-paint: linear-gradient(115deg,
       currentColor calc(var(--kku-shine-at) * 100% - 26%),
-      var(--kku-shine-color, #fff8de) calc(var(--kku-shine-at) * 100%),
+      var(--kku-shine-color, var(--kku-shine-tone, #fff8de)) calc(var(--kku-shine-at) * 100%),
       currentColor calc(var(--kku-shine-at) * 100% + 26%));
     --fy-sprite-fill: var(--kku-shine-paint);
     animation: kku-shine var(--kku-motion-duration, 3s) ease-in-out infinite;
     animation-delay: calc(var(--fy-glyph-index, 0) * var(--kku-motion-stagger, 140ms));
   }
-  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material], [data-fy-glow], [data-fy-face="element"], [data-fy-face="svg"], [class*="kku-look-"]) :where([part~="jamo"]) {
+  /* 꾸밈(kku-look-*)이 걸린 바탕 요소는 런타임이 찍는 data-fy-look으로 고른다 — [class*="kku-look-"] 뒤에 자손 결합자가 오면
+   * Chromium은 페이지 어디서든 class가 바뀔 때마다 그 아래 [part] 노드를 모두 다시 계산했다(홈 장 닫기 body class 하나에 자모
+   * 9,105개, 77ms — 홈 세션 2026-10-22). */
+  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material], [data-fy-glow], [data-fy-face="element"], [data-fy-face="svg"], [data-fy-look]) :where([part~="jamo"]) {
     background-image: var(--kku-shine-paint);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material]):is([class*="kku-look-"], [data-fy-glow]) :where([part~="jamo"]) {
+  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material]):is([data-fy-look], [data-fy-glow]) :where([part~="jamo"]) {
     animation-name: kku-shine-glint;
   }
+  /* 꾸밈이 고른 글자 단위 shine(--kku-look-shine-glyph — spec/themes.json 꾸밈 shine.glyph). 외곽선처럼 속이 거의 흰
+   * 꾸밈은 띠도 밝기 번쩍임도 보이지 않아(matrix-10) 글자 색을 빛 색 쪽으로 번쩍인다(kku-shine-rim) — 테두리·선 글자가
+   * 그 색을 따른다. 고르지 않은 꾸밈과 글꼴은 글자 노드가 움직이지 않는다. */
+  :where(font-kku, .font-kku)[data-fy-animate="shine"] :where([part="glyph"]) {
+    animation: var(--kku-look-shine-glyph, none) var(--kku-motion-duration, 3s) ease-in-out infinite;
+    animation-delay: calc(var(--fy-glyph-index, 0) * var(--kku-motion-stagger, 140ms));
+  }
+  /* BEGIN GENERATED: scripts/build_looks.js — 꾸러미 글꼴의 shine: 글꼴 칠(text-shadow)이 띠를 덮어
+   * 칠이 깨지므로 밝기 번쩍임을 쓰고 칠을 글꼴 값으로 되돌린다(matrix-9). 글꼴 목록은 spec/themes.json 꾸밈의 from.
+   * 그 아래는 글꼴·꾸러미 글꼴의 기본 빛 색(--kku-shine-tone — spec/themes.json shine.tone, 페이지 --kku-shine-color가 이긴다).
+   * 고치지 않는다 — 원본을 고치고 `node scripts/build_looks.js --write`. */
+  :where(font-kku, .font-kku)[data-fy-animate="shine"]:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"]):is([data-fy-font="blueprint"], [data-fy-font="geumbak"], [data-fy-font="glitch"], [data-fy-font="neon"], [data-fy-font="retro"], [data-fy-font="riso"], [data-fy-font="sticker"]) :where([part~="jamo"]) {
+    background-image: revert-layer;
+    -webkit-background-clip: revert-layer;
+    background-clip: revert-layer;
+    -webkit-text-fill-color: revert-layer;
+    animation-name: kku-shine-glint;
+  }
+  :where([data-fy-font="glitch"]) { --kku-shine-tone: rgb(0 236 255); }
+  :where([data-fy-font="chalk"]) { --kku-shine-tone: #ffd84a; }
+  /* END GENERATED: scripts/build_looks.js */
   /* 재료 칠은 움직일 때만 — 움직임 줄이기 출력은 정지 출력과 같다 */
   @media (prefers-reduced-motion: no-preference) {
     /* 띠 자리를 자모 노드에서 길이로 바꿔 물려준다(축 길이 = 전진폭·sin115° + 1em·|cos115°|). --kku-shine-mix는
@@ -155,7 +180,7 @@
     /* 마디: (x, y)에서 θ만큼 돈 상자의 그라데이션(115° − θ) 줄 위 띠 자리는
      * S − (x, y)·u + (w·|sin| + t·|cos|)/2 − (w/2 − s·d)·sin. 칠 변수는 이 상자에서만 바꾼다 — 그림을 품은
      * 상자는 자식 SVG 획이 그라데이션을 받지 못한다. */
-    :where(font-kku, .font-kku)[data-fy-animate="shine"]:is([data-fy-face="element"], [data-fy-face="svg"]):not([data-fy-material], [class*="kku-look-"]) :where([part="element"][data-element="line"]:not([data-element-drawing])) {
+    :where(font-kku, .font-kku)[data-fy-animate="shine"]:is([data-fy-face="element"], [data-fy-face="svg"]):not([data-fy-material], [data-fy-look]) :where([part="element"][data-element="line"]:not([data-element-drawing])) {
       --kku-shine-a: calc(115deg - var(--fy-el-angle, 0deg));
       --kku-shine-w: calc(var(--fy-el-len) + (var(--fy-el-s) + var(--fy-el-e)) * var(--fy-el-d));
       --kku-shine-g: calc(var(--kku-shine-pos) - var(--fy-el-x) * 0.9063 - var(--fy-el-y) * 0.4226
@@ -164,27 +189,27 @@
         - (var(--kku-shine-w) / 2 - var(--fy-el-s) * var(--fy-el-d)) * sin(var(--kku-shine-a)));
       --fy-element-fill: linear-gradient(var(--kku-shine-a),
         var(--kku-shine-base) calc(var(--kku-shine-g) - var(--kku-shine-half)),
-        var(--kku-shine-color, #fff8de) var(--kku-shine-g),
+        var(--kku-shine-color, var(--kku-shine-tone, #fff8de)) var(--kku-shine-g),
         var(--kku-shine-base) calc(var(--kku-shine-g) + var(--kku-shine-half)));
     }
     /* 고리: 테두리를 비우고 테두리 상자에 띠를 칠한 뒤 안쪽(padding 상자)을 마스크로 덜어 낸다 */
-    :where(font-kku, .font-kku)[data-fy-animate="shine"]:is([data-fy-face="element"], [data-fy-face="svg"]):not([data-fy-material], [class*="kku-look-"]) :where([part="element"][data-element="ring"]:not([data-element-drawing])) {
+    :where(font-kku, .font-kku)[data-fy-animate="shine"]:is([data-fy-face="element"], [data-fy-face="svg"]):not([data-fy-material], [data-fy-look]) :where([part="element"][data-element="ring"]:not([data-element-drawing])) {
       --kku-shine-g: calc(var(--kku-shine-pos)
         - (var(--fy-el-cx) - var(--fy-el-rx) - var(--fy-el-tx) / 2) * 0.9063
         - (var(--fy-el-cy) - var(--fy-el-ry) - var(--fy-el-ty) / 2) * 0.4226);
       --fy-element-fill: transparent;
       background: linear-gradient(115deg,
         var(--kku-shine-base) calc(var(--kku-shine-g) - var(--kku-shine-half)),
-        var(--kku-shine-color, #fff8de) var(--kku-shine-g),
+        var(--kku-shine-color, var(--kku-shine-tone, #fff8de)) var(--kku-shine-g),
         var(--kku-shine-base) calc(var(--kku-shine-g) + var(--kku-shine-half))) border-box;
       mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0) border-box;
     }
     /* 그림 획: SVG 재료는 칠 변수로, 벡터 자소는 글자 색으로 번쩍인다 */
-    :where(font-kku, .font-kku)[data-fy-animate="shine"][data-fy-face="svg"]:not([data-fy-material], [class*="kku-look-"]) :where([part="element"] > [part="vector"]) {
-      --fy-element-fill: color-mix(in srgb, var(--kku-shine-base), var(--kku-shine-color, #fff8de) var(--kku-shine-mix));
+    :where(font-kku, .font-kku)[data-fy-animate="shine"][data-fy-face="svg"]:not([data-fy-material], [data-fy-look]) :where([part="element"] > [part="vector"]) {
+      --fy-element-fill: color-mix(in srgb, var(--kku-shine-base), var(--kku-shine-color, var(--kku-shine-tone, #fff8de)) var(--kku-shine-mix));
     }
     :where(font-kku, .font-kku)[data-fy-animate="shine"][data-fy-material="vector"] :where([data-fy-vector-cell] > [part="vector"]) {
-      color: color-mix(in srgb, currentColor, var(--kku-shine-color, #fff8de) var(--kku-shine-mix));
+      color: color-mix(in srgb, currentColor, var(--kku-shine-color, var(--kku-shine-tone, #fff8de)) var(--kku-shine-mix));
     }
   }
 
@@ -335,9 +360,18 @@
 
 /* 빛 칠(ADR-021) 글꼴은 자모 노드의 filter가 빛번짐이다 — 번쩍임을 그 앞에 이어 붙여 빛을 지우지
  * 않고, 함수 목록을 양 끝에서 같게 두어 부드럽게 보간한다. */
+/* 밝기 번쩍임 — 꾸밈·글꼴이 빛 색(--kku-shine-tone)을 주면 그 색 번짐도 함께(흰 글자에는 밝기가 닿지 않는다 — glitch). 쉬는 자리도
+ * 같은 함수 목록이어야 사이가 이어진다 */
 @keyframes kku-shine-glint {
-  0%, 30%, 62%, 100% { filter: brightness(1) saturate(1) var(--fy-glow, var(--fy-font-glow, )); }
-  46% { filter: brightness(1.55) saturate(1.2) var(--fy-glow, var(--fy-font-glow, )); }
+  0%, 30%, 62%, 100% { filter: brightness(1) saturate(1) drop-shadow(0 0 0 transparent) var(--fy-glow, var(--fy-font-glow, )); }
+  46% { filter: brightness(1.55) saturate(1.2) drop-shadow(0 0 0.06em var(--kku-shine-tone, transparent)) var(--fy-glow, var(--fy-font-glow, )); }
+}
+
+/* 글자 색(테두리)을 빛 색 쪽으로 반까지 섞는다 — 테두리가 글자의 전부라 그림 획 shine처럼 70%까지 섞으면 흰 바탕에서
+ * 글자가 통째로 사라져 보였다. 글자 노드 color의 currentColor는 물려받은 색이다. */
+@keyframes kku-shine-rim {
+  0%, 30%, 62%, 100% { color: currentColor; }
+  46% { color: color-mix(in srgb, currentColor 50%, var(--kku-shine-color, var(--kku-shine-tone, #fff8de))); }
 }
 
 @keyframes kku-shine {

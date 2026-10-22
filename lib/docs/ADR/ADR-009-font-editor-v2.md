@@ -26,7 +26,7 @@ ADR-008이 모든 보정을 레벨별 `--fy-*` 변수와 고정된 cascade layer
 - 초기 범위는 repo-local authoring utility였다. 2026-10-16 [ADR-029](ADR-029-library-authoring-and-site.md)로 공용 제작 모델과 독립 작업실을 같은 npm 패키지의 선택 모듈로 배포하도록 확장했다. 정적·공개 API 사용·CSS 왕복 편집 원칙은 유지한다.
 
 ### 2. 문서 모델과 round-trip
-- `site/font-studio-model.js`가 폰트 CSS를 위치 정보가 있는 트리(최상위 문장, `@layer`·`@media`·`@supports` 그룹, 규칙, 선언의 시작·값·끝 offset, 줄 번호, 특이도)로 파싱한다. 주석·문자열·괄호·`url()` 토큰을 인식하는 손 파서이고 Node에서도 돌아 단위 테스트가 가능하다.
+- `authoring/font-studio-model.js`가 폰트 CSS를 위치 정보가 있는 트리(최상위 문장, `@layer`·`@media`·`@supports` 그룹, 규칙, 선언의 시작·값·끝 offset, 줄 번호, 특이도)로 파싱한다. 주석·문자열·괄호·`url()` 토큰을 인식하는 손 파서이고 Node에서도 돌아 단위 테스트가 가능하다.
 - 파서는 **브라우저와 같게 복구한다**(CSS Syntax 3): 파일 끝에서 열린 블록을 닫고, 줄바꿈에서 끝난 문자열은 그 선언을 무효로 하고, 떠돌이 `;`·`}`는 다음 셀렉터에 붙어 그 규칙을 무효로 한다. 절대 예외를 던지지 않고 오류를 줄 번호와 함께 돌려준다. 규칙마다 레이어(중첩·익명 레이어는 Cascade 5 순위), 조건(`@media`/`@supports`/`@container`), 중첩 여부(CSS nesting의 `&` 해석)를, 선언마다 `!important`를 기록한다. 선언 값은 끝의 주석과 `!important`를 뺀 구간이라, 값을 고쳐도 근거 주석과 중요도가 남는다. `{}` 블록을 담은 사용자 정의 속성 값도 한 선언이다.
 - 폰트 계약이 금지하는 `!important`·CSS nesting, 폰트가 선언한 페이지 전용 변수는 스튜디오가 린트식 경고(줄 번호)로 보여 준다. 캐스케이드 모델은 이것들도 정확히 계산한다(중요 선언은 레이어 순서가 뒤집힘).
 - **편집은 원문을 다시 쓰지 않고 해당 선언만 바꾼다.** 기존 선언은 값 구간만 교체하고, 없으면 규칙 끝(한 줄 규칙은 같은 줄)에, 규칙이 없으면 해당 레이어 블록 끝에(닫는 `}`가 내용과 같은 줄에 있는 압축·한 줄 블록은 그 블록 안 같은 줄에), 레이어 블록이 없으면 파일 끝에 v2 형식으로 추가한다. 줄바꿈은 파일의 것(CRLF 포함)을 따른다. 값을 비우면 그 줄을 지우고, 빈 규칙은 규칙째 지운다. 같은 선택자의 규칙이 여럿이면 그 변수를 이미 선언한 규칙(캐스케이드가 쓰는 규칙)을 고친다. 새 선언을 만들 곳으로는 조건부(`@media` 안)·중첩·무효 규칙을 고르지 않는다. 셀렉터 비교는 CSS 이스케이프와 따옴표 형식을 정규화한다.
@@ -63,7 +63,7 @@ ADR-008이 모든 보정을 레벨별 `--fy-*` 변수와 고정된 cascade layer
 
 ### 6. 기존 도구 처리
 - v2 스튜디오가 기존 기능(Font Editor의 slot/cluster 편집과 CSS diff, Sprite Studio의 시트 편집과 export)을 모두 대체하면 두 PoC 페이지를 제거한다. 그 전까지 PoC는 동결한다(버그 수정만).
-- 스튜디오의 slot 계약(부모·기본값)은 `check_css_contract.js --write`가 레지스트리에서 `site/font-studio-model.js`에 생성한다(`file://`에서 JSON을 읽을 수 없으므로 로딩 대신 생성). PoC의 slot contract 블록은 PoC 제거 때 함께 없앤다.
+- 스튜디오의 slot 계약(부모·기본값)은 `check_css_contract.js --write`가 레지스트리에서 `authoring/font-studio-model.js`에 생성한다(`file://`에서 JSON을 읽을 수 없으므로 로딩 대신 생성). PoC의 slot contract 블록은 PoC 제거 때 함께 없앤다.
 - **처리 결과(2026-09-25)**: 두 PoC 페이지(`site/font-editor.*`, `site/sprite-editor.*`, `site/sprite-editor-project.js`)와 PoC 전용 테스트를 제거했다. 이력은 git에 남는다. PoC에만 있던 sprite 다중 배율(1x/2x) PNG 내보내기, 사각형 도구, 광학 크기 프리셋 UI는 이때 옮기지 않았다가 2026-10-09에 재료 탭으로 복원했다 — 배율 세트는 ADR-008의 `--fy-sprite-url-2x/-3x`·`--fy-sprite-image`로 CSS에 연결하고, 광학 프리셋은 폰트 레벨 작은 글씨 프리셋과 페이지 전용 `--fy-optical-sprite-*` 미리보기·페이지 CSS 복사로 나눴다. PoC slot contract 생성 블록도 함께 없앴고, ADR-006 v1 프로젝트는 스튜디오의 v1 가져오기로만 읽는다.
 - `file://`에서는 브라우저가 shipped 폰트 CSS 읽기를 막을 수 있다(XHR 사용, 막히면 파일 열기 안내). 정적 서버로 열면 제약이 없다.
 

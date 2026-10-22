@@ -57,6 +57,30 @@
 - 페이지 CSS가 이웃 자모를 보고 자모를 옮기면 고정 배치가 깨진다. `FontKku.layoutStability(host)`가 `stable: false`와 어긋난 자모(`drifted`)를 알려 준다.
 - 디자인 JSON에서도 배치를 고른다(`layout`, 실험 — [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md)「디자인」).
 
+## 짓는 방식 — 글자를 몇 덩이로, 무엇으로 짓나
+
+**고르지 않아도 된다.** 아무것도 적지 않으면 그 글꼴 모양대로 짓는다(지금 출력 그대로). 다르게 짓고 싶을 때만 CSS 한 줄로 고른다.
+
+```html
+<font-kku style="--fy-composition: syllable" size="64">화요일</font-kku>
+```
+
+| 값 | 화 | 뜻 |
+|---|---|---|
+| `auto`(기본) | 모양대로(세벌식: ㅎ + ㅗ + ㅏ) | 그 글꼴 모양의 기본 |
+| `syllable` | 호 + ㅏ | 섞임 모음 글자(ㅘ·ㅚ·ㅢ …)를 받침 없는 머리 음절과 뒤 모음으로 |
+| `whole` | ㅎ + ㅘ | 겹모음·겹받침을 통째로 한 덩이 |
+| `jamo` | ㅎ + ㅗ + ㅏ | 자모를 하나씩(겹받침도 ㄹ + ㄱ) |
+| `pieces` | (ㅗ+ㅇ) + ㅗ + ㅏ | 자모도 다른 자모 조각으로(ㅎ = ㅗ + ㅇ, ㄲ = ㄱ + ㄱ, ㅋ = ㄱ + 획) |
+| `origins` | (ㆍ+ㅡ+ㅇ) + (ㆍ+ㅡ) + (ㅣ+ㆍ) | 원형 8과 천지인까지 내려가 짓기 |
+
+- 페이지 CSS(`--fy-composition`)가 글꼴 CSS(`--fy-font-composition`)를 이긴다. 디자인 JSON에도 `composition`으로 적는다([draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md)「디자인」).
+- **세세하게(선택):** 축을 따로 고르려면 깊이 변수를 쓴다 — `--fy-vowel-depth: split | whole | syllable`, `--fy-coda-depth: split | whole`. 한 계층 안에서는 이 낱 깊이가 프리셋을 이기고, 프리셋이 줄임 `--fy-jamo-depth`를 이긴다. 자모 하나만 다른 조립식으로 지으려면 디자인 규칙(`apply.recipe`)을 쓴다 — 늘 프리셋을 이긴다.
+- 고른 결과는 바탕 요소의 `data-fy-composition`(축을 섞었으면 `custom`)과 `FontKku.fontInfo(host).composition`으로 본다.
+- 못 짓는 경우는 몰래 바꾸지 않고 `data-fy-composition-status`로 알린다: 기기 글꼴 글자(꾸러미 글꼴, `--fy-face: device` — 글꼴 팔레트 디자인을 걸면 짓는다)와 그림 자소판 글꼴은 `pieces`·`origins`를 못 지어 `COMPOSITION_UNSUPPORTED`(나누기만 따른다), 옛한글 글자에는 아직 걸지 않아 `COMPOSITION_OLD_HANGUL`, 모르는 값은 `COMPOSITION_INVALID`.
+- 네모꼴 글꼴(`sebul`·`gothic` 등을 밝힌 글)에서 그 글꼴 기본이 아닌 나누기를 고르면, 런타임이 조각을 기본 나누기의 자리에 맞춘다. 글꼴 CSS가 그 자리 값을 밝혔으면 그것이 이기고, `--fy-split-fit: none`이면 맞추지 않는다.
+- 정적 렌더러(`render_html`)도 `composition`을 받는다 — 나누기는 같고, `pieces`·`origins`는 기본 획 그대로 `COMPOSITION_UNSUPPORTED`([terminal.md](https://font.tty.link/lib/skill/terminal.md)).
+
 ## 재료 — 세벌·고딕 계열과 그림 자소
 
 - **세벌·고딕 계열**: `sebul`·`gothic`·`malang`과 칠을 얹은 꾸러미 `neon`·`sticker`·`retro`·`saekdong`·`geumbak`·`glitch`·`riso`·`blueprint`. 배치는 CSS가 정하고 자모를 무엇으로 그릴지 고른다(재료).

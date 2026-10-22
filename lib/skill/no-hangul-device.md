@@ -9,8 +9,8 @@
 - 기기 글꼴로 그려지는 `<textarea>`·버튼 글은 이런 기기에서 보이지 않는다. 보이는 한글은 폰꾸로 그리고, 화면 글(단추·안내)은 영어로 둔다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku.min.js" data-fonts="sebul sticker" data-addons="looks"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.2/font-kku-ime.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="sebul sticker" data-addons="looks"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku-ime.js"></script>
 
 <font-kku size="56" id="title">어서 오세요</font-kku>                <!-- 원소 획: 한글 글꼴 없이도 보인다 -->
 <font-kku font="sticker" size="40" id="badge">오늘만 1+1</font-kku>  <!-- 꾸러미: 기기 한글 글꼴로 그린다 -->

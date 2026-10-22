@@ -1,0 +1,167 @@
+/* font-studio-pages.css — 디자인·자소판·검수 페이지의 쉬운·정밀 보기(PLAN-STUDIO-002 S3)
+ *
+ * 모드 감추기 규칙([data-studio-precise] · [data-studio-easy])은 font-studio.css의 이음매 두 줄이다. 이 파일은 S3에서 새로 생긴 칸의
+ * 모양(진행률 부품 · 재료 그림 · 글꼴 모양 끄기 · 자소판 채우기·비우기 · 검수 머리글)과 휴대폰 판만 둔다. */
+
+/* 진행률 부품(font-studio-progress.js) — 디자인 칸의 그림 세트 진행률. 단계 칸의 모양은 font-studio-draw.css(.studio-progress-stage) */
+.studio-progress {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.studio-progress-holder {
+  display: grid;
+  gap: 4px;
+}
+
+.studio-progress-next {
+  margin: 0;
+  color: var(--studio-muted);
+  font-size: 12px;
+}
+
+/* 재료 셋 — 그림 단추 */
+.studio-design-start button {
+  position: relative;
+}
+
+.studio-design-art {
+  display: block;
+  inline-size: 36px;
+  block-size: 36px;
+  margin-block-end: 4px;
+  color: var(--studio-accent);
+}
+
+.studio-design-start button[aria-pressed="true"] .studio-design-art {
+  color: inherit;
+}
+
+/* 글꼴 모양 셋(본문으로 나옴) */
+[data-studio-design] .studio-design-layout {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.studio-design-shape-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.studio-design-shape-actions button {
+  font: 12px/1.2 var(--studio-sans);
+  padding: 6px 10px;
+  border: 1px solid var(--studio-border-strong);
+  border-radius: 8px;
+  background: var(--studio-surface);
+  color: var(--studio-ink);
+  cursor: pointer;
+}
+
+.studio-design-shape-actions button:focus-visible {
+  outline: 2px solid var(--studio-accent);
+  outline-offset: 2px;
+}
+
+.studio-design-shape-confirm {
+  display: grid;
+  gap: 6px;
+  inline-size: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--studio-border);
+  border-radius: var(--studio-radius-sm);
+  background: var(--studio-surface);
+}
+
+.studio-design-shape-confirm[hidden] {
+  display: none;
+}
+
+.studio-design-shape-confirm p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* 그리기 입구는 '직접 그려 만들기'와 하나(S3) — 늦게 싣기 자리·모듈의 입구 줄은 자동화(#draw 넘김·시험)용으로만 남는다 */
+[data-studio-design] [data-draw-entry-row] {
+  display: none !important;
+}
+
+/* 출처 한 줄(쉬운 모드) */
+.studio-provenance-line {
+  margin: 0;
+  font-size: 13px;
+  color: var(--studio-ink);
+}
+
+/* 자소판 — 채우기·비우기 단추와 범위 */
+.studio-material-scope {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.studio-material-scope select {
+  max-inline-size: 11em;
+}
+
+.studio-material-note {
+  display: block;
+  color: var(--studio-muted);
+  font-size: 12px;
+}
+
+.studio-material-export-status:empty {
+  display: none;
+}
+
+/* 검수 — 120px 머리글 칸은 줄 하나를 다 쓴다 */
+.studio-review-hero {
+  grid-column: 1 / -1;
+}
+
+/* 휴대폰(S3): 자소판 칸 편집기를 화면 폭으로(전에는 한 칸 약 10px), 재료 단추는 한 줄에 하나 */
+@media (max-width: 560px) {
+  [data-studio][data-page="sheet"] .studio-material-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-studio][data-page="sheet"] .studio-material-editor .studio-cell-stack {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 1;
+  }
+
+  /* 판 전체 — 한 칸 약 30px로 넓혀 칸 안에서 옆으로 민다(전에는 21칸이 약 200px 폭이라 한 칸 약 10px). 줄 이름은 편집기 제목이 보인다 */
+  [data-studio][data-page="sheet"] .studio-material-sheet {
+    grid-template-columns: minmax(0, 1fr);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  [data-studio][data-page="sheet"] .studio-material-rows {
+    display: none;
+  }
+
+  [data-studio][data-page="sheet"] .studio-material-sheet canvas[data-material-sheet] {
+    inline-size: 640px;
+    max-inline-size: none;
+  }
+
+  .studio-design-start {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .studio-material-scope,
+  .studio-material-scope select {
+    inline-size: 100%;
+    max-inline-size: none;
+  }
+}

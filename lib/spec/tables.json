@@ -501,6 +501,34 @@
         "vowel": "syllable",
         "coda": "whole"
       }
+    },
+    "compositions": {
+      "auto": null,
+      "syllable": {
+        "vowel": "syllable",
+        "coda": "whole",
+        "pieces": "none"
+      },
+      "whole": {
+        "vowel": "whole",
+        "coda": "whole",
+        "pieces": "none"
+      },
+      "jamo": {
+        "vowel": "split",
+        "coda": "split",
+        "pieces": "none"
+      },
+      "pieces": {
+        "vowel": "split",
+        "coda": "split",
+        "pieces": "pieces"
+      },
+      "origins": {
+        "vowel": "split",
+        "coda": "split",
+        "pieces": "origins"
+      }
     }
   },
   "unicode": {

@@ -47,7 +47,4 @@ a { color: inherit; }
 :focus-visible { outline: 2px solid var(--studio-accent); outline-offset: 3px; }
 .studio-shell { max-width: 1180px; margin: 0 auto; padding: 20px 24px 32px; }
 .studio-kicker { color: var(--studio-accent); font-size: 12px; font-weight: 700; }
-.studio-title { margin: 0; font-size: clamp(25px, 4vw, 44px); line-height: 1.2; letter-spacing: -0.03em; }
-.studio-title em { color: var(--studio-accent); font-style: normal; }
-.studio-meta { margin: 8px 0 0; color: var(--studio-muted); font-size: 14px; }
 @media (max-width: 700px) { .studio-shell { padding: 12px; } }

@@ -1,0 +1,331 @@
+/* 머리 막대(PLAN-STUDIO-002 S2) — 글꼴 고르기 ▾ · 열기 · 저장 · 내보내기 ▾ · 되돌리기·다시 · 저장 상태. studio/font-studio-header.js */
+
+.studio-bar {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  min-inline-size: 0;
+}
+
+.studio-menu {
+  position: relative;
+}
+
+.studio-toolbar .studio-menu-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.studio-menu-kicker {
+  color: var(--studio-muted);
+  font-size: 12px;
+}
+
+.studio-font-button strong {
+  font: 600 13px/1.2 var(--studio-mono);
+  max-inline-size: 14em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studio-menu-caret {
+  color: var(--studio-muted);
+  font-size: 11px;
+}
+
+.studio-toolbar .studio-primary {
+  border-color: var(--studio-accent);
+  background: var(--studio-accent);
+  color: var(--studio-surface);
+  font-weight: 600;
+}
+
+.studio-toolbar .studio-primary[data-state="dirty"]::after {
+  content: " •";
+}
+
+.studio-menu-panel {
+  position: absolute;
+  z-index: 40;
+  inset-block-start: calc(100% + 4px);
+  inset-inline-start: 0;
+  display: grid;
+  gap: 2px;
+  min-inline-size: 280px;
+  max-inline-size: min(420px, calc(100vw - 32px));
+  max-block-size: min(72vh, 560px);
+  overflow: auto;
+  padding: 6px;
+  border: 1px solid var(--studio-border-strong);
+  border-radius: var(--studio-radius);
+  background: var(--studio-surface);
+  box-shadow: var(--studio-shadow-lg);
+}
+
+.studio-menu-panel:focus {
+  outline: none;
+}
+
+.studio-toolbar .studio-menu-panel [role^="menuitem"] {
+  display: grid;
+  gap: 2px;
+  inline-size: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--studio-radius-xs);
+  background: transparent;
+  color: var(--studio-ink);
+  font: 13px/1.3 var(--studio-sans);
+  text-align: start;
+}
+
+.studio-toolbar .studio-menu-panel [role^="menuitem"]:hover:not(:disabled),
+.studio-toolbar .studio-menu-panel [role^="menuitem"]:focus-visible,
+.studio-toolbar .studio-menu-panel [role^="menuitem"]:focus-within {
+  background: var(--studio-accent-soft);
+  outline: none;
+}
+
+.studio-toolbar .studio-menu-panel [role^="menuitem"]:disabled {
+  opacity: 0.5;
+}
+
+.studio-menu-panel small,
+.studio-menu-note {
+  display: block;
+  margin: 0;
+  color: var(--studio-muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.studio-menu-note {
+  padding: 4px 10px;
+}
+
+.studio-menu-group {
+  margin: 6px 10px 2px;
+  color: var(--studio-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.studio-menu-group:first-child {
+  margin-block-start: 2px;
+}
+
+.studio-menu-check {
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* 글꼴 고르기 — 이름 · 바탕 · 견본 한 줄 */
+.studio-toolbar .studio-font-option {
+  grid-template-columns: minmax(8em, max-content) 1fr;
+  align-items: baseline;
+  column-gap: 10px;
+}
+
+.studio-font-name {
+  font: 600 13px/1.3 var(--studio-mono);
+}
+
+.studio-font-base {
+  color: var(--studio-muted);
+  font-size: 11px;
+}
+
+.studio-font-sample {
+  grid-column: 1 / -1;
+  display: block;
+  min-block-size: 26px;
+  overflow: hidden;
+}
+
+.studio-toolbar .studio-font-option[aria-checked="true"] {
+  box-shadow: inset 3px 0 0 var(--studio-accent);
+  background: var(--studio-accent-soft);
+}
+
+.studio-store-fonts {
+  display: grid;
+  gap: 2px;
+  margin-block-start: 4px;
+  padding-block-start: 4px;
+  border-block-start: 1px solid var(--studio-border);
+}
+
+/* 저장 상태 — 저장 단추 옆 한 줄 */
+.studio-store-state:empty {
+  display: none;
+}
+
+.studio-store-state {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--studio-muted);
+}
+
+.studio-store-state[data-state="dirty"],
+.studio-store-state[data-state="conflict"] {
+  color: var(--studio-seal);
+}
+
+.studio-store-state[data-state="saved"] {
+  color: var(--studio-accent-2);
+}
+
+/* 정밀 자리 — 새 이름 · 파일 연결 · 그 밖(S3에서 정밀 모드로) */
+.studio-bar-more {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--studio-muted);
+}
+
+.studio-bar-more > summary {
+  inline-size: max-content;
+  cursor: pointer;
+}
+
+.studio-bar-more-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-block-start: 6px;
+}
+
+.studio-bar-more-body > label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.studio-bar-more-body > label.studio-file {
+  position: relative;
+  padding: 6px 10px;
+  border: 1px solid var(--studio-border-strong);
+  border-radius: 8px;
+  background: var(--studio-surface);
+  color: var(--studio-ink);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.studio-bar-more-body > label.studio-file input {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  max-inline-size: none;
+  block-size: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* 처음 저장 대화상자 */
+.studio-save-dialog {
+  inline-size: min(440px, calc(100vw - 32px));
+  padding: 18px 20px;
+  border: 1px solid var(--studio-border-strong);
+  border-radius: var(--studio-radius-lg);
+  background: var(--studio-surface);
+  color: var(--studio-ink);
+  box-shadow: var(--studio-shadow-lg);
+}
+
+.studio-save-dialog::backdrop {
+  background: rgba(28, 26, 22, 0.32);
+}
+
+.studio-save-dialog form {
+  display: grid;
+  gap: 10px;
+}
+
+.studio-save-dialog h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.studio-save-why {
+  margin: 0;
+  color: var(--studio-muted);
+  font-size: 13px;
+}
+
+.studio-save-choice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: start;
+  font-size: 13px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.studio-save-name {
+  display: grid;
+  gap: 4px;
+  margin-inline-start: 24px;
+  font-size: 12px;
+  color: var(--studio-muted);
+}
+
+.studio-toolbar .studio-save-name input {
+  font: 14px/1.2 var(--studio-mono);
+}
+
+.studio-save-error {
+  margin: 0;
+  color: var(--studio-seal);
+  font-size: 12px;
+}
+
+.studio-save-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* 휴대폰 — 누를 자리 44px, 메뉴는 화면 아래 판으로 */
+@media (max-width: 700px) {
+  .studio-toolbar .studio-bar > button,
+  .studio-toolbar .studio-menu-button,
+  .studio-toolbar .studio-bar-more-body > button,
+  .studio-toolbar .studio-save-actions button {
+    min-block-size: 44px;
+  }
+
+  .studio-store-state {
+    flex-basis: 100%;
+  }
+
+  .studio-bar > .studio-sep {
+    display: none;
+  }
+
+  .studio-menu {
+    position: static;
+  }
+
+  .studio-menu-panel {
+    position: fixed;
+    inset-inline: 8px;
+    inset-block: auto 8px;
+    min-inline-size: 0;
+    max-inline-size: none;
+    max-block-size: 70vh;
+  }
+
+  .studio-toolbar .studio-menu-panel [role^="menuitem"] {
+    min-block-size: 44px;
+  }
+}

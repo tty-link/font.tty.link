@@ -9,6 +9,8 @@ declare namespace FontKkuExport {
      * 런타임이 필요할 때 받는 중이면 도착을 기다린다. 원소 획(sebul·gothic)·기기 글꼴·8칸 그림 세트는
      * `EXPORT_UNSUPPORTED_FACE`로 거절한다. */
     font: string;
+    /** 구조화 디자인을 받으면 규칙·후보를 버리지 않고 EXPORT_DESIGN_UNSUPPORTED 또는 EXPORT_GLYPH_MAPPING_UNSUPPORTED로 거절한다. */
+    design?: unknown;
     /** 벡터 자소 세트 이름(jamo-set). 주면 자모별 SVG 칸을 그린다. 등록되지 않았으면 `EXPORT_JAMO_SET_NOT_LOADED`. */
     jamoSet?: string;
     /** 이 글자만 내보낸다(NFC로 맞춘 뒤 한글 음절·호환 자모만 — 나머지는 report.skipped). 주지 않으면
@@ -53,6 +55,10 @@ declare namespace FontKkuExport {
   type ExportErrorCode =
     /** text에 한글 음절(U+AC00–D7A3)·호환 자모가 없다(빈 문자열 포함, NFC로 맞춘 뒤) */
     | "EXPORT_NO_HANGUL"
+    /** 구조화 문자 후보·잠금을 글꼴 파일로 출력할 수 없다. */
+    | "EXPORT_GLYPH_MAPPING_UNSUPPORTED"
+    /** 디자인 규칙·소스를 무시하지 않고 입력을 거절한다. */
+    | "EXPORT_DESIGN_UNSUPPORTED"
     /** 그 글꼴 CSS가 문서(root)에 없다 — 필요할 때 받기가 실패했거나 꺼졌거나, 글꼴 id 오타 */
     | "EXPORT_FONT_NOT_LOADED"
     /** jamoSet이 등록되지 않았다(profiles/<set>.jamo.js·FontKku.registerJamo) */

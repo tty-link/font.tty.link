@@ -89,24 +89,33 @@
 - 런타임 JS: `font-kku.js`
 - 기준 샘플 글꼴 CSS: `profiles/sebul.css`, `profiles/gothic.css`, `profiles/sprite-example.css`
 - 폐기 예정 별칭 글꼴 CSS(수정하지 않음): `profiles/default.css`, `profiles/classic.css`, `profiles/gothic2.css`
-- 글꼴 비교 / 기본 샘플 페이지(기본 글): `site/basic-text.html` — 탈네모·네모 기준과 `sebul` / `gothic` 두 글꼴 비교
-- 짜임 살펴보기 + 문제 글자 점검 페이지(짜임 비교): `site/shape-comparison.html`
-- 즉석 실험 / 평문 구조 비교 / TextModel JSON 페이지(놀이터): `site/api-studio.html`
-- 그림 자소 점검 페이지(그림 자소 보기): `site/sprite-demo.html`
+- 아래 데모 페이지 넷은 사이트 저장소의 `src/`에 있다([ADR-029](../ADR/ADR-029-library-authoring-and-site.md)). 공개판은 `https://font.tty.link/<파일 이름>`으로 연다.
+  - 글꼴 비교 / 기본 샘플 페이지(기본 글): 사이트 저장소의 `src/basic-text.html` — 탈네모·네모 기준과 `sebul` / `gothic` 두 글꼴 비교
+  - 짜임 살펴보기 + 문제 글자 점검 페이지(짜임 비교): 사이트 저장소의 `src/shape-comparison.html`
+  - 즉석 실험 / 평문 구조 비교 / TextModel JSON 페이지(놀이터): 사이트 저장소의 `src/api-studio.html`
+  - 그림 자소 점검 페이지(그림 자소 보기): 사이트 저장소의 `src/sprite-demo.html`
+- 이 저장소의 최소 시험 호스트: `tests/fixtures/runtime/`(`index.html`·`basic-text.html`·`shape-comparison.html`·`faces.html`·`animation-catalog.html` — 사이트 메뉴와 페이지 코드가 없는 회귀용 견본), 글꼴 작업실 `studio/index.html`
 - 스모크 테스트: `. .venv/bin/activate && python -m pytest tests/test_playwright_smoke.py -q`
 
 ### 로컬에서 데모 페이지 띄우기
 
-`site/*.html`은 상대 경로로 `font-kku.js` / `font-kku.css` / `profiles/*.css`를 불러오므로 정적 서버가 필요하다. 저장소 루트에서 아래 중 하나를 쓴다.
+이 저장소의 최소 시험 호스트와 작업실은 상대 경로로 `font-kku.js` / `font-kku.css` / `profiles/*.css`를 불러오므로 정적 서버가 필요하다. 저장소 루트에서 아래를 쓴다.
 
 ```bash
 python3 -m http.server 8000
-# 이후 브라우저에서 http://127.0.0.1:8000/site/index.html
+# 이후 브라우저에서 http://127.0.0.1:8000/tests/fixtures/runtime/basic-text.html
+# 작업실은 http://127.0.0.1:8000/studio/index.html
 ```
 
-`file://` 로 직접 열어도 대부분 동작하지만, 일부 브라우저의 CORS 정책에서 자소판 그림이 빠질 수 있으므로 서버 경로를 권장한다. Playwright 스모크 테스트는 내부적으로 `file://`와 `http.server` 두 경로를 모두 검증한다(`--mode both`).
+사이트의 데모 페이지를 고친 런타임으로 보려면 사이트 저장소 README의 절차대로 후보 tarball(`npm pack`)로 사이트를 빌드해 연다(`scripts/build.py --package-tarball …`).
+
+`file://` 로 직접 열어도 대부분 동작하지만, 일부 브라우저의 CORS 정책에서 자소판 그림이 빠질 수 있으므로 서버 경로를 권장한다. Playwright 스모크를 직접 실행하면(`python tests/playwright_smoke.py`) 기본 `--mode both`로 `file://`와 `http.server` 두 경로를 모두 검증한다. pytest 스모크는 기본이 서버 경로이고 `FONT_KKU_SMOKE_MODES=both`면 두 경로를 돈다.
 
 ## 공통 원칙
+
+### 0. 간단하게 시작하고, 원하면 세세하게
+
+어떤 기능도 글꼴을 만드는 데 필수가 아니다(사용자 원칙 2026-10-18). 기반 글꼴 위 꾸밈 CSS 몇 줄, 그림 원형 8자만으로 완성된 글꼴이다. 자리 변수·문맥 보정·조립식·재료 섞기·짓는 방식은 세세하게 고치고 싶을 때 더한다. 새 변수·옵션을 더할 때는 비워 두면 지금 출력이 나오게 한다.
 
 ### 1. 구조는 런타임, 모양은 글꼴 CSS가 맡는다
 
@@ -131,7 +140,7 @@ python3 -m http.server 8000
 
 아래 레벨이 위 레벨을 이기는 것은 선택자 특이도나 파일 위치가 아니라 레이어다. 그래서 "어느 레벨에 쓰는가"만 맞게 고르면 규칙 순서를 신경 쓸 필요가 없다. 대신 **같은 변수는 대체된다**는 점을 기억한다. 자모 규칙과 문맥 규칙이 둘 다 `--fy-jamo-dy`를 쓰면 누적이 아니라 뒤 레이어 값 하나만 남는다. 문맥 보정은 `--fy-ctx-*`에 쓴다.
 
-글꼴은 코어가 소유한 속성(`margin`, `inset`, `transform`, `font-size`, `font-weight`, `-webkit-text-stroke`, `clip-path`, 그림 자소 재료의 `background*`·`filter`·`inline-size`·`block-size`·`width`·`height`·`overflow` 등)과 페이지 전용 변수(`--fy-top`, `--fy-left`, `--fy-font-size`, `--fy-weight`, `--fy-stroke`, `--fy-clip`, `--fy-scale-x`, `--fy-scale-y`, `--fy-rotate`, `--fy-sprite-filter`, `--fy-optical-sprite-*`, 깊이 `--fy-jamo-depth`/`--fy-vowel-depth`/`--fy-coda-depth`)를 선언하지 않는다. 글꼴의 기본 자모 깊이는 `--fy-font-jamo-depth`(또는 `--fy-font-vowel-depth`/`--fy-font-coda-depth`)로 선언한다. 자모별 잘라내기는 자모 레이어에서 자리 clip(`--fy-mt-clip` 등)을, 자모 회전은 자리 rotate나 `--fy-jamo-rotate`/`--fy-ctx-rotate`를 쓴다. `node scripts/check_css_contract.js --check`가 이를 검사한다.
+글꼴은 코어가 소유한 속성(`margin`, `inset`, `transform`, `font-size`, `font-weight`, `-webkit-text-stroke`, `clip-path`, 그림 자소 재료의 `background*`·`filter`·`inline-size`·`block-size`·`width`·`height`·`overflow` 등)과 페이지 전용 변수(`--fy-top`, `--fy-left`, `--fy-font-size`, `--fy-weight`, `--fy-stroke`, `--fy-clip`, `--fy-scale-x`, `--fy-scale-y`, `--fy-rotate`, `--fy-sprite-filter`, `--fy-optical-sprite-*`, 깊이 `--fy-jamo-depth`/`--fy-vowel-depth`/`--fy-coda-depth`, 짓는 방식 `--fy-composition`)를 선언하지 않는다. 글꼴의 기본 자모 깊이는 `--fy-font-jamo-depth`(또는 `--fy-font-vowel-depth`/`--fy-font-coda-depth`)로 선언한다. 글꼴의 기본 짓는 방식을 밝히고 싶으면 `--fy-font-composition: <프리셋>`을 쓴다(밝히지 않아도 된다. 같은 글꼴의 깊이 변수가 그 프리셋의 축을 이긴다 — [ADR-034](../ADR/ADR-034-composition-modes.md)). 자모별 잘라내기는 자모 레이어에서 자리 clip(`--fy-mt-clip` 등)을, 자모 회전은 자리 rotate나 `--fy-jamo-rotate`/`--fy-ctx-rotate`를 쓴다. `node scripts/check_css_contract.js --check`가 이를 검사한다.
 
 ### 3. 교정은 항상 고정 샘플 세트로 한다
 
@@ -371,24 +380,26 @@ python3 scripts/build_sprite.py --from-font /path/to/font.ttf --out my-sprite.pn
 
 ## 데모 페이지 사용 순서
 
-### `site/basic-text.html`
+아래 네 페이지는 사이트 저장소의 `src/`에 있고, 공개판은 `https://font.tty.link/<파일 이름>`이다. 이 저장소의 `tests/fixtures/runtime/basic-text.html`·`shape-comparison.html`은 같은 이름의 회귀용 최소 견본일 뿐 아래 기능을 갖추지 않는다.
+
+### 기본 글 — `src/basic-text.html`
 
 - 기본 비교용(기본 글). `sebul` / `gothic` 두 글꼴과 플랫폼 한글 글꼴의 완성형(native) 문장을 같은 문장에 나란히 올려 새 CSS 글꼴의 첫 인상을 확인한다.
 - 구조 스트레스, 혼합 콘텐츠, 크기별 샘플까지 한 페이지에서 본다.
 
-### `site/shape-comparison.html`
+### 짜임 비교 — `src/shape-comparison.html`
 
 - 일반 글꼴(`general`) 교정의 기준 페이지(짜임 비교).
 - 낱글자를 짜임 계열(`right` / `bottom` / `split-right`)로 묶어 `sebul` / `gothic`과 플랫폼 완성형(native) 기준을 같이 본다.
 - 문제 글자 살펴보기(외/읽/없/닭/밟/흙/긁)와 `layout bucket + layout` 카탈로그 표를 제공한다.
 
-### `site/api-studio.html`
+### 놀이터 — `src/api-studio.html`
 
 - 글꼴(`font`), 크기(`size`), 줄바꿈 단위(`wrap-unit`), 움직임(`animate`)을 빠르게 바꿔 보는 실험 페이지(놀이터).
 - DOM 미리보기, `renderText()` 2줄 평문 출력, `createTextModel()` JSON을 같은 입력으로 나란히 본다.
 - 정식 회귀 기준보다는 탐색용이며, 평문 구조 검증 경로를 여기서 같이 처리한다.
 
-### `site/sprite-demo.html`
+### 그림 자소 보기 — `src/sprite-demo.html`
 
 - 그림 자소 글꼴 전용 확인 페이지(그림 자소 보기).
 - 기기 글꼴 기반 결과와 나란히 비교.
@@ -454,7 +465,7 @@ python3 scripts/build_sprite.py --from-font /path/to/font.ttf --out my-sprite.pn
 - 자소판 생성 스크립트의 입력 경로와 인자가 작업 로그에 재현 가능한 형태로 남아 있다.
 - 그림 자소 행/열 대응이 `sprite-example.css` 계약과 맞다(코어 재료 규칙의 위치 계산식 하나 + 글꼴의 종류·자리·문맥 규칙의 `--fy-sprite-row`, 자소판과 맞는 `--fy-sprite-rows`·`--fy-sprite-kinds`).
 - 동일한 문장을 **두 개 이상의 바탕 요소 크기**(예: 24px와 48px)에서 스크린샷을 찍어, 두 이미지에서 자소 위치·비율이 같은 비례로 유지되는지 비교한다.
-- `site/sprite-demo.html`에서 기기 글꼴 기준 결과와 나란히 비교한 스크린샷을 남긴다.
+- 그림 자소 보기(사이트 저장소의 `src/sprite-demo.html`, 공개판 `https://font.tty.link/sprite-demo.html`)에서 기기 글꼴 기준 결과와 나란히 비교한 스크린샷을 남긴다.
 
 ### 런타임 계약을 건드렸을 때
 
@@ -507,9 +518,37 @@ verify: <commands>          # 예: python -m pytest tests/test_playwright_smoke.
 
 ## Change Log
 
+- 2026-10-17: ADR-029 뒤 경로 정리 — 데모 페이지는 사이트 저장소 `src/`, 로컬 확인은 `tests/fixtures/runtime/`·`studio/index.html`, 스모크 경로 모드(직접 실행 `--mode both`, pytest 기본 서버)
 - 2026-09-27: 계약 정규화 — 모든 자리 접미사(scale 포함)가 자리 → 부모 자리 → 역할 대체 체인, 자리 접미사에 rotate·clip·dilate 추가, 부모 자리 트리 완성(`tc`/`mc`/`mx`/`xb`/`xt`/`bs`/`bx`/`xl`/`xr`), `--fy-clip`·`--fy-sprite-filter`는 페이지 전용, 검사에 `spec/fonts.json` 역방향 대조 추가
 - 2026-09-25: 그림 자소 재료 코어화(ADR-008 §5) 반영 — 생성 CSS 점검 항목을 `--fy-sprite-*` 변수로 교체, 검사의 그림 자소 재료 속성·자소판 변수 항목 추가
 - 2026-09-24: 글꼴 계약 v2(ADR-008) 반영 — 레이어·레벨 작업 순서, 바탕 요소 블록 메타데이터, 자리 weight/stroke, 그림 자소 `--fy-sprite-row`와 생성 마커, v2 검사 항목
 - 2026-07-10: TRK-032 CSS 변수 레지스트리, active/reserved/deprecated 자리 상태와 계약 검사 명령 반영
 - 2026-04-19: 사용자와 AI 에이전트를 위한 글꼴 제작/교정 상세 안내 초안 추가
 - 2026-04-19: 에이전트 활용도 보강 — 용어 요약, 자리 변수 요약표, `data-fy-*` 계약 참조 위치, 데모 로컬 서버 명령, `--fy-expression-mode` 허용 값 단언, 글꼴 별칭 분류, 검증 기준을 스크린샷 비교 절차로 구체화, 작업 로그 양식 추가
+
+## 문자로 자모 그리기 (ADR-032)
+
+한글의 의미 구조를 유지하면서 그리는 글자만 바꾼다. 현재 구현은 브라우저 런타임 전용이며, 원문 선택·복사는 한글로 남는다. 기존 글꼴 파일의 레이어·범위 안에서 직접 쓴다.
+
+```css
+@layer font-kku.jamo {
+  :where([data-fy-font="my-font"]) [data-sprite-jamo="ㅇ"] {
+    --fy-jamo-glyph-text: "O";
+  }
+  :where([data-fy-font="my-font"]) [data-sprite-jamo="ㅣ"] {
+    --fy-jamo-glyph-text: "|";
+  }
+}
+```
+
+`data-sprite-jamo="ㅇ"`는 초성·받침의 ㅇ을 함께 고른다. `data-jamo`는 첫가끝 문자이므로 같은 선택자가 아니다. CSS를 바꾼 뒤 `FontKku.refreshAll(host)`를 호출한다. 매핑을 끄려면 해당 선언을 지우거나 더 높은 범위에 `none`을 쓴다. `"none"`은 문자 재료로 해석된다.
+
+직접 문자열의 우선순위는 페이지 `--fy-glyph-text` → `--fy-tune-glyph-text` → `--fy-ctx-glyph-text` → `--fy-jamo-glyph-text` → 자리/부모 자리/역할 `--fy-<이름>-glyph-text` → `--fy-font-glyph-text`다. 후보 ID 변수는 같은 위치의 `glyph-candidate`이며 같은 단계에서는 후보가 직접 문자열보다 우선한다. `--fy-face-glyph`와 맞춤 수치는 런타임 결과이므로 저작하지 않는다.
+
+여러 후보·잠금·조립식 재사용은 디자인 2.0의 기존 `font` 원본에 `glyphs`를 지정한다. [ADR-032 §12](../ADR/ADR-032-hangul-structure-and-materials.md#12-h3-구현-계약-2026-10-18)의 실제 JSON 예제를 따른다. 작업실 디자인 페이지의 문자 매핑 칸에서 후보를 바꾸고, 준비된 원형 8·기본 24·확장 40과 빠진 자모를 확인한다. 후보 변주는 `jamo-seeds`를 켰을 때만 동작하며 `seed="auto"`만으로 켜지지 않는다. 잠금은 변주에도 선택한 후보를 유지한다.
+
+문자는 그대로 놓지 않고 자모 획을 닮게 고쳐 놓는다(2026-10-18). 곧은 획 하나를 맡은 글자(ㅡ·ㅣ·짧은 획·빗금)는 그 획 방향으로 돌려 길이를 획 길이에, 글자의 획 두께를 글꼴의 획 굵기에 맞춘다 — `1`의 깃처럼 획 밖으로 나온 모양은 같은 비로 남는다. 점 `·`은 짧은 획이 된다. 가로·세로 마디로 된 자모(ㄱ·ㄴ·ㄷ·ㅁ…)는 글자를 마디 줄에서 잘라 마디는 획 굵기로, 그 사이만 늘인다 — `¬`가 가로·세로 굵기가 같은 ㄱ이 된다. 동그라미(ㅇ)는 통째로 쓸 때 글자 비율을 지켜(`O`·`0`·`o`가 달라 보인다), 조립식 조각일 때는 자리에 맞춰 늘인다. 글꼴 이름에 일반 글꼴 낱말(`sans-serif`·`serif`·`monospace` 등)을 그대로 쓸 수 있다.
+
+문자 매핑은 기존 기기 글꼴 잉크 맞춤과 글자 칠을 사용한다. 글꼴 굵기·자모 위치·크기·회전을 조정할 수 있지만 통짜 O의 획을 원소처럼 직접 편집하거나 획 단위로 그리는 움직임을 만들지는 않는다. 실제 처리와 실패 이유는 `FontKku.fontInfo(host).glyphMapping`으로 확인한다. 머리 음절·고정 배치 통짜 합자 모음·지원하지 않는 글꼴 설정은 원래 한글과 진단을 유지한다. CSS만으로 가상 조립 잎을 선택하는 확장은 후속 작업이다.
+
+JS 없는 정적 HTML에서는 위 저작 변수를 그림으로 바꾸지 않고 원래 한글을 표시한다. 디자인 JSON·프로젝트·묶음은 후보를 보존하지만 글꼴 파일 내보내기는 문자 매핑을 아직 지원하지 않아 명시적으로 거부한다. 기존 1.x 디자인은 계속 읽으며, 매핑을 추가한 디자인만 2.0으로 저장한다.

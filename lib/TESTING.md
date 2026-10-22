@@ -5,6 +5,7 @@
 기계용 원본과 실행 결과가 권위다.
 
 - 릴리스 단계와 순서: `scripts/verify.py`
+- 생성물 목록(생성기·쓰는 명령·검사 명령·차례·층·검사 단계): `scripts/generated-outputs.json` + `scripts/regen.py`
 - npm 진입점과 Node 테스트 모음: `package.json`
 - 선택적 원격 CI 설정: `.github/workflows/ci.yml` (릴리스 관문은 로컬 `npm run verify:release`)
 - 음절 내부 겹침 관문 정책: `tests/overlap-policy.json`
@@ -59,7 +60,7 @@ npm run verify:release    # 공개 전 — 전체 표본·씨앗·변주, 캐시
 돈다(기본 min(4, 코어 수 / 2)). 브라우저 측정과 스모크는 기계 전체 슬롯(`scripts/machine_slots.py`, `~/.cache/font-kku/slots`,
 K = `FONT_KKU_SLOTS`, 기본 코어 수 − 2와 메모리 ÷ 1.5GB 중 작은 값, 0이면 끔)을 나눠 쓴다 — worktree·에이전트가 여럿이어도
 기계 전체에서 K개를 넘지 않는다. 빈 슬롯이 없으면 '측정 슬롯 기다림'을 찍고 기다리고, 도구는 `jobs N (slots N/K)`를 찍는다.
-스모크는 브라우저를 쓰는 시험마다 슬롯 하나를 잡고 놓는다. 누가 쥐었는지는 `python3 scripts/machine_slots.py`로 본다.
+스모크는 브라우저를 쓰는 시험마다 슬롯 하나를 잡고 놓는다. 브라우저를 하나씩 띄우는 도구(가독성 감사·검수 시트·정적 HTML 정합·화면 회귀·글꼴 파일 내보내기·CDN 압축본 검사)는 그동안 슬롯 하나를, 매트릭스 탐침은 일꾼 수만큼 잡는다. 겹침·획 굵기 감사·조립 기준선은 캐시를 부모가 먼저 읽어 모두 캐시면 슬롯을 잡지 않는다. 누가 쥐었는지는 `python3 scripts/machine_slots.py`로 본다.
 감사 도구를 손으로 돌리면 기본이 캐시 읽기(`--cache use`)다 — 공개 판정과 같은 측정은 `--cache refresh`.
 측정 캐시(`scripts/measure_cache.py`)는 본 checkout의 `tmp/verify-cache/`다 — git worktree도 같은 폴더를 쓴다
 (`git rev-parse --git-common-dir`, 폴더는 `FONT_KKU_CACHE_DIR`로 바꾼다). 측정 페이지 HTML·그 페이지가
@@ -91,26 +92,26 @@ PASS"다. 릴리스 판정은 필요한 환경(macOS)에서 생략 없이 통과
 돌리지 않고 단계만 보려면 `python3 scripts/verify.py --list-stages [--tier fast|everyday|release] [--markdown]`.
 
 <!-- BEGIN GENERATED: verify.py --list-stages -->
-단계 수: fast 11 · everyday 49 · release 52. 번호는 공개 층 차례다 — 다른 층의 번호(`--from <번호>`)는 `--list-stages --tier <층>`.
+단계 수: fast 7 · everyday 49 · release 52. 번호는 공개 층 차례다 — 다른 층의 번호(`--from <번호>`)는 `--list-stages --tier <층>`.
 
 | # | 단계 | 층 | 개별 명령 | 판정 |
 | --- | --- | --- | --- | --- |
 | 1 | JS syntax | fast·everyday·release | `node --check font-kku.js` | `font-kku.js`가 파싱됨 |
 | 2 | CLI syntax | fast·everyday·release | `node --check bin/font-kku-text.js` | `bin/font-kku-text.js`가 파싱됨 |
-| 3 | Node tests | fast·everyday·release | `npm test` | 런타임/명세/패키지/자산/CSS/글꼴 작업실 모델 계약 통과 |
-| 4 | Markdown links | fast·everyday·release | `npm run test:docs` | 현행+보관 문서의 로컬 링크와 현행 문서 계약 통과 — 이 표가 `--list-stages --markdown` 출력과 같은지도 본다 |
-| 5 | Distribution assets | fast·everyday·release | `python3 scripts/check_distribution.py` | npm pack 목록의 제작·작업실 자산과 독립 UI의 상대 참조가 모두 패키지에 포함되고, 비공개 기록·사이트 소스가 제외됨 |
-| 6 | CSS contract | fast·everyday·release | `node scripts/check_css_contract.js --check` | 레지스트리/기본 CSS/런타임/글꼴/작업실/문서 정합 (별도 단계 — `npm test`도 부른다) |
-| 7 | Vendored asset sync | fast·everyday·release | `python3 scripts/sync_assets.py --check` | 정본→사본 바이트 어긋남 없음 |
-| 8 | Version copies | fast·everyday·release | `python3 scripts/bump_version.py --check` | 패키지 매니페스트 7곳과 문서·사이트·AI 설명서의 CDN 주소가 `package.json` 버전과 같음(ADR-022) |
-| 9 | Ink boxes | fast·everyday·release | `python3 scripts/build_ink_boxes.py --check` | 런타임의 표준 자모 잉크 상자 사본이 정본 `spec/jamo-ink-boxes.json`과 같음 (기기 글꼴 맞춤, ADR-023) |
-| 10 | Sidecar spec mirror codegen | fast·everyday·release | `node scripts/generate_sidecar_tables.js --check` | 4개 언어의 생성 미러(배치·깊이 덮어쓰기·글꼴 메타·별칭·그림 자소·Unicode 표·기본 배치의 원소 획 표)가 명세와 일치 |
-| 11 | Element boundary | fast·everyday·release | `node scripts/element_edition.js --check --report` | 원소 재료 경로(순수 코어 + 원소 출력)가 Canvas·FontFace·SVG 준비에 닿지 않음(설계 v1.2 §15.4). 매니페스트 `scripts/element-edition.json`의 자르는 자리로 잘라 본 원소 판이 구문 검사·document 없는 실행·순수 코어 값 대조를 넘고, 원소 판 크기(배포하지 않음)를 전체 판과 따로 보고한다. 브라우저 호출 수는 스모크 `element-boundary` |
-| 12 | Python renderer tests | everyday·release | `.venv/bin/python -m pytest renderers/python/tests -q` | 평문/HTML/명세/글꼴 메타데이터 정합 |
-| 13 | Static parity tolerance unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_static_html_parity.py -q` | 비교 허용오차 규칙 통과 |
-| 14 | Tooling unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_glyph_tools.py tests/test_font_export.py tests/test_verify_tools.py tests/test_confusable_audit.py tests/test_matrix_probe.py tests/test_build_pages.py tests/test_playwright_smoke.py::test_smoke_registration_in_sync tests/test_playwright_smoke.py::test_missing_engine_policy -q` | 글자 측정 도구 import/`--help`/순수 도우미/겹침 정책 판정, `font-kku-export.js`가 쓴 TTF·WOFF를 fontTools가 읽는지(복합 글리프·cmap·lsb·WOFF2 재저장), verify·공개 관문의 순수 도우미(`tests/test_verify_tools.py`), 헷갈리는 짝 감사·매트릭스 탐침의 순수 도우미, 기계 슬롯·공유 캐시, 종료한 사이트 내보내기의 소스 폴더 보호(`tests/test_build_pages.py`), 스모크 등록 어긋남 없음과 엔진 요구 정책 |
-| 15 | Go vet | everyday·release | `(cd renderers/go && go vet ./...)` | vet 통과 |
-| 16 | Go tests | everyday·release | `(cd renderers/go && go test -count=1 ./...)` | test 통과 (`-count=1`: 시험 캐시가 모듈 밖 `spec/*.json` 변경을 보지 않는다) |
+| 3 | Generated outputs | fast·everyday·release | `python3 scripts/regen.py --check` | 생성물 목록 `scripts/generated-outputs.json`에서 이 단계가 맡는 항목 14개(rule-resolution·skeletons·layout-stamps·layout-profiles·ink-boxes·jamo-svg·recipes·studio-recipe-catalog·derived-fonts·looks·css-contract·sidecar-mirrors·spec-cases·asset-copies)가 정본에서 다시 만든 것과 같음 — 생성기마다 `--check`(파일을 바꾸지 않음), 실패를 모두 모아 고칠 명령과 함께 보인다. 다시 쓰기는 `python3 scripts/regen.py --write`(목록 차례, 승인 항목 `layout-stamps`·`element-layer`은 `--only`로만). 목록의 나머지는 그 단계가 본다: version-copies(`Version copies`)·element-layer(`Element layer oracle`)·html-cases(`Browser-derived HTML spec regeneration`)·stage-table(`Markdown links`) |
+| 4 | Node tests | fast·everyday·release | `npm test` | 런타임/명세/패키지/자산/CSS/글꼴 작업실 모델 계약 통과. 원소 경계(`tests/element_boundary.test.js` — 원소 재료 경로가 Canvas·FontFace·SVG 준비에 닿지 않고, `scripts/element-edition.json`으로 잘라 본 원소 판이 순수 코어를 지킴, 설계 v1.2 §15.4)도 여기서 보고, 원소 판 크기(배포하지 않음)를 진단 줄로 찍는다. 브라우저 호출 수는 스모크 `element-boundary` |
+| 5 | Markdown links | fast·everyday·release | `npm run test:docs` | 현행+보관 문서의 로컬 링크와 현행 문서 계약 통과 — 이 표가 `--list-stages --markdown` 출력과 같은지도 본다 |
+| 6 | Distribution assets | fast·everyday·release | `python3 scripts/check_distribution.py` | npm pack 목록의 제작·작업실 자산과 독립 UI의 상대 참조가 모두 패키지에 포함되고, 비공개 기록·사이트 소스가 제외됨 |
+| 7 | Version copies | fast·everyday·release | `python3 scripts/bump_version.py --check` | 패키지 매니페스트 7곳과 문서·사이트·AI 설명서의 CDN 주소가 `package.json` 버전과 같음(ADR-022) |
+| 8 | Python renderer tests | everyday·release | `.venv/bin/python -m pytest renderers/python/tests -q` | 평문/HTML/명세/글꼴 메타데이터 정합 |
+| 9 | Static parity tolerance unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_static_html_parity.py -q` | 비교 허용오차 규칙 통과 |
+| 10 | Tooling unit tests | everyday·release | `.venv/bin/python -m pytest tests/test_glyph_tools.py tests/test_font_export.py tests/test_verify_tools.py tests/test_confusable_audit.py tests/test_matrix_probe.py tests/test_build_pages.py tests/test_playwright_smoke.py::test_smoke_registration_in_sync tests/test_playwright_smoke.py::test_missing_engine_policy -q` | 글자 측정 도구 import/`--help`/순수 도우미/겹침 정책 판정, `font-kku-export.js`가 쓴 TTF·WOFF를 fontTools가 읽는지(복합 글리프·cmap·lsb·WOFF2 재저장), verify·공개 관문의 순수 도우미(`tests/test_verify_tools.py`), 헷갈리는 짝 감사·매트릭스 탐침의 순수 도우미, 기계 슬롯·공유 캐시, 종료한 사이트 내보내기의 소스 폴더 보호(`tests/test_build_pages.py`), 스모크 등록 어긋남 없음과 엔진 요구 정책 |
+| 11 | Go vet | everyday·release | `(cd renderers/go && go vet ./...)` | vet 통과 |
+| 12 | Go tests | everyday·release | `(cd renderers/go && go test -count=1 ./...)` | test 통과 (`-count=1`: 시험 캐시가 모듈 밖 `spec/*.json` 변경을 보지 않는다) |
+| 13 | Devsite format | everyday·release | `(cd devsite && sh -c 'test -z "$(gofmt -l .)" \|\| { gofmt -l .; exit 1; }')` | `devsite/`가 gofmt 형식 그대로 |
+| 14 | Devsite vet | everyday·release | `(cd devsite && go vet ./...)` | vet 통과 |
+| 15 | Devsite tests | everyday·release | `(cd devsite && go test -count=1 ./...)` | 개발·검수 사이트 단위 시험 — 경로 허용·거절(대소문자 접기 포함), Host·Origin·CSRF, 신뢰 대역 쿠키·짝 맺기 토큰, 에이전트 토큰과 사람 전용 동작, 상태·글꼴·정적 출력·SSE, git 판 읽기(`/ref/`)·npm 판 풀기·판 고정 글꼴(`/f/`)·판정 기록과 다시 검수 |
+| 16 | Devsite browser | everyday·release | `.venv/bin/python -m pytest devsite/tests -q` | 검수 시트(`/review`)를 실제 저장소로 띄워 두 판이 모두 그려지고, 판정이 저장되고, 차이 강조와 '이 판에 없음'이 보인다. 편집 세션·에이전트 조작 묶음·작업 대기열(`/jobs`)·세션 화면·게시 검사·master 반영 확인·공개 승인 묶음도 본다(go가 없으면 건너뜀) |
 | 17 | Rust format | everyday·release | `(cd renderers/rust && cargo fmt --check)` | `cargo fmt` 형식 그대로 |
 | 18 | Rust tests | everyday·release | `(cd renderers/rust && cargo test)` | test 통과 |
 | 19 | Ruby tests | everyday·release | `(cd renderers/ruby && ruby -I lib -e 'Dir["test/test_*.rb"].sort.each { \|file\| require_relative file }')` | 평문/HTML/명세·사용자 글꼴 정합 (`.ruby-version`의 Ruby로 — 아래 gem 스모크와 같은 Ruby) |
@@ -118,13 +119,13 @@ PASS"다. 릴리스 판정은 필요한 환경(macOS)에서 생략 없이 통과
 | 21 | Package smoke (python) | everyday·release | `.venv/bin/python scripts/verify.py --package-smoke python` | wheel을 새 venv에 격리 설치: 평문/HTML/자산, 글꼴을 밝히지 않은 기본 출력의 도장·원소 획과 `face="device"`·밝힌 글꼴의 원소 층 없음(ADR-027) |
 | 22 | Package smoke (ruby) | everyday·release | `.venv/bin/python scripts/verify.py --package-smoke ruby` | gem payload와 격리 `GEM_HOME` 설치 — 호환 점검·설치·실행이 같은 cwd·env의 같은 Ruby(`.ruby-version`). 기본 출력 계약은 wheel과 같음 |
 | 23 | Package smoke (rust) | everyday·release | `.venv/bin/python scripts/verify.py --package-smoke rust` | crate에 실린 자산·생성 표와 외부 오프라인 소비자. 기본 출력 계약은 wheel과 같음 |
-| 24 | JS-derived spec regeneration | everyday·release | `node scripts/generate_spec_cases.js` | 생성 전후 `tables.json`/`test-cases.json` hash 동일 |
-| 25 | Browser-derived HTML spec regeneration | everyday·release | `.venv/bin/python scripts/generate_html_cases.py` | 생성 전후 `html-cases.json` hash 동일 |
-| 26 | Browser smoke | everyday·release | `[공개 층: FONT_KKU_SMOKE_MODES=both FONT_KKU_REQUIRE_ENGINES=1] .venv/bin/python -m pytest tests/test_playwright_smoke.py tests/test_studio_mount.py -q --durations=15 -n <jobs>` | server 런타임과 데모 화면 통과 — file:// 갈림이 있는 검사(`FILE_DIFFERS`, 7개)만 file 모드도 (`pytest-xdist`가 있으면 일꾼 여럿 — 일꾼마다 세션 브라우저·정적 서버). 공개 층은 모든 검사를 두 모드로, 다른 엔진이 꼭 있어야 한다(`FONT_KKU_SMOKE_MODES=both`, `FONT_KKU_REQUIRE_ENGINES=1`). 느린 검사 15개를 함께 보인다(`--durations=15`) |
-| 27 | Static HTML parity | everyday·release | `.venv/bin/python tests/static_html_parity.py` | 커밋된 HTML 케이스 전체의 DOM/style/geometry 정합 — 글꼴을 밝히지 않은 사례는 원소 획(`[part=hoek]`·`[part=element]`, 정체·마디 변수와 노드의 `--fy-face-width`·`--fy-el-density` 1e-4)까지 (ADR-027) |
-| 28 | Element layer oracle | everyday·release | `.venv/bin/python scripts/record_element_layer.py --check` | 글꼴을 밝히지 않은 바탕 요소(세벌식, 원소 재료)를 런타임이 64px로 그린 획과 노드 밀도 굵기 계수(`--fy-el-density`)가 `spec/element-layer.json`과 같음 — 같은 열쇠(짜임까지)는 어느 음절에서든 같은 값(고정 배치 불변식), 숫자는 tolerance 안. 승인된 변경만 `--write` |
-| 29 | Sprite cell coverage | everyday·release | `.venv/bin/python tests/sprite_cell_coverage.py` | sprite-system과 파생 그림 자소 글꼴마다 11,172자가 고르는 자소판 칸(`r<행>-<자모>`)이 SVG에 모두 있음 — 빈칸은 겹침·획 굵기 감사가 잡지 못한다 |
-| 30 | Visual regression | everyday·release | `.venv/bin/python tests/visual_regression.py` | 현재 플랫폼 기준선(`tests/baselines/<환경>/`)의 픽셀 임계값 통과 |
+| 24 | Browser-derived HTML spec regeneration | everyday·release | `.venv/bin/python scripts/regen.py --check --only html-cases` | 생성물 목록의 `html-cases`: 브라우저로 다시 만든 `spec/html-cases.json`이 커밋된 것과 hash 동일 — 검사는 파일을 되돌리고, 다른 결과는 `tmp/regen-check/spec/html-cases.json`에 남긴다 |
+| 25 | Browser smoke | everyday·release | `[공개 층: FONT_KKU_SMOKE_MODES=both FONT_KKU_REQUIRE_ENGINES=1] .venv/bin/python -m pytest tests/test_playwright_smoke.py tests/test_studio_mount.py tests/test_runtime_options_review.py tests/test_studio_review.py tests/test_glyph_mapping.py tests/test_glyph_runtime.py tests/test_composition.py tests/test_square_splits.py tests/test_studio_glyphs.py tests/test_studio_s0_core.py tests/test_studio_s0_design.py tests/test_studio_s0_sheet_review.py tests/test_studio_api_v1.py tests/test_studio_s1_lifecycle.py tests/test_studio_s2_history.py tests/test_studio_s2_package.py tests/test_studio_s2_header.py tests/test_studio_s3_modes.py tests/test_studio_s3_pages.py tests/test_studio_composition.py tests/test_studio_s4_ui.py tests/test_studio_s4_ladder.py tests/test_studio_s5_draw.py tests/test_studio_s5_design.py tests/test_studio_s5_review.py tests/test_studio_s6_screen.py tests/test_studio_s6_perf.py -q --durations=15 -n <jobs>` | server 런타임과 데모 화면 통과 — file:// 갈림이 있는 검사(`FILE_DIFFERS`)만 file 모드도 (`pytest-xdist`가 있으면 일꾼 여럿 — 일꾼마다 세션 브라우저·정적 서버). 공개 층은 모든 검사를 두 모드로, 다른 엔진이 꼭 있어야 한다(`FONT_KKU_SMOKE_MODES=both`, `FONT_KKU_REQUIRE_ENGINES=1`). 느린 검사 15개를 함께 보인다(`--durations=15`) |
+| 26 | Static HTML parity | everyday·release | `.venv/bin/python tests/static_html_parity.py` | 커밋된 HTML 케이스 전체의 DOM/style/geometry 정합 — 글꼴을 밝히지 않은 사례는 원소 획(`[part=hoek]`·`[part=element]`, 정체·마디 변수와 노드의 `--fy-face-width`·`--fy-el-density` 1e-4)까지 (ADR-027) |
+| 27 | Element layer oracle | everyday·release | `.venv/bin/python scripts/regen.py --check --only element-layer` | 생성물 목록의 `element-layer`(`record_element_layer.py --check`): 글꼴을 밝히지 않은 바탕 요소(세벌식, 원소 재료)를 런타임이 64px로 그린 획과 노드 밀도 굵기 계수(`--fy-el-density`)가 `spec/element-layer.json`과 같음 — 같은 열쇠(짜임까지)는 어느 음절에서든 같은 값(고정 배치 불변식), 숫자는 tolerance 안. 승인된 변경만 다시 쓴다(`regen.py --write --only element-layer`) |
+| 28 | Sprite cell coverage | everyday·release | `.venv/bin/python tests/sprite_cell_coverage.py` | sprite-system과 파생 그림 자소 글꼴마다 11,172자가 고르는 자소판 칸(`r<행>-<자모>`)이 SVG에 모두 있음 — 빈칸은 겹침·획 굵기 감사가 잡지 못한다 |
+| 29 | Visual regression | everyday·release | `.venv/bin/python tests/visual_regression.py` | 현재 플랫폼 기준선(`tests/baselines/<환경>/`)의 픽셀 임계값 통과 |
+| 30 | Studio screens | everyday·release | `.venv/bin/python tests/studio_screens.py` | 작업실 네 페이지 × 쉬운·정밀 × 1440·390 기준선(`tests/baselines/<환경>/studio/`)의 픽셀 임계값 통과 |
 | 31 | Composition baseline | everyday·release | `.venv/bin/python scripts/capture_composition_baseline.py --check --cache use\|refresh` | 원소·그림·기기 글꼴 재료(sebul·gothic·malang × element·device·svg 세 세트 × 네 깊이)가 자모 노드 안에 낸 획·마디·그림 DOM과 인라인 수치 변수가 기준선(`tests/baselines/composition/<환경>.json`, 50자 묶음 해시)과 같음. HTML 정합은 원소 노드를 빼므로 해석기·조립식 정본 변경의 "출력 무변경"은 이것으로 본다(PLAN-HANGUL-001). 승인된 모양 변경만 `--write`, 차이는 `--dump DIR`로 비교 |
 | 32 | Overlap audit | everyday·release | `.venv/bin/python scripts/glyph_overlap_audit.py --policy tests/overlap-policy.json --tier everyday\|release --cache use\|refresh` | 모든 글꼴의 음절 내부 잉크 겹침이 정책(`tests/overlap-policy.json`) 안 — 직결식(`jikgyeol`)도 여기서 (darwin 전용, 다른 플랫폼은 사유와 함께 SKIPPED). 일상 층은 표본 family·씨앗 하나 |
 | 33 | Overlap audit (device face) | everyday·release | `.venv/bin/python scripts/glyph_overlap_audit.py --policy tests/overlap-policy.json --tier everyday\|release --face device --fonts sebul,gothic,malang --cache use\|refresh` | 기본이 원소 재료인 글꼴을 기기 글꼴 재료(페이지 `--fy-face: device`)로도 잰다(ADR-024) |
@@ -145,7 +146,7 @@ PASS"다. 릴리스 판정은 필요한 환경(macOS)에서 생략 없이 통과
 | 48 | Sprite pipeline fixture | everyday·release | `.venv/bin/python scripts/verify.py --sprite-smoke` | PNG/report/CSS/hash 값 정합 |
 | 49 | Whitespace errors | everyday·release | `git diff --check` | 작업 트리·인덱스의 공백 오류 없음(`git diff --check`) |
 | 50 | Release review sheets | release (everyday `--sheets`) | `.venv/bin/python scripts/review_sheets.py --before tmp/release-baseline/<latest>/package --font <(없음)·sebul·gothic·pixel> --sections hero,para,small,looks --out tmp/review-sheets/<HEAD>/<글꼴>` | 직전 공개판(npm `latest`)과 지금 트리의 검수 시트를 나란히 그린다 — 기본 배치·sebul·gothic·pixel × 제목·문단·작은 글씨·꾸밈. 판정하지 않는다. 시트 경로·sha256은 summary `reviewSheets`, 공개 승인 요청에 붙여 사용자가 본다. 레지스트리에 닿지 않으면 SKIPPED(공개 판정 아님) |
-| 51 | Confusable pairs audit | release · 보고만 | `.venv/bin/python scripts/glyph_confusable_audit.py --fonts all --report --out tmp/confusable/release --before tmp/release-baseline/<latest>/package` | 헷갈리는 짝 21쌍(`tests/confusable-pairs.json`)을 글꼴 21개+기본 배치 × 16·24·32px × 화면 배율 1·2로 그려 기기 글꼴 대비 구별성 `rel`과 직전 공개판 대비 변화를 낸다. 보고만 — `tmp/confusable/release/sheet.png`를 실제 크기로 보고 공개 승인 요청에 붙인다(제안 경고: `rel` < 0.2, 직전 판보다 30% 넘게 떨어짐). 1px보다 좁은 낱자 틈은 못 본다 |
+| 51 | Confusable pairs audit | release · 보고만 | `.venv/bin/python scripts/glyph_confusable_audit.py --fonts all --report --out tmp/confusable/release --before tmp/release-baseline/<latest>/package` | 헷갈리는 짝 22쌍(`tests/confusable-pairs.json`)을 글꼴 21개+기본 배치 × 16·24·32px × 화면 배율 1·2로 그려 기기 글꼴 대비 구별성 `rel`과 직전 공개판 대비 변화를 낸다. 보고만 — `tmp/confusable/release/sheet.png`를 실제 크기로 보고 공개 승인 요청에 붙인다(제안 경고: `rel` < 0.2, 직전 판보다 30% 넘게 떨어짐). 1px보다 좁은 낱자 틈은 못 본다 |
 | 52 | Matrix probe | release · 보고만 | `.venv/bin/python tests/matrix_probe.py --report --require-engines --jobs 2 --out tmp/matrix-probe/release` | 세 엔진 × 글꼴 22 × 꾸밈 12 × 16·48px, 움직임 14 × 재료에서 빈칸·꾸밈 무변화·엔진 차·움직임 무변화·움직임 줄이기 위반을 찾는다. 보고만 — 모양은 판정하지 않는다. `tmp/matrix-probe/release/contact-sheet.png`와 `pages/*.png`를 눈으로 본다 |
 <!-- END GENERATED -->
 
@@ -161,9 +162,24 @@ PASS"다. 릴리스 판정은 필요한 환경(macOS)에서 생략 없이 통과
 - `npm publish`는 `prepublishOnly`로 `python3 scripts/release_gate.py`를 먼저 부른다. 그 summary가 지금 HEAD·tarball과 맞는지 보고
   공개 승인 보고를 찍는다.
 
-JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실행 전후 hash를 비교해
-어긋남을 실패로 처리한다. 개별 명령을 직접 실행했다면 생성물 diff를 따로
-확인한다.
+**생성물.** 정본에서 만드는 파일·구간(런타임·코어 CSS의 생성 구간, 파생 글꼴, 꾸밈, 자소판, 네 언어 미러, 렌더러 CSS 사본,
+`spec/tables.json`·`spec/test-cases.json`, 도장, 브라우저로 기록하는 `spec/html-cases.json`·`spec/element-layer.json`, 위 검증 표)은
+`scripts/generated-outputs.json` 한 목록에 생성기·쓰는 명령·검사 명령·차례(`after`, 고리는 `rerun`)·층·브라우저·승인·검사 단계(`gate`)와
+함께 있다(엔진 간결화 검토 A5, 2026-10-17). 진입점은 `scripts/regen.py` 하나다.
+
+```bash
+python3 scripts/regen.py                 # = --check: 빠른 층 `Generated outputs` 단계가 맡는 항목(브라우저 없음, 수 초)
+python3 scripts/regen.py --check --all   # 목록 전부 — 판 사본·검증 표와 브라우저 항목까지(.venv/bin/python)
+python3 scripts/regen.py --write         # 목록 차례대로 다시 쓰고 검사 — 브라우저·승인 항목은 빼고
+.venv/bin/python scripts/regen.py --write --browser            # html-cases까지
+.venv/bin/python scripts/regen.py --write --only element-layer # 승인 항목(layout-stamps·element-layer)은 이름으로만
+python3 scripts/regen.py --list          # 목록
+```
+
+검사는 추적 파일을 바꾸지 않는다. 생성기에 `--check`가 없는 항목(`html-cases`)은 다시 만든 뒤 hash를 견주고 원래 파일로 되돌리며,
+다른 결과는 `tmp/regen-check/<경로>`에 남긴다. 같은 생성물 검사를 `npm test`가 다시 돌리지 않는다 — 남은 겹침(`tests/layout_cases.test.js`·
+`tests/studio_f/recipe_catalog.test.js`의 `--check`)은 목록의 `note`에 적었다. 새 생성기를 더하면 목록에 항목을 더한다 —
+`tests/test_verify_tools.py`가 런타임·코어 CSS·작업 모듈·글꼴 CSS·이 문서의 `BEGIN GENERATED` 구간마다 목록의 생성기인지 본다.
 
 브라우저 단계는 기본적으로 Playwright Chromium을 쓴다.
 
@@ -185,18 +201,21 @@ JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실�
 - 작업실 디자인 모델(`tests/font_studio_design.test.js`): 기본 디자인(1.2 세벌식, 런타임 revision)·재료 바꾸기·배치 바꾸기가 만든 디자인을 실제 `registerDesign`으로 등록해 보고, 고정 배치 충돌(문맥 규칙·통짜 합자 모음·자리 변주)이 런타임 거부와 같은지, 확정 뒤 남는 충돌은 합치지 않는지, 내용 주소 이름, JSON 오류 줄·칸, 비교 칸 자리 세기, 스키마 맨 위 키
 - 작업실 F 묶음(`tests/font_studio_f.test.js`가 `tests/studio_f/*.test.js`를 이름 차례로 싣는다 — 새 묶음은 package.json을 고치지 않는다): F0 편집 기록(되돌리기·다시·건너뛰기·한도·참가자 상태 복사본)·묶음 편집(취소하면 기록 없음, commit은 한 줄)·검사 결과 모양 맞추기·임시 등록(`studio-tmp-<n>`을 실제 런타임 `planJamo`로 풀고 `unregisterDesign`으로 지운다, 남의 번호는 건너뜀, 없으면 내용 주소 이름) · F1 조립식 목록 거울(정본 투영·런타임 생성 구간·`--check`)과 규칙 모델(모드 × 배치 × 역할 × 자모 × 방법 전수가 `registerDesign`과 같은 판정, 무작위 300단계 뒤 같은 구체성 충돌 없음, 잠금·씨앗 섞기·소스 빼기, 영향 목록이 ㄱ 칸 지우기에서 ㄱ·ㅋ·ㄲ만) · F2 출처 모델(디자인 31 × 자모 51 × 역할 4 × 짜임 3 × 받침 2의 요청 약 11만에서 Q3 = `planJamo` trace.rules) · F4 그림 문서(실제 `registerJamo`, `sanitizeSvg` 시험 그림 둘, 떼어 내기) · F7 팔레트(준비 상태·기록 셈, `pal-*`가 `withMode`에서 살아남음) · F8 묶음(왕복, 해로운 묶음의 칸마다 거부, 이름 겹침, 사전 검사, `.jamo.js`를 VM으로) · F9 영향 확인을 언제 묻는가
 - 한글 입력기(`tests/font_kku_ime.test.js`): 두벌식 표준·세벌식 390·세벌식 최종의 키 표(행 단위 골든), 손으로 친 문장, 합자 모음·겹받침·두벌식 받침 넘김·세벌식 겹초성, 자모 단위 Backspace, 가짜 입력 칸으로 `attach()` 키 경로·한/영 전환·초점 없는 칸 캐럿, 패키지 `exports`/`files`
-- 조합 체계(ADR-017, `tests/asset_sync.test.js`): `node scripts/build_looks.js --check`와 같은 대조 — `font-kku-looks.css`·`authoring/themes-data.js`가 `spec/themes.json`과 꾸러미 글꼴 꾸밈 구간에서 다시 만든 것과 같은지, 레이어 순서 문(`font-kku.look`, `font-kku.motion`), 정본의 깨진 참조·분류 안 된 글꼴·꾸러미 테마 규칙·없는 움직임 훅·변주 목록 불일치 거부, 꾸밈이 칠 속성만 옮기는지와 씨앗 조건 유지, 조합법의 확장 목록, 패키지 `files`/`exports`(`./fx`, 확장 CSS, `spec/themes.json`)
+- 조합 체계(ADR-017, `tests/asset_sync.test.js`): 레이어 순서 문(`font-kku.look`, `font-kku.motion`), 정본의 깨진 참조·분류 안 된 글꼴·꾸러미 테마 규칙·없는 움직임 훅·변주 목록 불일치 거부, 꾸밈이 칠 속성만 옮기는지와 씨앗 조건 유지, 조합법의 확장 목록, 패키지 `files`/`exports`(`./fx`, 확장 CSS, `spec/themes.json`)
 - 한 줄 설치 확장(`tests/font_kku.test.js`): `data-addons`가 `font-kku-looks.css`·`font-kku-motion.css`를 글꼴 뒤에 붙이고 `font-kku-fx.js`를 순서 있는 스크립트로 붙이는지, 이름 접기·중복·모르는 이름 경고, `data-addons`만 있을 때
 - 상호작용(`tests/font_kku_fx.test.js`): `typingFrames`·`transitionFrames` 순수 함수, `type`의 지웠다 다시 치기·커서·한 번 도는 움직임 끄기·여러 바탕 요소 줄 나누기·멈춤·움직임 줄이기, `shuffle`의 `jamo-seeds` 켜기·누르기·주기·되돌리기, `scatter`·`magnet`·`replay`, 선언형 `bind`/`unbind`, CommonJS·ESM·타입 선언
 - 글꼴 계약 v2 검사(`tests/font_lint.test.js`, `authoring/font-kku-lint.js`): 기본 제공 글꼴·별칭 shim·작업실 fixture 통과, 텍스트 검사 우회로(중첩 속 규칙, 범위 밖 선택자, 부분 문자열 레이어 판정, 속성 누수, 단위 없는 0 변형, `@import` 면제, 디스패치·런타임 변수, `!important`)가 코드별로 실패, 생성된 레지스트리 요약 최신성
 
 - 배치 프로파일(ADR-026, `tests/layout_cases.test.js`): 설계 v1.2 사례 28개를 모두 node·browser·audit·deferred로 분류하고 node 사례를 실행 — 정본 생성기
   `--check`와 깨진 정본 거부, 디자인 1.2 `layout` 검증(누락·없는 프로파일·revision·고정 배치의 문맥 규칙·자리 변주), 도장 표(67키, 조합용 자모만,
-  ㅘ = ㅗ + ㅏ 조각), 맞춤 규칙이 역할·자모로만 고르는지. 브라우저 사례는 스모크 `fixed-layout`(세 재료 × 11,172음절 불변, 머리 음절 없음, 칸 하나,
-  sebul·네모 문맥·이전 디자인·대체·크기·낱자)
-- 소개 페이지의 AI 답 세트(`tests/landing_sets.test.js`, `site/landing-ai-sets.js`): 답 HTML의 등록 코드를 그대로 돌려 얻은 칸이 원형 8칸 칸 계약 세트(`frame: "box"`, 고치지 않음 기록)이고 실제 `registerJamo`가 받는지, 그 8칸만으로 현대 자모(초성·중성·받침)가 모두 조립되는지(`planJamo`의 모든 획이 그림이나 그림이 긋는 획), ㄱ 칸이 3,444자에 들어가는지, 프롬프트가 설명서와 원형 8칸을 담는지
-- 원소 획 표(ADR-027, `tests/element_table.test.js`): 생성기가 네 언어 미러에 굳히는 기본 배치(세벌식)의 원소 획 — 열쇠 283개(도장 짜임·조각마다
-  232와 낱자 51, 짜임 열쇠 접미사 `|v0`·`|h` …)와 UTF-8 바이트 차례, 값마다 런타임 서식(JS `String()` + 단위), 런타임 실측 정답
+  ㅘ = ㅗ + ㅏ 조각), 맞춤 규칙이 역할·자모로만 고르는지, 새 나누기 값(`splits` 통짜 모음 7·머리 57·겹받침 낱 11)이 다 있는지. 브라우저 사례는 스모크
+  `fixed-layout`(기본 나누기에서 세 재료 × 11,172음절 불변, 머리 음절 없음, 칸 하나, sebul·네모 문맥·이전 디자인·대체·크기·낱자)과
+  `fixed-shape-splits`(ADR-030 §4 — 세벌식·직결식 × 통짜 모음·머리 음절·겹받침 낱의 노드 수·모양 값·고정, 나누기 차례 페이지 > tune > 모양 기본,
+  합친 노드 안 ㅗ·ㅎ 획이 낱 노드 잉크와 1px 안, 기기 글꼴 통짜 모음 조각 잎)
+- 소개 페이지의 AI 답 세트 시험(옛 `tests/landing_sets.test.js`, 대상 `site/landing-ai-sets.js` — 답 HTML의 등록 코드가 원형 8칸 칸 계약 세트를 내고 그 8칸만으로 현대 자모가 모두 조립되는지)은 ADR-029 뒤 소개 페이지와 함께 사이트 저장소가 맡는다. 이 저장소에는 없다
+- 원소 획 표(ADR-027, `tests/element_table.test.js`): 생성기가 네 언어 미러에 굳히는 기본 배치(세벌식)의 원소 획 — 열쇠 477개(도장 짜임·조각마다
+  232, 새 나누기 값마다 194 — 통짜 모음·머리 음절·겹받침 낱자, ADR-030 §4, 낱자 51, 짜임 열쇠 접미사 `|v0`·`|h` …)와 머리 음절 획 묶음
+  (`data-fy-head-part`), UTF-8 바이트 차례, 값마다 런타임 서식(JS `String()` + 단위), 런타임 실측 정답
   `spec/element-layer.json`과 획·마디·값·노드 밀도 대조(숫자는 tolerance 안). 생성기는 `font-kku.js`의 굵기 보정 함수를 빌려 돌린다 —
   갈라짐 가드: 런타임 셈을 바꾸면 도장 밀도(파이썬 사본 `measure_layout_stamps.py`) 대조가 실패하고, 꼭지 틈을 끄면 ㅎ·ㅊ 열쇠가 따라
   바뀌며, 빌린 함수가 새 도우미·새 선택자를 쓰면 실패한다
@@ -225,7 +244,7 @@ JS/HTML 생성기는 출력 파일을 수정할 수 있다. `verify.py`는 실�
 (`--fy-el-*`)는 이름·단위가 같고 수가 1e-4 안이어야 한다. 화소는 스모크
 `test_sidecar_element_face_without_js[24·64]`(JS 끈 정적 출력 = 런타임 바탕 요소, `face="device"`는 다름)와
 `test_sidecar_element_face_is_device_independent`(기기 한글 글꼴을 바꿔 끼워도 원소 출력은 같고 기기 출력은 달라짐 —
-다른 한글 글꼴이 없으면 건너뜀)가 본다. 네 언어 원소 출력은 각 언어 시험이 `spec/element-layer.json`(열쇠 283개)과 대조한다.
+다른 한글 글꼴이 없으면 건너뜀)가 본다. 네 언어 원소 출력은 각 언어 시험이 `spec/element-layer.json`(1.2, 열쇠 477개)과 대조한다.
 
 ### 브라우저 스모크
 
@@ -248,7 +267,7 @@ file 모드도 돈다(아래 '모드').
 안내 버튼과 `#studio-material` 입구가 자소판으로 데려가는지 본다.
 소개 페이지는 `assert_demo`(제목, 히어로의 세 갈래 — 작업실 `#draw`·AI 문장 복사·`#web`, 처음 받는 글꼴 CSS 몇 장과 움직임 타일까지 내려갈 때 네온 글꼴의 필요할 때 받기, 실제 AI 답 여섯과 느낌마다 답이 있는지, 히어로 문장과 제목 둘째 줄이 고른 세트의 SVG 재료로 그려지는지)와 `assert_landing_problems`(AI 답 세트가 원형 8칸 그대로 등록되고 히어로 문장의 자모 노드가 모두 그 8칸에서 나오는지(`traceOf`), 그린 세트에 `animate`를 붙였다 떼도 SVG 재료·획 그대로인지, 칸마다 글자 수, 자모 지도, 칸을 직접 그으면 세트를 다시 등록하고 바뀐 글자 수를 세고 '내 페이지에 쓰기' 코드가 따라오는지, 한 번에 돌려 그은 닫힌 획이 점으로 줄지 않는지, 가져가기 줄과 브라우저 저장, 화면에 보인 6줄 그대로 돌린 JS 흔들기와 이름 씨앗, 짧은 씨앗 고정, NFD 대조, 390px에서 가로 넘침 없음·8칸이 첫 화면 안·메뉴가 화면 안, 서버 모드에서는 11,172자를 모두 그려 자모 노드가 모두 8칸에서 왔는지와 '작업실에서 이어 그리기'로 작업실이 8칸을 가져오는지)가 본다.
 `assert_font_studio_design`은 디자인 패널(설계 v1.2 §13)을 본다: 맨 주소의 첫 화면이 세벌식 기본 디자인이고 초안을 쓰지 않는지,
-비교 칸이 초성 ㄱ·중성 ㅏ를 한 가지 자리로 재는지, 재료를 바꿔도 배치가 그대로인지, 네모 문맥에서만 문맥 규칙 탭이 열리는지,
+비교 칸이 초성 ㄱ·중성 ㅏ를 한 가지 자리로 재는지, 재료를 바꿔도 배치가 그대로인지, 네모 문맥에서 규칙 목록(문맥 규칙 탭을 합침, S5-B)이 보이는지,
 문맥 규칙이 있는 디자인을 고정 배치로 바꾸면 충돌을 보이고 고를 때까지 적용하지 않는지, 등록 실패 때 마지막 정상 디자인을 두는지,
 고정 배치 도장 노드의 글꼴 CSS 편집을 받지 않는지, 디자인 JSON 저장·1.1 디자인 열기(배치를 끼워 넣지 않음)·초안 복원,
 그림 자소 글꼴을 "받지 않음"으로 보이는지.
@@ -342,7 +361,7 @@ p < 1.6t이고 바닥(0.75)이 아니면 p ≥ 1.6·k·t(틈이 가늘어진 획
 file 모드의 Chromium은 `--allow-file-access-from-files`로 뜬다. 그래서 실제 file:// 제약을 보지 못한다.
 `test_real_file_url_without_flag`가 그 깃발 없이 띄워 문서가 말한 것을 본다: CSS 획 글꼴(바탕 요소·`sebul`)이 그려지고,
 `font-kku.mjs`(module script)는 막히고, 사례 페이지는 목록·고쳐 쓰기 대신 정적 서버 안내를 보인다.
-Chromium은 깃발이 없어도 file:// 자소판(배경·마스크 칠)을 그린다. 그래서 자소판은 이 시험에서 단언하지 않는다.
+깃발 없는 Chromium은 file:// 자소판 가운데 배경 칠(chalk 등)은 그리고 마스크 칠(crayon·pilgi·dunggeun·butgeul)은 그리지 않는다 — 마스크 그림은 CORS로 받는데 file://에는 출처가 없다(WebKit도 같고 Firefox는 그린다). 엔진 제약이라 이 시험은 자소판을 단언하지 않는다.
 
 **엔진.** Firefox·WebKit이 없으면 엔진 검사(`test_*_engines`, `test_face_svg_stroke_firefox`)는 건너뛴다.
 `FONT_KKU_REQUIRE_ENGINES=1`이면 건너뛰지 않고 설치 안내와 함께 실패한다. 엔진 검사는 `engine_params`(매개변수)와
@@ -368,13 +387,15 @@ FONT_KKU_JOBS=1 FONT_KKU_SMOKE_CPU_THROTTLE=4 .venv/bin/python -m pytest tests/t
 
 | 시험 id | 증상 | 재현 조건 | 상태 |
 |---|---|---|---|
-| `test_page_surface[server-showcase]` | `showcase.html#apps at 1280px should land at its scroll margin (top 57, margin 64)`, 390px에서 top −53 | CPU 늦춤 4, 일꾼 1. 기준 fb971d8에서 4번 중 3번 실패(top 57–58) | 고침 2026-10-13. 페이지 경합이었다 — 처음 맞춘 뒤 카드가 서며 목표가 7–157px 밀렸고, 8초를 기다려도 다시 맞추지 않았다. `#new`는 고쳐 쓰기 미리보기 틀이 297px 줄었다 몇 초 뒤 다시 늘어 밀렸다. `site/showcase.js` `holdJump`가 사용자가 손대기 전까지 15초 동안 프레임마다 다시 맞춘다. 시험은 8초 동안 제자리 두 번을 기다린다. 고친 뒤 CPU 늦춤 4로 5/5 |
+| `test_page_surface[server-showcase]` | `showcase.html#apps at 1280px should land at its scroll margin (top 57, margin 64)`, 390px에서 top −53 | CPU 늦춤 4, 일꾼 1. 기준 fb971d8에서 4번 중 3번 실패(top 57–58) | 고침 2026-10-13. 페이지 경합이었다 — 처음 맞춘 뒤 카드가 서며 목표가 7–157px 밀렸고, 8초를 기다려도 다시 맞추지 않았다. `#new`는 고쳐 쓰기 미리보기 틀이 297px 줄었다 몇 초 뒤 다시 늘어 밀렸다. 사례 페이지 스크립트(당시 `site/showcase.js`, ADR-029 뒤 사이트 저장소가 맡는다)의 `holdJump`가 사용자가 손대기 전까지 15초 동안 프레임마다 다시 맞춘다. 시험은 8초 동안 제자리 두 번을 기다린다. 고친 뒤 CPU 늦춤 4로 5/5. 이 시험과 페이지는 이제 사이트 저장소에 있다 |
 | `test_page_surface[server-fonts-themes]` | `closing the customizer must restore the composer hash` | 병렬 부하(load 약 45)에서 6번 중 1번. CPU 늦춤 8로 3/3 통과(재현 못 함) | 고침 2026-10-13. 시험이 조합기 해시 쓰기(200ms 늦춤)·대화상자 close 사건(늦게 옴)과 경합했다. 지금 조합의 해시가 선 뒤 열고, 닫은 뒤 되돌아오기를 기다린다 |
 | `test_font_studio_f_surface[server-assert_studio_f_draw_detach]` | IoU 0.069 | 병렬 부하에서 기준 3번 중 1번. CPU 늦춤 4·8로 재현 못 함 | 고침(추정) 2026-10-13. 무대 코어 CSS가 4초 안에 안 와도 찍었다. 이제 안 오면 '코어 CSS 없음'으로 실패한다. 그 뒤 통합 일상 verify(`-n 4`, load 약 4)에서 IoU 0.000이 한 번 났다(뗀 뒤 사진에 잉크 없음, 혼자·CPU 늦춤 4·6으로 8/8 통과) — 뗀 뒤 사진은 IoU가 설 때까지 8초 동안 다시 찍는다 |
 | `test_page_surface[server-effects]` | `the cursor magnet should push nearby jamo, moved 0` | 병렬 부하. CPU 늦춤 4·8로 재현 못 함 | 고침 2026-10-13. 400ms sleep 대신 밀릴 때까지 기다린다(다시 재생의 2.6초 sleep도 상태 기다리기로) |
 | `test_page_surface[server-public-pages]` | `fonts did not arrive for visible hosts` | 병렬 부하. CPU 늦춤 4로 재현 못 함 | 고침 2026-10-13. 훑어 내릴 때 자리마다 화면이 그려지기를 기다린다(관찰자는 그릴 때만 잰다). 고친 뒤 CPU 늦춤 4로 5/5 |
 | 위 셋(fonts-themes·effects·draw_detach) 중 하나 | `Page.wait_for_function: Timeout 30000ms exceeded` | 고친 뒤 CPU 늦춤 4 묶음 16번 중 1번(다른 에이전트 부하가 있던 때). 시험 id를 남기지 못했다 | 열림. 다시 나면 `--tb=short` 출력으로 id를 적는다 |
-| `test_runtime_lifecycle_contract[file]` | `shadow root font resolution mismatch … 'loadFont': False` | 병렬 부하(load 약 20)의 묶음 실행에서 1번. 혼자·CPU 늦춤 4로 6/6 통과. 2026-10-14 `verify:release`(5fa07c7)에서 1번 — 기준 78fa3d6과 5fa07c7을 트리마다 4개씩 함께 CPU 늦춤 8(load 약 10)로 돌려 각 2/20 실패(같은 증상), 혼자 CPU 늦춤 4로 둘 다 8/8 통과 | 열림. `loadFont(href, {root})`의 돌려준 목록(`refreshAll`)이 그 root의 stylesheet 자동 다시 맞춤과 경합하는 듯하다(런타임) |
+| `test_selection_copy_engines[server-firefox]` | `server: a host refreshed while selected should be highlighted again [True, None, 'all']` — 고른 채 다시 그린 바탕 요소의 강조가 늦게 돌아옴 | 2026-10-18 일상 verify(S3 통합 `e728d01`, `-n 10`)에서 1번. 혼자 4/4, 병렬 스모크 부하(load 약 6) 아래 8/8 통과(재현 못 함). 그 변경은 런타임 고르기·복사를 건드리지 않았다. 2026-10-20 일상 verify(`-n 10`)에서 또 1번 — 다시 그리기 전 값이 None이었다(다시 그린 뒤는 all) | 고침 2026-10-20. 다시 그리기 전 강조가 아직 서지 않았다 — Firefox의 selectionchange가 부하에서 세 프레임보다 늦게 와 거울이 돌지 않았다. 고정 세 프레임 대신 강조가 설 때까지(2초) 기다린다. 고친 뒤 브라우저 단계 `-n 10` 332/332 |
+| `test_ime_attach_engines[webkit]` | `webkit: Cmd/Ctrl+Z should undo IME-typed Hangul ['ㅇ', '']` — 첫 되돌리기가 첫 키만 따로 남겼다 | 2026-10-18 일상 verify(`e936348`, `-n 10`)에서 1번. 혼자 4/4, 병렬 스모크 부하(load 약 8) 아래 8/8 통과. 같은 날 짓는 방식 통합(`c1a0735`)의 브라우저 단계 `-n 10`에서 2/2(첫 되돌리기 뒤 `['안', '']`), **기준 master `b2252d6`에서도 같은 단계 `-n 10` 2번 중 1번 재현** — 원래 있던 간헐 실패. 혼자는 늘 통과 | 고침(시험, 2026-10-20 — 병합 때 묻는 관문 완화). WebKit은 이어 친 글을 키 사이 시간으로 묶어 되돌리니 묶음 크기를 보지 않고, 되돌릴 때마다 친 차례의 앞 상태로 돌아가 끝에 빈 칸인지 본다. Chromium·Firefox는 그대로 키 하나씩 |
+| `test_runtime_lifecycle_contract[file]` | `shadow root font resolution mismatch … 'loadFont': False` | 병렬 부하(load 약 20)의 묶음 실행에서 1번. 혼자·CPU 늦춤 4로 6/6 통과. 2026-10-14 `verify:release`(5fa07c7)에서 1번 — 기준 78fa3d6과 5fa07c7을 트리마다 4개씩 함께 CPU 늦춤 8(load 약 10)로 돌려 각 2/20 실패(같은 증상), 혼자 CPU 늦춤 4로 둘 다 8/8 통과 | 고침(2026-10-18). 시트 적용 뒤 load 사건 앞에 예약된 자동 다시 맞춤이 먼저 돌면 `refreshAll`이 빈 목록이었다. `loadFont`가 부른 뒤 바뀐 요소를 모두 돌려준다 — 두 모드 12번씩 통과 |
 
 ### 글자 측정 도구와 겹침 릴리스 관문
 
@@ -421,7 +442,8 @@ FONT_KKU_JOBS=1 FONT_KKU_SMOKE_CPU_THROTTLE=4 .venv/bin/python -m pytest tests/t
   (`sebul-fixed-v1`) 도장 배율로 붓을 미리 누르므로 직결식 도장을 바꿨으면 `node scripts/build_jamo_svg.js --write`. 직결식(`jikgyeol`)의
   겹침은 정책 단계 `Overlap audit`가 잰다. 이어서 네 언어 미러·정적 자산·원소 획 정답·HTML 사례를 다시 낸다
   (`generate_sidecar_tables.js --write` → `sync_assets.py` → `record_element_layer.py --write` → `generate_html_cases.py`, ADR-026 §2).
-  `npm test`의 `--check`들이 빠진 단계를 잡는다.
+  이 차례는 생성물 목록의 차례다 — `.venv/bin/python scripts/regen.py --write --only layout-stamps,layout-profiles,jamo-svg,sidecar-mirrors,asset-copies,element-layer,html-cases`
+  (도장·원소 획 정답은 승인 항목이라 이름으로만). 빠진 단계는 빠른 층 `Generated outputs`(`python3 scripts/regen.py --check`)가 잡는다.
 
 - `Legibility audit (fixed layout)` 단계(2026-10-13): `scripts/glyph_legibility_audit.py`가 기본 배치(세벌식)가 **읽히는 꼴**인지
   원소·기기 글꼴·SVG 그림(`pilgi-box`) 세 재료로 잰다 — 겹침·획 굵기 감사가 재지 않는 것이다(세벌 고정 revision 1은 두 감사를 넘고도
@@ -433,8 +455,12 @@ FONT_KKU_JOBS=1 FONT_KKU_SMOKE_CPU_THROTTLE=4 .venv/bin/python -m pytest tests/t
   `Legibility audit (jikgyeol)`은 직결식(`font="jikgyeol"`)을 원소 재료로 같은 게이트에 건다 — 고정 배치를 고르는 글꼴은 게이트,
   그 밖의 글꼴을 밝힌 문맥 배치는 보고만 한다(2026-10-14).
   `--font sebul`처럼 글꼴을 밝히면 보고만 한다. 지표의 셈은 `tests/test_glyph_tools.py`가 브라우저 없이 본다(가짜 상자로 통과·실패).
+  `--depth atomic|composite|syllable`은 고정 모양의 새 음절 나누기(ADR-030 §4)를 잰다 — 머리 노드는 두 획 묶음을 초성·중성 색으로 칠한다.
+  겹침 감사(`--layout fixed` 또는 `--font jikgyeol`)와 획 굵기 감사(`--policy … --layout fixed`)도 같은 `--depth`를 받는다. 일상 단계에는 넣지 않았다 —
+  새 나누기 값을 바꾸면 손으로 돈다(2026-10-17 측정은 [노트](docs/NOTES/one-engine-step2-adr030.md)).
 - 검수 시트(게이트 아님): `scripts/review_sheets.py`가 첫 화면 제목(128px, 원소·글자 칸·기기·SVG·네온·스티커), 낱말(112·48px),
-  문단(24·48px), 1,000자 격자, 확대 자모 칸(원소·기기), 낱자, 재료 셋, 작은 글씨(16·24px, 1x·2x), 꾸밈 여덟 가지를 그린다.
+  문단(24·48px), 1,000자 격자, 확대 자모 칸(원소·기기), 낱자, 재료 셋, 작은 글씨(16·24px, 1x·2x), 꾸밈 여덟 가지와 음절 나누기(`splits` —
+  합자 모음·겹받침 글자를 나누기 다섯 × 재료 셋, ADR-030 §4)를 그린다.
   `--before <checkout>`이면 그 checkout의 런타임으로 같은 시트를 그려 전·후를 나란히 붙인다. 배치·재료·꾸밈을 바꾸면 이 시트를 **눈으로 본다**
   (점검표 `skills/font-kku/references/legibility.md` §3.1).
 
@@ -442,7 +468,7 @@ FONT_KKU_JOBS=1 FONT_KKU_SMOKE_CPU_THROTTLE=4 .venv/bin/python -m pytest tests/t
 
 - `FONT_KKU_JOBS=1 .venv/bin/python scripts/glyph_confusable_audit.py --fonts all --before tmp/release-baseline/<직전 판>/package --report`
   (`verify:release`의 `Confusable pairs audit` 단계가 같은 것을 `--out tmp/confusable/release`로 돈다).
-- 짝 21쌍(`tests/confusable-pairs.json`)을 기본 배치·글꼴 21개 × 16·24·32px × 화면 배율 1·2로 그린다. `rel` = 한쪽에만 있는 잉크
+- 짝 22쌍(`tests/confusable-pairs.json`)을 기본 배치·글꼴 21개 × 16·24·32px × 화면 배율 1·2로 그린다. `rel` = 한쪽에만 있는 잉크
   (1 장치 화소 어긋남은 용서) ÷ 기기 글꼴의 같은 짝. 일부만: `--fonts fixed,sebul --sizes 24 --dsf 1`.
 - 판정하지 않는다. `--report`는 언제나 0이다. 결과는 `tmp/confusable/<시각>/report.json`과 `sheet.png`다.
 - `sheet.png`를 열어 걸린 짝(제안: `rel` < 0.2, 직전 공개판보다 30% 넘게 떨어짐)을 실제 크기로 본다. 공개 승인을 청할 때 함께 보인다.
@@ -521,6 +547,8 @@ node scripts/check_css_contract.js --check
   정책의 예외(사유·상한)를 같은 변경에서 갱신한다
 - `glyph_ink_diff.py`/`glyph_metrics.py`/`glyph_solve_head.py`: bbox, 구조, head 상자
 - 시각 기준선 변경: `tests/visual_regression.py --update` 후 이미지 diff 수동 검토
+- 작업실 화면 기준선(S6): `tests/studio_screens.py`가 네 페이지 × 쉬운·정밀 × 1440·390 16장을 `tests/baselines/<환경>/studio/`와 견준다. 화면을 일부러 바꿨으면 `--out <폴더>`로 찍어 전후 시트를 보고 `--update`로 다시 쓴다(기준선이 없으면 exit 2)
+- 작업실 성능 재기(S6): `scripts/measure_studio_perf.py --root <판>`이 값 고침(sync·첫 프레임·두 프레임·settled)과 페이지마다 처음 싣는 JS gzip을 JSON으로 낸다(`--profile`은 CPU 프로필). 부하가 섞이면 기준·고친 판을 번갈아 여러 번 재고 중앙값을 쓴다
 
 측정 하네스(`scripts/glyph_fit_lib.py`)는 모든 글자 측정 도구가 공유한다. 요청한 기준 family가
 실제로 그려지는지 폭 대조로 검증하고, 기준 family를 주지 않으면 native stack이 실제로 풀린
@@ -613,3 +641,16 @@ family를 stderr에 기록한다. 대체 글꼴로 떨어지면 측정하지 않
 
 과거 실행 수치를 새 릴리스의 증거로 재사용하지 않는다 — 공개 층은 측정 캐시를 읽지 않는다. 현재 판정은 공개할 커밋에서
 실행한 `npm run verify:release`가 쓴 `tmp/verify-summary.json`이다(`releasePass`, `git.head`, `pack.integrity`).
+
+### 작업실에서 사람이 검수하기
+
+1. 작업실의 **검수** 페이지(`?page=review`)에서 대표 낱말·짜임과 받침·헷갈리는 글자·문장을 16·24·48px로 본다. 필요한 문장도 추가한다.
+2. 고치기 전에 **지금을 비교 기준으로 저장**을 눌러 기준본을 남긴다. 두 모습은 현재 실행 환경에서 그리므로 예전 런타임의 화면 보관과는 다르다.
+3. 판정과 메모를 적고 **이 문장 고치기**로 이동한다. 고친 뒤 검수로 돌아와 기준본과 견주고 다시 판정한다. 변경 전 판정은 지우지 않고 다시 검수로 표시한다.
+4. 환경 확인 내역을 보고 확인된 현재 환경을 기록한다. 프로젝트를 저장하고 다시 열어 판정·메모·기준본을 확인한다. 외부 재료의 내용이 미확인이면 다음에 열 때 판정을 다시 확인한다.
+
+이 절차는 LLM 없이 끝난다. LLM 의견은 선택적인 참고이며 사람의 판정을 대체하지 않는다. 검수 기록은 프로젝트·초안에 담기며 CSS 저장에는 담기지 않는다.
+
+### 전송 크기 측정
+
+Node 시험의 `report shipped asset gzip sizes without enforcing a budget`은 자산별 gzip -9 바이트를 보고만 한다. 크기 상한은 검증 관문이 아니다(사용자 결정 2026-10-18, ADR-019 §5). 추후 최적화 작업이 필요할 때 대상과 목표 크기를 정한다.

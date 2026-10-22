@@ -1,6 +1,6 @@
 {
   "name": "@tty.link/font-kku",
-  "version": "0.1.4-rc.2",
+  "version": "0.1.4-rc.4",
   "description": "Browser library for decomposing Korean Hangul syllables into jamo and rendering them as stylable, repositionable glyph parts",
   "license": "MIT",
   "homepage": "https://font.tty.link/",
@@ -192,7 +192,7 @@
     "tests/baselines/darwin-chromium/sebul-sentence-1.png"
   ],
   "scripts": {
-    "test": "node --test tests/font_kku.test.js tests/spec_parity.test.js tests/asset_sync.test.js tests/font_lint.test.js tests/font_studio_model.test.js tests/font_studio_design.test.js tests/font_studio_f.test.js tests/font_kku_ime.test.js tests/font_kku_export.test.js tests/font_kku_fx.test.js tests/resolver_cases.test.js tests/layout_cases.test.js tests/element_table.test.js tests/element_boundary.test.js tests/studio_mount.test.js",
+    "test": "node --test tests/font_kku.test.js tests/glyph_mapping_runtime.test.js tests/spec_parity.test.js tests/asset_sync.test.js tests/font_lint.test.js tests/font_publish_check.test.js tests/font_studio_model.test.js tests/font_studio_design.test.js tests/font_studio_f.test.js tests/font_kku_ime.test.js tests/font_kku_export.test.js tests/font_kku_fx.test.js tests/resolver_cases.test.js tests/composition.test.js tests/layout_cases.test.js tests/element_table.test.js tests/element_boundary.test.js tests/studio_mount.test.js tests/studio_api.test.js tests/font_package.test.js tests/font_derive.test.js",
     "test:docs": "node scripts/check_markdown_links.js && node scripts/check_document_contracts.js",
     "verify": ".venv/bin/python scripts/verify.py",
     "verify:release": ".venv/bin/python scripts/verify.py --release",

@@ -120,7 +120,7 @@
 세그먼트마다 다음 인라인 CSS 변수도 자동 주입된다: `--fy-line-index`, `--fy-word-index`, `--fy-glyph-index`, `--fy-jamo-index`. 바탕 요소에 씨앗값(`seed`)이 지정되면 `--fy-seed`도 함께 주입된다. 자세한 활용은 [움직임과 변주](./animation-and-variation.md) 참조.
 
 이 정보가 있어야 CSS 글꼴이 음절 구조별로 다른 배치를 줄 수 있다.
-현재 기본 제공 일반 글꼴은 `gothic.css`의 한 단계 저작을 기준으로 한다. `sebul.css`와 같이 바탕 요소 한 블록에서 자리 변수만 조절하면 되고, 직접 내보내지지 않는 부모 자리(`--fy-tc-*`, `--fy-tl-*`, `--fy-tr-*`, `--fy-mc-*`, `--fy-bs-*`, `--fy-xl-*`, `--fy-xr-*` …)로 형제 자리의 배치를 한 번에 잡을 수 있다. 부모 자리는 내보내지지 않고 자식과 역할이 같다 — `br`은 `bottom:double`에서 실제로 내보내는 자리라 누구의 부모도 아니다(전에는 `--fy-br-*`가 세로모음 짜임의 홑받침 자리 `brs`로 새어 들어갔다). `--fy-tlo-*`, `--fy-tlc-*`, `--fy-tls-*`, `--fy-tro-*`, `--fy-trc-*`, `--fy-trs-*`, `--fy-brs-*`, `--fy-brd-*`, `--fy-bbrs-*`처럼 더 잘게 나뉜 자리와 `--fy-jung-cluster-open-*`, `--fy-jung-cluster-closed-*`, `--fy-jong-cluster-right-*`, `--fy-jong-cluster-bottom-*`, `--fy-jong-cluster-split-*` 같은 묶음 변수도 같은 한 블록 안에서 바로 쓸 수 있다. 런타임이 노출하는 `data-fy-layout-bucket`, `data-layout-key`, `data-fy-axis`, `data-fy-open`, `data-fy-jong-count`, `data-fy-role`은 구조 기반 선택자가 정말 필요할 때만 쓰는 보조 계약으로 남긴다. `gothic2.css`는 현재 `gothic.css`를 불러오는 하위 호환 별칭이다.
+현재 기본 제공 일반 글꼴은 `gothic.css`의 한 단계 저작을 기준으로 한다. `sebul.css`와 같이 글꼴 레이어의 바탕 요소 블록에서 자리 변수로 뼈대를 잡고(자모 레이어·문맥 레이어는 자리로 풀리지 않는 자모별·이웃 조건별 보정만 더한다), 직접 내보내지지 않는 부모 자리(`--fy-tc-*`, `--fy-tl-*`, `--fy-tr-*`, `--fy-mc-*`, `--fy-bs-*`, `--fy-xl-*`, `--fy-xr-*` …)로 형제 자리의 배치를 한 번에 잡을 수 있다. 부모 자리는 내보내지지 않고 자식과 역할이 같다 — `br`은 `bottom:double`에서 실제로 내보내는 자리라 누구의 부모도 아니다(전에는 `--fy-br-*`가 세로모음 짜임의 홑받침 자리 `brs`로 새어 들어갔다). `--fy-tlo-*`, `--fy-tlc-*`, `--fy-tls-*`, `--fy-tro-*`, `--fy-trc-*`, `--fy-trs-*`, `--fy-brs-*`, `--fy-brd-*`, `--fy-bbrs-*`처럼 더 잘게 나뉜 자리와 `--fy-jung-cluster-open-*`, `--fy-jung-cluster-closed-*`, `--fy-jong-cluster-right-*`, `--fy-jong-cluster-bottom-*`, `--fy-jong-cluster-split-*` 같은 묶음 변수도 같은 한 블록 안에서 바로 쓸 수 있다. 런타임이 노출하는 `data-fy-layout-bucket`, `data-layout-key`, `data-fy-axis`, `data-fy-open`, `data-fy-jong-count`, `data-fy-role`은 구조 기반 선택자가 정말 필요할 때만 쓰는 보조 계약으로 남긴다. `gothic2.css`는 현재 `gothic.css`를 불러오는 하위 호환 별칭이다.
 
 ## CSS 변수 계약
 
@@ -174,7 +174,8 @@
 | --- | --- | --- |
 | `font-kku.font` | 바탕 요소 규칙(글꼴 변수, 역할·부모 자리·자리 변수, `[data-fy-vowel-depth="syllable"]` 같은 바탕 요소 조건)과 자리 단위 노드 규칙(`[data-fy-pos]`만 쓰는 규칙, 그림 자소 종류별 행 선택) | `:where([data-fy-font="X"])`, `… [data-fy-pos="t"]` |
 | `font-kku.jamo` | 자모 정체성으로 고르는 규칙 | `[data-jamo]`, `[data-jamo-base]`, 선택적으로 `[data-fy-pos][data-jamo]` |
-| `font-kku.context` | 이웃 조건으로 고르는 규칙 | `:has()`, 짜임 조건 |
+| `font-kku.context` | 이웃 조건으로 고르는 규칙 | 글자 칸의 자리 자모(`[data-fy-at-<자리>]`)·자모 목록(`[data-fy-jamos~=]`), 짜임 조건 |
+| `font-kku.tune` | 고정 글꼴 모양(세벌식·직결식)의 손 보정 — 코어가 생성한 모양 값(`font-kku.shape`) 위 위치·크기(`--fy-shape-left·top·size·scale-x·scale-y`). 이 블록을 쓰면 첫 문장을 다섯 계층 `@layer font-kku.font, font-kku.jamo, font-kku.context, font-kku.shape, font-kku.tune;`으로 쓴다(ADR-030) | `:where([data-fy-font="X"][data-fy-layout="sebul-cases-v1"]) [data-jung-layout][data-jong-layout] [part~="choseong"][data-jamo]` |
 
 - 뒤 레이어는 특이도와 무관하게 앞 레이어를 이긴다. 같은 레이어 안에서는 특이도가 정한다(`[data-fy-pos][data-jamo]`가 `[data-jamo]`를 이긴다).
 - 레이어 밖에 있는 페이지 CSS는 모든 글꼴을 이긴다. 페이지는 `@layer reset, font-kku, app;`처럼 font-kku 전체를 자기 레이어 체계 안에 배치할 수도 있다.
@@ -190,8 +191,8 @@
 | --- | --- | --- | --- |
 | 글꼴(`font`) | 바탕 요소 | `--fy-glyph-*`, `--fy-font-family`, `--fy-font-weight`, `--fy-font-stroke` … | 기본값 |
 | 자리(`slot`) | 바탕 요소, 바탕 요소 조건 | 자리 → 부모 자리 → 역할: `--fy-<slot>-top/left/size/scale-x/scale-y/rotate/weight/stroke/clip/dilate` | 상위(구체)가 대체 |
-| 자모(`jamo`) | 자모 노드(`font-kku.jamo`) | 자리 변수의 노드 재선언 + `--fy-jamo-dx/dy/scale-x/scale-y/rotate` | 대체 또는 누적 |
-| 문맥(`context`) | 자모 노드(`font-kku.context`) | 자리 변수의 노드 재선언 + `--fy-ctx-dx/dy/scale-x/scale-y/rotate` | 대체 또는 누적 |
+| 자모(`jamo`) | 자모 노드(`font-kku.jamo`) | 자리 변수의 노드 재선언 + `--fy-jamo-dx/dy/scale-x/scale-y/rotate/size/weight/stroke/clip` | 대체 또는 누적(굵기·자르기는 대체) |
+| 문맥(`context`) | 자모 노드(`font-kku.context`) | 자리 변수의 노드 재선언 + `--fy-ctx-*`(자모와 같은 접미사) | 대체 또는 누적(굵기·자르기는 대체) |
 | 페이지(`page`) | 페이지 CSS·인라인 스타일 | `--fy-top/left/font-size/weight/stroke/clip`(대체), `--fy-scale-x/scale-y/rotate`(누적 보정), `--fy-sprite-filter`, `--fy-optical-sprite-*` | 최종 |
 
 - 규칙은 하나다. **같은 변수는 대체되고, 누적이 필요한 보정은 레벨 전용 오프셋 변수로 쓴다.** 자모 규칙이 노드에 `--fy-t-left`를 다시 선언하면 자리 값을 대체한다. 바탕 요소 값은 상속으로 내려오므로 노드에 선언한 값을 이길 수 없다.
@@ -199,7 +200,7 @@
 - 모든 속성이 같은 규칙을 따른다: **절대값 = 페이지 ?? 자리 ?? 부모 자리 ?? 역할 ?? 글꼴 ?? 내장값, 보정 = 자모·문맥·페이지 레벨 변수의 누적.** 역할은 어느 속성에서도 곱해지지 않는 대체값이다(2026-09 이전 코어는 역할 배율만 자리 배율에 곱했다).
 - 배율 = 자리 체인 배율 × 자모 × 문맥 × 페이지(`--fy-scale-*`). 회전 = 자리 체인 회전 + 자모 + 문맥 + 페이지(`--fy-rotate`). 굵기는 `--fy-weight`(페이지) → 자리 체인 weight → `--fy-font-weight`, 획 보상은 `--fy-stroke`(페이지) → 자리 체인 stroke → `--fy-font-stroke`, 잘라내기는 `--fy-clip`(페이지) → 자리 체인 clip → `none` 순으로 해소된다. `--fy-font-weight`는 노드별 덮어쓰기가 아니라 글꼴 레벨 기본값이다.
 - 자모별 잘라내기는 자모 레이어에서 자리 clip(`--fy-mt-clip: inset(0 0 31% 0)` 등)을 재선언한다.
-- `--fy-top`, `--fy-left`, `--fy-font-size`, `--fy-weight`, `--fy-stroke`, `--fy-clip`, `--fy-scale-x`, `--fy-scale-y`, `--fy-rotate`, `--fy-sprite-filter`, `--fy-optical-sprite-*`, 깊이 변수 `--fy-jamo-depth`/`--fy-vowel-depth`/`--fy-coda-depth`는 페이지 작성자 전용이다(글꼴의 깊이는 `--fy-font-*-depth`)(레지스트리 `declaredBy: page`). 글꼴이 쓰지 않으므로 글꼴을 가져다 쓴 페이지가 항상 마지막 말을 한다.
+- `--fy-top`, `--fy-left`, `--fy-font-size`, `--fy-weight`, `--fy-stroke`, `--fy-clip`, `--fy-scale-x`, `--fy-scale-y`, `--fy-rotate`, `--fy-sprite-filter`, `--fy-optical-sprite-*`, 깊이 변수 `--fy-jamo-depth`/`--fy-vowel-depth`/`--fy-coda-depth`, 짓는 방식 `--fy-composition`은 페이지 작성자 전용이다(글꼴의 깊이는 `--fy-font-*-depth`, 짓는 방식은 `--fy-font-composition` — [ADR-034](../ADR/ADR-034-composition-modes.md), 고르지 않아도 된다)(레지스트리 `declaredBy: page`). 글꼴이 쓰지 않으므로 글꼴을 가져다 쓴 페이지가 항상 마지막 말을 한다.
 - 같은 레이어 안에서는 특이도가, 같으면 파일 순서가 정한다. 한 노드에 같은 특이도의 두 규칙이 겹쳐 속성별로 값을 나눠 갖지 않게 조건을 서로 배타적으로 쓴다(gothic의 ㅇ/ㅎ 초성 × mtl ㅗ 규칙이 예).
 
 ### 메타데이터
@@ -216,10 +217,10 @@
 
 글꼴 CSS 문법의 정본은 [ADR-008 §9](../ADR/ADR-008-font-contract-v2.md)다. 검사 모듈 `authoring/font-kku-lint.js`(`FontKkuLint.lint(css, { fileName })`)가 글꼴 작업실 파서 위에서 규칙 트리와 선택자를 문법대로 읽고, `node scripts/check_css_contract.js --check`(모든 `profiles/*.css`와 별칭 shim), `tests/font_lint.test.js`, 글꼴 작업실이 같은 모듈을 쓴다. 강제하는 것:
 
-- 구조: 첫 문장이 레이어 순서 선언, 모든 규칙이 세 레이어 블록 안(최상위에는 그 밖에 `@font-face`만), 레이어 안 조건부 그룹은 `@media`·`@supports`만, 중첩·익명 레이어·CSS nesting·`!important` 금지, `@import`는 별칭 shim의 대상 한 줄만
+- 구조: 첫 문장이 레이어 순서 선언, 모든 규칙이 세 레이어 블록 안(최상위에는 그 밖에 `@font-face`만, 고정 글꼴 모양의 손 보정은 `font-kku.tune` 블록 — 그때 첫 문장은 다섯 계층), 레이어 안 조건부 그룹은 `@media`·`@supports`만, 중첩·익명 레이어·CSS nesting·`!important` 금지, `@import`는 별칭 shim의 대상 한 줄만
 - 범위: 모든 선택자가 `:where([data-fy-font="<id>"])`로 시작(바탕 요소 조건은 그 `:where` 안, `<id>`는 소문자 — 런타임이 `data-fy-font`를 소문자로 찍는다), 런타임 DOM 계약의 속성과 `:is`/`:where`/`:not`/`:has`만
-- 레이어 = 레벨: 파싱한 대상 복합 선택자와 조건으로 판정 — 바탕 요소·자리/역할/종류 조건은 `font`, 자모 조건은 `jamo`, 문맥 조건(`:has()`, 조상·형제, 짜임)은 `context`. 대상은 바탕 요소나 자모 노드(조상 글자를 대상으로 한 문맥 규칙은 오류)
-- 변수: 레지스트리 `declaredBy: font`만, 범위(바탕 요소/노드)가 대상과 맞게, `--fy-jamo-*`·`--fy-ctx-*`는 자기 레이어에서만. 미등록·폐기 예정·예약 자리 변수 금지
+- 레이어 = 레벨: 파싱한 대상 복합 선택자와 조건으로 판정 — 바탕 요소·자리/역할/종류 조건은 `font`, 자모 조건은 `jamo`, 문맥 조건(글자 칸의 자리 자모·자모 목록, `:has()`, 조상·형제, 짜임)은 `context` — 조상 자리 `:has()`는 Chromium 무효화 비용 때문에 경고(`has-context`). 대상은 바탕 요소나 자모 노드(조상 글자를 대상으로 한 문맥 규칙은 오류)
+- 변수: 레지스트리 `declaredBy: font`만, 범위(바탕 요소/노드)가 대상과 맞게, `--fy-jamo-*`·`--fy-ctx-*`·손 보정 `--fy-shape-*`(level tune)는 자기 레이어에서만. 미등록·폐기 예정·예약 자리 변수 금지
 - 속성: 허용 목록(칠하기 — `color`, `text-shadow`, `-webkit-text-stroke-color`, `opacity`, `text-decoration*` …; 바탕 요소만 글꼴 기능). 위치·크기·변형·잘라내기·획 폭·배경·필터 등은 코어 소유
 - 값: 레지스트리 `type` 검사, 길이 변수의 단위 없는 0(`0`, `0.0`, `-0`, `+0`, `calc()` 합의 `0`) 금지, 자산 `url()`은 상대 경로나 `data:`
 - 메타데이터 세 값(`--fy-font-id`는 파일 이름과 일치)을 조건 없는 바탕 요소 규칙에. `--fy-material: sprite`이면 `--fy-sprite-url`과 `--fy-sprite-kinds`(`consonant`·`vowel`·`coda-cluster` 목록)도 있다
@@ -344,8 +345,8 @@
 - 바탕 요소: 글꼴 레벨 기본값 `--fy-font-weight`, `--fy-font-stroke`와 메타데이터 `--fy-font-id`, `--fy-contract`, `--fy-material`
 - 자리 토큰과 부모 자리: `--fy-<token>-top`, `-left`, `-size`, `-scale-x`, `-scale-y`, `-rotate`, `-weight`, `-stroke`, `-clip`, `-dilate`(그림 자소 획 보정)
 - 역할 단축 변수: `--fy-head-*`, `--fy-choseong-*`, `--fy-jung-main-*`, `--fy-jung-base-*`, `--fy-jung-tail-*`, `--fy-jong-main-*`, `--fy-jong-left-*`, `--fy-jong-right-*` (자리와 같은 접미사 10종)
-- 자모 노드 보정: `--fy-jamo-dx`, `--fy-jamo-dy`, `--fy-jamo-scale-x`, `--fy-jamo-scale-y`, `--fy-jamo-rotate`
-- 문맥 노드 보정: `--fy-ctx-dx`, `--fy-ctx-dy`, `--fy-ctx-scale-x`, `--fy-ctx-scale-y`, `--fy-ctx-rotate`
+- 자모 노드 보정: `--fy-jamo-dx`, `--fy-jamo-dy`, `--fy-jamo-scale-x`, `--fy-jamo-scale-y`, `--fy-jamo-rotate`, `--fy-jamo-size`(배수), `--fy-jamo-weight`(대체), `--fy-jamo-stroke`(더함, 원소 획 굵기에도), `--fy-jamo-clip`(대체) — 뒤 넷은 (ADR-030 §7, 2026-10-17)
+- 문맥 노드 보정: `--fy-ctx-*` 같은 아홉
 - 페이지 전용 덮어쓰기: `--fy-top`, `--fy-left`, `--fy-font-size`, `--fy-weight`, `--fy-stroke`, `--fy-clip`, `--fy-scale-x`, `--fy-scale-y`, `--fy-rotate`, `--fy-sprite-filter`, `--fy-optical-sprite-*`
 
 ### 기계 판독용 CSS 계약
@@ -371,7 +372,7 @@
 | `ml` | 섞임모음 중성의 기본 부분 | `[data-jung-layout="split-right"] [part~="jungseong-base"]` | `ㅘ`, `ㅢ` 같은 경우 |
 | `mtl` | 받침이 있을 때 위로 당겨진 섞임모음 중성의 기본 부분 | `[data-fy-pos="mtl"]` 또는 `[data-jung-layout="split-right"][data-jong-layout="single"] [part~="jungseong-base"]` | 위치 이동은 `--fy-mtl-top`(자리) 또는 자모 레이어의 `--fy-jamo-dy`로 조정 |
 | `tt/ttl` | 받침 때문에 위로 이동한 초성 | `[data-fy-pos="tt"]`, `[data-fy-pos="ttl"]` 또는 `[data-jong-layout="single"] [part~="choseong"]` | 왼쪽 미세 이동은 `--fy-tt-left` / `--fy-ttl-left`(자리) 또는 `--fy-jamo-dx`로 조정 |
-| `blr/brs/brd`, `bl/br`, `bbr/bbrs/bbrd` | 받침 노드 | `[part~="jongseong"]`, 겹받침이면 `[part~="jongseong-right"]` | `brs=right:single`, `blr/brd=right:double`, `bl/br=bottom:double`, `bbrs=split-right:single`, `bbrd=split-right:double-right` |
+| `blr/brs/brd`, `bl/br`, `bbl/bbrs/bbrd` | 받침 노드 | `[part~="jongseong"]`, 겹받침이면 `[part~="jongseong-left"]`·`[part~="jongseong-right"]` | `brs=right:single`, `blr/brd=right:double`, `bl/br=bottom:double`, `bbrs=split-right:single`, `bbl/bbrd=split-right:double`. 옛 `bbr`은 은퇴한 자리라 노드에 찍히지 않고 검사기가 거부한다 |
 
 복합 모음 분리의 핵심은 "중성 노드 2개 생성"이다. 예를 들어 `과`는 아래처럼 그려진다.
 
@@ -417,7 +418,7 @@
 
 @layer font-kku.context {
   /* 초성이 ㅇ일 때만 아래 ㅗ를 내린다 — 같은 slot 값에 누적 */
-  :where([data-fy-font="rounded"]) [part="glyph"]:has([part~="choseong"][data-jamo="ᄋ"]) [data-fy-pos="m"][data-jamo="ᅩ"] {
+  :where([data-fy-font="rounded"]) [part="glyph"][data-fy-jamos~="ᄋ"] [data-fy-pos="m"][data-jamo="ᅩ"] {
     --fy-ctx-dy: 3%;
   }
 }

@@ -249,6 +249,19 @@ python3 scripts/build_sprite.py \
 - **음절**: 칸 부품 + 아핀 복합 글리프다. WOFF2는 약 20KB(`scripts/export_font_file.py --woff2`).
 - **입구**: 글꼴 작업실 재료 탭 "글꼴 파일(TTF)로 내보내기"(편집 중인 자소판), 글꼴 시험대의 "글꼴 파일 받기", 저장소 CLI `python scripts/export_font_file.py --font pixel --out tmp/pixel.ttf --woff2 tmp/pixel.woff2 --compare`.
 - **한계**: 글꼴 파일은 단색이다. 획 보정과 벡터 자소의 `non-scaling-stroke`는 들어가지 않고, 영문·숫자는 넣지 않는다.
+- **거절**: 내보낼 글자가 없으면 빈 TTF를 돌려주지 않고 `error.code`가 달린 오류(`error.name` `"FontKkuExportError"`, `error.font`·`error.jamoSet`)를 던진다. 화면에는 코드를 보고 까닭을 쓴다(작업실·글꼴 시험대가 그렇다). CLI `scripts/export_font_file.py`는 거절이면 종료 코드 2다.
+
+  | 코드 | 까닭 | 더 실린 값 |
+  |---|---|---|
+  | `EXPORT_UNSUPPORTED_FACE` | 재료가 그림 자소·벡터 자소가 아니다 — 원소 획(`element`), 세벌·고딕에 건 8칸 그림 세트(`svg`, `frame: "box"`), 기기 글꼴(`device`·`system`) | `error.face` |
+  | `EXPORT_FONT_NOT_LOADED` | 그 글꼴 CSS가 문서(`root`)에 없다 — 필요할 때 받기가 실패했거나 꺼졌거나 글꼴 id 오타 | |
+  | `EXPORT_JAMO_SET_NOT_LOADED` | `jamoSet`이 등록되지 않았다(`profiles/<세트>.jamo.js`·`FontKku.registerJamo`) | |
+  | `EXPORT_NO_HANGUL` | `text`에 한글 음절(U+AC00–D7A3)·호환 자모가 없다(NFC로 맞춘 뒤, 빈 문자열 포함) | `error.skipped` |
+  | `EXPORT_NO_GLYPHS` | 쓰는 칸 그림에 잉크가 없다(빈 자소판, 읽지 못한 자소판) | `error.missing` |
+  | `EXPORT_DESIGN_UNSUPPORTED` | `design`을 넘겼다 — 규칙·소스를 버리고 내보내지 않는다 | |
+  | `EXPORT_GLYPH_MAPPING_UNSUPPORTED` | 문자 매핑(구조화 후보·잠금)이 있는 디자인이거나, 그린 바탕 요소에 문자 매핑이 보인다 | |
+
+  성공해도 `report.skipped`(`text`에서 한글이 아니라 넣지 않은 글자, 공백 빼고)와 `report.missing`(칸이 없거나 비어 넣지 못한 글자 — 다른 글꼴로 대체된다)을 본다. 타입은 `font-kku-export.d.ts`의 `ExportErrorCode`·`ExportReport`.
 
 ## 재료만 바꾼 자소판 — 파생 그림 자소 글꼴
 
@@ -296,7 +309,7 @@ python3 scripts/build_sprite.py \
   # missing-jamo를 에러로 취급
   python3 scripts/build_sprite.py --from-dir ./glyphs --out my-sprite.png --fail-on-missing
   ```
-- **그림 자소 보기** — [`site/sprite-demo.html`](https://font.tty.link/sprite-demo.html): 기기 글꼴과 `sprite-example`/`sprite-system` 그림 자소 경로를 비교한다.
+- **그림 자소 보기** — [공개판](https://font.tty.link/sprite-demo.html)(사이트 저장소의 `src/sprite-demo.html`): 기기 글꼴과 `sprite-example`/`sprite-system` 그림 자소 경로를 비교한다.
 - **브라우저 저작 도구** — [글꼴 작업실](./font-studio.md) 재료 탭([`studio/index.html`](https://font.tty.link/font-studio.html)): 자소판을 원본 캔버스로 편집(펜·지우개·채우기·직선, 칸 복사·붙여넣기, 기기 글꼴로 칸 채우기), 미리보기 자소 클릭으로 칸 선택, blob 덮어쓰기로 즉시 미리보기, 행별 사용 칸 기준 빈 칸 진단, PNG·CSS·프로젝트 JSON v2 내보내기, ADR-006 v1 프로젝트 가져오기.
 
 ## 향후 개선안
@@ -304,6 +317,7 @@ python3 scripts/build_sprite.py \
 - **로컬 글꼴 자동 탐색.** 실행 환경에서 쓸 수 있는 한글 글꼴을 자동으로 찾아 `--from-font` 기본값으로 쓴다.
 
 ## Change Log
+- 2026-10-17: 그림 자소 보기 페이지 경로를 사이트 저장소 `src/`로(ADR-029)
 - 2026-10-10: 획 뼈대 × 획 표현(`SKELETONS` × `TEXTURES`) 생성기 절, 새 그림 자소 글꼴 `pilgi`·`dunggeun`·`butgeul`, 그림 자소에 거는 꾸밈 `kku-look-*`(ADR-017) 추가
 - 2026-10-10: 글꼴 파일로 내보내기(ADR-015) 절 추가
 - 2026-10-10: 마스크 칠(ADR-014) — `--fy-sprite-paint: mask`, `--fy-sprite-fill` 절 추가

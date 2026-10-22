@@ -315,6 +315,35 @@ document.addEventListener("font-kku:render", (event) => {
 - 정규화된 글꼴이 바뀌는 전환은 관리 DOM 전체를 다시 생성하고 정본 바탕 요소 속성과 CSS 적용을 갱신한다. 크기·간격 같은 표시 옵션만 바뀌는 경로와 구분한다.
 - 메타데이터 키워드(`--fy-material`, `--fy-sprite-kinds`)는 깊이·expression mode 키워드처럼 대소문자를 구분하지 않는다(`Sprite` → `sprite`).
 
+### 짓는 방식 (ADR-034)
+
+글자를 어떤 덩어리로 지을지 고르는 선택이다. 고르지 않아도 된다. 고르지 않거나 `auto`면 지금 출력 그대로다(DOM·그림·도장 같음 — [ADR-034](../ADR/ADR-034-composition-modes.md) §0). '화'를 예로 든다.
+
+| 프리셋 | 모음 나누기 | 받침 나누기 | 조각 깊이 | 화 |
+|---|---|---|---|---|
+| `auto` | 모양대로 | 모양대로 | 없음 | 모양의 기본(화는 세벌식·네모꼴 다 ㅎ + ㅗ + ㅏ) |
+| `syllable` | `syllable` | `whole` | 없음 | 호 + ㅏ |
+| `whole` | `whole` | `whole` | 없음 | ㅎ + ㅘ |
+| `jamo` | `split` | `split` | 없음 | ㅎ + ㅗ + ㅏ |
+| `pieces` | `split` | `split` | `pieces` | (ㅗ + ㅇ) + ㅗ + ㅏ |
+| `origins` | `split` | `split` | `origins` | (ㆍ + ㅡ + ㅇ) + (ㆍ + ㅡ) + (ㅣ + ㆍ) |
+
+- 프리셋은 세 축의 묶음이다: 모음 나누기(`--fy-vowel-depth`와 같은 값), 받침 나누기(`--fy-coda-depth`와 같은 값), 조각 깊이(`none | pieces | origins`). 조각 깊이의 자모별 조립식은 `spec/jamo-recipes.json`의 `levels`가 정한다. `pieces`는 자모를 한 번 나눈다(ㅎ = ㅗ + ㅇ, 쌍자음·겹받침·겹모음은 조각 둘, ㅋ·ㄷ·ㅌ·ㅈ·ㅊ = 바탕 + 더한 획). `origins`는 원형까지 내려간다(ㅎ = ㆍ + ㅡ + ㅇ, ㄹ·ㅂ·ㅍ = 선, 모음 = 천지인 ㅣ·ㅡ·ㆍ, 가획은 바탕까지 되풀이). `pieces`는 맨 위 요청에만 걸고, `origins`는 조각 안에서도 건다. `scripts/build_jamo_recipes.js`가 표의 낱말·조립식 id·대상 자모를 검사하고 `RECIPE_LEVELS`로 런타임에 옮긴다.
+- 고르는 곳과 이기는 차례(높은 것부터): 자모마다 고른 디자인 규칙(`rules`·조각 binding) > 페이지 CSS(낱 깊이 변수 > `--fy-composition` > 줄임 `--fy-jamo-depth`) > 디자인 `composition` > 글꼴 CSS(낱 깊이 변수 > `--fy-font-composition` > 줄임 `--fy-font-jamo-depth`) > 모양의 기본. 순수 함수 `FontKku.resolveComposition({ page, design, font, shape })`가 차례를 풀고 `{ vowel, coda, pieces, preset, source }`를 돌려준다. 프리셋을 골랐는데 깊이 변수가 일부를 바꾸면 `preset`은 `"custom"`이다. 깊이 변수만 쓰고 프리셋을 고르지 않으면 짓는 방식을 고른 것이 아니다(`preset: null`, 지금 동작).
+- CSS: `--fy-composition`(페이지 전용, 레지스트리 `level: page`)과 `--fy-font-composition`(글꼴 레벨, 모양 레이어가 `initial`로 지우고 tune이 다시 선언) 둘이다. 값은 프리셋 이름 하나다. 대소문자를 구분하지 않는다. 모르는 낱말이면 고르지 않은 것으로 그리고 진단만 남긴다.
+- 디자인: 최상위 `composition`에 프리셋 이름 하나나 `{ preset?, vowel?, coda?, pieces? }`를 쓴다(빠진 축은 프리셋 값). 어느 판의 디자인에도 더할 수 있다. 모르는 값은 `DESIGN_COMPOSITION_INVALID`(경로 `composition`·`composition.<축>`)로 등록을 막는다.
+- 바탕 요소 도장: 고른 것이 있을 때만 `data-fy-composition="<프리셋>|custom"`을 찍는다. 진단이 있으면 `data-fy-composition-status`에 공백으로 나눈 코드를 찍는다. 고르지 않으면 두 속성 모두 없다. 그래서 다른 언어 구현의 DOM 계약(html-cases)은 그대로다. `FontKku.fontInfo(host).composition`은 고른 것이 있을 때만 `{ preset, vowel, coda, pieces, status }`를 돌려준다.
+- 진단(몰래 다른 방식으로 바꾸지 않는다 — ADR-032 §6.1):
+  - `COMPOSITION_INVALID`: 모르는 낱말이다. 고르지 않은 것으로 그린다.
+  - `COMPOSITION_UNSUPPORTED`: 조각 깊이를 이 재료로 지을 수 없다. 기기 글꼴은 낱자를 통째로 그리고, 자소판도 같다. 나누기 두 축은 따르고 조각은 자모 그대로 둔다. 조각 계획이 재료 없이 실패하면 그 자모의 trace에도 같은 코드를 남긴다. 조각으로 지으려면 글꼴 디자인이나 원소·그림 재료를 쓴다.
+  - `COMPOSITION_OLD_HANGUL`: 옛한글은 H6 전까지 짓는 방식을 걸지 않고 그대로 그린다(ADR-034 §7).
+- 재료마다:
+  - 그림 세트·글꼴 디자인은 조각 자모를 그 자리에 맞춰 그린다.
+  - 원소 재료도 고른 조립식을 따른다(ADR-025 §5 '재료 없이도 따른다'). 조각 자모의 제 뼈대 획을 놓을 자리의 중심선 범위에 맞춰 긋는다. pieces의 ㅎ은 ㅗ의 꼭지·가로획과 ㅇ이다. `data-hoek-letter`가 조각 자모를 밝힌다. 제 뼈대가 없는 조각(ㆍ)과 모음 대상(겹모음·천지인)은 대상 획 그대로라 꼴이 같다.
+  - 자모마다 디자인 규칙이 고른 place 조립식도 원소 재료에서 이렇게 긋는다. 프리셋을 고르지 않아도 그렇다. 이전에는 대상 획을 그대로 나눠 썼다.
+- 조립 계획: `FontKku.planJamo(jamo, { pieces?, composition? })`가 조각 깊이로 계획을 낸다. 모르는 값이면 TypeError다. 조각 깊이로 고른 조립식은 trace 항목의 `composition`에 그 깊이를 적는다. `FontKku.compositionPresets`는 `{ presets, levels }`(얼린 사본)다. 작업실·검사기가 같은 표를 읽는다.
+- 네모꼴에서 기본이 아닌 나누기 자리(통짜 모음·머리 음절·통짜 받침)는 C2(PLAN-COMPOSE-001)가 맡는다. C1은 구조(노드·조각)까지다.
+
 ## 성능 전략
 
 ### 구현된 안전장치
@@ -386,5 +415,5 @@ document.addEventListener("font-kku:render", (event) => {
 
 - 브라우저 런타임 자체의 서버 DOM 그리기·hydration API. 서버 정적 HTML은 다른 언어 구현의 `render_html`이 공식 경로다.
 - Canvas/WebGL 그리기 엔진
-- 런타임 내부 편집기 API. 브라우저 저작 도구인 글꼴 작업실(`studio/index.html`)은 공개 API만 쓰는 별도 사이트 도구로 제공한다.
+- 런타임 내부 편집기 API. 브라우저 저작 도구인 글꼴 작업실(`studio/index.html`)은 공개 API만 쓰는 선택 진입점(`@tty.link/font-kku/studio`의 `mount()`)으로 따로 제공하고, 런타임은 이것을 불러오지 않는다([ADR-029](../ADR/ADR-029-library-authoring-and-site.md)).
 - 별도 변주 규칙 엔진/DSL

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:font-kku:design:1",
   "title": "font-kku Design — 한글 조립 디자인 설정(ADR-025)",
-  "description": "FontKku.registerDesign(name, design)에 넘기는 디자인 JSON의 모양. 편집기·도구용 보조 스키마이고, 정본 검증은 런타임 registerDesign이다(소스·조립식·조각 참조, 같은 구체성 규칙 충돌) — FontKku.validateDesign이 같은 규칙으로 오류를 모두 코드·자리와 함께 돌려준다. 설계 v1.1 스키마(docs/PLAN/ponkku-final-design-v1.1/spec/design.schema.json)에서 저장소 대조 정정을 넣었다: version·id·rules·fallback은 생략할 수 있고, 짜임은 right·bottom·split-right(v1.0 이름도 받는다). 설계 v1.2(docs/PLAN/ponkku-final-design-v1.2/)의 layout(배치 프로파일·revision)을 더했다 — version 1.2는 layout이 필수다(ADR-026).",
+  "description": "FontKku.registerDesign(name, design)에 넘기는 디자인 JSON의 모양. 편집기·도구용 보조 스키마이고, 정본 검증은 런타임 registerDesign이다(소스·조립식·조각 참조, 같은 구체성 규칙 충돌) — FontKku.validateDesign이 같은 규칙으로 오류를 모두 코드·자리와 함께 돌려준다. 설계 v1.1 스키마(docs/PLAN/ponkku-final-design-v1.1/spec/design.schema.json)에서 저장소 대조 정정을 넣었다: version·id·rules·fallback은 생략할 수 있고, 짜임은 right·bottom·split-right(v1.0 이름도 받는다). 설계 v1.2(docs/PLAN/ponkku-final-design-v1.2/)의 layout(배치 프로파일·revision)을 더했다 — version 1.2는 layout이 필수다(ADR-026). version 2.0은 font 소스의 glyphs 후보·고정·잠금과 editor.glyphPreview를 지원하며 layout은 선택이다. 이전 판에서는 새 필드를 거부한다.",
   "type": "object",
   "properties": {
     "$schema": {
@@ -13,7 +13,8 @@
       "enum": [
         "1.0",
         "1.1",
-        "1.2"
+        "1.2",
+        "2.0"
       ]
     },
     "id": {
@@ -49,6 +50,24 @@
       ],
       "additionalProperties": false,
       "description": "등록된 배치 프로파일(spec/layout-profiles.json)과 그 revision(ADR-026). 모델·문맥 허용성은 프로파일 한 곳에 있고 여기 되풀이하지 않는다. 1.2 디자인은 반드시 적는다. 적지 않은 1.0·1.1 디자인은 지금 배치(legacy)로 그린다."
+    },
+    "composition": {
+      "description": "짓는 방식(ADR-034) — 고르지 않아도 된다. 프리셋 하나(auto 모양대로·syllable 음절로·whole 겹모음 통째로·jamo 자모로·pieces 조각으로·origins 원형으로), 또는 축마다(빠진 축은 프리셋 값). 페이지 CSS(--fy-composition·깊이 변수)가 이기고, 자모마다 고른 규칙(rules)이 늘 이긴다. 어느 판의 디자인에도 더할 수 있다.",
+      "oneOf": [
+        {
+          "enum": ["auto", "syllable", "whole", "jamo", "pieces", "origins"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "preset": { "enum": ["auto", "syllable", "whole", "jamo", "pieces", "origins"] },
+            "vowel": { "enum": ["split", "whole", "syllable"] },
+            "coda": { "enum": ["split", "whole"] },
+            "pieces": { "enum": ["none", "pieces", "origins"] }
+          },
+          "additionalProperties": false
+        }
+      ]
     },
     "sources": {
       "type": "object",
@@ -203,6 +222,23 @@
           },
           "uniqueItems": true,
           "description": "작업실 잠금(설계 v1.2 §13.6) — 자동 섞기 같은 일괄 바꾸기가 건드리지 않는 자모·역할·조각. role이 없으면 모든 역할, part가 없으면 자모 전체. 그리기에는 쓰지 않는다(revision만 바뀐다)"
+        },
+        "glyphPreview": {
+          "type": "object",
+          "properties": {
+            "seed": {
+              "type": "string"
+            },
+            "jamoSeeds": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "seed",
+            "jamoSeeds"
+          ],
+          "additionalProperties": false,
+          "description": "2.0 작업실 미리보기 설정. 디자인 등록만으로 바탕 요소의 씨앗을 바꾸지 않는다. 페이지 코드가 seed/jamo-seeds 속성으로 명시한다."
         }
       },
       "required": [],
@@ -308,6 +344,13 @@
           },
           "uniqueItems": true,
           "description": "svg 소스에서 보이는 자모 칸(미리보기). 원소 그림(@…)은 늘 보인다"
+        },
+        "glyphs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/glyphMapping"
+          },
+          "description": "2.0 문자 원본 목록. 빈 목록은 직접 원본 없음. 후보 ID와 자모+역할 중복 금지, selected는 후보 ID를 가리킨다. 잠그지 않으면 jamo-seeds가 후보를 바꿀 수 있다."
         }
       },
       "required": [
@@ -393,6 +436,20 @@
                   ]
                 }
               ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "glyphs"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "const": "font"
+              }
             }
           }
         }
@@ -580,6 +637,80 @@
           }
         }
       ]
+    },
+    "glyphCandidate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "glyphMapping": {
+      "type": "object",
+      "properties": {
+        "jamo": {
+          "type": "string",
+          "pattern": "^[ㄱ-ㆎ]$"
+        },
+        "role": {
+          "enum": [
+            "initial",
+            "medial",
+            "final",
+            "standalone"
+          ]
+        },
+        "candidates": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/glyphCandidate"
+          }
+        },
+        "selected": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "locked": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "jamo",
+        "candidates"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "locked": {
+                "const": true
+              }
+            },
+            "required": [
+              "locked"
+            ]
+          },
+          "then": {
+            "required": [
+              "selected"
+            ]
+          }
+        }
+      ]
     }
   },
   "allOf": [
@@ -598,6 +729,38 @@
         "required": [
           "layout"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "version": {
+            "const": "2.0"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "else": {
+        "properties": {
+          "sources": {
+            "additionalProperties": {
+              "not": {
+                "required": [
+                  "glyphs"
+                ]
+              }
+            }
+          },
+          "editor": {
+            "not": {
+              "required": [
+                "glyphPreview"
+              ]
+            }
+          }
+        }
       }
     }
   ]

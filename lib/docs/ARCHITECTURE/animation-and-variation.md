@@ -185,7 +185,7 @@ FontKku.applyJamoSeeds(host, {
 | 새로 뿌린 자모 씨앗값 | `FontKku.applyJamoSeeds(host, { salt: Date.now() })` | 호출할 때마다 새 `--fy-jamo-seed` |
 | 비결정적 바탕 요소 씨앗값 | `seed="auto"` / `seed="random"` | 그릴 때마다 새 `Math.random()` |
 
-이 차이를 가장 직접적으로 보는 데모는 [`site/animation-catalog.html`](https://font.tty.link/animation-catalog.html)이다. 같은 문자열을 "고정 씨앗값으로 다시 그리기"와 "새 씨앗값 뿌리기(reseed)"로 나란히 보여준다.
+이 차이를 가장 직접적으로 보는 데모는 [움직임 훅](https://font.tty.link/animation-catalog.html)(사이트 저장소의 `src/animation-catalog.html`)이다. 같은 문자열을 "같은 씨앗값으로 다시 그리기"와 "씨앗값 다시 뽑기"(reseed)로 나란히 보여준다.
 
 ## 조건/상태 기반 변주
 
@@ -368,7 +368,7 @@ document.addEventListener("font-kku:render", (event) => {
 
 ### 7. 페이지에서 만드는 변주 — 꾸미기·글꼴 뽑기
 
-글꼴 페이지(`site/fonts.html`)의 시험대 '변주'는 모든 견본에 `seed`·`jamo-seeds`를 걸고(씨앗 반응 글꼴만 모양이 바뀐다), 꾸미기 창의 '변주' 묶음은 기울기·크기·굵기·미세 위치·색조 흔들림을 `var(--fy-jamo-seed, 0.5)`로 쓰는 페이지 CSS를 만든다. '글꼴 뽑기'는 뽑기 씨앗 하나로 기반 글꼴과 꾸미기 설정을 결정론적으로 고른다 — 같은 뽑기 번호(`#kku=` 링크)는 같은 결과다.
+글꼴 페이지(사이트 저장소의 `src/fonts.html`)의 시험대 '변주'는 모든 견본에 `seed`·`jamo-seeds`를 걸고(씨앗 반응 글꼴만 모양이 바뀐다), 꾸미기 창의 '변주' 묶음은 기울기·크기·굵기·미세 위치·색조 흔들림을 `var(--fy-jamo-seed, 0.5)`로 쓰는 페이지 CSS를 만든다. '글꼴 뽑기'는 뽑기 씨앗 하나로 기반 글꼴과 꾸미기 설정을 결정론적으로 고른다 — 같은 뽑기 번호(`#kku=` 링크)는 같은 결과다.
 
 ## 조합
 
@@ -417,6 +417,7 @@ document.addEventListener("font-kku:render", (event) => {
 - 씨앗값을 넣은 난수 생성기(RNG) 상태를 별도 런타임 객체로 보존하는 API
 
 ## Change Log
+- 2026-10-17: 데모 페이지 경로를 사이트 저장소 `src/`로(ADR-029), 움직임 훅 페이지의 단추 이름을 실제 문구로
 - 2026-10-11: scatter·magnet 이동 속성의 controller별 소유권, 명시적 우선순위, 작성자 인라인 복원 및 공유 포커스·클래스 수명 계약 추가
 - 2026-10-10: 조합 확장(ADR-017) — 자모 움직임 7종(`font-kku-motion.css`), 상호작용 `FontKkuFx`(`font-kku-fx.js`), 공용 변주 클래스 `kku-vary-*`와 변주 겹침 감사 절 추가. "역할별 내장 움직임 라이브러리"를 범위 밖에서 뺌
 - 2026-10-10: 씨앗 반응 글꼴(ADR-016)과 글꼴 페이지의 변주·꾸미기·글꼴 뽑기 절 추가, 예시 1·2를 계약 v2에 맞는 페이지 CSS로 정정

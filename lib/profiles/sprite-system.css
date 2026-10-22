@@ -139,12 +139,12 @@
 }
 
 @layer font-kku.context {
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-jamo="ᅮ"], [data-jamo="ᅲ"]) [data-fy-pos="t"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᅮ"], [data-fy-jamos~="ᅲ"]) [data-fy-pos="t"] {
     /* ㅜ·ㅠ 문맥 초성 — bar가 높아 초성 공간이 ㅡ 문맥보다 짧다(수의 ㅅ h57 vs
        스-형 셀 h69 실측). bottom 행 셀은 X+ㅡ 추출형이라 여기서만 세로 압축. */
     --fy-t-top: -0.3%; --fy-t-left: -1%; --fy-t-size: 1.08em; --fy-t-scale-x: 0.935; --fy-t-scale-y: 0.8;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="t"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) [data-fy-pos="m"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-t]:is([data-fy-at-t="ᄀ"], [data-fy-at-t="ᄁ"], [data-fy-at-t="ᄏ"]) [data-fy-pos="m"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
     /* ㄱ계 아래 ㅜ·ㅠ — 기준 bar가 다른 초성보다 0.045em 높다(구 0.447 vs 누 0.493). ㅜ·ㅠ 칸의
        추출 원본(구·규) 문맥이라 칸 제자리(이전 값)가 맞는다: 구 0.57→0.83, 규 0.59→0.80. */
     --fy-m-top: 1.89%; --fy-m-scale-y: 0.989;
@@ -152,31 +152,31 @@
   /* ㅎ 문맥 긴 기둥(한 적합, 0.727em) — ㄴ 받침과 겹받침(아래 brw 규칙이 자른다)만. ㄴ은 오른쪽이 비어
      기준도 기둥을 길게 내리지만, ㄹ·ㅂ·ㄱ·ㅁ·ㅇ 받침에서는 기둥이 받침 오른 획을 타고 내려가
      22~31% 포갰다(할·합·학·행, 전체 표본). 그 받침은 slot 값(갈과 같은 기둥)을 쓴다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tlc"][data-jamo="ᄒ"]):has([data-fy-pos="brs"][data-jamo="ᆫ"], [data-fy-pos="brw"]) [data-fy-pos="trc"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tlc][data-fy-at-tlc="ᄒ"]:is([data-fy-at-brs][data-fy-at-brs="ᆫ"], [data-fy-at-brw]) [data-fy-pos="trc"] {
     --fy-trc-top: 1.1%; --fy-trc-left: 0.3%; --fy-trc-size: 1em; --fy-trc-scale-x: 1; --fy-trc-scale-y: 0.824;
   }
   /* (온·울·흙의 키 큰 초성 문맥 bar 규칙은 아래 family 교정의 받침 키·초성 키 규칙으로 옮겼다 —
      기준에서 ㅇ은 보통 초성과 같은 bar 높이이고, ㅎ만 bar가 낮다.) */
   /* 모음별 초성 ㅇ — 기준 링 크기가 모음 bar 높이에 따라 다르다(웨 h65·왜 h81·와 h85 실측) */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅰ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄋ"] {
     /* 웨 ㅇ — 기준 링 x[0.06,0.447] y[0.047,0.38]. 이전 IoU 적합값(scale-x 1.15)은 링을
        x 0.62까지 넓혀 ㅞ의 왼기둥을 17% 덮었다(TRK-033). 기준 상자로 직해한다. */
     --fy-tls-top: 1.79%; --fy-tls-left: 1.33%; --fy-tls-size: 1.086em; --fy-tls-scale-x: 0.802; --fy-tls-scale-y: 0.483;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄋ"] {
     --fy-tls-top: 0%; --fy-tls-left: -1.17%; --fy-tls-size: 1.086em; --fy-tls-scale-x: 0.946; --fy-tls-scale-y: 0.807;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅪ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅪ"] [data-fy-pos="tls"][data-jamo="ᄋ"] {
     --fy-tls-top: 1.64%; --fy-tls-left: 0.96%; --fy-tls-size: 0.958em; --fy-tls-scale-x: 1.101; --fy-tls-scale-y: 0.682;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄀ"]) [data-fy-pos="mtw"][data-jamo="ᅪ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl][data-fy-at-ttl="ᄀ"] [data-fy-pos="mtw"][data-jamo="ᅪ"] {
     /* 광 전용 — mtw-ᅪ 공유 최적이 왕에 기울어 광이 희생된다 */
     --fy-mtw-top: -0.4%; --fy-mtw-left: -0.8%; --fy-mtw-size: 1em; --fy-mtw-scale-x: 1; --fy-mtw-scale-y: 0.661;
   }
   /* 키 큰 초성(ㅇㅎㄷ) 문맥 합자 모음 — 6행째(ㅇ-문맥 셀, bar가 낮다)로 전환.
      ㄱ-문맥(과궈권광…)은 모음 행 유지. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tls"][data-jamo="ᄋ"], [data-fy-pos="tls"][data-jamo="ᄒ"], [data-fy-pos="tls"][data-jamo="ᄃ"], [data-fy-pos="ttl"][data-jamo="ᄋ"], [data-fy-pos="ttl"][data-jamo="ᄒ"], [data-fy-pos="ttl"][data-jamo="ᄃ"]) [data-fy-pos="mw"],
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tls"][data-jamo="ᄋ"], [data-fy-pos="tls"][data-jamo="ᄒ"], [data-fy-pos="tls"][data-jamo="ᄃ"], [data-fy-pos="ttl"][data-jamo="ᄋ"], [data-fy-pos="ttl"][data-jamo="ᄒ"], [data-fy-pos="ttl"][data-jamo="ᄃ"]) [data-fy-pos="mtw"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-at-tls][data-fy-at-tls="ᄋ"], [data-fy-at-tls][data-fy-at-tls="ᄒ"], [data-fy-at-tls][data-fy-at-tls="ᄃ"], [data-fy-at-ttl][data-fy-at-ttl="ᄋ"], [data-fy-at-ttl][data-fy-at-ttl="ᄒ"], [data-fy-at-ttl][data-fy-at-ttl="ᄃ"]) [data-fy-pos="mw"],
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-at-tls][data-fy-at-tls="ᄋ"], [data-fy-at-tls][data-fy-at-tls="ᄒ"], [data-fy-at-tls][data-fy-at-tls="ᄃ"], [data-fy-at-ttl][data-fy-at-ttl="ᄋ"], [data-fy-at-ttl][data-fy-at-ttl="ᄒ"], [data-fy-at-ttl][data-fy-at-ttl="ᄃ"]) [data-fy-pos="mtw"] {
     --fy-sprite-row: 5;
   }
 }
@@ -187,67 +187,67 @@
   /* ㅜ계 합자(ㅝ/ㅞ/ㅟ) 위의 ㄱ/ㅋ — 0행(가-문맥) ㄱ은 비스듬한 다리가 0.46~0.70까지 내려와
      ㅜ bar를 가로질렀다(궈 15%, 권 17%). 기준 ㄱ은 짧은 세로획으로 [0.065,0.39]에서 끝나고
      ㅜ bar에 닿는다 — 5행째(그-문맥, X+ㅡ 추출) ㄱ이 그 형태라 행을 바꾸고 상자를 맞춘다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"])) [data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅰ"], [data-fy-at-mw="ᅱ"]) [data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-sprite-row: 4;
     --fy-tls-top: 0.5%; --fy-tls-left: 1.77%; --fy-tls-scale-x: 0.657; --fy-tls-scale-y: 0.579; /* 잉크 x[0.10,0.525] y[0.065,0.385] */
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"])) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅰ"], [data-fy-at-mtw="ᅱ"]) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-sprite-row: 4;
     --fy-ttl-top: 1.02%; --fy-ttl-left: 1.86%; --fy-ttl-scale-x: 0.635; --fy-ttl-scale-y: 0.556; /* 잉크 x[0.10,0.525] y[0.065,0.39] */
   }
   /* 같은 결함의 ㅗ계(ㅘ/ㅙ/ㅚ) — 합자 칸의 ㅗ 꼭지를 복원(추출 수정)하자 0행 ㄱ의 긴 사선 다리가
      꼭지를 가로질렀다(과 18%, 광·괆 20%). 기준 ㄱ은 짧은 다리로 꼭지 위에서 끝난다 — 5행째
      ㄱ으로 바꾸고 과괘괴·광관괜괸 평균 잉크 상자로 직해한다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅪ"], [data-jamo="ᅫ"], [data-jamo="ᅬ"])) [data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅪ"], [data-fy-at-mw="ᅫ"], [data-fy-at-mw="ᅬ"]) [data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-sprite-row: 4;
     --fy-tls-top: 1.58%; --fy-tls-left: -0.83%; --fy-tls-size: 1.086em; --fy-tls-scale-x: 0.661; --fy-tls-scale-y: 0.705; /* 잉크 x[0.076,0.502] y[0.091,0.48] */
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅪ"], [data-jamo="ᅫ"], [data-jamo="ᅬ"])) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅪ"], [data-fy-at-mtw="ᅫ"], [data-fy-at-mtw="ᅬ"]) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-sprite-row: 4;
     --fy-ttl-top: 0.03%; --fy-ttl-left: 0.68%; --fy-ttl-size: 1.104em; --fy-ttl-scale-x: 0.626; --fy-ttl-scale-y: 0.526; /* 잉크 x[0.088,0.498] y[0.055,0.35] */
   }
   /* ㅙ 위 ㄲ — 위 상자는 홑 ㄱ(과괘괴) 평균이라, 잉크가 더 넓은 4행 ㄲ은 오른끝이 0.530em까지 가서 둘째 ㄱ 기둥이
      ㅐ 왼기둥(0.525em)과 틈 없이 붙어 굵은 기둥 하나가 됐다 — 꽤·꽥·꽹이 괘·괙·괭으로 읽혔다(겹침 비율은 13%라
      임계 밑). 빼의 ㅃ(기둥 0.05em 앞)처럼 왼끝을 두고 가로를 좁혀 오른끝을 0.480em에 둔다. ㅘ·ㅚ는 기둥이 멀어 그대로. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄁ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄁ"] {
     --fy-tls-left: -0.1%; --fy-tls-scale-x: 0.591; /* 잉크 x[0.060,0.480] */
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
-    --fy-ttl-left: 1.24%; --fy-ttl-scale-x: 0.57; /* 잉크 x[0.070,0.480] */
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"][data-jamo="ᄁ"] {
+    --fy-ttl-left: 1.38%; --fy-ttl-scale-x: 0.55; /* 잉크 x[0.070,0.480]. 2026-10-19 0.57 → 0.55 — 필기는 꽨이 기둥 0.012em 앞(collide-7) */
   }
   /* ㅐㅒㅔㅖ 옆 ㅃ — 0행 ㅃ 칸을 두 짝으로 복원(추출 수정)하자 오른 ㅂ이 ㅐ 왼기둥(0.52)에
      겹쳤다(빼 27%, 뺀 25%). 기준은 ㅃ을 좁혀 기둥 0.06em 앞(빼 0.513)에서 끝낸다 — 왼끝을
      고정하고 가로만 0.8배로 좁힌다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tro"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
     --fy-tlo-left: 0.8%; --fy-tlo-scale-x: 0.8;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="trc"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlc"][data-jamo="ᄈ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄈ"] {
     --fy-tlc-left: 1.1%; --fy-tlc-scale-x: 0.818;
   }
   /* 의 ㅇ — 기준 링 [0.06,0.473]. tls ㅇ 자모 값은 와/왜(bar가 높다) 기준이라 ㅢ bar(0.60~)까지
      0.673으로 내려와 14.5% 포갰다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅴ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅴ"] [data-fy-pos="tls"][data-jamo="ᄋ"] {
     --fy-tls-top: 1.52%; --fy-tls-left: 3.16%; --fy-tls-scale-x: 0.978; --fy-tls-scale-y: 0.638; /* 잉크 x[0.085,0.54] y[0.06,0.47] */
   }
   /* 흙 — ㅎ 문맥 ㅡ가 [0.46,0.513]으로 통짜 ㄺ 머리(0.50)와 18% 포갰다. 기준은 ㅡ [0.44,0.50],
      받침 0.56~. ㅡ는 아래 ㅎ 초성 키 규칙이, 겹받침 머리는 이 규칙이 0.525로 내린다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="bw"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt][data-fy-at-tt="ᄒ"] [data-fy-pos="bw"] {
     --fy-bw-top: 1.83%; --fy-bw-scale-y: 0.98; /* 잉크 [0.525,0.867] */
   }
   /* 획 — ㅇ-문맥 ㅚ 칸(열린 음절 외에서 추출)은 bar 밑으로 ㅣ가 0.18em 더 내려가, 닫힌 음절에
      맞춰 ㅣ 끝을 0.573에 두면 bar가 [0.393,0.447]로 떠서 ㅎ 링 밑동과 20% 포갰다. 기준 획은
      ㅣ 끝 = bar 밑(0.58)이다. 칸을 bar [0.50,0.566]에 맞춰 내리고 bar 밑으로 삐져나온 ㅣ를 자른다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅬ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="mtw"][data-jamo="ᅬ"] {
     --fy-mtw-top: 0.38%; --fy-mtw-scale-y: 0.815;
     --fy-mtw-clip: inset(0 0 30.9% 0); /* 0.568em 아래를 자른다: 1 - (0.568 - 원점 0.004em) / (0.815 × 1em) */
   }
   /* 같은 결함의 ㅜ계(훤 17%, 휜 15%) — 기준 bar 훤 [0.467,0.54], 휜 [0.473,0.547].
      ㅟ 칸은 bar가 얇아 ㅣ 머리를 다 살리면 bar가 0.09em로 굵어지므로 ㅣ 머리를 0.04에서 시작한다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅯ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="mtw"][data-jamo="ᅯ"] {
     --fy-mtw-top: 0.23%; --fy-mtw-scale-y: 1.024;
     --fy-mtw-clip: inset(0 0 42.7% 0); /* 1 - (0.58 - 0.002em) / (1.024 × 0.984em) */
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅱ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="mtw"][data-jamo="ᅱ"] {
     --fy-mtw-top: 4.32%; --fy-mtw-scale-y: 0.9;
     --fy-mtw-clip: inset(0 0 41.3% 0); /* 1 - (0.58 - 0.051em) / (0.9 × 1em) */
   }
@@ -281,57 +281,57 @@
   }
 }
 @layer font-kku.context {
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"], [data-jamo="ᅮ"], [data-jamo="ᅲ"], [data-jamo="ᅳ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"], [data-jamo="ᅮ"], [data-jamo="ᅲ"], [data-jamo="ᅳ"]) {
     --fy-ctx-dy: -0.038em;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-jamo="ᆫ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"], [data-jamo="ᅮ"], [data-jamo="ᅲ"], [data-jamo="ᅳ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-jamos~="ᆫ"] [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"], [data-jamo="ᅮ"], [data-jamo="ᅲ"], [data-jamo="ᅳ"]) {
     --fy-ctx-dy: 0.041em;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"])) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt]:is([data-fy-at-tt="ᄀ"], [data-fy-at-tt="ᄁ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-top: -22.69%;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"])) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt]:is([data-fy-at-tt="ᄀ"], [data-fy-at-tt="ᄁ"]) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
     --fy-mt-top: -7.22%; --fy-mt-clip: inset(0 0 35.8% 0);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄅ"], [data-jamo="ᄎ"], [data-jamo="ᄐ"])) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt]:is([data-fy-at-tt="ᄅ"], [data-fy-at-tt="ᄎ"], [data-fy-at-tt="ᄐ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-top: -18.38%;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄅ"], [data-jamo="ᄎ"], [data-jamo="ᄐ"])) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt]:is([data-fy-at-tt="ᄅ"], [data-fy-at-tt="ᄎ"], [data-fy-at-tt="ᄐ"]) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
     --fy-mt-top: -0.4%; --fy-mt-clip: inset(0 0 44.1% 0);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"])) [data-fy-pos="mt"][data-jamo="ᅳ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt]:is([data-fy-at-tt="ᄀ"], [data-fy-at-tt="ᄁ"]) [data-fy-pos="mt"][data-jamo="ᅳ"] {
     --fy-mt-top: -25.68%;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄅ"], [data-jamo="ᄎ"], [data-jamo="ᄐ"])) [data-fy-pos="mt"][data-jamo="ᅳ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt]:is([data-fy-at-tt="ᄅ"], [data-fy-at-tt="ᄎ"], [data-fy-at-tt="ᄐ"]) [data-fy-pos="mt"][data-jamo="ᅳ"] {
     --fy-mt-top: -18.56%;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt][data-fy-at-tt="ᄒ"] [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-top: -14.1%;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt][data-fy-at-tt="ᄒ"] [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
     --fy-mt-top: 2.65%; --fy-mt-clip: inset(0 0 47.8% 0);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="mt"][data-jamo="ᅳ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt][data-fy-at-tt="ᄒ"] [data-fy-pos="mt"][data-jamo="ᅳ"] {
     --fy-mt-top: -15.1%;
   }
   /* 받침 없는 ㅗ·ㅛ — 복원한 꼭지가 0.38em까지 올라와 ㄴ 밑획을 뚫었다(뇨 15%·표 16%). 기준 꼭지는
      초성 밑(0.48em~)에서 시작한다 — 0.465em 위를 자른다. ㄱ·ㄲ은 밑획이 없어 기준 꼭지가 더 올라가므로
      (고·교) 제외한다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="t"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"])) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-t]:not([data-fy-at-t="ᄀ"], [data-fy-at-t="ᄁ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-clip: inset(45.9% 0 0 0);
   }
   /* ㄱ·ㄲ 위 ㅡ는 ㄹ계 받침에서 bar를 덜 올린다(긂·긑·긓 0.347 — 글 0.320만 예외). */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])):has([data-fy-pos="tt"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"])) [data-fy-pos="mt"][data-jamo="ᅳ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"])[data-fy-at-tt]:is([data-fy-at-tt="ᄀ"], [data-fy-at-tt="ᄁ"]) [data-fy-pos="mt"][data-jamo="ᅳ"] {
     --fy-ctx-dy: -0.018em;
   }
   /* ㄹㅊㅌ 아래 받침 ㅎ — 기준은 키 큰 초성 밑에서 받침 ㅎ 꼭지를 0.06em 내린다(롷 0.513 vs 놓 0.453).
      칸 그대로면 내려온 bar와 17~18% 포갰다(롷·촣·톻·뤃·릏). */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄅ"], [data-jamo="ᄎ"], [data-jamo="ᄐ"])) [data-fy-pos="b"][data-jamo="ᇂ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt]:is([data-fy-at-tt="ᄅ"], [data-fy-at-tt="ᄎ"], [data-fy-at-tt="ᄐ"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
     --fy-b-top: 7.05%; --fy-b-scale-y: 0.929;
   }
   /* ㅎ 아래 받침 — 기준은 키 큰 ㅎ 밑에서 받침을 0.05em 내려 납작하게 그린다(홀 ㄹ 0.56~,
      흙 ㄺ 0.525~). 받침이 제자리면 내려온 bar와 20~36% 포갰다(홀·횰·홍). */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt][data-fy-at-tt="ᄒ"] [data-fy-pos="b"] {
     --fy-b-top: 8.82%; --fy-b-scale-y: 0.895;
   }
 }
@@ -351,19 +351,59 @@
   :where([data-fy-font="sprite-system"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
     --fy-b-top: 3.71%; --fy-b-scale-y: 0.971;
   }
+  /* 세로 모음 아래 받침 ㅎ·ㄶ·ㅀ(2026-10-19, collide-10) — brs·brw 자리(host 값)에서 꼭지 윗선이 ㅏ·ㅣ 기둥 끝보다 위라
+     꼭지가 기둥에 이어져 보였다(쌓·앟 −0.006…−0.025, 않 −0.050, 싫·앓 −0.05…−0.087em — 0.1.2부터). 밑선은 두고 꼭지를 기둥
+     끝 0.02em 아래로 내린다(겹받침은 ㄹ·ㄴ도 함께 납작해진다). */
+  :where([data-fy-font="sprite-system"]) [data-fy-pos="brs"][data-jamo="ᇂ"] {
+    --fy-brs-top: 9.48%; --fy-brs-scale-y: 0.862;
+  }
+  :where([data-fy-font="sprite-system"]) [data-fy-pos="brw"][data-jamo="ᆭ"] {
+    --fy-brw-top: 14.48%; --fy-brw-scale-y: 0.8;
+  }
+  :where([data-fy-font="sprite-system"]) [data-fy-pos="brw"][data-jamo="ᆶ"] {
+    --fy-brw-top: 21.76%; --fy-brw-scale-y: 0.702;
+  }
 }
 @layer font-kku.context {
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="b"][data-jamo="ᇂ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mt]:is([data-fy-at-mt="ᅮ"], [data-fy-at-mt="ᅲ"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
     --fy-b-top: 10.29%; --fy-b-scale-y: 0.883;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="b"][data-jamo="ᇂ"]) [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-b][data-fy-at-b="ᇂ"] [data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
     --fy-ctx-dy: -0.048em;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt][data-fy-at-tt="ᄒ"] [data-fy-pos="b"][data-jamo="ᇂ"] {
     --fy-b-top: 13.9%; --fy-b-scale-y: 0.833;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"])):has([data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"], [data-jamo="ᅳ"])) [data-fy-pos="b"][data-jamo="ᇂ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt]:is([data-fy-at-tt="ᄀ"], [data-fy-at-tt="ᄁ"])[data-fy-at-mt]:is([data-fy-at-mt="ᅩ"], [data-fy-at-mt="ᅭ"], [data-fy-at-mt="ᅳ"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
     --fy-b-top: -2.07%; --fy-b-scale-y: 1.051;
+  }
+}
+
+/* 합자 모음 아래 받침 ㅎ의 꼭지 틈(2026-10-19, collide-9) — 가로모음 아래 b 자리처럼(위 규칙) 받침 ㅎ 칸은 꼭지까지 키가 커서
+   bbrs 자리(꼭지 윗선 0.494em)에 두면 합자 모음 막대에 꼭지가 묻혀 왛·됳·횧이 ㅇ 받침처럼 읽혔다(−0.006…−0.119em — 0.1.2부터,
+   필기·픽셀이 더 낮다). 받침 밑선(0.881em)은 두고 꼭지만 모음 막대 밑 0.02em 아래로 내린다 — 모음 묶음마다(ㅘ·ㅙ 막대가 가장
+   낮다), ㅎ 초성은 막대가 더 낮아 따로. y(em) = top × 1.2 + 칸 잉크 × scale-y. */
+@layer font-kku.context {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅪ"], [data-fy-at-mtw="ᅫ"]) [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-top: 24.36%; --fy-bbrs-scale-y: 0.692;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅫ"])[data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-top: 28.49%; --fy-bbrs-scale-y: 0.634;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅬ"], [data-fy-at-mtw="ᅴ"]) [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-top: 9.29%; --fy-bbrs-scale-y: 0.905;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅬ"], [data-fy-at-mtw="ᅴ"])[data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-top: 17.07%; --fy-bbrs-scale-y: 0.795;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅴ"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-top: 20.86%; --fy-bbrs-scale-y: 0.742;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅰ"], [data-fy-at-mtw="ᅱ"]) [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-top: 13.63%; --fy-bbrs-scale-y: 0.844;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅰ"], [data-fy-at-mtw="ᅱ"])[data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-top: 21.63%; --fy-bbrs-scale-y: 0.731;
   }
 }
 
@@ -391,31 +431,31 @@
   }
 }
 @layer font-kku.context {
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅪ"], [data-jamo="ᅬ"])) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅪ"], [data-fy-at-mw="ᅬ"]) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-tls-top: 0.98%; --fy-tls-left: 0.42%; --fy-tls-scale-x: 0.678; --fy-tls-scale-y: 0.793;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-tls-top: 1.23%; --fy-tls-left: 0.01%; --fy-tls-scale-x: 0.582; --fy-tls-scale-y: 0.771;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅱ"]) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-tls-top: -0.53%; --fy-tls-left: 2.57%; --fy-tls-scale-x: 0.647; --fy-tls-scale-y: 0.699;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅰ"]) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-tls-top: 1.15%; --fy-tls-left: 0.79%; --fy-tls-scale-x: 0.551; --fy-tls-scale-y: 0.659;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅴ"]) [data-fy-pos="tls"]:not([data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅴ"] [data-fy-pos="tls"]:not([data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-tls-top: 1.52%; --fy-tls-left: 1.4%; --fy-tls-scale-x: 0.661; --fy-tls-scale-y: 0.769;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅪ"], [data-jamo="ᅬ"])) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅪ"], [data-fy-at-mtw="ᅬ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-ttl-top: -0.14%; --fy-ttl-left: 2.18%; --fy-ttl-scale-x: 0.613; --fy-ttl-scale-y: 0.617;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅱ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-ttl-top: -0.12%; --fy-ttl-left: 2.95%; --fy-ttl-scale-x: 0.603; --fy-ttl-scale-y: 0.559;
   }
@@ -423,105 +463,105 @@
      다르다) 평균 상자에 넣으면 IoU가 무너진다. 5행째(납작한 X+ㅡ 형)도 기준 ㅎ보다 납작해 0행을 유지하고
      모음 묶음별 자기 상자를 직해한다. 받침 있는 ㅎ은 ㄴ 받침에서 기준이 ㅎ을 0.03em 내려 그리므로
      (환·횐·휜·훤) ㄴ 받침은 slot 값(이전 배치)에 둔다. ㅚ는 획 전용 모음 규칙(위)과 짝인 이전 배치를 둔다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅪ"], [data-jamo="ᅬ"])) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅪ"], [data-fy-at-mw="ᅬ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
     --fy-tls-top: 0.05%; --fy-tls-left: 2.8%; --fy-tls-scale-x: 0.916; --fy-tls-scale-y: 0.766;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄒ"] {
     --fy-tls-top: 2.3%; --fy-tls-left: 1.47%; --fy-tls-scale-x: 0.79; --fy-tls-scale-y: 0.71;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅱ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
     --fy-tls-top: -1.37%; --fy-tls-left: 3.8%; --fy-tls-scale-x: 0.916; --fy-tls-scale-y: 0.666;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅰ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄒ"] {
     --fy-tls-top: 0.37%; --fy-tls-left: 2.8%; --fy-tls-scale-x: 0.728; --fy-tls-scale-y: 0.593;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅴ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅴ"] [data-fy-pos="tls"][data-jamo="ᄒ"] {
     --fy-tls-top: -0.03%; --fy-tls-left: 3.75%; --fy-tls-scale-x: 0.921; --fy-tls-scale-y: 0.77;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅪ"]):not(:has([data-jamo="ᆫ"])) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅪ"]:not([data-fy-jamos~="ᆫ"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
     --fy-ttl-top: -1.28%; --fy-ttl-left: 3.36%; --fy-ttl-scale-x: 0.851; --fy-ttl-scale-y: 0.596;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])):not(:has([data-jamo="ᆫ"])) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅱ"]):not([data-fy-jamos~="ᆫ"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
     --fy-ttl-top: -1.36%; --fy-ttl-left: 3.78%; --fy-ttl-scale-x: 0.864; --fy-ttl-scale-y: 0.538;
   }
   /* 받침 있는 ㅙ·ㅞ·ㅢ — 열린 음절과 같은 결함(늰 26%·쇌 20%·흰 19%). ㅙㅞ는 ㅐㅔ 왼기둥이 가까워 초성이
      ㅘㅝ보다 좁고, ㅢ는 ㅡ bar 위에 앉는다 — 모음별 상자를 따로 직해한다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-ttl-top: 0.08%; --fy-ttl-left: 2.31%; --fy-ttl-scale-x: 0.537; --fy-ttl-scale-y: 0.591;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅰ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-ttl-top: 0.61%; --fy-ttl-left: 2.68%; --fy-ttl-scale-x: 0.526; --fy-ttl-scale-y: 0.517;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅴ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅴ"] [data-fy-pos="ttl"]:not([data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
     --fy-sprite-row: 4;
     --fy-ttl-top: -0.37%; --fy-ttl-left: 1.03%; --fy-ttl-scale-x: 0.648; --fy-ttl-scale-y: 0.608;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"][data-jamo="ᄒ"] {
     --fy-ttl-top: -0.97%; --fy-ttl-left: 2.36%; --fy-ttl-scale-x: 0.723; --fy-ttl-scale-y: 0.589;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅰ"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"][data-jamo="ᄒ"] {
     --fy-ttl-top: -1.05%; --fy-ttl-left: 3.78%; --fy-ttl-scale-x: 0.728; --fy-ttl-scale-y: 0.518;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅴ"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅴ"] [data-fy-pos="ttl"][data-jamo="ᄒ"] {
     --fy-ttl-top: -2.28%; --fy-ttl-left: 3.69%; --fy-ttl-scale-x: 0.83; --fy-ttl-scale-y: 0.595;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅱ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
     --fy-tls-top: 0.09%; --fy-tls-left: 3.04%; --fy-tls-scale-x: 0.994; --fy-tls-scale-y: 0.565;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) [data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"]),
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) [data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tls]:not([data-fy-at-tls="ᄀ"], [data-fy-at-tls="ᄁ"], [data-fy-at-tls="ᄏ"]) [data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"]),
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl]:not([data-fy-at-ttl="ᄀ"], [data-fy-at-ttl="ᄁ"], [data-fy-at-ttl="ᄏ"]) [data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"]) {
     --fy-sprite-row: 5;
   }
   /* 받침 있는 ㅞ 위 ㅇ — ㅇ 자모 규칙(광·왕 문맥)의 링이 0.09em 길어 ㄹ계 받침으로 올라온 bar에 닿았다(웰 17%). */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅰ"]) [data-fy-pos="ttl"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"][data-jamo="ᄋ"] {
     --fy-ttl-top: 0.95%; --fy-ttl-left: 4.05%; --fy-ttl-scale-x: 0.796; --fy-ttl-scale-y: 0.403;
   }
   /* ㄱ계 위 받침 있는 ㅝ — ㅝ 칸 top은 6행째(bar가 낮은 ㅇ 문맥 칸)를 쓰는 초성 평균이라, 1행 칸을
      그대로 쓰는 ㄱ계는 이전 값(권 적합)으로 둔다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) [data-fy-pos="mtw"][data-jamo="ᅯ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl]:is([data-fy-at-ttl="ᄀ"], [data-fy-at-ttl="ᄁ"], [data-fy-at-ttl="ᄏ"]) [data-fy-pos="mtw"][data-jamo="ᅯ"] {
     --fy-mtw-top: 0.7%;
   }
   /* 받침 있는 합자 모음의 받침 키 — 가로모음(mt)과 같은 3단(ㄹ계·ㅄ·ㅊ·ㅌ·ㅎ 받침은 bar가 높고 ㄴ은
      낮다, 잔차 +0.05/−0.03em). ㄱ계 초성은 전용 규칙(위)이 이미 받침별로 맞춰 제외하고, ㅎ은 ㄴ 받침
      (ㅎ 전용 규칙이 이전 배치를 유지)에서만 제외한다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])):has([data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) [data-fy-pos="mtw"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"])[data-fy-at-ttl]:not([data-fy-at-ttl="ᄀ"], [data-fy-at-ttl="ᄁ"], [data-fy-at-ttl="ᄏ"]) [data-fy-pos="mtw"] {
     --fy-ctx-dy: -0.035em;
   }
   /* ㄱ계 위 ㅚ·ㅞ·ㅟ·ㅢ도 ㄹ계 받침에서 bar가 올라간다(괼·귈·긝 잔차 +0.03~0.08em) — ㅘ·ㅝ(ㄱ계 전용 규칙)만 뺀다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])):has([data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) [data-fy-pos="mtw"]:is([data-jamo="ᅬ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"], [data-jamo="ᅴ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"])[data-fy-at-ttl]:is([data-fy-at-ttl="ᄀ"], [data-fy-at-ttl="ᄁ"], [data-fy-at-ttl="ᄏ"]) [data-fy-pos="mtw"]:is([data-jamo="ᅬ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"], [data-jamo="ᅴ"]) {
     --fy-ctx-dy: -0.037em;
   }
   /* ㅎ 위 받침 있는 ㅢ — 기준 bar가 보통 초성보다 0.05em 낮고 ㄴ 받침에서 더 내려온다(흰 0.533). */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅴ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="mtw"][data-jamo="ᅴ"] {
     --fy-mtw-top: 6.53%;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄒ"]):has([data-jamo="ᆫ"]) [data-fy-pos="mtw"][data-jamo="ᅴ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"][data-fy-jamos~="ᆫ"] [data-fy-pos="mtw"][data-jamo="ᅴ"] {
     --fy-ctx-dy: 0.063em;
   }
   /* ㅎ 위 ㅙ·ㅞ는 기준 bar가 ㄹ계 받침에서도 내려오지 않는다(휄 잔차 −0.04em) — 받침 키 보정을 끈다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])):has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"]:is([data-jamo="ᅫ"], [data-jamo="ᅰ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"])[data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="mtw"]:is([data-jamo="ᅫ"], [data-jamo="ᅰ"]) {
     --fy-ctx-dy: 0em;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-jamo="ᆫ"]):has([data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄒ"])) [data-fy-pos="mtw"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-jamos~="ᆫ"][data-fy-at-ttl]:not([data-fy-at-ttl="ᄀ"], [data-fy-at-ttl="ᄁ"], [data-fy-at-ttl="ᄏ"], [data-fy-at-ttl="ᄒ"]) [data-fy-pos="mtw"] {
     --fy-ctx-dy: 0.032em;
   }
   /* 받침 있는 ㅝㅞㅟ — 기준은 오른 기둥을 받침 머리 위(0.53~0.55em)에서 끊고 받침이 그 밑을 가로지른다.
      칸의 긴 기둥(0.75em)이 ㄱ·ㅇ 받침 오른쪽을 29%까지 덮었다. ㄴ 받침(기준 기둥 0.65em, 좁은 받침)과
      ㅎ 문맥(위 획·훤·휜 규칙)은 제외한다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="bbrs"]:not([data-jamo="ᆫ"]), [data-fy-pos="bbw"]):has([data-fy-pos="ttl"]:not([data-jamo="ᄒ"])) [data-fy-pos="mtw"][data-jamo="ᅯ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-at-bbrs]:not([data-fy-at-bbrs="ᆫ"]), [data-fy-at-bbw])[data-fy-at-ttl]:not([data-fy-at-ttl="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅯ"] {
     --fy-mtw-clip: inset(0 0 33.2% 0);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="bbrs"]:not([data-jamo="ᆫ"]), [data-fy-pos="bbw"]):has([data-fy-pos="ttl"]:not([data-jamo="ᄒ"])) [data-fy-pos="mtw"][data-jamo="ᅰ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-at-bbrs]:not([data-fy-at-bbrs="ᆫ"]), [data-fy-at-bbw])[data-fy-at-ttl]:not([data-fy-at-ttl="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅰ"] {
     --fy-mtw-clip: inset(0 0 28.2% 0);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="bbrs"]:not([data-jamo="ᆫ"]), [data-fy-pos="bbw"]):has([data-fy-pos="ttl"]:not([data-jamo="ᄒ"])) [data-fy-pos="mtw"][data-jamo="ᅱ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-at-bbrs]:not([data-fy-at-bbrs="ᆫ"]), [data-fy-at-bbw])[data-fy-at-ttl]:not([data-fy-at-ttl="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅱ"] {
     --fy-mtw-clip: inset(0 0 28.3% 0);
   }
   /* ㄱ계는 받침 키 문맥 규칙 밖이라 ㄹ계 받침에서도 기둥 끝이 0.585em로 남아 겹받침 머리(0.50)를
      19%까지 덮었다(궑·꿣) — 기준 기둥 끝 0.51em에서 자른다. 받침 문맥 clip 규칙(위)보다 구체적이어야 이긴다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])):has([data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])):has([data-fy-pos="bbrs"], [data-fy-pos="bbw"]) [data-fy-pos="mtw"][data-jamo="ᅯ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"])[data-fy-at-ttl]:is([data-fy-at-ttl="ᄀ"], [data-fy-at-ttl="ᄁ"], [data-fy-at-ttl="ᄏ"]):is([data-fy-at-bbrs], [data-fy-at-bbw]) [data-fy-pos="mtw"][data-jamo="ᅯ"] {
     --fy-mtw-clip: inset(0 0 41.7% 0);
   }
 }
@@ -530,10 +570,10 @@
    기둥 0.73em)과 키 큰 ㅎ(0.58em)이 겹받침 머리(0.51em)를 16~22% 덮었다. 기준은 겹받침이 있으면
    ㅎ과 모음을 0.48em 위로 줄인다 — ㅎ 상자를 기준에 맞추고 기둥을 받침 머리 위에서 자른다. */
 @layer font-kku.context {
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="brw"]) [data-fy-pos="tlc"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-brw] [data-fy-pos="tlc"][data-jamo="ᄒ"] {
     --fy-tlc-top: -2.29%; --fy-tlc-left: 2.64%; --fy-tlc-scale-x: 0.759; --fy-tlc-scale-y: 0.682;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tlc"][data-jamo="ᄒ"]):has([data-fy-pos="brw"]) [data-fy-pos="trc"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tlc][data-fy-at-tlc="ᄒ"][data-fy-at-brw] [data-fy-pos="trc"] {
     --fy-trc-clip: inset(0 0 40.9% 0);
   }
 }
@@ -545,74 +585,200 @@
 @layer font-kku.context {
   /* ㅎ + 세로모음 + ㄴ 외 받침 — 키 큰 ㅎ(링 밑 0.573)이 받침 머리(ㄹ 0.50·ㅇ 0.527)를 덮었다(할 14%).
      '행'은 ㅎ 링과 받침 ㅇ이 맞붙어 한 덩이로 읽혔다(사용자 보고). 링 밑을 0.473에서 끝낸다(기준 할 0.493). */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="brs"]:not([data-jamo="ᆫ"])) [data-fy-pos="tlc"][data-jamo="ᄒ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-brs]:not([data-fy-at-brs="ᆫ"]) [data-fy-pos="tlc"][data-jamo="ᄒ"] {
     --fy-tlc-top: -1.2%; --fy-tlc-scale-y: 0.62;
   }
   /* ㄹ계 받침 위 ㅝ·ㅟ의 ㅇ — 받침 키 규칙이 bar를 0.035em 올려(월 bar 0.307) ㅇ 링 밑동(0.367)이
      bar에 포갰다(월 18%, 픽셀 20%). 링 밑을 bar 머리(0.317)에서 끝낸다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])):has([data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="ttl"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"])[data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅱ"]) [data-fy-pos="ttl"][data-jamo="ᄋ"] {
     --fy-ttl-scale-y: 0.421;
   }
   /* ㅞ 위 ㄱ계 — ㅔ 왼기둥(0.533)이 ㅝ·ㅟ 기둥보다 왼쪽인데 ㄱ계는 ㅝ 문맥 상자(오른끝 0.547)를 써서
      오른 다리가 기둥에 붙고, 다리가 bar(0.327~0.387)를 뚫고 내려갔다(꿸 23%, 픽셀 35%·궷 28%).
      ㄱ계 외 초성(ㅞ 상자 0.526배)처럼 좁혀 오른끝을 0.487에 두고, 다리를 bar 머리에서 자른다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅰ"]) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-ttl-scale-x: 0.56;
     --fy-ttl-clip: inset(0 0 50% 0); /* 다리 끝 0.32em */
   }
   /* ㄹ계 받침은 bar가 0.037em 올라온다(꿸 0.287, ㅟ 뀔 0.307) — 다리도 그만큼 위에서 자른다
      (픽셀은 bar가 0.02em 더 높게 양자화돼 bar 머리에 맞춘다). */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])):has([data-fy-pos="mtw"][data-jamo="ᅰ"]) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"])[data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-ttl-clip: inset(0 0 56% 0); /* 0.283em */
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])):has([data-fy-pos="mtw"][data-jamo="ᅱ"]) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"])[data-fy-at-mtw][data-fy-at-mtw="ᅱ"] [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-ttl-clip: inset(0 0 52% 0); /* 0.308em */
   }
   /* ㅎ 위 받침 있는 ㅞ — 받침 문맥 기둥 clip(위)이 ㅎ을 빼서 기둥이 0.653까지 내려와 ㄹ 받침 머리(0.547)를
      덮었다(휄 13%, 픽셀 17%). 다른 초성처럼 받침 머리에서 자른다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="bbrs"]:not([data-jamo="ᆫ"]), [data-fy-pos="bbw"]):has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅰ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-at-bbrs]:not([data-fy-at-bbrs="ᆫ"]), [data-fy-at-bbw])[data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="mtw"][data-jamo="ᅰ"] {
     --fy-mtw-clip: inset(0 0 27% 0);
   }
   /* ㅓ·ㅕ 옆 ㅃ — ㅐ계 규칙(위)과 같은 결함. 오른 ㅂ(0.58)이 ㅓ·ㅕ 점획(0.50~)에 포갰다(뼝 15%, 뼈 12%).
      같은 배율로 좁혀 점획 앞(0.473)에서 끝낸다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tro"]:is([data-jamo="ᅥ"], [data-jamo="ᅧ"])) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅥ"], [data-fy-at-tro="ᅧ"]) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
     --fy-tlo-left: 0.8%; --fy-tlo-scale-x: 0.8;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="trc"]:is([data-jamo="ᅥ"], [data-jamo="ᅧ"])) [data-fy-pos="tlc"][data-jamo="ᄈ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅥ"], [data-fy-at-trc="ᅧ"]) [data-fy-pos="tlc"][data-jamo="ᄈ"] {
     --fy-tlc-left: 1.1%; --fy-tlc-scale-x: 0.818;
   }
   /* ㅐㅒㅔㅖ 옆 ㅉ — 오른 ㅈ의 삐침(0.607)이 ㅐ 왼기둥(0.52)·ㅔ 점획(0.433~)에 포갰다(쩽 13%, 둥근 16%).
-     왼끝을 두고 가로를 0.85배로 좁힌다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tro"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlo"][data-jamo="ᄍ"] {
-    --fy-tlo-left: 0.8%; --fy-tlo-scale-x: 0.85;
+     왼끝을 두고 가로를 좁힌다. 0.85배로는 ㅐ 기둥에 여전히 닿아(째·쨍 −0.01…−0.06em, 픽셀이 가장 넓다 — collide-6)
+     2026-10-19 0.70배로 더 좁혀 기둥 0.03em 앞에서 끝낸다. */
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄍ"] {
+    --fy-tlo-left: 0.89%; --fy-tlo-scale-x: 0.7;
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="trc"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlc"][data-jamo="ᄍ"] {
-    --fy-tlc-left: 1.1%; --fy-tlc-scale-x: 0.85;
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄍ"] {
+    --fy-tlc-left: 1.24%; --fy-tlc-scale-x: 0.7;
+  }
+  /* ㅙ·ㅞ 위 쌍자음(2026-10-19, collide-7) — 'ㅙ 위 ㄲ'(꽤)만 고쳐져 있어, ㄲ+ㅞ(꿰)·ㅆ·ㅉ·ㄸ·ㅃ+ㅙ·ㅞ의 오른 낱자가 ㅐ·ㅔ
+     기둥에 붙었다(꿰 −0.02…−0.03, 쫴 −0.02…−0.03, 쐐 0.000, 픽셀 받침 있는 쐔·쫸 −0.037em — 0.1.2부터). 같은 방법(왼끝을
+     두고 가로만 좁힘)으로 기둥 0.03em 앞에서 끝낸다 — 자리 배율에 곱한 비: ㅙ 위 ㅆ 0.92·ㅉ 0.88·ㄸ·ㅃ 0.93, ㅞ 위 ㄲ 0.87·ㅉ 0.95·
+     ㅆ 0.975, 받침 있는 자리(ttl)는 ㅆ·ㅉ 0.87–0.88·ㄸ·ㅃ 0.93–0.95. */
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄊ"] {
+    --fy-tls-left: 0.15%; --fy-tls-scale-x: 0.535;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄍ"] {
+    --fy-tls-left: 0.07%; --fy-tls-scale-x: 0.512;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"]:is([data-jamo="ᄄ"], [data-jamo="ᄈ"]) {
+    --fy-tls-left: 0.39%; --fy-tls-scale-x: 0.541;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄁ"] {
+    --fy-tls-left: 2.55%; --fy-tls-scale-x: 0.57;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄍ"] {
+    --fy-tls-left: 0.83%; --fy-tls-scale-x: 0.523;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄊ"] {
+    --fy-tls-left: 0.84%; --fy-tls-scale-x: 0.537;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"][data-jamo="ᄊ"] {
+    --fy-ttl-left: 2.57%; --fy-ttl-scale-x: 0.467;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"][data-jamo="ᄍ"] {
+    --fy-ttl-left: 2.4%; --fy-ttl-scale-x: 0.467;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"]:is([data-jamo="ᄄ"], [data-jamo="ᄈ"]) {
+    --fy-ttl-left: 2.66%; --fy-ttl-scale-x: 0.499;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"][data-jamo="ᄊ"] {
+    --fy-ttl-left: 2.9%; --fy-ttl-scale-x: 0.463;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"][data-jamo="ᄍ"] {
+    --fy-ttl-left: 2.75%; --fy-ttl-scale-x: 0.463;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"]:is([data-jamo="ᄄ"], [data-jamo="ᄈ"]) {
+    --fy-ttl-left: 2.94%; --fy-ttl-scale-x: 0.5;
+  }
+  /* ㅐㅒㅔㅖ 옆 홑자음(2026-10-19, collide-6 남은 몫) — 초성 자리 상자가 ㅏ와 같아 ㅐ 왼기둥(0.50~0.52em)이 더 왼쪽인 만큼 ㄴ·ㄷ·
+     ㄹ·ㅅ·ㅈ·ㅊ·ㅋ·ㅌ·ㅍ·ㅎ의 오른끝이 기둥에 겹쳤다(대·패 −0.06…−0.10, 내·재·채·태 −0.04…−0.06em — 픽셀이 가장 넓다). 쌍자음과
+     같은 방법으로 자모마다 가로를 좁혀(0.77–0.92배) 기둥 0.03em(픽셀 0.02em) 앞에서 끝낸다. ㄱ·ㅁ·ㅂ·ㅇ은 픽셀에서만 닿기만
+     해 그대로 둔다. 값은 네 글꼴(sprite-system·pixel·pilgi·dunggeun)을 잰 최솟값. */
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄂ"] {
+    --fy-tlo-left: 1.20%; --fy-tlo-scale-x: 0.825;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄃ"] {
+    --fy-tlo-left: 1.53%; --fy-tlo-scale-x: 0.777;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄅ"] {
+    --fy-tlo-left: 1.06%; --fy-tlo-scale-x: 0.846;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄉ"] {
+    --fy-tlo-left: 0.27%; --fy-tlo-scale-x: 0.855;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄌ"] {
+    --fy-tlo-left: 0.32%; --fy-tlo-scale-x: 0.829;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄎ"] {
+    --fy-tlo-left: 0.30%; --fy-tlo-scale-x: 0.838;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄏ"] {
+    --fy-tlo-left: 0.35%; --fy-tlo-scale-x: 0.920;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄐ"] {
+    --fy-tlo-left: 1.06%; --fy-tlo-scale-x: 0.846;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄑ"] {
+    --fy-tlo-left: 0.70%; --fy-tlo-scale-x: 0.777;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄒ"] {
+    --fy-tlo-left: 0.45%; --fy-tlo-scale-x: 0.855;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄂ"] {
+    --fy-tlc-left: 0.89%; --fy-tlc-scale-x: 0.853;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄃ"] {
+    --fy-tlc-left: 1.31%; --fy-tlc-scale-x: 0.794;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄅ"] {
+    --fy-tlc-left: 0.81%; --fy-tlc-scale-x: 0.865;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄉ"] {
+    --fy-tlc-left: 0.11%; --fy-tlc-scale-x: 0.874;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄌ"] {
+    --fy-tlc-left: 0.08%; --fy-tlc-scale-x: 0.847;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄎ"] {
+    --fy-tlc-left: 0.06%; --fy-tlc-scale-x: 0.856;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄏ"] {
+    --fy-tlc-left: 0.08%; --fy-tlc-scale-x: 0.940;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄐ"] {
+    --fy-tlc-left: 0.81%; --fy-tlc-scale-x: 0.865;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄑ"] {
+    --fy-tlc-left: 0.47%; --fy-tlc-scale-x: 0.794;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄒ"] {
+    --fy-tlc-left: 0.45%; --fy-tlc-scale-x: 0.745;
+  }
+  /* ㅐㅒㅔㅖ 옆 ㄸ·ㅆ·ㄲ(2026-10-19, collide-6) — 넓은 쌍자음의 오른 낱자가 ㅐ 왼기둥(0.50~0.52)을 넘어 굵은 기둥 하나로
+     붙었다(때·떼·쌔·땡 −0.07…−0.10em, 깨 −0.006…−0.031em — 0.1.2부터). ㅃ처럼 왼끝을 두고 가로를 좁혀(ㄸ 0.75배, ㅆ 0.72배 —
+     픽셀은 점 격자에 맞춰 ㅆ 끝이 반 칸 바깥에 놓인다, ㄲ 0.87배) 기둥 0.03~0.05em 앞에서 끝낸다. 받침 있는 자리(tlc)는 그 자리 배율 1.022에 같은 비를 곱한다. */
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄄ"] {
+    --fy-tlo-left: 1.4%; --fy-tlo-scale-x: 0.75;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄄ"] {
+    --fy-tlc-left: 1.18%; --fy-tlc-scale-x: 0.767;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄊ"] {
+    --fy-tlo-left: 0.53%; --fy-tlo-scale-x: 0.72;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄊ"] {
+    --fy-tlc-left: 0.32%; --fy-tlc-scale-x: 0.736;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄁ"] {
+    --fy-tlo-left: 0.25%; --fy-tlo-scale-x: 0.87;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄁ"] {
+    --fy-tlc-left: -0.01%; --fy-tlc-scale-x: 0.889;
   }
   /* 받침 없는 ㅗ·ㅛ의 꼭지 머리 — 위 꼭지 규칙은 0.465에서 자르는데(ㄴ 밑획 기준) 다른 초성은 밑이
      0.50~0.61로 더 낮아, 꼭지 머리가 밑획·링 속을 지나갔다(효 13%·료 12%·표 11%, 둥근 17%). 꼭지를
      초성 밑에서 시작한다 — 자르는 높이 h(em)의 inset 위 = (h - 원점 0.009em) / (0.989 × 1em). */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="t"]:is([data-jamo="ᄃ"], [data-jamo="ᄆ"], [data-jamo="ᄋ"])) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-t]:is([data-fy-at-t="ᄃ"], [data-fy-at-t="ᄆ"], [data-fy-at-t="ᄋ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-clip: inset(50.7% 0 0 0); /* 0.51em */
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="t"]:is([data-jamo="ᄇ"], [data-jamo="ᄑ"])) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-t]:is([data-fy-at-t="ᄇ"], [data-fy-at-t="ᄑ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-clip: inset(52.7% 0 0 0); /* 0.53em */
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="t"]:is([data-jamo="ᄅ"], [data-jamo="ᄐ"])) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-t]:is([data-fy-at-t="ᄅ"], [data-fy-at-t="ᄐ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-clip: inset(54.5% 0 0 0); /* 0.548em */
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="t"][data-jamo="ᄒ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-t][data-fy-at-t="ᄒ"] [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-clip: inset(58.2% 0 0 0); /* 0.585em */
   }
   /* ㄲ은 칸(X+ㅡ 추출)의 곧은 다리가 0.60까지 내려와 왼 다리가 ㅗ 꼭지 자리(0.36~0.43)를 차지했다 —
      꼬가 끄처럼 읽혔다(픽셀 19%). 기준 ㄲ은 다리가 0.50에서 왼쪽으로 끝나고 꼭지가 두 ㄱ 사이로
      올라온다. 왼끝을 두고 0.9배로 좁혀 왼 다리를 꼭지 왼쪽(0.36)에 두고, 다리를 0.487에서 자르고
      꼭지를 0.527에서 시작한다. */
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"])) [data-fy-pos="t"][data-jamo="ᄁ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄁ"] {
     --fy-t-scale-x: 0.9;
     --fy-t-clip: inset(0 0 53% 0);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="t"][data-jamo="ᄁ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-t][data-fy-at-t="ᄁ"] [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-clip: inset(52.4% 0 0 0); /* 0.527em */
   }
 }
@@ -665,153 +831,294 @@
   :where([data-fy-font="sprite-system"]) [data-fy-pos="tt"][data-jamo="ᄏ"] {
     --fy-tt-dilate: drop-shadow(0 0.013em 0 #000) drop-shadow(0 -0.013em 0 #000);
   }
+  :where([data-fy-font="sprite-system"]) [data-fy-pos="brs"][data-jamo="ᇂ"] {
+    --fy-brs-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [data-fy-pos="brw"][data-jamo="ᆭ"] {
+    --fy-brw-dilate: drop-shadow(0 0.005em 0 #000) drop-shadow(0 -0.005em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [data-fy-pos="brw"][data-jamo="ᆶ"] {
+    --fy-brw-dilate: drop-shadow(0 0.009em 0 #000) drop-shadow(0 -0.009em 0 #000);
+  }
 }
 @layer font-kku.context {
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-jamo="ᅮ"], [data-jamo="ᅲ"]) [data-fy-pos="t"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᅮ"], [data-fy-jamos~="ᅲ"]) [data-fy-pos="t"] {
     --fy-t-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tlc"][data-jamo="ᄒ"]):has([data-fy-pos="brs"][data-jamo="ᆫ"], [data-fy-pos="brw"]) [data-fy-pos="trc"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tlc][data-fy-at-tlc="ᄒ"]:is([data-fy-at-brs][data-fy-at-brs="ᆫ"], [data-fy-at-brw]) [data-fy-pos="trc"] {
     --fy-trc-dilate: drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅰ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄋ"] {
     --fy-tls-dilate: drop-shadow(0.003em 0 0 #000) drop-shadow(-0.003em 0 0 #000) drop-shadow(0 0.019em 0 #000) drop-shadow(0 -0.019em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄋ"] {
     --fy-tls-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅪ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅪ"] [data-fy-pos="tls"][data-jamo="ᄋ"] {
     --fy-tls-dilate: drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"])) [data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅰ"], [data-fy-at-mw="ᅱ"]) [data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-tls-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.012em 0 #000) drop-shadow(0 -0.012em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅰ"], [data-jamo="ᅱ"])) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅰ"], [data-fy-at-mtw="ᅱ"]) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-ttl-dilate: drop-shadow(0.009em 0 0 #000) drop-shadow(-0.009em 0 0 #000) drop-shadow(0 0.013em 0 #000) drop-shadow(0 -0.013em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅪ"], [data-jamo="ᅫ"], [data-jamo="ᅬ"])) [data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅪ"], [data-fy-at-mw="ᅫ"], [data-fy-at-mw="ᅬ"]) [data-fy-pos="tls"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-tls-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.006em 0 #000) drop-shadow(0 -0.006em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅪ"], [data-jamo="ᅫ"], [data-jamo="ᅬ"])) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅪ"], [data-fy-at-mtw="ᅫ"], [data-fy-at-mtw="ᅬ"]) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
     --fy-ttl-dilate: drop-shadow(0.009em 0 0 #000) drop-shadow(-0.009em 0 0 #000) drop-shadow(0 0.015em 0 #000) drop-shadow(0 -0.015em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄁ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄁ"] {
     --fy-tls-dilate: drop-shadow(0.012em 0 0 #000) drop-shadow(-0.012em 0 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"][data-jamo="ᄁ"] {
-    --fy-ttl-dilate: drop-shadow(0.012em 0 0 #000) drop-shadow(-0.012em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tro"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
-    --fy-tlo-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="trc"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlc"][data-jamo="ᄈ"] {
-    --fy-tlc-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅴ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
-    --fy-tls-dilate: drop-shadow(0 0.009em 0 #000) drop-shadow(0 -0.009em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅬ"] {
-    --fy-mtw-dilate: drop-shadow(0 0.005em 0 #000) drop-shadow(0 -0.005em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅯ"] {
-    --fy-mtw-dilate: initial;
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="ttl"][data-jamo="ᄒ"]) [data-fy-pos="mtw"][data-jamo="ᅱ"] {
-    --fy-mtw-dilate: drop-shadow(0 0.002em 0 #000) drop-shadow(0 -0.002em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"] {
-    --fy-b-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="b"][data-jamo="ᇂ"] {
-    --fy-b-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tt"][data-jamo="ᄒ"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
-    --fy-b-dilate: drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅪ"], [data-jamo="ᅬ"])) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-tls-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-tls-dilate: drop-shadow(0.012em 0 0 #000) drop-shadow(-0.012em 0 0 #000) drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-tls-dilate: drop-shadow(0.009em 0 0 #000) drop-shadow(-0.009em 0 0 #000) drop-shadow(0 0.007em 0 #000) drop-shadow(0 -0.007em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅰ"]) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-tls-dilate: drop-shadow(0.014em 0 0 #000) drop-shadow(-0.014em 0 0 #000) drop-shadow(0 0.008em 0 #000) drop-shadow(0 -0.008em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅴ"]) [data-fy-pos="tls"]:not([data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-tls-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅪ"], [data-jamo="ᅬ"])) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-ttl-dilate: drop-shadow(0.010em 0 0 #000) drop-shadow(-0.010em 0 0 #000) drop-shadow(0 0.010em 0 #000) drop-shadow(0 -0.010em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-ttl-dilate: drop-shadow(0.010em 0 0 #000) drop-shadow(-0.010em 0 0 #000) drop-shadow(0 0.013em 0 #000) drop-shadow(0 -0.013em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅪ"], [data-jamo="ᅬ"])) [data-fy-pos="tls"][data-jamo="ᄒ"] {
-    --fy-tls-dilate: drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅫ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
-    --fy-tls-dilate: drop-shadow(0.003em 0 0 #000) drop-shadow(-0.003em 0 0 #000) drop-shadow(0 0.006em 0 #000) drop-shadow(0 -0.006em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="tls"][data-jamo="ᄒ"] {
-    --fy-tls-dilate: drop-shadow(0 0.008em 0 #000) drop-shadow(0 -0.008em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅰ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
-    --fy-tls-dilate: drop-shadow(0.006em 0 0 #000) drop-shadow(-0.006em 0 0 #000) drop-shadow(0 0.012em 0 #000) drop-shadow(0 -0.012em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"][data-jamo="ᅴ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
-    --fy-tls-dilate: drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])):not(:has([data-jamo="ᆫ"])) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
-    --fy-ttl-dilate: drop-shadow(0 0.014em 0 #000) drop-shadow(0 -0.014em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-ttl-dilate: drop-shadow(0.014em 0 0 #000) drop-shadow(-0.014em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅰ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-ttl-dilate: drop-shadow(0.015em 0 0 #000) drop-shadow(-0.015em 0 0 #000) drop-shadow(0 0.016em 0 #000) drop-shadow(0 -0.016em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅴ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
-    --fy-ttl-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.010em 0 #000) drop-shadow(0 -0.010em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅫ"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
-    --fy-ttl-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅰ"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
-    --fy-ttl-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000) drop-shadow(0 0.015em 0 #000) drop-shadow(0 -0.015em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="tls"][data-jamo="ᄋ"] {
-    --fy-tls-dilate: drop-shadow(0 0.013em 0 #000) drop-shadow(0 -0.013em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅰ"]) [data-fy-pos="ttl"][data-jamo="ᄋ"] {
-    --fy-ttl-dilate: drop-shadow(0.003em 0 0 #000) drop-shadow(-0.003em 0 0 #000) drop-shadow(0 0.026em 0 #000) drop-shadow(0 -0.026em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="brw"]) [data-fy-pos="tlc"][data-jamo="ᄒ"] {
-    --fy-tlc-dilate: drop-shadow(0.007em 0 0 #000) drop-shadow(-0.007em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="brs"]:not([data-jamo="ᆫ"])) [data-fy-pos="tlc"][data-jamo="ᄒ"] {
-    --fy-tlc-dilate: drop-shadow(0 0.014em 0 #000) drop-shadow(0 -0.014em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has(:is([data-jamo="ᆯ"], [data-jamo="ᆰ"], [data-jamo="ᆱ"], [data-jamo="ᆲ"], [data-jamo="ᆳ"], [data-jamo="ᆴ"], [data-jamo="ᆵ"], [data-jamo="ᆶ"], [data-jamo="ᆹ"], [data-jamo="ᆾ"], [data-jamo="ᇀ"], [data-jamo="ᇂ"])):has([data-fy-pos="mtw"]:is([data-jamo="ᅯ"], [data-jamo="ᅱ"])) [data-fy-pos="ttl"][data-jamo="ᄋ"] {
-    --fy-ttl-dilate: drop-shadow(0 0.024em 0 #000) drop-shadow(0 -0.024em 0 #000);
-  }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="mtw"][data-jamo="ᅰ"]) [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"][data-jamo="ᄁ"] {
     --fy-ttl-dilate: drop-shadow(0.013em 0 0 #000) drop-shadow(-0.013em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tro"]:is([data-jamo="ᅥ"], [data-jamo="ᅧ"])) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
     --fy-tlo-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="trc"]:is([data-jamo="ᅥ"], [data-jamo="ᅧ"])) [data-fy-pos="tlc"][data-jamo="ᄈ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄈ"] {
     --fy-tlc-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="tro"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlo"][data-jamo="ᄍ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅴ"] [data-fy-pos="tls"][data-jamo="ᄋ"] {
+    --fy-tls-dilate: drop-shadow(0 0.009em 0 #000) drop-shadow(0 -0.009em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="mtw"][data-jamo="ᅬ"] {
+    --fy-mtw-dilate: drop-shadow(0 0.005em 0 #000) drop-shadow(0 -0.005em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="mtw"][data-jamo="ᅯ"] {
+    --fy-mtw-dilate: initial;
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="mtw"][data-jamo="ᅱ"] {
+    --fy-mtw-dilate: drop-shadow(0 0.002em 0 #000) drop-shadow(0 -0.002em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt][data-fy-at-tt="ᄒ"] [data-fy-pos="b"] {
+    --fy-b-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mt]:is([data-fy-at-mt="ᅮ"], [data-fy-at-mt="ᅲ"]) [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tt][data-fy-at-tt="ᄒ"] [data-fy-pos="b"][data-jamo="ᇂ"] {
+    --fy-b-dilate: drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅪ"], [data-fy-at-mtw="ᅫ"]) [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-dilate: drop-shadow(0 0.010em 0 #000) drop-shadow(0 -0.010em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅫ"])[data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-dilate: drop-shadow(0 0.013em 0 #000) drop-shadow(0 -0.013em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅬ"], [data-fy-at-mtw="ᅴ"]) [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-dilate: drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅬ"], [data-fy-at-mtw="ᅴ"])[data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-dilate: drop-shadow(0 0.006em 0 #000) drop-shadow(0 -0.006em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅴ"][data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-dilate: drop-shadow(0 0.008em 0 #000) drop-shadow(0 -0.008em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅰ"], [data-fy-at-mtw="ᅱ"]) [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-dilate: drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅰ"], [data-fy-at-mtw="ᅱ"])[data-fy-at-ttl][data-fy-at-ttl="ᄒ"] [data-fy-pos="bbrs"][data-jamo="ᇂ"] {
+    --fy-bbrs-dilate: drop-shadow(0 0.008em 0 #000) drop-shadow(0 -0.008em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅪ"], [data-fy-at-mw="ᅬ"]) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-tls-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.003em 0 #000) drop-shadow(0 -0.003em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-tls-dilate: drop-shadow(0.012em 0 0 #000) drop-shadow(-0.012em 0 0 #000) drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅱ"]) [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-tls-dilate: drop-shadow(0.009em 0 0 #000) drop-shadow(-0.009em 0 0 #000) drop-shadow(0 0.007em 0 #000) drop-shadow(0 -0.007em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-tls-dilate: drop-shadow(0.014em 0 0 #000) drop-shadow(-0.014em 0 0 #000) drop-shadow(0 0.008em 0 #000) drop-shadow(0 -0.008em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅴ"] [data-fy-pos="tls"]:not([data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-tls-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅪ"], [data-fy-at-mtw="ᅬ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-ttl-dilate: drop-shadow(0.010em 0 0 #000) drop-shadow(-0.010em 0 0 #000) drop-shadow(0 0.010em 0 #000) drop-shadow(0 -0.010em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅱ"]) [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-ttl-dilate: drop-shadow(0.010em 0 0 #000) drop-shadow(-0.010em 0 0 #000) drop-shadow(0 0.013em 0 #000) drop-shadow(0 -0.013em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅪ"], [data-fy-at-mw="ᅬ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+    --fy-tls-dilate: drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄒ"] {
+    --fy-tls-dilate: drop-shadow(0.003em 0 0 #000) drop-shadow(-0.003em 0 0 #000) drop-shadow(0 0.006em 0 #000) drop-shadow(0 -0.006em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅱ"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
+    --fy-tls-dilate: drop-shadow(0 0.008em 0 #000) drop-shadow(0 -0.008em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄒ"] {
+    --fy-tls-dilate: drop-shadow(0.006em 0 0 #000) drop-shadow(-0.006em 0 0 #000) drop-shadow(0 0.012em 0 #000) drop-shadow(0 -0.012em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅴ"] [data-fy-pos="tls"][data-jamo="ᄒ"] {
+    --fy-tls-dilate: drop-shadow(0 0.004em 0 #000) drop-shadow(0 -0.004em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅱ"]):not([data-fy-jamos~="ᆫ"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
+    --fy-ttl-dilate: drop-shadow(0 0.014em 0 #000) drop-shadow(0 -0.014em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-ttl-dilate: drop-shadow(0.014em 0 0 #000) drop-shadow(-0.014em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"]:not([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"], [data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-ttl-dilate: drop-shadow(0.015em 0 0 #000) drop-shadow(-0.015em 0 0 #000) drop-shadow(0 0.016em 0 #000) drop-shadow(0 -0.016em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅴ"] [data-fy-pos="ttl"]:not([data-jamo="ᄋ"], [data-jamo="ᄒ"]) {
+    --fy-ttl-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.010em 0 #000) drop-shadow(0 -0.010em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"][data-jamo="ᄒ"] {
+    --fy-ttl-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"][data-jamo="ᄒ"] {
+    --fy-ttl-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000) drop-shadow(0 0.015em 0 #000) drop-shadow(0 -0.015em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw]:is([data-fy-at-mw="ᅯ"], [data-fy-at-mw="ᅱ"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
+    --fy-tls-dilate: drop-shadow(0 0.013em 0 #000) drop-shadow(0 -0.013em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"][data-jamo="ᄋ"] {
+    --fy-ttl-dilate: drop-shadow(0.003em 0 0 #000) drop-shadow(-0.003em 0 0 #000) drop-shadow(0 0.026em 0 #000) drop-shadow(0 -0.026em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-brw] [data-fy-pos="tlc"][data-jamo="ᄒ"] {
+    --fy-tlc-dilate: drop-shadow(0.007em 0 0 #000) drop-shadow(-0.007em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-brs]:not([data-fy-at-brs="ᆫ"]) [data-fy-pos="tlc"][data-jamo="ᄒ"] {
+    --fy-tlc-dilate: drop-shadow(0 0.014em 0 #000) drop-shadow(0 -0.014em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"]:is([data-fy-jamos~="ᆯ"], [data-fy-jamos~="ᆰ"], [data-fy-jamos~="ᆱ"], [data-fy-jamos~="ᆲ"], [data-fy-jamos~="ᆳ"], [data-fy-jamos~="ᆴ"], [data-fy-jamos~="ᆵ"], [data-fy-jamos~="ᆶ"], [data-fy-jamos~="ᆹ"], [data-fy-jamos~="ᆾ"], [data-fy-jamos~="ᇀ"], [data-fy-jamos~="ᇂ"])[data-fy-at-mtw]:is([data-fy-at-mtw="ᅯ"], [data-fy-at-mtw="ᅱ"]) [data-fy-pos="ttl"][data-jamo="ᄋ"] {
+    --fy-ttl-dilate: drop-shadow(0 0.024em 0 #000) drop-shadow(0 -0.024em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"]) {
+    --fy-ttl-dilate: drop-shadow(0.013em 0 0 #000) drop-shadow(-0.013em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅥ"], [data-fy-at-tro="ᅧ"]) [data-fy-pos="tlo"][data-jamo="ᄈ"] {
+    --fy-tlo-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅥ"], [data-fy-at-trc="ᅧ"]) [data-fy-pos="tlc"][data-jamo="ᄈ"] {
+    --fy-tlc-dilate: drop-shadow(0.005em 0 0 #000) drop-shadow(-0.005em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄍ"] {
+    --fy-tlo-dilate: drop-shadow(0.009em 0 0 #000) drop-shadow(-0.009em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄍ"] {
+    --fy-tlc-dilate: drop-shadow(0.010em 0 0 #000) drop-shadow(-0.010em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄊ"] {
+    --fy-tls-dilate: drop-shadow(0.015em 0 0 #000) drop-shadow(-0.015em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"][data-jamo="ᄍ"] {
+    --fy-tls-dilate: drop-shadow(0.017em 0 0 #000) drop-shadow(-0.017em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅫ"] [data-fy-pos="tls"]:is([data-jamo="ᄄ"], [data-jamo="ᄈ"]) {
+    --fy-tls-dilate: drop-shadow(0.015em 0 0 #000) drop-shadow(-0.015em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄁ"] {
+    --fy-tls-dilate: drop-shadow(0.013em 0 0 #000) drop-shadow(-0.013em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄍ"] {
+    --fy-tls-dilate: drop-shadow(0.016em 0 0 #000) drop-shadow(-0.016em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mw][data-fy-at-mw="ᅰ"] [data-fy-pos="tls"][data-jamo="ᄊ"] {
+    --fy-tls-dilate: drop-shadow(0.015em 0 0 #000) drop-shadow(-0.015em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"][data-jamo="ᄊ"] {
+    --fy-ttl-dilate: drop-shadow(0.019em 0 0 #000) drop-shadow(-0.019em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"][data-jamo="ᄍ"] {
+    --fy-ttl-dilate: drop-shadow(0.019em 0 0 #000) drop-shadow(-0.019em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅫ"] [data-fy-pos="ttl"]:is([data-jamo="ᄄ"], [data-jamo="ᄈ"]) {
+    --fy-ttl-dilate: drop-shadow(0.017em 0 0 #000) drop-shadow(-0.017em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"][data-jamo="ᄊ"] {
+    --fy-ttl-dilate: drop-shadow(0.020em 0 0 #000) drop-shadow(-0.020em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"][data-jamo="ᄍ"] {
+    --fy-ttl-dilate: drop-shadow(0.020em 0 0 #000) drop-shadow(-0.020em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-mtw][data-fy-at-mtw="ᅰ"] [data-fy-pos="ttl"]:is([data-jamo="ᄄ"], [data-jamo="ᄈ"]) {
+    --fy-ttl-dilate: drop-shadow(0.017em 0 0 #000) drop-shadow(-0.017em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄂ"] {
     --fy-tlo-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="trc"]:is([data-jamo="ᅢ"], [data-jamo="ᅤ"], [data-jamo="ᅦ"], [data-jamo="ᅨ"])) [data-fy-pos="tlc"][data-jamo="ᄍ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄃ"] {
+    --fy-tlo-dilate: drop-shadow(0.006em 0 0 #000) drop-shadow(-0.006em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄅ"] {
+    --fy-tlo-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄉ"] {
+    --fy-tlo-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄌ"] {
+    --fy-tlo-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄎ"] {
+    --fy-tlo-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄐ"] {
+    --fy-tlo-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄑ"] {
+    --fy-tlo-dilate: drop-shadow(0.006em 0 0 #000) drop-shadow(-0.006em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄒ"] {
+    --fy-tlo-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄂ"] {
     --fy-tlc-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
   }
-  :where([data-fy-font="sprite-system"]) [part="glyph"]:has([data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"])) [data-fy-pos="t"][data-jamo="ᄁ"] {
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄃ"] {
+    --fy-tlc-dilate: drop-shadow(0.006em 0 0 #000) drop-shadow(-0.006em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄅ"] {
+    --fy-tlc-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄉ"] {
+    --fy-tlc-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄌ"] {
+    --fy-tlc-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄎ"] {
+    --fy-tlc-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄏ"] {
+    --fy-tlc-dilate: drop-shadow(0.002em 0 0 #000) drop-shadow(-0.002em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄐ"] {
+    --fy-tlc-dilate: drop-shadow(0.004em 0 0 #000) drop-shadow(-0.004em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄑ"] {
+    --fy-tlc-dilate: drop-shadow(0.006em 0 0 #000) drop-shadow(-0.006em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄒ"] {
+    --fy-tlc-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄄ"] {
+    --fy-tlo-dilate: drop-shadow(0.007em 0 0 #000) drop-shadow(-0.007em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄄ"] {
+    --fy-tlc-dilate: drop-shadow(0.007em 0 0 #000) drop-shadow(-0.007em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄊ"] {
+    --fy-tlo-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄊ"] {
+    --fy-tlc-dilate: drop-shadow(0.008em 0 0 #000) drop-shadow(-0.008em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-tro]:is([data-fy-at-tro="ᅢ"], [data-fy-at-tro="ᅤ"], [data-fy-at-tro="ᅦ"], [data-fy-at-tro="ᅨ"]) [data-fy-pos="tlo"][data-jamo="ᄁ"] {
+    --fy-tlo-dilate: drop-shadow(0.003em 0 0 #000) drop-shadow(-0.003em 0 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-trc]:is([data-fy-at-trc="ᅢ"], [data-fy-at-trc="ᅤ"], [data-fy-at-trc="ᅦ"], [data-fy-at-trc="ᅨ"]) [data-fy-pos="tlc"][data-jamo="ᄁ"] {
+    --fy-tlc-dilate: drop-shadow(0.003em 0 0 #000) drop-shadow(-0.003em 0 0 #000) drop-shadow(0 0.011em 0 #000) drop-shadow(0 -0.011em 0 #000);
+  }
+  :where([data-fy-font="sprite-system"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄁ"] {
     --fy-t-dilate: drop-shadow(0.002em 0 0 #000) drop-shadow(-0.002em 0 0 #000);
   }
 }

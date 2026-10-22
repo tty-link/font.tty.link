@@ -1,0 +1,25 @@
+/* font-studio-review.css — 검수 페이지의 꾸밈·바탕 바꿔 보기와 차이 칠하기(PLAN-STUDIO-002 S5-C)
+ * 차이 칠하기는 화소를 읽지 않는다: 기준과 지금을 같은 자리에 겹치고 합성(mix-blend-mode)으로 칠한다. 층마다 잉크를 검정 실루엣으로
+ * 만들고(brightness(0)), 기준 층은 빨강, 지금 층은 파랑으로 물들인 뒤(screen) 곱한다(multiply) — 둘 다 있는 잉크는 검정, 기준에만 있으면
+ * 빨강, 지금에만 있으면 파랑이다(빨강 #dc0000 × 파랑 #006eff = 검정). 같은 문서·같은 크기라 장치 배율도 같다. */
+.studio-review-view { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 12px 0; }
+.studio-review-view label { display: inline-flex; align-items: center; gap: 6px; }
+.studio-review-view select { min-height: 36px; font: inherit; }
+.studio-review-view small { color: var(--studio-muted); }
+.studio-review-specimens[data-review-tone] { background: var(--review-tone-bg); color: var(--review-tone-ink); }
+.studio-review-specimens[data-review-tone] .studio-review-size small { color: inherit; opacity: 0.72; }
+.studio-review-diff-toggle { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; }
+.studio-review-diff-toggle[hidden] { display: none; }
+.studio-review-diff { grid-column: 1 / -1; }
+.studio-review-diff[hidden] { display: none; }
+.studio-review-diff-old { color: #dc0000; font-weight: 600; }
+.studio-review-diff-new { color: #006eff; font-weight: 600; }
+.studio-review-diff-specimens { background: #fff; color: #111; }
+.studio-review-diff-specimens .studio-review-size small { color: #555; }
+.studio-review-diff-stack { position: relative; isolation: isolate; background: #fff; }
+.studio-review-diff-layer { position: relative; isolation: isolate; background: #fff; }
+.studio-review-diff-layer > div { filter: brightness(0); }
+.studio-review-diff-layer::after { content: ""; position: absolute; inset: 0; mix-blend-mode: screen; pointer-events: none; }
+.studio-review-diff-base::after { background: #dc0000; }
+.studio-review-diff-now { position: absolute; inset: 0; mix-blend-mode: multiply; }
+.studio-review-diff-now::after { background: #006eff; }

@@ -65,7 +65,7 @@
   }
   :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     --fy-font-element-fill: color-mix(in srgb, currentColor 25%, #fff);
-    --fy-font-glow: drop-shadow(calc(max(0.016em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-scale-x, 1))) 0 0 currentColor) drop-shadow(calc(-1 * calc(max(0.016em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-scale-x, 1)))) 0 0 currentColor) drop-shadow(0 calc(max(0.016em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-scale-y, 1))) 0 currentColor) drop-shadow(0 calc(-1 * calc(max(0.016em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-scale-y, 1)))) 0 currentColor) drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.16em color-mix(in srgb, currentColor 70%, transparent));
+    --fy-font-glow: drop-shadow(calc(max(0.016em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-case-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-syl-scale-x, 1) * var(--fy-scale-x, 1))) 0 0 currentColor) drop-shadow(calc(-1 * calc(max(0.016em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-case-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-syl-scale-x, 1) * var(--fy-scale-x, 1)))) 0 0 currentColor) drop-shadow(0 calc(max(0.016em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-case-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-syl-scale-y, 1) * var(--fy-scale-y, 1))) 0 currentColor) drop-shadow(0 calc(-1 * calc(max(0.016em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-case-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-syl-scale-y, 1) * var(--fy-scale-y, 1)))) 0 currentColor) drop-shadow(0 0 0.05em currentColor) drop-shadow(0 0 0.16em color-mix(in srgb, currentColor 70%, transparent));
   }
   :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) [part="content"][data-fy-standalone] {
     --fy-font-element-fill: color-mix(in srgb, currentColor 25%, #fff);
@@ -74,7 +74,7 @@
   :where(.kku-look-neon:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
     filter: none;
   }
-  :where(.kku-look-neon:is([data-fy-layout-model="fixed-three"], [data-fy-layout-model="case-fixed"]):not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
+  :where(.kku-look-neon:is([data-fy-layout="sebul-cases-v1"], [data-fy-layout="sebul-fixed-v1"]):not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="jungseong"], [part~="jongseong"]) {
     --kku-look-stroke: 0.03em;
     --fy-stroke: var(--kku-look-stroke);
   }
@@ -147,13 +147,13 @@
     color: hsl(calc(160deg + (var(--fy-jamo-seed, 0.5) - 0.5) * 60deg) 78% 39%);
   }
   :where(.kku-look-sticker:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
-    filter: drop-shadow(0.035em 0 0 #fff) drop-shadow(-0.035em 0 0 #fff) drop-shadow(0 0.035em 0 #fff) drop-shadow(0 -0.035em 0 #fff) drop-shadow(0.03em 0.05em 0.02em rgb(60 20 40 / 35%));
+    filter: drop-shadow(max(0.035em, var(--kku-look-hair, 1.1px)) 0 0 #fff) drop-shadow(calc(-1 * max(0.035em, var(--kku-look-hair, 1.1px))) 0 0 #fff) drop-shadow(0 max(0.035em, var(--kku-look-hair, 1.1px)) 0 #fff) drop-shadow(0 calc(-1 * max(0.035em, var(--kku-look-hair, 1.1px))) 0 #fff) drop-shadow(max(0.03em, var(--kku-look-hair, 1.1px)) max(0.05em, var(--kku-look-hair, 1.1px)) 0.02em rgb(60 20 40 / 35%));
   }
   :where(.kku-look-sticker:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     --fy-font-glow: drop-shadow(0.045em 0 0 #fff) drop-shadow(-0.045em 0 0 #fff) drop-shadow(0 0.045em 0 #fff) drop-shadow(0 -0.045em 0 #fff);
   }
   :where(.kku-look-sticker:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
-    filter: drop-shadow(0.03em 0.05em 0.02em rgb(60 20 40 / 35%));
+    filter: drop-shadow(max(0.03em, var(--kku-look-hair, 1.1px)) max(0.05em, var(--kku-look-hair, 1.1px)) 0.02em rgb(60 20 40 / 35%));
   }
 
   /* 꾸밈 geumbak — 금박: 결이 다른 금빛 면에 짙은 테두리와 눌린 그림자. 원본: profiles/geumbak.css 꾸밈 구간. */
@@ -176,9 +176,8 @@
   }
   :where(.kku-look-geumbak:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #f0c75e;
-    -webkit-text-stroke-color: #7a4f0f;
-    paint-order: stroke fill;
-    text-shadow: 0 -0.014em 0 #fff6cf, 0 0.018em 0 #b07a22, 0 0.036em 0 #6b4510, 0 0.06em 0.05em rgb(15 8 0 / 0.5);
+    -webkit-text-stroke-color: currentColor;
+    text-shadow: max(0.016em, 1.1px) 0 0 #7a4f0f, calc(-1 * max(0.016em, 1.1px)) 0 0 #7a4f0f, 0 max(0.016em, 1.1px) 0 #7a4f0f, 0 calc(-1 * max(0.016em, 1.1px)) 0 #7a4f0f, 0 -0.014em 0 #fff6cf, 0 0.018em 0 #b07a22, 0 0.036em 0 #6b4510, 0 0.06em 0.05em rgb(15 8 0 / 0.5);
   }
   :where(.kku-look-geumbak:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="head"]) {
     color: #f7d77e;
@@ -205,11 +204,12 @@
     color: #eba45c;
   }
   :where(.kku-look-geumbak:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
-    filter: drop-shadow(0 -0.012em 0 #fff6cf) drop-shadow(0 0.03em 0 #6b4510) drop-shadow(0 0.05em 0.04em rgb(15 8 0 / 50%));
+    filter: drop-shadow(0 calc(-1 * max(0.012em, var(--kku-look-hair, 1.1px))) 0 #fff6cf) drop-shadow(0 max(0.03em, var(--kku-look-hair, 1.1px)) 0 #6b4510) drop-shadow(0 max(0.05em, var(--kku-look-hair, 1.1px)) 0.04em rgb(15 8 0 / 50%));
   }
 
   /* 꾸밈 glitch — 글리치: 초성·중성·받침이 저마다 다른 방향으로 색 채널이 어긋난다. 원본: profiles/glitch.css 꾸밈 구간. */
   :where(.kku-look-glitch) {
+    --kku-shine-tone: rgb(0 236 255);
     --fy-font-glow: initial;
     --fy-content-stroke: initial;
     --fy-sprite-paint: mask;
@@ -243,7 +243,7 @@
     color: #f4f4f6;
   }
   :where(.kku-look-glitch:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
-    filter: drop-shadow(-0.03em 0 0 rgb(0 236 255 / 85%)) drop-shadow(0.03em 0 0 rgb(255 0 170 / 85%));
+    filter: drop-shadow(calc(-1 * max(0.03em, var(--kku-look-hair, 1.1px))) 0 0 rgb(0 236 255 / 85%)) drop-shadow(max(0.03em, var(--kku-look-hair, 1.1px)) 0 0 rgb(255 0 170 / 85%));
   }
   :where(.kku-look-glitch:is([data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="head"]) {
     --fy-font-glow: drop-shadow(calc(-0.04em - (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 0 rgb(0 236 255 / 0.9)) drop-shadow(calc(0.03em + (var(--fy-jamo-seed, 0.5) - 0.5) * 0.04em) 0 0 rgb(255 0 170 / 0.9));
@@ -280,14 +280,13 @@
     --fy-font-stroke: 0.014em;
     color: #ffd166;
     -webkit-text-stroke-color: #073b4c;
-    paint-order: stroke fill;
     text-shadow: 0.02em 0.02em 0 #ef476f, 0.04em 0.04em 0 #ef476f, 0.06em 0.06em 0 #ef476f, 0.08em 0.08em 0 #073b4c, 0.1em 0.1em 0 #073b4c;
   }
   :where(.kku-look-retro:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) {
     color: #ffd166;
   }
   :where(.kku-look-retro:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
-    filter: drop-shadow(0.014em 0 0 #073b4c) drop-shadow(-0.014em 0 0 #073b4c) drop-shadow(0 0.014em 0 #073b4c) drop-shadow(0 -0.014em 0 #073b4c) drop-shadow(0.03em 0.03em 0 #ef476f) drop-shadow(0.03em 0.03em 0 #073b4c);
+    filter: drop-shadow(max(0.014em, var(--kku-look-hair, 1.1px)) 0 0 #073b4c) drop-shadow(calc(-1 * max(0.014em, var(--kku-look-hair, 1.1px))) 0 0 #073b4c) drop-shadow(0 max(0.014em, var(--kku-look-hair, 1.1px)) 0 #073b4c) drop-shadow(0 calc(-1 * max(0.014em, var(--kku-look-hair, 1.1px))) 0 #073b4c) drop-shadow(max(0.03em, var(--kku-look-hair, 1.1px)) max(0.03em, var(--kku-look-hair, 1.1px)) 0 #ef476f) drop-shadow(max(0.03em, var(--kku-look-hair, 1.1px)) max(0.03em, var(--kku-look-hair, 1.1px)) 0 #073b4c);
   }
 
   /* 꾸밈 saekdong — 색동: 초성 다홍 · 중성 쪽빛 · 뒷조각 노랑 · 받침 초록 — 자소 구조가 색으로. 원본: profiles/saekdong.css 꾸밈 구간. */
@@ -390,7 +389,7 @@
     color: rgb(0 120 191 / 0.86);
   }
   :where(.kku-look-riso:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
-    filter: drop-shadow(0.024em -0.018em 0 rgb(0 120 191 / 42%));
+    filter: drop-shadow(max(0.024em, var(--kku-look-hair, 1.1px)) calc(-1 * max(0.018em, var(--kku-look-hair, 1.1px))) 0 rgb(0 120 191 / 42%));
   }
   :where(.kku-look-riso:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     color: rgb(255 72 176);
@@ -469,7 +468,7 @@
   }
   :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     --fy-font-element-fill: color-mix(in srgb, currentColor 20%, #0f3d7a);
-    --fy-font-glow: drop-shadow(calc(max(0.014em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-scale-x, 1))) 0 0 currentColor) drop-shadow(calc(-1 * calc(max(0.014em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-scale-x, 1)))) 0 0 currentColor) drop-shadow(0 calc(max(0.014em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-scale-y, 1))) 0 currentColor) drop-shadow(0 calc(-1 * calc(max(0.014em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-scale-y, 1)))) 0 currentColor);
+    --fy-font-glow: drop-shadow(calc(max(0.014em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-case-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-syl-scale-x, 1) * var(--fy-scale-x, 1))) 0 0 currentColor) drop-shadow(calc(-1 * calc(max(0.014em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-case-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-syl-scale-x, 1) * var(--fy-scale-x, 1)))) 0 0 currentColor) drop-shadow(0 calc(max(0.014em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-case-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-syl-scale-y, 1) * var(--fy-scale-y, 1))) 0 currentColor) drop-shadow(0 calc(-1 * calc(max(0.014em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-case-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-syl-scale-y, 1) * var(--fy-scale-y, 1)))) 0 currentColor);
   }
   :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part="content"][data-fy-standalone] {
     --fy-font-element-fill: color-mix(in srgb, currentColor 20%, #0f3d7a);
@@ -478,7 +477,7 @@
   :where(.kku-look-blueprint:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
     filter: none;
   }
-  :where(.kku-look-blueprint:is([data-fy-layout-model="fixed-three"], [data-fy-layout-model="case-fixed"]):not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
+  :where(.kku-look-blueprint:is([data-fy-layout="sebul-cases-v1"], [data-fy-layout="sebul-fixed-v1"]):not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="jungseong"], [part~="jongseong"]) {
     --kku-look-stroke: 0.018em;
     --fy-stroke: var(--kku-look-stroke);
   }
@@ -487,6 +486,7 @@
   :where(.kku-look-outline) {
     --kku-look-stroke: 0.04em;
     --fy-stroke: var(--kku-look-stroke);
+    --kku-look-shine-glyph: kku-shine-rim;
     --fy-content-stroke: var(--kku-look-stroke);
     --fy-font-glow: initial;
     --fy-sprite-paint: mask;
@@ -527,7 +527,7 @@
   }
   :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) [part~="jamo"] {
     --fy-font-element-fill: color-mix(in srgb, currentColor 7%, #fff);
-    --fy-font-glow: drop-shadow(calc(max(0.02em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-scale-x, 1))) 0 0 currentColor) drop-shadow(calc(-1 * calc(max(0.02em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-scale-x, 1)))) 0 0 currentColor) drop-shadow(0 calc(max(0.02em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-scale-y, 1))) 0 currentColor) drop-shadow(0 calc(-1 * calc(max(0.02em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-scale-y, 1)))) 0 currentColor);
+    --fy-font-glow: drop-shadow(calc(max(0.02em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-case-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-syl-scale-x, 1) * var(--fy-scale-x, 1))) 0 0 currentColor) drop-shadow(calc(-1 * calc(max(0.02em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)) * var(--fy-jamo-scale-x, 1) * var(--fy-case-scale-x, 1) * var(--fy-ctx-scale-x, 1) * var(--fy-syl-scale-x, 1) * var(--fy-scale-x, 1)))) 0 0 currentColor) drop-shadow(0 calc(max(0.02em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-case-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-syl-scale-y, 1) * var(--fy-scale-y, 1))) 0 currentColor) drop-shadow(0 calc(-1 * calc(max(0.02em, var(--kku-look-hair, 1.1px)) / (var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)) * var(--fy-jamo-scale-y, 1) * var(--fy-case-scale-y, 1) * var(--fy-ctx-scale-y, 1) * var(--fy-syl-scale-y, 1) * var(--fy-scale-y, 1)))) 0 currentColor);
   }
   :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) [part="content"][data-fy-standalone] {
     --fy-font-element-fill: color-mix(in srgb, currentColor 7%, #fff);
@@ -536,7 +536,7 @@
   :where(.kku-look-outline:is([data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"][data-hangul="true"] {
     filter: none;
   }
-  :where(.kku-look-outline:is([data-fy-layout-model="fixed-three"], [data-fy-layout-model="case-fixed"]):not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [data-fy-stamp] {
+  :where(.kku-look-outline:is([data-fy-layout="sebul-cases-v1"], [data-fy-layout="sebul-fixed-v1"]):not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) :is([part~="choseong"], [part~="jungseong"], [part~="jongseong"]) {
     --kku-look-stroke: 0.04em;
     --fy-stroke: var(--kku-look-stroke);
   }
@@ -588,7 +588,7 @@
     color: #62c48b;
   }
   :where(.kku-look-pastel:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
-    filter: drop-shadow(0.035em 0.035em 0 rgb(80 60 120 / 14%));
+    filter: drop-shadow(max(0.035em, var(--kku-look-hair, 1.1px)) max(0.035em, var(--kku-look-hair, 1.1px)) 0 rgb(80 60 120 / 14%));
   }
 
   /* 꾸밈 shadow — 입체: 같은 색 계열로 쌓은 두 단 그림자. 원본: spec/themes.json paint. */
@@ -617,7 +617,7 @@
     color: #2b2540;
   }
   :where(.kku-look-shadow:is([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) [part="glyph"] {
-    filter: drop-shadow(0.03em 0.03em 0 #b9b2cf) drop-shadow(0.03em 0.03em 0 #8f87ab);
+    filter: drop-shadow(max(0.03em, var(--kku-look-hair, 1.1px)) max(0.03em, var(--kku-look-hair, 1.1px)) 0 #b9b2cf) drop-shadow(max(0.03em, var(--kku-look-hair, 1.1px)) max(0.03em, var(--kku-look-hair, 1.1px)) 0 #8f87ab);
   }
 
   /* 꾸밈 inju — 인주: 도장 인주 한 가지 빨강. 원본: spec/themes.json paint. */

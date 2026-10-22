@@ -13,216 +13,475 @@
     <link rel="stylesheet" href="./font-studio-draw.css" />
     <link rel="stylesheet" href="./font-studio-draw-detach.css" />
     <link rel="stylesheet" href="./font-studio-palette.css" />
+    <link rel="stylesheet" href="./font-studio-glyphs.css" />
     <link rel="stylesheet" href="./font-studio-bundle.css" />
     <link rel="stylesheet" href="./font-studio-history.css" />
-    <style>
-      /* 작업실 안내 — 처음 쓰는 사람에게 순서·배치 두 가지·저장을 한 칸에. 접으면 그 상태를 기억한다(아래 스크립트) */
-      .studio-guide {
-        flex: 1 1 100%;
-        font-size: 13px;
-        line-height: 1.55;
-        min-inline-size: 0;
-      }
-      .studio-guide[open] {
-        padding: 10px 16px;
-        border: 1px solid var(--studio-border);
-        border-radius: 14px;
-        background: var(--studio-panel);
-      }
-      .studio-guide > summary {
-        cursor: pointer;
-        inline-size: fit-content;
-        font-weight: 700;
-        font-size: 14px;
-        color: var(--studio-accent);
-      }
-      .studio-guide[open] > summary {
-        font-size: 15px;
-        color: inherit;
-      }
-      .studio-guide > summary small {
-        margin-inline-start: 6px;
-        font-weight: 400;
-        font-size: 12px;
-        color: var(--studio-muted);
-      }
-      .studio-guide-steps {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
-        gap: 10px 14px;
-        margin: 10px 0 0;
-        padding: 0;
-        list-style: none;
-        counter-reset: studio-guide;
-      }
-      .studio-guide-steps li {
-        display: grid;
-        gap: 2px;
-        counter-increment: studio-guide;
-      }
-      .studio-guide-steps strong::before {
-        content: counter(studio-guide);
-        display: inline-grid;
-        place-items: center;
-        inline-size: 1.4em;
-        block-size: 1.4em;
-        margin-inline-end: 6px;
-        border-radius: 999px;
-        background: var(--studio-accent-soft);
-        color: var(--studio-accent);
-        font-size: 12px;
-      }
-      .studio-guide-steps span,
-      .studio-guide-layouts dd {
-        color: var(--studio-ink-soft);
-      }
-      .studio-guide-layouts {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-        gap: 8px 14px;
-        margin: 12px 0 2px;
-        padding-block-start: 10px;
-        border-block-start: 1px solid var(--studio-border);
-      }
-      .studio-guide-layouts dt {
-        font-weight: 700;
-      }
-      .studio-guide-layouts dt small {
-        margin-inline-start: 4px;
-        padding: 0 8px;
-        border: 1px solid var(--studio-accent);
-        border-radius: 999px;
-        font-weight: 400;
-        font-size: 11px;
-        color: var(--studio-accent);
-      }
-      .studio-guide-layouts dd {
-        margin: 2px 0 0;
-      }
-    </style>
+    <link rel="stylesheet" href="./font-studio-header.css" />
+    <link rel="stylesheet" href="./font-studio-modes.css" />
+    <link rel="stylesheet" href="./font-studio-pages.css" />
+    <link rel="stylesheet" href="./font-studio-composition.css" />
+    <link rel="stylesheet" href="./font-studio-review.css" />
   </head>
   <body>
     <div class="studio-shell">
-      <main class="studio" data-studio>
-        <section class="studio-head">
-          <div>
+      <main class="studio" data-studio data-page="design">
+        <header class="studio-head">
+          <div class="studio-head-top">
             <span class="studio-kicker">글꼴 작업실</span>
-            <h1 class="studio-title">디자인을 고르고, <em>자소 하나까지</em> 고치세요</h1>
-            <p class="studio-meta">디자인 칸에서 무엇으로·어떤 배치로 그릴지 정하고, 그 아래에서 글꼴 CSS를 자소 하나까지 고칩니다.</p>
+            <!-- 작업실 페이지(2026-10-17 사용자 결정 — 페이지 나누기). 주소 ?page=design|edit|sheet|review, 한 문서 안에서 바뀌어
+                 고친 것·되돌리기 기록·mount 연결이 이어진다. 각 칸은 data-studio-pages로 보이는 페이지를 밝힌다 -->
+            <nav class="studio-pages" data-studio-pages-nav aria-label="작업실 페이지">
+              <a href="?page=design" data-studio-page-link="design">디자인</a>
+              <a href="?page=edit" data-studio-page-link="edit">고치기</a>
+              <a href="?page=sheet" data-studio-page-link="sheet">자소판</a>
+              <a href="?page=review" data-studio-page-link="review">검수</a>
+            </nav>
+            <div class="studio-status" aria-live="polite">
+              <!-- 상태(계약·재료·줄 바뀜)는 정밀 모드에서(PLAN-STUDIO-002 S3 '페이지별 보기') -->
+              <span data-studio-precise>글꼴 CSS <output data-studio-font-id>-</output></span>
+              <span data-studio-precise>계약 <output data-studio-contract>-</output></span>
+              <span data-studio-precise>재료 <output data-studio-material>-</output></span>
+              <span data-studio-precise><output data-studio-changes>0</output>줄 바뀜</span>
+              <span class="studio-draft-status" data-studio-draft-status></span>
+            </div>
           </div>
-          <div class="studio-status" aria-live="polite">
-            <span>글꼴 CSS <output data-studio-font-id>-</output></span>
-            <span>계약 <output data-studio-contract>-</output></span>
-            <span>재료 <output data-studio-material>-</output></span>
-            <span><output data-studio-changes>0</output>줄 바뀜</span>
-            <span class="studio-draft-status" data-studio-draft-status></span>
+        </header>
+
+        <section class="studio-toolbar" aria-label="글꼴 고르기·열기·저장·내보내기">
+          <!-- 머리 막대(PLAN-STUDIO-002 S2 '머리 막대 다시 짜기'): 글꼴 고르기 ▾ · 열기 하나 · 저장 하나 · 내보내기 ▾ · 되돌리기·다시(하나의 기록).
+               글꼴 목록은 spec/fonts.json에서 만든다(고르면 바로 연다 — 고친 것이 있으면 묻는다). 메뉴는 studio/font-studio-header.js -->
+          <div class="studio-bar" data-studio-bar>
+            <div class="studio-menu" data-studio-menu="font">
+              <button type="button" class="studio-menu-button studio-font-button" data-studio-menu-button="font"
+                aria-haspopup="menu" aria-expanded="false" aria-controls="studio-font-menu" title="글꼴 고르기 — 고르면 바로 엽니다">
+                <span class="studio-menu-kicker">글꼴</span>
+                <strong data-studio-font-current>-</strong>
+                <span class="studio-menu-caret" aria-hidden="true">▾</span>
+              </button>
+              <div class="studio-menu-panel studio-font-menu" id="studio-font-menu" role="menu" aria-label="글꼴 고르기"
+                data-studio-menu-panel="font" data-studio-font-menu hidden></div>
+            </div>
+            <!-- 쉬운 모드에서는 '글꼴 ▾'의 '파일 열기…'(S3) -->
+            <button type="button" data-studio-open data-studio-precise title="CSS · 글꼴 묶음 · 프로젝트 · 디자인 JSON · 디자인 묶음 · 자소판 PNG">열기</button>
+            <input type="file" class="studio-visually-hidden" tabindex="-1" aria-hidden="true"
+              accept=".css,.json,.png,text/css,application/json,image/png" data-studio-open-file />
+            <button type="button" class="studio-primary" data-studio-save-all title="글꼴 묶음 전체(CSS · 디자인 · 그림 · 자소판 · 검수)를 저장합니다">저장</button>
+            <div class="studio-menu" data-studio-menu="export">
+              <button type="button" class="studio-menu-button" data-studio-menu-button="export"
+                aria-haspopup="menu" aria-expanded="false" aria-controls="studio-export-menu">내보내기 <span class="studio-menu-caret" aria-hidden="true">▾</span></button>
+              <div class="studio-menu-panel studio-export-menu" id="studio-export-menu" role="menu" aria-label="내보내기"
+                data-studio-menu-panel="export" hidden>
+                <button type="button" role="menuitem" data-studio-export-css>CSS만 내려받기<small data-studio-export-lost></small></button>
+                <button type="button" role="menuitem" data-studio-copy-css>CSS 복사</button>
+                <button type="button" role="menuitem" data-studio-save hidden>CSS를 연결한 파일에 저장</button>
+                <button type="button" role="menuitem" data-studio-export-page>내 페이지에 쓰기 — 코드 복사<small>CSS · 그림 세트 · 디자인 등록</small></button>
+                <button type="button" role="menuitem" data-studio-export-project>글꼴 묶음 파일<small>다시 열면 그대로인 한 파일</small></button>
+                <button type="button" role="menuitem" data-studio-export-font>글꼴 파일(TTF)<small data-studio-export-font-note></small></button>
+                <button type="button" role="menuitem" data-studio-export-sheet>자소판 PNG<small data-studio-export-sheet-note></small></button>
+                <button type="button" role="menuitem" data-studio-export-jamo>그림 세트 .jamo.js<small data-studio-export-jamo-note></small></button>
+                <label class="studio-menu-check" role="menuitemcheckbox" aria-checked="false" data-studio-flatten-option hidden
+                  title="바탕 구간 표시와 작업실 머리말을 떼어, 바탕 관계가 없는 글꼴 한 파일로 저장·내보내기·복사합니다">
+                  <input type="checkbox" data-studio-flatten />
+                  <span>통째로 풀어 저장(파생 글꼴)</span>
+                </label>
+              </div>
+            </div>
+            <!-- 파생 글꼴의 바탕에 새 판이 있을 때만 보인다(ADR-030 §8) -->
+            <button type="button" data-studio-rebase hidden title="바탕 구간만 지금 판의 바탕 글꼴로 다시 씁니다 — 손 보정은 그대로">바탕 새 판 받기</button>
+            <span class="studio-sep" aria-hidden="true"></span>
+            <button type="button" class="studio-history-button" data-studio-undo disabled title="되돌릴 것이 없습니다">되돌리기</button>
+            <button type="button" class="studio-history-button" data-studio-redo disabled title="다시 할 것이 없습니다">다시</button>
+            <!-- 알림 한 줄(S6 — 막대 안, 되돌리기 옆): 따로 한 줄을 차지하지 않아 미리보기를 밀지 않는다. 휴대폰은 막대 아래 한 줄 -->
+            <p class="studio-message" data-studio-message role="status"></p>
+            <p class="studio-store-state" data-studio-store-state role="status" aria-live="polite"></p>
+            <!-- 쉬운 / 정밀 전환(S3 — font-studio-header.js가 채운다) -->
+            <span class="studio-mode-slot" data-studio-mode-slot hidden></span>
           </div>
-          <details class="studio-guide" data-studio-guide open>
-            <summary>작업실 안내 <small>쓰는 순서 · 배치 두 가지 · 저장과 공유</small></summary>
-            <ol class="studio-guide-steps">
-              <li>
-                <strong>무엇으로 그릴지 고르기</strong>
-                <span>디자인 칸의 세 단추가 재료를 바꿉니다 — 선·원(기기 글꼴 없이 어디서나 같은 모양), 직접 그려(SVG 그림 세트, ‘그리기 8 → 24 → 40’), 기존 글꼴(기기·웹 글꼴, ‘글꼴 팔레트’ 탭에서 섞기). 재료를 바꿔도 배치는 그대로입니다.</span>
-              </li>
-              <li>
-                <strong>자모 살펴보고 고르기</strong>
-                <span>비교 칸은 같은 자모가 몇 가지 자리에 찍히는지 잽니다. 미리보기에서 자소를 누르면 그 자소의 출처가 보이고, ‘조립식·binding’ 탭에서 그 자모를 원본·조립식 가운데 고르거나 조각마다 소스를 정합니다. 바꾼 것은 ‘편집 기록’에서 되돌립니다.</span>
-              </li>
-              <li>
-                <strong>글꼴 CSS 고치기</strong>
-                <span>도구 막대에서 글꼴을 불러오거나 새로 만들고, 자소를 눌러 고른 범위(자리·자모·문맥)의 규칙 한 줄만 고칩니다. 고정 배치에서는 배치가 자리를 정하므로 네모 문맥으로 바꾸거나 디자인을 끄고 고칩니다.</span>
-              </li>
-              <li>
-                <strong>저장하고 나누기</strong>
-                <span>디자인 JSON은 디자인만, 묶음은 디자인과 직접 그린 그림을 한 파일로, 페이지용 코드는 내 페이지에 붙일 등록 코드, 프로젝트 저장은 글꼴 CSS·자소판·디자인 전부입니다. 고친 것은 이 브라우저에 초안으로도 남습니다.</span>
-              </li>
-            </ol>
-            <dl class="studio-guide-layouts">
-              <div>
-                <dt>세벌식 <small>기본 · 처음 화면</small></dt>
-                <dd>초성·중성·종성을 짜임(세로·가로·합자 모음 × 받침 없음·홑·겹)마다 정해진 자리와 크기로 찍습니다. 받침 없는 글자는 아래를 비워 두고, 받침 있는 글자는 칸 높이를 다 씁니다. 글꼴을 밝히지 않은 <code>&lt;font-kku&gt;</code>가 이 배치입니다.</dd>
-              </div>
-              <div>
-                <dt>직결식</dt>
-                <dd>세벌식 타자기처럼 같은 역할의 같은 자모를 어느 글자에서나 같은 자리·크기·모양으로 찍고 받침 자리는 늘 비워 둡니다. <code>font="jikgyeol"</code>이 이 배치이고, ‘고급 — 배치·문맥·JSON’에서 고릅니다.</dd>
-              </div>
-              <div>
-                <dt>네모 문맥</dt>
-                <dd>보통 글꼴처럼 모음 모양과 받침에 따라 자리와 크기가 바뀝니다(글꼴 CSS의 자리·문맥 값). <code>font="sebul"</code>처럼 글꼴을 밝힌 페이지와 같은 짜임이고, ‘고급 — 배치·문맥·JSON’에서 고릅니다.</dd>
-              </div>
-            </dl>
+          <!-- 저장 창구의 판이 다르거나 다른 행위자가 저장했을 때(S2 저장 창구) -->
+          <div class="studio-ask" data-studio-store-conflict-bar role="alert" hidden>
+            <p data-studio-store-conflict-text></p>
+            <button type="button" data-studio-store-reload>창구 판 다시 싣기</button>
+            <button type="button" data-studio-store-overwrite>내 것으로 덮어쓰기</button>
+          </div>
+          <!-- 정밀 자리(S3에서 정밀 모드로) — 늘 보이던 새 이름 칸과 '이 글꼴로 새 글꼴'은 첫 저장 대화상자와 여기에 -->
+          <details class="studio-bar-more" data-studio-bar-more data-studio-precise>
+            <summary>새 이름 · 파일 연결 · 그 밖</summary>
+            <div class="studio-bar-more-body">
+              <label>
+                <span>새 이름</span>
+                <input type="text" size="12" placeholder="my-font" data-studio-new-name />
+              </label>
+              <button type="button" data-studio-rename>이 글꼴로 새 글꼴</button>
+              <button type="button" data-studio-open-handle hidden>CSS 파일 연결해 열기</button>
+            </div>
           </details>
+          <p class="studio-derived" data-studio-glyph-export-note hidden>문자 매핑은 CSS 파일에 포함되지 않습니다. 글꼴 묶음으로 저장하거나, '내 페이지에 쓰기' 코드를 함께 쓰세요.</p>
+          <!-- 고친 것이 있는데 다른 글꼴을 열 때(2026-10-18 검토 D12) -->
+          <div class="studio-ask" data-studio-unsaved role="alertdialog" aria-labelledby="studio-unsaved-text" hidden>
+            <p id="studio-unsaved-text" data-studio-unsaved-text></p>
+            <button type="button" data-studio-unsaved-choice="save">저장하고 열기</button>
+            <button type="button" data-studio-unsaved-choice="discard">버리고 열기</button>
+            <button type="button" data-studio-unsaved-choice="cancel">취소</button>
+          </div>
+          <!-- CSS만 내보내면 빠지는 것(2026-10-18 검토 D6) -->
+          <div class="studio-ask" data-studio-export-notice role="alert" hidden>
+            <p data-studio-export-notice-text></p>
+            <button type="button" data-studio-export-notice-project>글꼴 묶음 파일 저장</button>
+            <button type="button" data-studio-export-notice-close>닫기</button>
+          </div>
+          <!-- CSS 복사의 마지막 대체 길 — 어느 페이지에서나 보이는 칸 -->
+          <div class="studio-ask studio-copy-fallback" data-studio-copy-fallback hidden>
+            <label><span data-studio-copy-fallback-label>글꼴 CSS — 골라 두었으니 직접 복사하세요</span>
+              <textarea readonly spellcheck="false" rows="4" data-studio-copy-fallback-text></textarea></label>
+            <button type="button" data-studio-copy-fallback-close>닫기</button>
+          </div>
+          <div class="studio-draft" data-studio-draft hidden>
+            <span>저장되지 않은 초안이 있습니다.</span>
+            <span data-studio-draft-list></span>
+            <button type="button" data-studio-discard-draft>초안 버리기</button>
+          </div>
+          <ul class="studio-diagnostics" data-studio-diagnostics data-studio-precise hidden aria-label="구문·글꼴 계약 검사 경고"></ul>
+          <!-- 쉬운 모드의 경고 요약 한 줄(목록은 정밀 모드) -->
+          <p class="studio-diagnostics-summary" data-studio-diagnostics-summary data-studio-easy hidden></p>
+          <!-- 처음 저장(S2): 기본 제공 글꼴을 아직 저장하지 않았으면 '새 글꼴로 / 이 글꼴 그대로' 중에서 — FontStudio.saveNeedsChoice() -->
+          <dialog class="studio-save-dialog" data-studio-save-dialog aria-labelledby="studio-save-title">
+            <form method="dialog" data-studio-save-form>
+              <h2 id="studio-save-title">처음 저장 — 어떻게 저장할까요?</h2>
+              <p class="studio-save-why" data-studio-save-why></p>
+              <label class="studio-save-choice" data-studio-save-option="new">
+                <input type="radio" name="studio-save-as" value="new" checked />
+                <span><strong>새 글꼴로</strong> — 바탕은 판을 고정해 옮기고, 고친 것은 손 보정이 됩니다.</span>
+              </label>
+              <label class="studio-save-name">
+                <span>새 글꼴 이름</span>
+                <input type="text" size="16" autocomplete="off" spellcheck="false" data-studio-save-name />
+              </label>
+              <label class="studio-save-choice" data-studio-save-option="same">
+                <input type="radio" name="studio-save-as" value="same" />
+                <span><strong>이 글꼴 그대로</strong> — <span data-studio-save-font></span>을(를) 같은 이름으로 저장합니다(저장소 작업실에서만).</span>
+              </label>
+              <p class="studio-save-error" data-studio-save-error role="alert" hidden></p>
+              <div class="studio-save-actions">
+                <button type="button" data-studio-save-cancel>취소</button>
+                <button type="submit" class="studio-primary" data-studio-save-confirm>저장</button>
+              </div>
+            </form>
+          </dialog>
         </section>
 
-        <section class="studio-design" data-studio-design aria-labelledby="studio-design-title">
+        <!-- 검수(S3): 쉬운 모드는 항목 · 16·24·48px + 120px 머리글 · 통과·고칠 것·보류 · 메모 · 내 문장 · '이 문장 고치기'. 정밀 모드에
+             비교 기준(저장한 모습과 견주기)과 저장 환경 -->
+        <section class="studio-reproducibility" data-studio-pages="review" data-studio-precise aria-label="저장한 환경">
+          <p data-studio-environment-status role="status">그리기에 쓰는 파일을 확인하고 있습니다.</p>
+          <button type="button" data-studio-environment-adopt disabled>지금 환경으로 갱신</button>
+          <details><summary>환경 확인 내역</summary><ul data-studio-environment-details></ul></details>
+        </section>
+        <section class="studio-review" data-studio-pages="review" aria-labelledby="studio-review-title">
+          <h2 id="studio-review-title">글꼴 검수</h2>
+          <p>16 · 24 · 48px 문장과 120px 머리글에서 읽힘, 획과 자소의 간격, 받침과 줄 간격을 살펴보세요. 글꼴이 바뀌면 그 항목 글자의 모양이 바뀐 항목만 '다시 검수'로 표시합니다. 기기·브라우저가 달라도 판정은 그대로입니다.</p>
+          <p data-review-summary role="status"></p>
+          <div class="studio-review-layout">
+            <nav data-review-samples aria-label="검수 항목"></nav>
+            <div>
+              <h3 data-review-title></h3>
+              <div class="studio-review-actions" data-studio-precise><button type="button" data-review-baseline-save>지금을 비교 기준으로 저장</button><button type="button" data-review-baseline-clear hidden>비교 기준 지우기</button><label class="studio-review-diff-toggle" data-review-diff-toggle hidden><input type="checkbox" data-review-diff /> 차이 칠하기</label></div>
+              <p class="studio-hint" data-review-baseline-info data-studio-precise>고치기 전에 비교 기준을 저장하면 이전 모습과 견줄 수 있습니다.</p>
+              <div class="studio-review-compare" data-review-compare>
+                <div data-review-baseline data-studio-precise hidden><h4>저장한 기준</h4><div data-review-baseline-specimens class="studio-review-specimens"></div></div>
+                <div><h4>지금 모습</h4><div data-review-specimens class="studio-review-specimens"></div></div>
+                <div class="studio-review-diff" data-review-diff-view data-studio-precise hidden>
+                  <h4>차이 — 저장한 기준과 지금</h4>
+                  <p class="studio-hint">검정은 둘 다 있는 잉크, <span class="studio-review-diff-old">빨강</span>은 기준에만, <span class="studio-review-diff-new">파랑</span>은 지금에만 있는 잉크입니다. 꾸밈·바탕 없이 글자 모양만 같은 크기로 겹쳐 봅니다.</p>
+                  <p data-review-diff-status role="status"></p>
+                  <div data-review-diff-specimens class="studio-review-specimens studio-review-diff-specimens"></div>
+                </div>
+              </div>
+              <!-- 꾸밈·바탕 바꿔 보기(S5-C): 보기만 바꾼다 — 판정 근거(그린 모양 서명)에는 들지 않고, 판정 기록에 본 꾸밈·바탕을 참고로 적는다.
+                   S6: 견본 아래 판정 칸 바로 위 — 첫 화면은 항목과 견본부터 -->
+              <div class="studio-review-view" data-review-view>
+                <label>꾸밈 <select data-review-look><option value="">꾸밈 없음</option></select></label>
+                <label>바탕 <select data-review-background><option value="">꾸밈에 맞춤</option></select></label>
+                <small data-review-view-note></small>
+              </div>
+              <p data-review-status role="status"></p>
+              <label class="studio-review-note">검수 메모<textarea data-review-note rows="3" maxlength="4000" placeholder="예: 16px에서 읽의 받침이 붙어 보임"></textarea></label>
+              <div class="studio-review-actions">
+                <button type="button" data-review-verdict="pass">통과</button>
+                <button type="button" data-review-verdict="needs-fix">고칠 것</button>
+                <button type="button" data-review-verdict="hold">보류</button>
+                <button type="button" data-review-edit>이 문장 고치기</button>
+              </div>
+              <p data-review-history></p>
+            </div>
+          </div>
+          <label class="studio-review-custom">추가로 볼 문장<input data-review-custom maxlength="500" placeholder="이름이나 자주 쓰는 문장을 넣으세요" /></label>
+          <p class="studio-hint">판정과 메모는 초안과 프로젝트에 함께 저장됩니다. CSS 파일에는 담기지 않습니다.</p>
+        </section>
+        <p data-studio-pages="edit" data-review-return hidden><a href="?page=review" data-studio-page-link="review">검수로 돌아가 바뀐 글자 확인하기</a></p>
+
+        <section class="studio-workspace" data-studio-pages="design edit sheet">
+          <!-- 첫 화면(S6): 머리 막대 바로 아래가 미리보기다 — 문장 칸·페이지 안내·파생 글꼴 줄은 미리보기 아래(PLAN-STUDIO-002 Success
+               Criteria '미리보기 위끝 1440 ≤ 200px · 390 ≤ 300px'). 전에는 머리 아래 안내 두 줄과 문장 칸이 위에 있어 322 · 439px이었다 -->
+          <div class="studio-stage">
+            <div class="studio-preview" data-studio-preview tabindex="0" aria-label="미리보기. 자소를 클릭해 고르고 방향키로 옮긴다">
+              <font-kku data-studio-host size="84px" wrap-unit="glyph"></font-kku>
+            </div>
+            <label class="studio-text">
+              <span>미리보기 문장</span>
+              <input type="text" value="가 각 고 글 의 왕 읽 흙 괆 한글 조형" data-studio-text />
+            </label>
+            <p class="studio-page-intro" data-studio-pages="design">
+              <strong>디자인</strong> 무엇으로(선·원 · 직접 그린 그림 · 기존 글꼴) 어떤 글꼴 모양(세벌식 · 직결식 · 네모꼴)으로 그릴지 정하고, 그림 세트를 그립니다.
+              자소를 누르면 오른쪽에 그 자모가 무엇으로 어디서 그려졌는지 보입니다. 끌어 고치기는 고치기 페이지에서 합니다.
+            </p>
+            <p class="studio-page-intro" data-studio-pages="edit" data-studio-easy>
+              <strong>고치기</strong> 미리보기에서 자모의 획을 눌러 고르고, 끌거나 아래 칸의 막대로 위치·크기·회전·굵기를 고칩니다.
+              어디까지 바꿀지(이 글자만 · 같은 짜임 모두 · 이 자모 어디서나)를 고르면 바뀔 글자에 점선이 보입니다.
+            </p>
+            <p class="studio-page-intro" data-studio-pages="edit" data-studio-precise>
+              <strong>고치기</strong> 미리보기에서 자모의 획을 눌러 고르고 끌어 고칩니다. 고른 범위(자리 · 자모 · 문맥 · 이 짜임 · 이 글자)의 규칙 한 줄만 바뀝니다 —
+              세벌식 · 직결식은 글꼴 CSS의 손 보정(<code>@layer font-kku.tune</code>)에 적습니다.
+            </p>
+            <p class="studio-page-intro" data-studio-pages="sheet">
+              <strong>자소판</strong> 그림 자소 글꼴의 자소판(자음 19 + 모음 21칸)을 칸마다 그립니다. 미리보기에서 자소를 누르면 아래 자소판에서 그 칸이 열립니다.
+            </p>
+            <p class="studio-hint" data-studio-pages="edit">
+              자모의 획을 눌러 선택(같은 점을 다시 누르면 그 아래 자모, 머리 음절은 먼저 그 안 조각) · 끌어 이동, 틀 오른쪽 아래 손잡이로 크기, 위 손잡이로 회전(5°씩, Shift 15°씩 — 한 번이 되돌리기 한 단계) ·
+              방향키 0.1% (Shift 1%) · + − 크기 · [ ] 회전 1° (Shift 15°) · 휴대폰은 두드려 고르고 고른 자모를 끕니다 · 값 칸은 지금 보이는 값이고, 비우면 그 규칙에서 선언을 지웁니다.
+              다른 규칙이 값을 덮어 편집이 보이지 않으면 경고합니다.
+            </p>
+            <!-- 파생 글꼴의 바탕(ADR-030 §8) 한 줄 — 머리 막대 안에서 미리보기를 밀던 것을 여기로(S6) -->
+            <p class="studio-derived" data-studio-derived hidden></p>
+            <section class="studio-checks" data-studio-pages="edit" data-studio-precise aria-label="검증">
+              <h2>검증 <small data-studio-check-summary></small></h2>
+              <ul data-studio-checks></ul>
+            </section>
+          </div>
+
+          <aside class="studio-inspector" data-studio-pages="design edit" aria-label="선택한 자소">
+            <div class="studio-selection" data-studio-selection>자소를 클릭하세요.</div>
+            <!-- 쉬운 고치기(PLAN-STUDIO-002 S3): 뜻 범위 셋 · 위치·크기·회전·굵기 막대와 숫자(지금 보이는 값) · 한국어 경고와 해결 단추.
+                 휴대폰에서는 고르면 아래에서 올라오는 판이 된다. 편집은 정밀 모드의 값 칸·끌기와 같은 길(applyInput·nudge·키 한 걸음) -->
+            <section class="studio-easy-edit" data-studio-easy-edit data-studio-easy data-studio-pages="edit" aria-label="고른 자모 고치기" hidden>
+              <div class="studio-easy-head">
+                <strong data-studio-easy-what></strong>
+                <button type="button" class="studio-easy-fold" data-studio-easy-fold aria-expanded="true">접기</button>
+              </div>
+              <div class="studio-easy-body" data-studio-easy-body>
+                <fieldset class="studio-easy-scope" data-studio-easy-scope>
+                  <legend>어디까지 바꿀까요</legend>
+                  <label><input type="radio" name="easy-scope" value="glyph" /> <span>이 글자만</span></label>
+                  <label><input type="radio" name="easy-scope" value="case" /> <span>같은 짜임 모두</span></label>
+                  <label><input type="radio" name="easy-scope" value="jamo" /> <span>이 자모 어디서나</span></label>
+                </fieldset>
+                <p class="studio-easy-note" data-studio-easy-scope-note hidden></p>
+                <p class="studio-easy-count" data-studio-easy-count></p>
+                <div class="studio-easy-sliders" data-studio-easy-sliders></div>
+                <div class="studio-easy-warning" data-studio-easy-warning role="status" hidden></div>
+                <p class="studio-easy-checks" data-studio-easy-checks></p>
+                <p class="studio-easy-more"><button type="button" class="studio-link-button" data-studio-to-precise>범위·값을 더 자세히 — 정밀 모드에서 하기</button></p>
+              </div>
+            </section>
+            <section class="studio-f-panel" data-studio-f="provenance" hidden></section>
+            <fieldset class="studio-scope" data-studio-scope data-studio-pages="edit" data-studio-precise disabled>
+              <legend>편집 범위 <span class="studio-scope-order" data-studio-scope-order>넓은 것부터 — 아래 범위가 위 범위를 이깁니다</span></legend>
+              <label><input type="radio" name="scope" value="family" /> <span data-scope-label="family">자리 가족</span></label>
+              <label><input type="radio" name="scope" value="slot" checked /> <span data-scope-label="slot">이 자리 모두</span></label>
+              <label><input type="radio" name="scope" value="slotJamo" /> <span data-scope-label="slotJamo">이 자리의 이 자모</span></label>
+              <label><input type="radio" name="scope" value="jamo" /> <span data-scope-label="jamo">이 자모 어디서나 (보정)</span></label>
+              <label><input type="radio" name="scope" value="principle" /> <span data-scope-label="principle">원칙 범위</span></label>
+              <label><input type="radio" name="scope" value="case" /> <span data-scope-label="case">같은 짜임 모두</span></label>
+              <label><input type="radio" name="scope" value="context" /> <span data-scope-label="context">문맥 (보정)</span></label>
+              <label><input type="radio" name="scope" value="glyph" /> <span data-scope-label="glyph">이 글자만</span></label>
+              <select data-studio-context aria-label="문맥 조건"></select>
+            </fieldset>
+            <div class="studio-target" data-studio-target data-studio-pages="edit" data-studio-precise hidden aria-live="polite"></div>
+            <table class="studio-props" data-studio-props data-studio-pages="edit" data-studio-precise>
+              <thead><tr><th>속성</th><th title="노드가 지금 그리는 값 — 친 값이 보이도록 고른 범위의 값을 고칩니다">보이는 값</th><th>출처</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <details class="studio-rules" data-studio-pages="edit" data-studio-precise open>
+              <summary>이 자소에 걸린 규칙</summary>
+              <ol data-studio-rules></ol>
+            </details>
+          </aside>
+        </section>
+
+        <details class="studio-globals" data-studio-globals data-studio-pages="edit" data-studio-precise>
+          <summary>전역·묶음 변수 <small>바탕 요소 규칙의 값을 그 자리에서 고친다</small></summary>
+          <div class="studio-globals-body" data-studio-globals-body></div>
+        </details>
+
+        <!-- 디자인(PLAN-STUDIO-002 S3) — 미리보기(위 작업 칸) 아래에 둔다: 도구를 열어도 미리보기가 밀리지 않는다(검토 §3 — 그리기를 열면
+             미리보기가 1,606px까지 내려갔다). 쉬운 모드: 재료 셋 · 글꼴 모양 셋 · 그리기 · 글자로 만들기. 정밀 모드([data-studio-precise])에
+             비교 칸 · 글꼴 확인 · 역할마다 다른 글꼴 · 문맥 규칙 · 디자인 JSON · 파일 · 조립식 · 팔레트 -->
+        <section class="studio-design" data-studio-design data-studio-pages="design" aria-labelledby="studio-design-title">
           <div class="studio-design-head">
             <h2 id="studio-design-title">디자인 <small data-design-summary></small></h2>
             <span class="studio-design-chip" data-design-layout-chip>세벌식</span>
-            <label class="studio-design-apply"><input type="checkbox" data-design-apply /> 미리보기에 디자인 적용</label>
+            <label class="studio-design-apply" data-studio-precise><input type="checkbox" data-design-apply /> 미리보기에 디자인 적용</label>
             <button type="button" class="studio-design-fold" data-design-fold aria-expanded="true" aria-controls="studio-design-main">접기</button>
             <small class="studio-design-reason" data-design-apply-reason hidden></small>
           </div>
+          <!-- 짓는 방식(ADR-034 §0·§6) — 고르지 않아도 된다(접혀 있고 기본은 모양대로). 디자인 본문 밖에 둔다: 디자인을 끈 글꼴(본문이 접힘)도 글꼴 CSS로 고른다. 쉬운 모드는 그림 단추 여섯, 정밀 모드는 축 셋·
+               자모마다 조립식 고리·지원표를 더한다. 디자인이 걸려 있으면 디자인에, 아니면 글꼴 CSS에 적는다(studio/font-studio-composition.js) -->
+          <details class="studio-composition" data-studio-composition>
+            <summary>짓는 방식 <span class="studio-composition-current" data-composition-summary>모양대로</span>
+              <small>— 고르지 않아도 됩니다</small></summary>
+            <p class="studio-composition-where" data-composition-where></p>
+            <div class="studio-composition-presets" role="group" aria-label="짓는 방식" data-composition-presets></div>
+            <div class="studio-composition-precise" data-studio-precise data-composition-precise>
+              <div class="studio-composition-axes">
+                <label><span>모음 나누기</span><select data-composition-axis="vowel"></select></label>
+                <label><span>받침 나누기</span><select data-composition-axis="coda"></select></label>
+                <label><span>조각 깊이</span><select data-composition-axis="pieces"></select></label>
+              </div>
+              <output class="studio-composition-now" data-composition-now></output>
+              <p class="studio-composition-recipes">
+                <button type="button" data-composition-recipes>자모마다 조립식 고르기</button>
+                <small data-composition-recipes-note hidden>미리보기에서 자모를 고르면 '조립식·조각 소스' 탭이 열립니다.</small>
+              </p>
+              <table class="studio-composition-support" data-composition-support>
+                <caption>지원표 — 지금 재료로 글꼴 모양마다 짓는 방식이 되는가(자모마다 고른 규칙은 그대로 이깁니다)</caption>
+                <thead><tr><th scope="col">글꼴 모양</th><th scope="col">음절로</th><th scope="col">겹모음 통째로</th><th scope="col">자모로</th><th scope="col">조각으로</th><th scope="col">원형으로</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </details>
           <div class="studio-design-main" id="studio-design-main" data-design-main>
           <div class="studio-design-body">
             <div class="studio-design-pick">
               <div class="studio-design-start" role="group" aria-label="무엇으로 그릴까">
                 <button type="button" data-design-start="primitive" aria-pressed="true">
-                  <strong>선·원으로 만들기</strong><span>획을 선·점·원 원소로. 기기 글꼴 없이 어디서나 같은 모양</span>
+                  <svg class="studio-design-art" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                    <path d="M7 10h17v26" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="36" cy="28" r="7" fill="none" stroke="currentColor" stroke-width="4" />
+                  </svg>
+                  <strong>선·원으로 만들기</strong><span>획을 선·점·원으로. 기기 글꼴 없이 어디서나 같은 모양</span>
                 </button>
+                <!-- 직접 그려 만들기 = 그리기 8 → 24 → 40 입구(하나로 합침): 고르면 빈 그림 세트로 그리기를 연다. 기본 제공 세트는 아래 칸에서 -->
                 <button type="button" data-design-start="svg" aria-pressed="false">
-                  <strong>직접 그려 만들기</strong><span>SVG 그림 세트. 원형 8부터 24·40으로</span>
+                  <svg class="studio-design-art" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                    <path d="M10 36c6-2 9-10 14-16s10-8 14-8" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                    <path d="M30 8l8 8-4 4-8-8z" fill="currentColor" />
+                  </svg>
+                  <strong>직접 그려 만들기</strong><span>원형 8칸부터 그려 24 · 40칸으로 — 고르면 빈 그림 세트로 그리기를 엽니다</span>
                 </button>
                 <button type="button" data-design-start="font" aria-pressed="false">
-                  <strong>기존 글꼴로 만들기</strong><span>기기·웹 글꼴의 자모를 재료로</span>
+                  <svg class="studio-design-art" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                    <text x="24" y="33" text-anchor="middle" font-size="22" font-weight="700" fill="currentColor">가A</text>
+                  </svg>
+                  <strong>기존 글꼴로 만들기</strong><span>기기·웹 글꼴의 자모, 또는 영문·숫자·기호로(글자로 만들기)</span>
                 </button>
               </div>
+              <!-- 글꼴 모양 셋(전에는 '고급' 안). 고르면 바로 바뀌고 Ctrl+Z로 되돌린다. 디자인을 통째로 끄는 단추는 먼저 묻는다(⚑9, 검토 D5 —
+                   전에는 고치기 페이지의 살펴보기에 있었다) -->
+              <fieldset class="studio-design-layout" data-design-layout-field>
+                <legend>글꼴 모양</legend>
+                <label><input type="radio" name="design-layout" value="sebul-cases-v1" /> <strong>세벌식</strong> — 기본. 짜임(모음 모양·받침 수)마다 정해진 자리·크기, 받침 없는 글자는 아래를 비워 둔다</label>
+                <label><input type="radio" name="design-layout" value="sebul-fixed-v1" /> <strong>직결식</strong> — 역할마다 어느 글자에서나 같은 자리·크기 하나, 받침 자리는 늘 비워 둔다</label>
+                <label><input type="radio" name="design-layout" value="square-context-v1" /> <strong>네모꼴</strong> — 모음·받침에 따라 자리·크기가 바뀐다(글꼴 CSS의 자리·문맥 값)</label>
+                <label data-design-legacy-option hidden><input type="radio" name="design-layout" value="legacy" disabled /> <strong>지금 모양</strong> — 글꼴 모양을 적지 않은 디자인(글꼴 설정을 따름)</label>
+                <!-- 글꼴 모양을 통째로 바꾸는 단추 둘 — 먼저 묻는다. 확인 단추는 작업실이 받는 갈고리([data-studio-design-square]·
+                     [data-studio-design-off], FontStudio.shapeChange와 같은 길)라 작업실 동작으로 기록되고 Ctrl+Z가 되돌린다 -->
+                <div class="studio-design-shape-actions" data-design-shape-actions>
+                  <button type="button" data-design-shape-ask="square" aria-expanded="false" aria-controls="studio-design-shape-confirm">네모꼴로 바꾸기…</button>
+                  <button type="button" data-design-shape-ask="off" aria-expanded="false" aria-controls="studio-design-shape-confirm">디자인 끄고 글꼴 CSS로…</button>
+                  <button type="button" data-design-shape-on hidden>디자인 다시 켜기</button>
+                  <div class="studio-design-shape-confirm" id="studio-design-shape-confirm" data-design-shape-confirm role="alertdialog" hidden>
+                    <p data-design-shape-question></p>
+                    <button type="button" data-studio-design-square data-design-shape-kind="square">네모꼴로 바꾸기</button>
+                    <button type="button" data-studio-design-off data-design-shape-kind="off">디자인 끄기</button>
+                    <button type="button" data-design-shape-cancel>취소</button>
+                  </div>
+                </div>
+              </fieldset>
+              <!-- 이 모양과 맞지 않는 규칙(S5-B — 충돌 상자와 원칙 안내를 한 칸으로, ADR-030 §5). 글꼴 모양 바로 아래라 쉬운 모드에도 보인다.
+                   막음: 그 모양이 그릴 수 없는 규칙(통짜 합자 모음) — 고를 때까지 글꼴 모양을 바꾸지 않는다.
+                   경고: 그 모양의 원칙(역할·자모로만 고름, 자리마다 변주 없음)을 깨는 규칙 — 그대로 그리고 되돌리는 길을 준다 -->
+              <div class="studio-design-mismatch" data-design-mismatch hidden>
+                <p class="studio-design-mismatch-title" data-design-mismatch-title>이 모양과 맞지 않는 규칙</p>
+                <div class="studio-design-mismatch-group studio-design-conflicts" data-design-conflicts data-severity="block" hidden role="alert">
+                  <p data-design-conflicts-title></p>
+                  <ul></ul>
+                  <div class="studio-design-buttons">
+                    <button type="button" data-design-conflicts-drop>통째 규칙 지우고 바꾸기</button>
+                    <button type="button" data-design-conflicts-cancel>바꾸지 않기</button>
+                  </div>
+                </div>
+                <div class="studio-design-mismatch-group studio-design-principle-notice" data-design-principle data-severity="warn" hidden role="status">
+                  <p data-design-principle-title></p>
+                  <ul></ul>
+                  <div class="studio-design-buttons">
+                    <button type="button" data-design-principle-flatten>원칙대로 되돌리기</button>
+                    <button type="button" data-design-principle-drop>문맥 규칙 지우기</button>
+                  </div>
+                </div>
+              </div>
               <div class="studio-design-source" data-design-source-for="svg" hidden>
-                <label><span>그림 세트</span><select data-design-set></select></label>
-                <output data-design-progress></output>
-                <small>PNG 자소판(그림 자소 글꼴)은 디자인과 다른 재료입니다 — <a href="#studio-material">재료 — 자소판</a></small>
+                <div class="studio-progress-holder" data-design-progress role="status" aria-live="polite"></div>
+                <label><span>기본 제공 그림 세트</span><select data-design-set></select></label>
+                <small>PNG 자소판(그림 자소 글꼴)은 디자인과 다른 재료입니다 — <a href="?page=sheet" data-studio-page-link="sheet">자소판</a></small>
               </div>
               <div class="studio-design-source" data-design-source-for="font" hidden>
                 <label><span>글꼴 이름</span><input type="text" value="Apple SD Gothic Neo" spellcheck="false" data-design-family /></label>
-                <details>
+                <details data-studio-precise>
                   <summary>역할마다 다른 글꼴</summary>
                   <label><span>초성</span><input type="text" placeholder="(기본 글꼴)" spellcheck="false" data-design-family-role="initial" /></label>
                   <label><span>중성</span><input type="text" placeholder="(기본 글꼴)" spellcheck="false" data-design-family-role="medial" /></label>
                   <label><span>종성</span><input type="text" placeholder="(기본 글꼴)" spellcheck="false" data-design-family-role="final" /></label>
                 </details>
-                <output data-design-identity></output>
+                <button type="button" data-glyphs-open>글자로 만들기 — 영문·숫자·기호로 자모</button>
+                <output data-design-identity data-studio-precise></output>
               </div>
             </div>
-            <div class="studio-design-compare" data-design-compare role="group" aria-label="대표 음절 비교 — 같은 역할의 같은 자모가 몇 가지 자리에 찍히는가"></div>
+            <div class="studio-design-compare" data-design-compare data-studio-precise role="group" aria-label="대표 음절 비교 — 같은 역할의 같은 자모가 몇 가지 자리에 찍히는가"></div>
           </div>
           <nav class="studio-f-tabs" data-studio-f-tabs role="tablist" aria-label="디자인 도구" hidden></nav>
           <section class="studio-f-panel" data-studio-f="recipes" hidden></section>
           <section class="studio-f-panel" data-studio-f="draw" hidden></section>
           <section class="studio-f-panel" data-studio-f="draw-detach" hidden></section>
+          <section class="studio-f-panel" data-studio-f="glyphs" hidden></section>
           <section class="studio-f-panel" data-studio-f="palette" hidden></section>
-          <section class="studio-f-panel" data-studio-f="history" hidden></section>
-          <details class="studio-design-advanced" data-design-advanced>
-            <summary>고급 — 배치·문맥·JSON</summary>
+          <details class="studio-design-advanced" data-design-advanced data-studio-precise>
+            <summary>고급 — 규칙 목록 · 디자인 JSON</summary>
             <div class="studio-design-advanced-body">
-              <fieldset class="studio-design-layout" data-design-layout-field>
-                <legend>배치</legend>
-                <label><input type="radio" name="design-layout" value="sebul-cases-v1" /> 세벌식 — 기본. 짜임(모음 모양·받침 수)마다 정해진 자리·크기(도장), 받침 없는 글자는 아래를 비워 둔다</label>
-                <label><input type="radio" name="design-layout" value="sebul-fixed-v1" /> 직결식 — 역할마다 어느 글자에서나 같은 자리·크기(도장) 하나, 받침 자리는 늘 비워 둔다</label>
-                <label><input type="radio" name="design-layout" value="square-context-v1" /> 네모 문맥 — 모음·받침에 따라 자리·크기가 바뀐다(글꼴 CSS의 자리·문맥 값, 글꼴을 밝힌 페이지와 같은 짜임)</label>
-                <label data-design-legacy-option hidden><input type="radio" name="design-layout" value="legacy" disabled /> 지금 배치 — 배치를 적지 않은 1.0·1.1 디자인(그대로 둔다)</label>
-              </fieldset>
-              <div class="studio-design-context" data-design-context-tab hidden>
-                <h3>문맥 규칙</h3>
-                <ul data-design-context-list></ul>
-                <p data-design-context-empty>문맥 규칙이 없습니다. JSON의 rules에 <code>match.vowelLayout</code>·<code>match.hasFinal</code>을 적은 규칙을 더하면 여기 보입니다.</p>
-              </div>
-              <div class="studio-design-conflicts" data-design-conflicts hidden role="alert">
-                <p data-design-conflicts-title></p>
-                <ul></ul>
-                <div class="studio-design-buttons">
-                  <button type="button" data-design-conflicts-drop>문맥 규칙 지우기</button>
-                  <button type="button" data-design-conflicts-flatten>역할별 값으로 확정</button>
-                  <button type="button" data-design-conflicts-cancel>취소</button>
-                </div>
+              <!-- 규칙 목록 하나(S5-B — 문맥 규칙 탭을 합침). 모든 규칙을 조건 → 결과 한 줄로, 목록에서 더하기·고치기·지우기(한 번이 기록 한 줄).
+                   더한 규칙은 JSON에 손으로 적은 것과 같은 꼴이다(검사는 런타임 validateDesign) -->
+              <div class="studio-design-rules" data-design-rules>
+                <h3>규칙 목록</h3>
+                <p class="studio-design-rules-help">규칙은 자모마다(역할·짜임·받침 조건을 붙여) 무엇으로 어떻게 그릴지 정합니다. 없어도 됩니다 — 기본 소스·짓기로 그립니다. 조건이 구체적인 규칙이 이깁니다.</p>
+                <ul data-design-rule-list></ul>
+                <p data-design-rules-empty>규칙이 없습니다 — 모든 자모를 기본 소스·짓기로 그립니다.</p>
+                <form class="studio-design-rule-form" data-design-rule-form novalidate>
+                  <p class="studio-design-rule-form-title" data-design-rule-form-title>규칙 더하기</p>
+                  <div class="studio-design-rule-fields">
+                    <label><span>자모</span><input type="text" maxlength="1" size="3" spellcheck="false" autocomplete="off" placeholder="ㄱ" data-design-rule-jamo /></label>
+                    <label><span>역할</span><select data-design-rule-role>
+                      <option value="">모든 역할</option><option value="initial">초성</option><option value="medial">중성</option><option value="final">종성</option><option value="standalone">낱자</option>
+                    </select></label>
+                    <label><span>짜임</span><select data-design-rule-layout>
+                      <option value="">어느 짜임이든</option><option value="right">세로모음 짜임</option><option value="bottom">가로모음 짜임</option><option value="split-right">합자모음 짜임</option>
+                    </select></label>
+                    <label><span>받침</span><select data-design-rule-final>
+                      <option value="">있든 없든</option><option value="true">받침 있음</option><option value="false">받침 없음</option>
+                    </select></label>
+                    <label><span>소스</span><select data-design-rule-source></select></label>
+                    <label><span>짓기</span><select data-design-rule-method>
+                      <option value="">그대로</option><option value="auto">자동</option><option value="direct">원본 그대로</option><option value="compose">조합</option>
+                    </select></label>
+                    <label><span>조립식</span><select data-design-rule-recipe></select></label>
+                    <label><span>늘림</span><select data-design-rule-fit>
+                      <option value="">그대로</option><option value="preserve-aspect">비율 지킴</option><option value="allow-anisotropic">가로·세로 따로 늘림</option>
+                    </select></label>
+                  </div>
+                  <p class="studio-design-rule-note" data-design-rule-condition-note hidden></p>
+                  <div class="studio-design-buttons">
+                    <button type="submit" data-design-rule-submit>더하기</button>
+                    <button type="button" data-design-rule-cancel hidden>고치기 그만</button>
+                  </div>
+                  <p class="studio-design-rule-message" data-design-rule-message role="status"></p>
+                </form>
               </div>
               <label class="studio-design-json">
                 <span>디자인 JSON <small>spec/design.schema.json — 검사는 FontKku.validateDesign(오류 전부)</small></span>
@@ -231,19 +490,15 @@
               <div class="studio-design-buttons">
                 <button type="button" data-design-apply-json>JSON 적용</button>
                 <button type="button" data-design-revert hidden>마지막 정상 디자인으로</button>
-                <button type="button" data-design-undo disabled>디자인 되돌리기</button>
-                <button type="button" data-design-redo disabled>디자인 다시</button>
               </div>
             </div>
           </details>
-          <div class="studio-design-files">
+          <div class="studio-design-files" data-studio-precise>
             <label class="studio-file">
               <span>디자인 JSON 열기</span>
               <input type="file" accept=".json,application/json" data-design-open />
             </label>
             <button type="button" data-design-save>디자인 JSON 저장</button>
-            <button type="button" data-design-copy>디자인 JSON 복사</button>
-            <button type="button" data-design-copy-snippet>페이지용 코드 복사</button>
             <section class="studio-f-panel" data-studio-f="bundle" hidden></section>
           </div>
           </div>
@@ -251,107 +506,11 @@
           <ul class="studio-diagnostics" data-design-errors hidden aria-label="디자인 검증 오류"></ul>
         </section>
 
-        <section class="studio-toolbar" aria-label="글꼴 불러오기와 저장">
-          <label>
-            <span>기본 제공 글꼴</span>
-            <select data-studio-shipped>
-              <option value="sebul">sebul</option>
-              <option value="gothic">gothic</option>
-              <option value="sprite-example">sprite-example</option>
-              <option value="sprite-system">sprite-system</option>
-            </select>
-          </label>
-          <button type="button" data-studio-load>불러오기</button>
-          <label class="studio-file">
-            <span>CSS 파일 열기</span>
-            <input type="file" accept=".css,text/css" data-studio-open-css />
-          </label>
-          <label class="studio-file">
-            <span>프로젝트 열기</span>
-            <input type="file" accept=".json,application/json" data-studio-open-project />
-          </label>
-          <span class="studio-sep" aria-hidden="true"></span>
-          <label>
-            <span>새 이름</span>
-            <input type="text" size="12" placeholder="my-font" data-studio-new-name />
-          </label>
-          <button type="button" data-studio-rename>이 글꼴로 새 글꼴</button>
-          <button type="button" data-studio-new-sprite>새 그림 자소 글꼴</button>
-          <label class="studio-file">
-            <span>v1 그림 자소 프로젝트 가져오기</span>
-            <input type="file" accept=".json,application/json" data-studio-import-v1 />
-          </label>
-          <span class="studio-sep" aria-hidden="true"></span>
-          <button type="button" data-studio-undo disabled>되돌리기</button>
-          <button type="button" data-studio-redo disabled>다시</button>
-          <button type="button" data-studio-open-handle hidden>파일 연결해 열기</button>
-          <button type="button" data-studio-save hidden>파일에 저장</button>
-          <button type="button" data-studio-export-css>CSS 내보내기</button>
-          <button type="button" data-studio-copy-css>CSS 복사</button>
-          <button type="button" data-studio-export-project>프로젝트 저장</button>
-          <p class="studio-message" data-studio-message role="status"></p>
-          <div class="studio-draft" data-studio-draft hidden>
-            <span>저장되지 않은 초안이 있습니다.</span>
-            <span data-studio-draft-list></span>
-            <button type="button" data-studio-discard-draft>초안 버리기</button>
-          </div>
-          <ul class="studio-diagnostics" data-studio-diagnostics hidden aria-label="구문·글꼴 계약 검사 경고"></ul>
-        </section>
-
-        <section class="studio-workspace">
-          <div class="studio-stage">
-            <label class="studio-text">
-              <span>미리보기 문장</span>
-              <input type="text" value="가 각 고 글 의 왕 읽 흙 괆 한글 조형" data-studio-text />
-            </label>
-            <div class="studio-preview" data-studio-preview tabindex="0" aria-label="미리보기. 자소를 클릭해 고르고 방향키로 옮긴다">
-              <font-kku data-studio-host size="84px" wrap-unit="glyph"></font-kku>
-            </div>
-            <p class="studio-hint">
-              자소 클릭으로 선택 · 드래그로 이동(한 번이 되돌리기 한 단계) · 방향키 0.1% (Shift 1%) · 값 칸을 비우면 그 규칙에서 선언을 지웁니다.
-              다른 규칙이 값을 덮어 편집이 보이지 않으면 경고합니다. 고정 배치에서는 자리를 배치가 정해 글꼴 CSS를 바꾸지 않습니다 — 자소를 고르면 나오는 ‘네모 문맥으로’나 ‘디자인 끄고 글꼴 CSS로’를 누르세요.
-            </p>
-            <section class="studio-checks" aria-label="검증">
-              <h2>검증 <small data-studio-check-summary></small></h2>
-              <ul data-studio-checks></ul>
-            </section>
-          </div>
-
-          <aside class="studio-inspector" aria-label="선택한 자소">
-            <div class="studio-selection" data-studio-selection>자소를 클릭하세요.</div>
-            <section class="studio-f-panel" data-studio-f="provenance" hidden></section>
-            <fieldset class="studio-scope" data-studio-scope disabled>
-              <legend>편집 범위</legend>
-              <label><input type="radio" name="scope" value="family" /> <span data-scope-label="family">자리 가족</span></label>
-              <label><input type="radio" name="scope" value="slot" checked /> <span data-scope-label="slot">자리 전체</span></label>
-              <label><input type="radio" name="scope" value="slotJamo" /> <span data-scope-label="slotJamo">이 자리의 이 자모</span></label>
-              <label><input type="radio" name="scope" value="jamo" /> <span data-scope-label="jamo">이 자모 (모든 자리, 보정)</span></label>
-              <label><input type="radio" name="scope" value="context" /> <span data-scope-label="context">문맥 (보정)</span></label>
-              <select data-studio-context aria-label="문맥 조건"></select>
-            </fieldset>
-            <div class="studio-target" data-studio-target hidden aria-live="polite"></div>
-            <table class="studio-props" data-studio-props>
-              <thead><tr><th>속성</th><th>값</th><th>출처</th></tr></thead>
-              <tbody></tbody>
-            </table>
-            <details class="studio-rules" open>
-              <summary>이 자소에 걸린 규칙</summary>
-              <ol data-studio-rules></ol>
-            </details>
-          </aside>
-        </section>
-
-        <details class="studio-globals" data-studio-globals>
-          <summary>전역·묶음 변수 <small>바탕 요소 규칙의 값을 그 자리에서 고친다</small></summary>
-          <div class="studio-globals-body" data-studio-globals-body></div>
-        </details>
-
-        <div class="studio-material-area" id="studio-material">
+        <div class="studio-material-area" id="studio-material" data-studio-pages="sheet">
         <section class="studio-material-intro" data-studio-material-intro hidden aria-label="자소판 그리기 시작">
           <h2>재료 — 자소판</h2>
           <p>
-            <strong data-material-intro-font>-</strong> 글꼴은 <code>--fy-material: <span data-material-intro-kind>system</span></code> 재료라
-            그릴 자소판이 없습니다. 자소를 직접 그려 글꼴을 만들려면 그림 자소 글꼴을 여세요 —
+            <strong data-material-intro-font>-</strong> 글꼴에는 그릴 자소판이 없습니다<span data-studio-precise>(재료 <code>--fy-material: <span data-material-intro-kind>system</span></code>)</span>. 자소를 직접 그려 글꼴을 만들려면 그림 자소 글꼴을 여세요 —
             자음 19 + 모음 21칸을 그리면 한글 11,172자가 됩니다. 픽셀 그림 대신 벡터로 그리려면 위 디자인의 ‘직접 그려 만들기’(SVG 그림 세트)를 쓰세요.
           </p>
           <div class="studio-material-buttons">
@@ -374,17 +533,19 @@
                 <canvas data-material-cell aria-label="선택한 칸 편집"></canvas>
               </div>
               <p class="studio-material-coverage" data-material-coverage></p>
+              <!-- 쉬운 모드(S3): 펜 · 지우개 · 굵기 · 되돌리기 · 채우기 · 비우기. 정밀 모드에 페인트 통 · 직선 · 사각형 · 색 · 안내선 · 칸 복사 ·
+                   참고 글꼴 -->
               <fieldset class="studio-material-tools">
                 <legend>도구</legend>
                 <label><input type="radio" name="material-tool" value="pen" checked /> 펜</label>
                 <label><input type="radio" name="material-tool" value="eraser" /> 지우개</label>
-                <label><input type="radio" name="material-tool" value="fill" /> 채우기</label>
-                <label><input type="radio" name="material-tool" value="line" /> 직선</label>
-                <label><input type="radio" name="material-tool" value="rect" /> 사각형</label>
+                <label data-studio-precise><input type="radio" name="material-tool" value="fill" /> 페인트 통</label>
+                <label data-studio-precise><input type="radio" name="material-tool" value="line" /> 직선</label>
+                <label data-studio-precise><input type="radio" name="material-tool" value="rect" /> 사각형</label>
                 <label>굵기 <input type="range" min="1" max="20" value="4" data-material-size /> <output data-material-size-output>4</output></label>
-                <label>색 <input type="color" value="#000000" data-material-color /></label>
+                <label data-studio-precise>색 <input type="color" value="#000000" data-material-color /></label>
               </fieldset>
-              <fieldset class="studio-material-tools">
+              <fieldset class="studio-material-tools" data-studio-precise>
                 <legend>안내선</legend>
                 <label><input type="checkbox" checked data-material-guide-grid /> 격자</label>
                 <label><input type="checkbox" checked data-material-guide-reference /> 참고 글자</label>
@@ -392,12 +553,26 @@
               <div class="studio-material-buttons">
                 <button type="button" data-material-undo disabled>그리기 되돌리기</button>
                 <button type="button" data-material-redo disabled>그리기 다시</button>
-                <button type="button" data-material-clear>칸 비우기</button>
-                <button type="button" data-material-seed>글꼴로 칸 채우기</button>
-                <button type="button" data-material-copy>칸 복사</button>
-                <button type="button" data-material-paste disabled>칸 붙여넣기</button>
+                <!-- 채우기 하나·비우기 하나(S3 — 전에는 칸 채우기 · 빈 칸 모두 채우기 · 전체 다시 채우기, 칸 비우기 · 자소판 전체 비우기) -->
+                <span class="studio-material-scope">
+                  <button type="button" data-material-fill>채우기</button>
+                  <select data-material-fill-scope aria-label="채우기 범위 — 글꼴로 칸을 채운다">
+                    <option value="cell">이 칸을 글꼴로</option>
+                    <option value="missing" selected>빈 칸 모두 글꼴로</option>
+                    <option value="all">모든 칸 다시(그린 것도)</option>
+                  </select>
+                </span>
+                <span class="studio-material-scope">
+                  <button type="button" data-material-clear>비우기</button>
+                  <select data-material-clear-scope aria-label="비우기 범위">
+                    <option value="cell" selected>이 칸</option>
+                    <option value="sheet">자소판 전체</option>
+                  </select>
+                </span>
+                <button type="button" data-material-copy data-studio-precise>칸 복사</button>
+                <button type="button" data-material-paste data-studio-precise disabled>칸 붙여넣기</button>
               </div>
-              <label class="studio-material-family">
+              <label class="studio-material-family" data-studio-precise>
                 <span>참고·채우기 글꼴</span>
                 <input type="text" value='"Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif' data-material-family />
               </label>
@@ -410,13 +585,11 @@
                 <span>PNG 열기</span>
                 <input type="file" accept="image/png" data-material-open-png />
               </label>
-              <button type="button" data-material-seed-missing>빈 칸 모두 글꼴로 채우기</button>
-              <button type="button" data-material-seed-all>전체 다시 채우기</button>
-              <button type="button" data-material-clear-sheet>자소판 전체 비우기</button>
               <p data-material-missing></p>
             </fieldset>
-            <fieldset class="studio-material-group">
-              <legend>래스터·미리보기</legend>
+            <!-- '미리보기 PNG 칸'은 뺐다(S3 ⚑5 — 내보내기 PNG 칸과 겹침). 미리보기는 원본 칸 그대로 -->
+            <fieldset class="studio-material-group" data-studio-precise>
+              <legend>래스터</legend>
               <label>
                 <span>래스터 품질 <small>--fy-sprite-rendering</small></span>
                 <select data-material-quality>
@@ -425,19 +598,8 @@
                   <option value="pixel">픽셀 (pixelated)</option>
                 </select>
               </label>
-              <label>
-                <span>미리보기 PNG 칸</span>
-                <select data-material-preview-cell>
-                  <option value="native">원본</option>
-                  <option value="auto">자동 · 미리보기 크기</option>
-                  <option value="64">64px (1x)</option>
-                  <option value="128">128px (2x)</option>
-                  <option value="192">192px (3x)</option>
-                  <option value="256">256px (4x)</option>
-                </select>
-              </label>
             </fieldset>
-            <fieldset class="studio-material-group">
+            <fieldset class="studio-material-group" data-studio-precise>
               <legend>내보내기</legend>
               <label>
                 <span>PNG 칸</span>
@@ -452,16 +614,19 @@
               <button type="button" data-material-export-png>PNG 내보내기</button>
               <button type="button" data-material-export-set>배율 세트 1x·2x·3x 내보내기</button>
               <button type="button" data-material-export-font>글꼴 파일(TTF)로 내보내기</button>
-              <p data-material-export-status></p>
             </fieldset>
-            <fieldset class="studio-material-group">
+            <!-- 광학 보정은 정밀 모드로 옮겼다(S3 ⚑5 기본값 — 빼지 않는다). 변수 계약(--fy-optical-sprite-*)은 그대로 -->
+            <fieldset class="studio-material-group" data-studio-precise>
               <legend>작은 글씨 보정</legend>
               <button type="button" data-material-preset-small>작은 글씨 그림 자소 프리셋</button>
               <button type="button" data-material-preset-reset>프리셋 해제</button>
               <label class="studio-material-check"><input type="checkbox" data-material-optical-preview /> 광학 보정 미리보기 (페이지 전용)</label>
               <button type="button" data-material-copy-optical>페이지용 광학 CSS 복사</button>
+              <small class="studio-material-note">광학 보정은 글꼴이 아니라 글꼴을 쓰는 페이지의 CSS입니다 — 미리보기에만 걸고, 쓰려면 복사해 페이지에 넣으세요.</small>
             </fieldset>
           </div>
+          <!-- 내보내기 진행·결과 — 머리 막대 '내보내기 ▾'에서 내보내도 보이게 묶음 밖에(쉬운·정밀 모두) -->
+          <p class="studio-material-export-status" data-material-export-status></p>
           <div class="studio-material-pending" data-material-pending hidden>
             <p data-material-pending-text></p>
             <button type="button" data-material-pending-accept>CSS를 자소판에 맞추고 불러오기</button>
@@ -470,69 +635,76 @@
         </section>
         </div>
 
-        <details class="studio-source">
-          <summary>글꼴 CSS 원문</summary>
-          <textarea readonly spellcheck="false" data-studio-source></textarea>
+        <!-- 글꼴 CSS 원문 고쳐 쓰기(정밀 모드, PLAN-STUDIO-002 ⚑6): Ctrl/Cmd+Enter 또는 칸을 떠나면 적용(기록 한 줄), Esc는 지금 CSS로 되돌림.
+             구문 오류가 있으면 적용하지 않고 칸에 남긴다. 검사 결과는 줄 번호와 함께 아래에 -->
+        <details class="studio-source" data-studio-pages="edit" data-studio-precise>
+          <summary>글꼴 CSS 원문 <small data-studio-source-state>고쳐 쓰고 Ctrl+Enter(⌘Enter)로 적용</small></summary>
+          <textarea spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" aria-describedby="studio-source-help"
+            data-studio-source></textarea>
+          <p class="studio-source-help" id="studio-source-help">Ctrl+Enter(⌘Enter) 또는 칸을 떠나면 적용 · Esc는 지금 CSS로 되돌림 · 구문 오류가 있으면 적용하지 않습니다</p>
+          <div class="studio-source-actions">
+            <button type="button" data-studio-source-apply disabled>적용</button>
+            <button type="button" data-studio-source-revert disabled>되돌림</button>
+          </div>
+          <ol class="studio-source-lint" data-studio-source-lint aria-label="원문 검사"></ol>
         </details>
+
+        <!-- 편집 기록(하나의 기록, PLAN-STUDIO-002 S2) — 모든 페이지 맨 아래에 보이는 칸. 첫 기록이 생길 때 font-studio-history.js가
+             채운다. 맨 아래라 처음 생겨도 위 칸(미리보기)을 밀지 않는다 -->
+        <section class="studio-f-panel" data-studio-f="history" hidden></section>
       </main>
     </div>
 
     <script src="../font-kku.js"></script>
-    <script>
-      /* 작업실 안내 — 고른 대로(접기·펼치기) 다음에도 연다. 고른 적이 없으면 맨 주소의 넓은 화면에서만 펼친다 */
-      (function () {
-        var guide = document.querySelector("[data-studio-guide]");
-        var summary = guide && guide.querySelector("summary");
-        var key = "font-kku-studio-guide";
-        if (!guide || !summary) {
-          return;
-        }
-        var saved = null;
-        try {
-          saved = window.localStorage.getItem(key);
-        } catch (error) {
-          saved = null; // 저장소를 못 읽으면 화면 폭으로만 정한다
-        }
-        var narrow = Boolean(window.matchMedia && window.matchMedia("(max-width: 700px)").matches);
-        /* 글꼴(?font·?src)이나 자소판(#studio-material)을 밝히고 들어오면 고칠 것이 정해져 있다 — 디자인 칸처럼 접어 둔다 */
-        var params = new URLSearchParams(location.search);
-        var focused = params.has("font") || params.has("src") || location.hash === "#studio-material";
-        if (saved === "closed" || (saved !== "open" && (narrow || focused))) {
-          guide.open = false;
-        }
-        /* 사람이 접고 펼친 것만 기억한다(위의 화면 폭 접기는 남기지 않는다). click은 toggle보다 먼저 온다 */
-        summary.addEventListener("click", function () {
-          try {
-            window.localStorage.setItem(key, guide.open ? "closed" : "open");
-          } catch (error) {
-            /* 기억하지 못해도 접기·펼치기는 된다 */
-          }
-        });
-      })();
-    </script>
+    <script src="../authoring/font-studio-util.js"></script>
     <script src="../authoring/font-studio-model.js"></script>
     <script src="../authoring/font-kku-lint.js"></script>
+    <script src="../authoring/font-derive.js"></script>
+    <!-- 글꼴 묶음(S2) — 작업실이 시작할 때 초안(묶음 모양)을 읽으므로 font-studio.js 앞 -->
+    <script src="../authoring/font-studio-package.js"></script>
     <script src="./font-studio.js"></script>
-    <script src="../authoring/font-studio-sheet.js"></script>
-    <script src="../font-kku-export.js"></script>
-    <script src="./font-studio-material.js"></script>
     <script src="../authoring/font-studio-design-model.js"></script>
     <script src="../authoring/font-studio-transactions.js"></script>
     <script src="../authoring/font-studio-recipe-catalog.js"></script>
     <script src="../authoring/font-studio-design-rules.js"></script>
+    <!-- 진행률 부품 하나(S3) — 디자인 칸과 그리기 탭이 같이 쓴다 -->
+    <script src="./font-studio-progress.js"></script>
     <script src="./font-studio-design.js"></script>
     <script src="./font-studio-f-shell.js"></script>
-    <script src="../authoring/font-studio-provenance-model.js"></script>
-    <script src="./font-studio-provenance.js"></script>
-    <script src="./font-studio-recipes.js"></script>
     <script src="../authoring/font-studio-draw-model.js"></script>
-    <script src="./font-studio-draw.js"></script>
-    <script src="./font-studio-draw-detach.js"></script>
-    <script src="../authoring/font-studio-palette-model.js"></script>
-    <script src="./font-studio-palette.js"></script>
+    <script src="../authoring/font-studio-glyphs.js"></script>
+    <script src="./font-studio-glyphs.js"></script>
+    <!-- 짓는 방식(ADR-034, PLAN-COMPOSE-001 C3) — 디자인 칸의 고르기. 고르지 않아도 된다 -->
+    <script src="./font-studio-composition.js"></script>
     <script src="../authoring/font-studio-bundle-model.js"></script>
     <script src="./font-studio-bundle.js"></script>
     <script src="./font-studio-history.js"></script>
+    <script src="../authoring/font-studio-reproducibility-model.js"></script>
+    <script src="../authoring/font-studio-review-model.js"></script>
+    <!-- 저장 창구(S2 — 로컬·HTTP·mount store 다리) -->
+    <script src="./font-studio-store.js"></script>
+    <!-- 처음 쓸 때 싣는 모듈(PLAN-STUDIO-002 S1) — 이 type은 브라우저가 받지 않는다. font-studio-lazy.js가 FontStudio.need(무리)로
+         적힌 차례대로 싣는다. 무리: recipes · provenance · draw(독립 SVG 포함) · palette · export · reach · looks ·
+         material(자소판 — 자소판 페이지·그림 자소 글꼴) · review(검수 — 검수 페이지, material 다음).
+         data-studio-lazy-pages: 그 페이지가 보이면 싣는다. data-studio-lazy-needs: 그 무리를 먼저 싣는다(S6 성능) -->
+    <script type="text/x-font-studio-lazy" data-studio-lazy="material" data-studio-lazy-pages="sheet" data-studio-global="FontStudioSheet" src="../authoring/font-studio-sheet.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="material" data-studio-lazy-pages="sheet" src="./font-studio-material.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="review" data-studio-lazy-pages="review" data-studio-lazy-needs="material" src="./font-studio-review.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="recipes" src="./font-studio-recipes.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="provenance" data-studio-global="FontKkuRuleResolution" src="../authoring/font-kku-rule-resolution.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="provenance" data-studio-global="FontStudioProvenanceModel" src="../authoring/font-studio-provenance-model.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="provenance" src="./font-studio-provenance.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="draw" src="./font-studio-draw.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="draw" src="./font-studio-draw-detach.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="palette" data-studio-global="FontStudioPaletteModel" src="../authoring/font-studio-palette-model.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="palette" src="./font-studio-palette.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="export" data-studio-global="FontKkuExport" src="../font-kku-export.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="reach" src="./font-studio-reach.js"></script>
+    <script type="text/x-font-studio-lazy" data-studio-lazy="looks" data-studio-global="FontKkuThemes" src="../authoring/themes-data.js"></script>
+    <script src="./font-studio-lazy.js"></script>
+    <script src="../authoring/font-studio-refusals.js"></script>
+    <script src="./font-studio-api.js"></script>
+    <script src="./font-studio-header.js"></script>
     <script src="./bridge.js"></script>
   </body>
 </html>

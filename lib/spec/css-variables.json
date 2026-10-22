@@ -20,6 +20,7 @@
     "role": "L2 — role values on the host; the last fallback of every slot chain",
     "jamo": "L3 — accumulating corrections declared on jamo nodes in font-kku.jamo",
     "context": "L4 — accumulating corrections declared on jamo nodes in font-kku.context",
+    "tune": "L5 — hand corrections over a fixed glyph shape (ADR-030): shape values declared on jamo nodes in font-kku.tune, after the generated font-kku.shape values",
     "page": "page-only overrides; fonts must not declare them",
     "runtime": "written by font-kku.js; neither fonts nor pages declare them",
     "dispatch": "computed by the generated core dispatch; internal"
@@ -176,10 +177,11 @@
       "type": "keyword",
       "values": ["atomic", "composite", "syllable"],
       "default": "atomic",
-      "surfaces": ["runtime"],
+      "surfaces": ["runtime", "base-css"],
       "level": "font",
       "scope": "host",
-      "declaredBy": "font"
+      "declaredBy": "font",
+      "tune": true
     },
     {
       "name": "--fy-jamo-depth",
@@ -200,10 +202,11 @@
       "type": "keyword",
       "values": ["split", "whole", "syllable"],
       "default": "split",
-      "surfaces": ["runtime"],
+      "surfaces": ["runtime", "base-css"],
       "level": "font",
       "scope": "host",
-      "declaredBy": "font"
+      "declaredBy": "font",
+      "tune": true
     },
     {
       "name": "--fy-vowel-depth",
@@ -224,10 +227,11 @@
       "type": "keyword",
       "values": ["split", "whole"],
       "default": "split",
-      "surfaces": ["runtime"],
+      "surfaces": ["runtime", "base-css"],
       "level": "font",
       "scope": "host",
-      "declaredBy": "font"
+      "declaredBy": "font",
+      "tune": true
     },
     {
       "name": "--fy-coda-depth",
@@ -235,6 +239,56 @@
       "kind": "author",
       "type": "keyword",
       "values": ["split", "whole"],
+      "default": null,
+      "surfaces": ["runtime"],
+      "level": "page",
+      "scope": "page",
+      "declaredBy": "page"
+    },
+    {
+      "name": "--fy-font-composition",
+      "status": "stable",
+      "kind": "author",
+      "type": "keyword",
+      "values": ["auto", "syllable", "whole", "jamo", "pieces", "origins"],
+      "default": "auto",
+      "surfaces": ["runtime", "base-css"],
+      "level": "font",
+      "scope": "host",
+      "declaredBy": "font",
+      "tune": true
+    },
+    {
+      "name": "--fy-composition",
+      "status": "stable",
+      "kind": "author",
+      "type": "keyword",
+      "values": ["auto", "syllable", "whole", "jamo", "pieces", "origins"],
+      "default": null,
+      "surfaces": ["runtime"],
+      "level": "page",
+      "scope": "page",
+      "declaredBy": "page"
+    },
+    {
+      "name": "--fy-font-split-fit",
+      "status": "stable",
+      "kind": "author",
+      "type": "keyword",
+      "values": ["auto", "none"],
+      "default": "auto",
+      "surfaces": ["runtime"],
+      "level": "font",
+      "scope": "host",
+      "declaredBy": "font",
+      "tune": true
+    },
+    {
+      "name": "--fy-split-fit",
+      "status": "stable",
+      "kind": "author",
+      "type": "keyword",
+      "values": ["auto", "none"],
       "default": null,
       "surfaces": ["runtime"],
       "level": "page",
@@ -339,6 +393,29 @@
       "level": "runtime",
       "scope": "node",
       "declaredBy": "runtime"
+    },
+    {
+      "name": "--fy-sprite-cell-image",
+      "status": "internal",
+      "kind": "runtime",
+      "type": "image",
+      "default": null,
+      "surfaces": ["base-css", "runtime"],
+      "level": "runtime",
+      "scope": "node",
+      "declaredBy": "runtime"
+    },
+    {
+      "name": "--fy-sprite-cells",
+      "status": "internal",
+      "kind": "runtime",
+      "type": "integer",
+      "default": "0",
+      "surfaces": ["base-css", "runtime"],
+      "level": "runtime",
+      "scope": "node",
+      "declaredBy": "runtime",
+      "registered": { "syntax": "<integer>", "inherits": false, "initialValue": "0" }
     },
     {
       "name": "--fy-sprite-zoom",
@@ -789,6 +866,17 @@
       "declaredBy": "runtime"
     },
     {
+      "name": "--fy-leaf-rotate",
+      "status": "stable",
+      "kind": "runtime",
+      "type": "angle",
+      "default": "0deg",
+      "surfaces": ["base-css", "runtime"],
+      "level": "runtime",
+      "scope": "node",
+      "declaredBy": "runtime"
+    },
+    {
       "name": "--fy-face-width",
       "status": "stable",
       "kind": "runtime",
@@ -800,92 +888,92 @@
       "declaredBy": "runtime"
     },
     {
-      "name": "--fy-stamp-density",
+      "name": "--fy-shape-density",
       "status": "internal",
-      "kind": "runtime",
+      "kind": "dispatch",
       "type": "number",
       "default": null,
-      "surfaces": ["base-css", "runtime"],
-      "level": "runtime",
+      "surfaces": ["base-css"],
+      "level": "dispatch",
       "scope": "node",
-      "declaredBy": "runtime"
+      "declaredBy": "core"
     },
     {
-      "name": "--fy-stamp-left",
-      "status": "internal",
-      "kind": "runtime",
+      "name": "--fy-shape-left",
+      "status": "stable",
+      "kind": "author",
       "type": "length-percentage",
       "default": null,
-      "surfaces": ["base-css", "runtime"],
-      "level": "runtime",
+      "surfaces": ["base-css"],
+      "level": "tune",
       "scope": "node",
-      "declaredBy": "runtime"
+      "declaredBy": "font"
     },
     {
-      "name": "--fy-stamp-scale-x",
-      "status": "internal",
-      "kind": "runtime",
+      "name": "--fy-shape-scale-x",
+      "status": "stable",
+      "kind": "author",
       "type": "number",
       "default": null,
-      "surfaces": ["base-css", "runtime"],
-      "level": "runtime",
+      "surfaces": ["base-css"],
+      "level": "tune",
       "scope": "node",
-      "declaredBy": "runtime"
+      "declaredBy": "font"
     },
     {
-      "name": "--fy-stamp-scale-y",
-      "status": "internal",
-      "kind": "runtime",
+      "name": "--fy-shape-scale-y",
+      "status": "stable",
+      "kind": "author",
       "type": "number",
       "default": null,
-      "surfaces": ["base-css", "runtime"],
-      "level": "runtime",
+      "surfaces": ["base-css"],
+      "level": "tune",
       "scope": "node",
-      "declaredBy": "runtime"
+      "declaredBy": "font"
     },
     {
-      "name": "--fy-stamp-size",
-      "status": "internal",
-      "kind": "runtime",
+      "name": "--fy-shape-size",
+      "status": "stable",
+      "kind": "author",
       "type": "length",
       "default": null,
-      "surfaces": ["base-css", "runtime"],
-      "level": "runtime",
+      "surfaces": ["base-css"],
+      "level": "tune",
       "scope": "node",
-      "declaredBy": "runtime"
+      "declaredBy": "font"
     },
     {
-      "name": "--fy-stamp-stroke",
+      "name": "--fy-shape-stroke",
       "status": "internal",
-      "kind": "runtime",
+      "kind": "dispatch",
       "type": "length",
       "default": null,
-      "surfaces": ["base-css", "runtime"],
-      "level": "runtime",
+      "surfaces": ["base-css"],
+      "level": "dispatch",
       "scope": "node",
-      "declaredBy": "runtime"
+      "declaredBy": "core"
     },
     {
-      "name": "--fy-stamp-top",
-      "status": "internal",
-      "kind": "runtime",
+      "name": "--fy-shape-top",
+      "status": "stable",
+      "kind": "author",
       "type": "length-percentage",
       "default": null,
-      "surfaces": ["base-css", "runtime"],
-      "level": "runtime",
+      "surfaces": ["base-css"],
+      "level": "tune",
       "scope": "node",
-      "declaredBy": "runtime"
+      "declaredBy": "font"
     },
     {
-      "name": "--fy-stamp-weight",
+      "name": "--fy-shape-weight",
       "status": "internal",
-      "kind": "runtime",
+      "kind": "dispatch",
       "type": "font-weight",
       "default": null,
-      "surfaces": ["base-css", "runtime"],
-      "level": "runtime",
+      "surfaces": ["base-css"],
+      "level": "dispatch",
       "scope": "node",
-      "declaredBy": "runtime"
+      "declaredBy": "core"
     },
     {
       "name": "--fy-font-face",
@@ -921,6 +1009,18 @@
       "level": "font",
       "scope": "host",
       "declaredBy": "font"
+    },
+    {
+      "name": "--fy-layout",
+      "status": "stable",
+      "kind": "author",
+      "type": "keyword",
+      "default": null,
+      "values": ["sebul-cases-v1", "sebul-fixed-v1", "square-context-v1"],
+      "surfaces": ["runtime"],
+      "level": "page",
+      "scope": "page",
+      "declaredBy": "page"
     },
     {
       "name": "--fy-font-layout",
@@ -1234,6 +1334,18 @@
       "registered": { "syntax": "<length>", "inherits": true, "initialValue": "0px" }
     },
     {
+      "name": "--fy-el-plus",
+      "status": "internal",
+      "kind": "dispatch",
+      "type": "length",
+      "default": null,
+      "surfaces": ["base-css"],
+      "level": "dispatch",
+      "scope": "node",
+      "declaredBy": "core",
+      "registered": { "syntax": "<length>", "inherits": true, "initialValue": "0px" }
+    },
+    {
       "name": "--fy-el-o",
       "status": "internal",
       "kind": "dispatch",
@@ -1280,6 +1392,50 @@
     },
     {
       "name": "--fy-el-ty",
+      "status": "internal",
+      "kind": "dispatch",
+      "type": "length",
+      "default": null,
+      "surfaces": ["base-css"],
+      "level": "dispatch",
+      "scope": "node",
+      "declaredBy": "core"
+    },
+    {
+      "name": "--fy-el-nx",
+      "status": "internal",
+      "kind": "dispatch",
+      "type": "length",
+      "default": null,
+      "surfaces": ["base-css"],
+      "level": "dispatch",
+      "scope": "node",
+      "declaredBy": "core"
+    },
+    {
+      "name": "--fy-el-ny",
+      "status": "internal",
+      "kind": "dispatch",
+      "type": "length",
+      "default": null,
+      "surfaces": ["base-css"],
+      "level": "dispatch",
+      "scope": "node",
+      "declaredBy": "core"
+    },
+    {
+      "name": "--fy-el-up",
+      "status": "internal",
+      "kind": "dispatch",
+      "type": "length",
+      "default": null,
+      "surfaces": ["base-css"],
+      "level": "dispatch",
+      "scope": "node",
+      "declaredBy": "core"
+    },
+    {
+      "name": "--fy-el-dpx",
       "status": "internal",
       "kind": "dispatch",
       "type": "length",
@@ -1391,6 +1547,175 @@
   ],
   "families": [
     {
+      "id": "page-glyph-mapping",
+      "prefix": "--fy-",
+      "status": "stable",
+      "kind": "author",
+      "surfaces": [
+        "runtime"
+      ],
+      "level": "page",
+      "scope": "page",
+      "declaredBy": "page",
+      "members": [
+        {
+          "suffix": "glyph-text",
+          "type": "string",
+          "default": null
+        },
+        {
+          "suffix": "glyph-candidate",
+          "type": "string",
+          "default": null
+        }
+      ]
+    },
+    {
+      "id": "font-glyph-mapping",
+      "prefix": "--fy-font-",
+      "status": "stable",
+      "kind": "author",
+      "surfaces": [
+        "runtime"
+      ],
+      "level": "font",
+      "scope": "host",
+      "declaredBy": "font",
+      "members": [
+        {
+          "suffix": "glyph-text",
+          "type": "string",
+          "default": null
+        },
+        {
+          "suffix": "glyph-candidate",
+          "type": "string",
+          "default": null
+        }
+      ]
+    },
+    {
+      "id": "jamo-glyph-mapping",
+      "prefix": "--fy-jamo-",
+      "status": "stable",
+      "kind": "author",
+      "surfaces": [
+        "runtime"
+      ],
+      "level": "jamo",
+      "scope": "node",
+      "declaredBy": "font",
+      "members": [
+        {
+          "suffix": "glyph-text",
+          "type": "string",
+          "default": null
+        },
+        {
+          "suffix": "glyph-candidate",
+          "type": "string",
+          "default": null
+        }
+      ],
+      "tune": true
+    },
+    {
+      "id": "ctx-glyph-mapping",
+      "prefix": "--fy-ctx-",
+      "status": "stable",
+      "kind": "author",
+      "surfaces": [
+        "runtime"
+      ],
+      "level": "context",
+      "scope": "node",
+      "declaredBy": "font",
+      "members": [
+        {
+          "suffix": "glyph-text",
+          "type": "string",
+          "default": null
+        },
+        {
+          "suffix": "glyph-candidate",
+          "type": "string",
+          "default": null
+        }
+      ]
+    },
+    {
+      "id": "case-glyph-mapping",
+      "prefix": "--fy-case-",
+      "status": "stable",
+      "kind": "author",
+      "surfaces": [
+        "runtime"
+      ],
+      "level": "context",
+      "scope": "node",
+      "declaredBy": "font",
+      "members": [
+        {
+          "suffix": "glyph-text",
+          "type": "string",
+          "default": null
+        },
+        {
+          "suffix": "glyph-candidate",
+          "type": "string",
+          "default": null
+        }
+      ]
+    },
+    {
+      "id": "syl-glyph-mapping",
+      "prefix": "--fy-syl-",
+      "status": "stable",
+      "kind": "author",
+      "surfaces": [
+        "runtime"
+      ],
+      "level": "context",
+      "scope": "node",
+      "declaredBy": "font",
+      "members": [
+        {
+          "suffix": "glyph-text",
+          "type": "string",
+          "default": null
+        },
+        {
+          "suffix": "glyph-candidate",
+          "type": "string",
+          "default": null
+        }
+      ]
+    },
+    {
+      "id": "tune-glyph-mapping",
+      "prefix": "--fy-tune-",
+      "status": "stable",
+      "kind": "author",
+      "surfaces": [
+        "runtime"
+      ],
+      "level": "tune",
+      "scope": "node",
+      "declaredBy": "font",
+      "members": [
+        {
+          "suffix": "glyph-text",
+          "type": "string",
+          "default": null
+        },
+        {
+          "suffix": "glyph-candidate",
+          "type": "string",
+          "default": null
+        }
+      ]
+    },
+    {
       "id": "glyph-body",
       "prefix": "--fy-body-",
       "status": "stable",
@@ -1439,12 +1764,17 @@
       "level": "jamo",
       "scope": "node",
       "declaredBy": "font",
+      "tune": true,
       "members": [
         { "suffix": "dx", "type": "length-percentage", "default": "0%" },
         { "suffix": "dy", "type": "length-percentage", "default": "0%" },
         { "suffix": "scale-x", "type": "number", "default": "1" },
         { "suffix": "scale-y", "type": "number", "default": "1" },
-        { "suffix": "rotate", "type": "angle", "default": "0deg" }
+        { "suffix": "rotate", "type": "angle", "default": "0deg" },
+        { "suffix": "size", "type": "number", "default": "1" },
+        { "suffix": "weight", "type": "font-weight", "default": "inherit" },
+        { "suffix": "stroke", "type": "length", "default": "0px" },
+        { "suffix": "clip", "type": "clip-path", "default": "none" }
       ]
     },
     {
@@ -1461,7 +1791,53 @@
         { "suffix": "dy", "type": "length-percentage", "default": "0%" },
         { "suffix": "scale-x", "type": "number", "default": "1" },
         { "suffix": "scale-y", "type": "number", "default": "1" },
-        { "suffix": "rotate", "type": "angle", "default": "0deg" }
+        { "suffix": "rotate", "type": "angle", "default": "0deg" },
+        { "suffix": "size", "type": "number", "default": "1" },
+        { "suffix": "weight", "type": "font-weight", "default": "inherit" },
+        { "suffix": "stroke", "type": "length", "default": "0px" },
+        { "suffix": "clip", "type": "clip-path", "default": "none" }
+      ]
+    },
+    {
+      "id": "case-offset",
+      "prefix": "--fy-case-",
+      "status": "stable",
+      "kind": "author",
+      "surfaces": ["base-css"],
+      "level": "context",
+      "scope": "node",
+      "declaredBy": "font",
+      "members": [
+        { "suffix": "dx", "type": "length-percentage", "default": "0%" },
+        { "suffix": "dy", "type": "length-percentage", "default": "0%" },
+        { "suffix": "scale-x", "type": "number", "default": "1" },
+        { "suffix": "scale-y", "type": "number", "default": "1" },
+        { "suffix": "rotate", "type": "angle", "default": "0deg" },
+        { "suffix": "size", "type": "number", "default": "1" },
+        { "suffix": "weight", "type": "font-weight", "default": "inherit" },
+        { "suffix": "stroke", "type": "length", "default": "0px" },
+        { "suffix": "clip", "type": "clip-path", "default": "none" }
+      ]
+    },
+    {
+      "id": "syllable-offset",
+      "prefix": "--fy-syl-",
+      "status": "stable",
+      "kind": "author",
+      "surfaces": ["base-css"],
+      "level": "context",
+      "scope": "node",
+      "declaredBy": "font",
+      "members": [
+        { "suffix": "dx", "type": "length-percentage", "default": "0%" },
+        { "suffix": "dy", "type": "length-percentage", "default": "0%" },
+        { "suffix": "scale-x", "type": "number", "default": "1" },
+        { "suffix": "scale-y", "type": "number", "default": "1" },
+        { "suffix": "rotate", "type": "angle", "default": "0deg" },
+        { "suffix": "size", "type": "number", "default": "1" },
+        { "suffix": "weight", "type": "font-weight", "default": "inherit" },
+        { "suffix": "stroke", "type": "length", "default": "0px" },
+        { "suffix": "clip", "type": "clip-path", "default": "none" }
       ]
     },
     {
@@ -1520,6 +1896,8 @@
   "roleContract": { "roles": ["head", "choseong", "jung-main", "jung-base", "jung-tail", "jong-main", "jong-left", "jong-right"] },
   "slotContract": {
     "suffixes": [
+      { "suffix": "glyph-text", "dispatch": "glyph-text", "type": "string", "coreDefault": null, "runtime": true },
+      { "suffix": "glyph-candidate", "dispatch": "glyph-candidate", "type": "string", "coreDefault": null, "runtime": true },
       { "suffix": "top", "dispatch": "top", "type": "length-percentage", "coreDefault": "0%" },
       { "suffix": "left", "dispatch": "left", "type": "length-percentage", "coreDefault": "0%" },
       { "suffix": "size", "dispatch": "font-size", "type": "length-percentage", "coreDefault": "1em" },
@@ -1534,187 +1912,187 @@
     "tokens": [
       {
         "token": "tc", "role": "choseong", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "choseong above a horizontal vowel",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "t", "role": "choseong", "status": "active", "type": "placement", "emitted": true, "parent": "tc",
-        "defaults": { "top": "0%", "left": "8%", "size": "0.68em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "0%", "left": "8%", "size": "0.68em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "tt", "role": "choseong", "status": "active", "type": "placement", "emitted": true, "parent": "tc",
-        "defaults": { "top": "0%", "left": "4%", "size": "0.60em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "0%", "left": "4%", "size": "0.60em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "tl", "role": "choseong", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "choseong beside a vertical or split vowel",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "tlo", "role": "choseong", "status": "active", "type": "placement", "emitted": true, "parent": "tl",
-        "defaults": { "top": "0%", "left": "0%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "0%", "left": "0%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "tlc", "role": "choseong", "status": "active", "type": "placement", "emitted": true, "parent": "tl",
-        "defaults": { "top": "0%", "left": "0%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "0%", "left": "0%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "tls", "role": "choseong", "status": "active", "type": "placement", "emitted": true, "parent": "tl",
-        "defaults": { "top": "0%", "left": "0%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "0%", "left": "0%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "ttl", "role": "choseong", "status": "active", "type": "placement", "emitted": true, "parent": "tl",
-        "defaults": { "top": "0%", "left": "0%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "0%", "left": "0%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "h", "role": "head", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "syllable-depth head",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "hs", "role": "head", "status": "active", "type": "placement", "emitted": true, "parent": "h", "depth": "syllable",
-        "defaults": { "top": "0%", "left": "0%", "size": "0.78em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "0%", "left": "0%", "size": "0.78em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "hts", "role": "head", "status": "active", "type": "placement", "emitted": true, "parent": "h", "depth": "syllable",
-        "defaults": { "top": "0%", "left": "0%", "size": "0.78em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "0%", "left": "0%", "size": "0.78em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "tr", "role": "jung-main", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "vertical vowel",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "tro", "role": "jung-main", "status": "active", "type": "placement", "emitted": true, "parent": "tr",
-        "defaults": { "top": "5%", "left": "40%", "size": "0.60em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "5%", "left": "40%", "size": "0.60em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "trc", "role": "jung-main", "status": "active", "type": "placement", "emitted": true, "parent": "tr",
-        "defaults": { "top": "5%", "left": "40%", "size": "0.60em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "5%", "left": "40%", "size": "0.60em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "mc", "role": "jung-main", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "horizontal vowel",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "m", "role": "jung-main", "status": "active", "type": "placement", "emitted": true, "parent": "mc",
-        "defaults": { "top": "28%", "left": "12%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "28%", "left": "12%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "mt", "role": "jung-main", "status": "active", "type": "placement", "emitted": true, "parent": "mc",
-        "defaults": { "top": "22%", "left": "10%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "22%", "left": "10%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "mx", "role": "jung-main", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "whole compound vowel",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "mw", "role": "jung-main", "status": "active", "type": "placement", "emitted": true, "parent": "mx", "depth": "composite",
-        "defaults": { "top": "8%", "left": "8%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "8%", "left": "8%", "size": "0.62em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "mtw", "role": "jung-main", "status": "active", "type": "placement", "emitted": true, "parent": "mx", "depth": "composite",
-        "defaults": { "top": "6%", "left": "8%", "size": "0.58em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "6%", "left": "8%", "size": "0.58em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "xb", "role": "jung-base", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "split compound vowel base",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "ml", "role": "jung-base", "status": "active", "type": "placement", "emitted": true, "parent": "xb",
-        "defaults": { "top": "20%", "left": "6%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "20%", "left": "6%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "mtl", "role": "jung-base", "status": "active", "type": "placement", "emitted": true, "parent": "xb",
-        "defaults": { "top": "18%", "left": "8%", "size": "0.48em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "18%", "left": "8%", "size": "0.48em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "xt", "role": "jung-tail", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "split compound vowel tail",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "trs", "role": "jung-tail", "status": "active", "type": "placement", "emitted": true, "parent": "xt",
-        "defaults": { "top": "5%", "left": "40%", "size": "0.60em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "5%", "left": "40%", "size": "0.60em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "ttr", "role": "jung-tail", "status": "active", "type": "placement", "emitted": true, "parent": "xt",
-        "defaults": { "top": "3%", "left": "38%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "3%", "left": "38%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bs", "role": "jong-main", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "single coda",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "b", "role": "jong-main", "status": "active", "type": "placement", "emitted": true, "parent": "bs",
-        "defaults": { "top": "52%", "left": "12%", "size": "0.56em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "52%", "left": "12%", "size": "0.56em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "brs", "role": "jong-main", "status": "active", "type": "placement", "emitted": true, "parent": "bs",
-        "defaults": { "top": "46%", "left": "24%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "46%", "left": "24%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bbrs", "role": "jong-main", "status": "active", "type": "placement", "emitted": true, "parent": "bs",
-        "defaults": { "top": "50%", "left": "24%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "50%", "left": "24%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bx", "role": "jong-main", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "whole double coda",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bw", "role": "jong-main", "status": "active", "type": "placement", "emitted": true, "parent": "bx", "depth": "composite",
-        "defaults": { "top": "47%", "left": "10%", "size": "0.56em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "47%", "left": "10%", "size": "0.56em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "brw", "role": "jong-main", "status": "active", "type": "placement", "emitted": true, "parent": "bx", "depth": "composite",
-        "defaults": { "top": "47%", "left": "10%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "47%", "left": "10%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bbw", "role": "jong-main", "status": "active", "type": "placement", "emitted": true, "parent": "bx", "depth": "composite",
-        "defaults": { "top": "51%", "left": "10%", "size": "0.52em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "51%", "left": "10%", "size": "0.52em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "xl", "role": "jong-left", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "split double coda, left",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bl", "role": "jong-left", "status": "active", "type": "placement", "emitted": true, "parent": "xl",
-        "defaults": { "top": "48%", "left": "10%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "48%", "left": "10%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "blr", "role": "jong-left", "status": "active", "type": "placement", "emitted": true, "parent": "xl",
-        "defaults": { "top": "48%", "left": "10%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "48%", "left": "10%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bbl", "role": "jong-left", "status": "active", "type": "placement", "emitted": true, "parent": "xl",
-        "defaults": { "top": "52%", "left": "10%", "size": "0.48em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "52%", "left": "10%", "size": "0.48em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "xr", "role": "jong-right", "status": "fallback", "type": "family", "emitted": false, "parent": null, "meaning": "split double coda, right",
-        "defaults": { "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": null, "left": null, "size": null, "scale-x": null, "scale-y": null, "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "br", "role": "jong-right", "status": "active", "type": "placement", "emitted": true, "parent": "xr",
-        "defaults": { "top": "46%", "left": "24%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "46%", "left": "24%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "brd", "role": "jong-right", "status": "active", "type": "placement", "emitted": true, "parent": "xr",
-        "defaults": { "top": "46%", "left": "24%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "46%", "left": "24%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bbrd", "role": "jong-right", "status": "active", "type": "placement", "emitted": true, "parent": "xr",
-        "defaults": { "top": "50%", "left": "24%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "50%", "left": "24%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "blb", "role": "jong-left", "status": "reserved", "type": "legacy-placement", "emitted": false, "parent": null,
-        "defaults": { "top": "48%", "left": "10%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "48%", "left": "10%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "brb", "role": "jong-right", "status": "reserved", "type": "legacy-placement", "emitted": false, "parent": null,
-        "defaults": { "top": "46%", "left": "24%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "46%", "left": "24%", "size": "0.54em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bb", "role": "jong-main", "status": "deprecated", "type": "legacy-placement", "emitted": false, "parent": null,
-        "defaults": { "top": "56%", "left": "14%", "size": "0.52em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "56%", "left": "14%", "size": "0.52em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       },
       {
         "token": "bbr", "role": "jong-right", "status": "deprecated", "type": "legacy-placement", "emitted": false, "parent": null,
-        "defaults": { "top": "50%", "left": "24%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
+        "defaults": { "glyph-text": null, "glyph-candidate": null, "top": "50%", "left": "24%", "size": "0.50em", "scale-x": "1", "scale-y": "1", "rotate": null, "weight": null, "stroke": null, "clip": null, "dilate": null }
       }
     ]
   }

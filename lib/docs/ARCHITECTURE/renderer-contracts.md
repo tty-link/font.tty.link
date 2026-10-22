@@ -30,17 +30,21 @@ HTML escaping과 실제 DOM/문자열 출력은 각 구현의 책임이며 평�
 
 `emission`의 source/condition은 출력기들이 지원하는 제한된 선택 어휘다. 생성기는 이 어휘와 역할 값을 검증하므로 지원하지 않는 선택식을 명세에 넣으면 생성을 거부한다. 역할 값과 배치 변경은 공통 생성 경로를 따르고, 새로운 자모 선택 연산은 명세와 네 언어·JS 구현을 함께 확장한다. 범용 식 인터프리터나 모든 출력 코드의 자동 생성까지 제공하는 구조는 아니다.
 
-정본을 바꾸면 다음 순서로 생성하고 검증한다.
+정본을 바꾸면 생성물 목록(`scripts/generated-outputs.json`)의 차례대로 다시 쓰고 검사한다. 생성기와 차례(미러 → spec 사례 → 미러 다시)는 목록 한 곳에 있다.
 
 ```sh
-node scripts/generate_sidecar_tables.js --write
-node scripts/generate_spec_cases.js
-npm test
+python3 scripts/regen.py --write                 # 목록 차례대로 다시 쓰기(브라우저·승인 항목 빼고)
+python3 scripts/regen.py --check                 # 빠른 층 'Generated outputs' 단계와 같다
+python3 scripts/regen.py --write --only html-cases   # 브라우저가 드는 항목은 이름을 주어 따로
 ```
 
-배치 프로파일(`spec/layout-profiles.json`)을 바꾸면 `node scripts/build_layout_profiles.js --write` 뒤에 위 미러 생성과 `.venv/bin/python scripts/generate_html_cases.py`(글꼴을 밝히지 않은 사례가 기록한 도장)를 함께 돌린다.
+배치 프로파일(`spec/layout-profiles.json`)을 바꾸면 목록의 `layout-profiles` 뒤 항목(미러·spec 사례)과 `html-cases`(글꼴을 밝히지 않은 사례가 기록한 도장)를 함께 다시 쓴다.
 
 `--check`는 생성물 어긋남을 실패로 처리한다. 생성 블록을 손으로 수정하지 않는다. `generate_spec_cases.js`는 authored placement를 기존 명세에서 보존하여, 아직 생성하지 않은 명세 편집을 이전 런타임 값으로 덮어쓰지 않는다. Unicode 판을 바꿀 때는 `generate_spec_cases.js --refresh-unicode`로 표를 명시적으로 갱신하고 capability의 Unicode 판도 맞춘 뒤 위 생성·검증을 수행한다.
+
+## 지원 옵션의 기계 계약
+
+`spec/capabilities.json`의 `implementations.<언어>.htmlOptions`는 지원하는 모음·받침 나누기, 기본/이름 있는 글꼴의 재료를 구조화한다. 네 언어의 spec 시험이 명세의 모든 나누기 × 재료 조합을 호출하고 실제 바탕 요소와 획 출력, 지원하지 않는 조합의 오류를 확인한다. 지원 여부는 시각 교정 완료를 뜻하지 않는다(`quality: font-and-size-dependent`).
 
 ## Unicode 정책
 
@@ -80,32 +84,42 @@ npm test
   이들은 글꼴 CSS의 문맥 배치(지금 배치) 그대로이고, 출력도 이 변경 전과 바이트 단위로 같다.
 - **글꼴은 기본 글꼴 `sebul`이다.** `data-fy-font`·`data-fy-profile`·`data-font`·`data-profile`이 `sebul`이고, static
   문서는 지금처럼 `font-kku.css` + `sebul.css`를 싣는다.
-- **깊이는 프로파일 깊이(합자 모음 `split`, 겹받침 `whole`)가 이긴다.** 깊이 인자(`jamo_depth`·`vowel_depth`·`coda_depth`)는
-  검사하되(모르는 값은 여전히 오류) 무시한다. 런타임이 `--fy-jamo-depth`를 무시하는 것과 같다. 그래서 합자 모음은 두 조각의
-  `jungseong-cluster`, 겹받침은 통짜 `jongseong` 하나이고 머리 음절이 없다.
+- **나누기는 깊이 인자(`jamo_depth`·`vowel_depth`·`coda_depth`, longhand가 이긴다)를 따르고, 없으면 프로파일 깊이(합자 모음
+  `split`, 겹받침 `whole`)다**([ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md) §4, 2026-10-17 — 그 전에는 인자를 검사만 하고
+  무시했다). 런타임이 페이지 깊이 변수를 따르는 것과 같다. 정적 출력에는 글꼴 CSS의 tune 계층 나누기가 없다(기본 글꼴 sebul은 고정
+  모양의 나누기를 정하지 않는다). 기본은 합자 모음 두 조각의 `jungseong-cluster`, 겹받침 통짜 `jongseong` 하나다. 새 나누기의
+  노드도 모양 값을 받는다 — 통짜 모음(`whole`, 노드 하나), 머리 음절(`syllable`, 완성형 머리 글자 `[part~="head"]`와 머리 옆
+  모음 — 그 합자 모음의 오른쪽 조각 값), 겹받침 낱(`coda: split`, `jongseong-cluster` 안 낱자 둘). 값은 코어 CSS의 둘째
+  `@layer font-kku.shape` 블록이 주고, 렌더러는 미러의 `splits`(whole·head·coda — 도장과 같은 꼴·같은 찾는 차례)로 그림 문맥과
+  원소 획 열쇠를 고른다.
 - **바탕 요소:** `font` 속성을 쓰지 않는다(`font=""`도 쓰지 않는다). `data-fy-coda-depth` 바로 뒤에
-  `data-fy-layout="sebul-cases-v1"`·`data-fy-layout-model="case-fixed"`를 쓴다.
-- **자모 노드:** 초성·중성·종성 노드마다 다른 속성 뒤에 `data-fy-stamp="initial|medial|final"`을 쓴다. 프로파일이 그 역할의
-  그림 문맥을 정했으면 `data-fy-draw`도 쓴다(세벌식은 받침의 `sebeol`). 인라인 style에는 색인 변수 뒤에
-  `--fy-stamp-left/top/size/scale-x/scale-y/weight/stroke/density` 여덟을 붙인다(density는 원소·그림 재료의 밀도 굵기 계수 — 아래
-  원소 출력에서는 코어 CSS가 획 굵기에 곱하고, `face="device"`의 기기 글꼴 글자에는 닿지 않는다). 합자 모음 조각은 그 음절 합자 모음의 조각
-  도장이다(0 = ㅗ·ㅜ·ㅡ 조각, 1 = 오른쪽 조각). cluster 묶음, 비한글 glyph, 낱자(`ㅋ`)에는 도장이 없다.
-  도장은 음절의 짜임으로 고른다 — 미러의 자모 하나는 `(짜임 열쇠, 조각들)` 목록이고(세벌 고정은 열쇠 `""` 하나), 짜임 열쇠는
-  모음 모양(글자 칸 `data-jung-layout` right·bottom·split-right → `v`·`h`·`c`) + 받침(`data-jong-layout` none·single·double →
-  `0`·`1`·`2`)이다. 짜임 열쇠, 모양 열쇠(첫 글자), `""` 차례로 찾는다(런타임 `caseStamp`).
+  `data-fy-layout="sebul-cases-v1"`을 쓴다(2026-10-17까지 쓰던 `data-fy-layout-model`은 없앴다, ADR-030 D6).
+- **자모 노드:** 자리·크기·굵기는 함께 싣는 코어 CSS의 모양 값 규칙(`@layer font-kku.shape`, `--fy-shape-*` 여덟)이 정한다
+  ([ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md) — 2026-10-17까지는 노드마다 `data-fy-stamp`와 인라인 `--fy-stamp-*`를 썼다).
+  렌더러는 값을 쓰지 않고, 프로파일이 그 역할의 그림 문맥을 정했으면 다른 속성 뒤에 `data-fy-draw`만 쓴다(세벌식은 받침의
+  `sebeol`). 모양 값은 음절의 짜임으로 고른다 — 미러의 자모 하나는 `(짜임 열쇠, 조각들)` 목록이고(세벌 고정은 열쇠 `""` 하나),
+  짜임 열쇠는 모음 모양(글자 칸 `data-jung-layout` right·bottom·split-right → `v`·`h`·`c`) + 받침(`data-jong-layout`
+  none·single·double → `0`·`1`·`2`)이다. 짜임 열쇠, 모양 열쇠(첫 글자), `""` 차례로 찾는다(런타임 `caseStamp`) — 렌더러는 이 차례를
+  원소 획 열쇠를 고르는 데에만 쓰고, 그리는 값은 CSS 선택자의 구체성이 같은 차례로 고른다. 합자 모음 조각은 그 음절 합자 모음의 조각
+  값이다(0 = ㅗ·ㅜ·ㅡ 조각, 1 = 오른쪽 조각). cluster 묶음, 비한글 glyph, 낱자(`ㅋ`)는 모양 값을 받지 않는다.
 - **그림(원소 재료, [ADR-027](../ADR/ADR-027-static-element-face.md)):** 런타임 기본처럼 기기 글꼴과 무관한 원소 획을 그린다.
   고정 배치에서는 자모 노드의 변환이 도장 배율 하나라 굵기 되돌림이 도장 표만으로 정해진다 — `generate_sidecar_tables.js`가 획을
-  런타임 문자열 그대로 굽고(`ELEMENT_NODES` 열쇠 283개: 도장(짜임·조각)마다 하나 232와 낱자 51), 렌더러는 붙이기만 한다. 세벌식 초성은
+  런타임 문자열 그대로 굽고(`ELEMENT_NODES` 열쇠 477개: 도장(짜임·조각)마다 하나 232, 새 나누기 값마다 하나 194 — 통짜 모음 14·
+  머리 음절 114·겹받침 낱자 66, 낱자 51), 렌더러는 붙이기만 한다. 머리 음절·통짜 모음 노드 안 두 묶음(초성·모음, 앞·뒤 조각)은
+  런타임 `fitFixedParts`처럼 낱으로 나눴을 때의 잉크 자리로 옮긴 획이다(생성기가 `fixedPartRegions`·`fitPartSpans`를 빌린다). 세벌식 초성은
   짜임의 모음 모양이 그림 문맥이고(세로 `@cho`, 가로·합자 `@bar`), 받침은 `@sebeol` 뼈대가 있으면 그것이다.
   생성기는 셈을 옮겨 적지 않고 `font-kku.js`의 굵기 보정 함수(`balanceElementNode`·`strokeDensity`·`dotShifts` 등)를 이름으로 꺼내 그대로
   돌린다 — 획 자리는 밀도 굵기 계수(도장 값, 낱자는 런타임 셈)의 굵기로 놓고 ㅎ·ㅊ 꼭지 틈을 연 자리다. 빌린 함수가 목록 밖 도우미를
   부르거나, 도장의 밀도(`measure_layout_stamps.py` 파이썬 사본이 셈)가 런타임 `strokeDensity`와 다르면 생성기가 실패한다.
-  1. host: `data-fy-layout-model` 바로 뒤에 `data-fy-face="element"`(한글이 없어도). `data-fy-element-cap`은 없다.
-  2. 도장 붙은 노드: 인라인 style 끝에 `--fy-face-width:0.865em`(`ELEMENT_DENSITY`에 열쇠가 있으면 그 뒤 `--fy-el-density` — 지금은
-     없다, 도장 노드는 `--fy-stamp-density`를 코어 CSS가 받는다), 글자 바로 뒤에 `[part="hoek"]`(`data-hoek`·`-kind`·`-from`·
+  1. host: `data-fy-layout` 바로 뒤에 `data-fy-face="element"`(한글이 없어도). `data-fy-element-cap`은 없다.
+  2. 모양 값을 받는 노드: 인라인 style 끝에 `--fy-face-width:0.865em`(`ELEMENT_DENSITY`에 열쇠가 있으면 그 뒤 `--fy-el-density` — 지금은
+     없다, 그 노드는 `--fy-shape-density`를 코어 CSS가 받는다), 글자 바로 뒤에 `[part="hoek"]`(`data-hoek`·`-kind`·`-from`·
      `-letter`·`-role`) > 빈 `[part="element"]`(`data-element="line|ring"`, 변수는 `ELEMENT_LINE_PROPS`·`ELEMENT_RING_PROPS` 차례).
-     열쇠는 도장 역할:자모, 합자 모음 조각은 `medial:<합자 모음>#<조각>`, 그 뒤에 고른 짜임 열쇠가 `""`가 아니면 `|<짜임 열쇠>`
-     (`initial:ᄀ|v`, `medial:ᅡ|v1`, `final:ᆨ|h`).
+     열쇠는 역할:자모, 합자 모음 조각은 `medial:<합자 모음>#<조각>`, 그 뒤에 고른 짜임 열쇠가 `""`가 아니면 `|<짜임 열쇠>`
+     (`initial:ᄀ|v`, `medial:ᅡ|v1`, `final:ᆨ|h`). 새 나누기: 통짜 모음 `medial:<합자 모음>`, 머리 음절 `head:<머리 글자>`(머리 옆
+     모음은 `medial:<합자 모음>#1`), 겹받침 낱자 `final:<겹받침>#<0 왼쪽|1 오른쪽>`(`head:호|c0`, `medial:ᅬ|c`, `final:ᆰ#0|v`).
+     머리 음절 획은 `part` 바로 뒤에 `data-fy-head-part` — 앞 n획(`ELEMENT_HEAD_INITIAL`)이 `initial`, 나머지가 `medial`이고
+     `data-hoek`는 묶음마다 1부터 센다.
   3. 낱자(원문이 호환 자모 U+3131–U+3163 한 코드 포인트인 비음절 글자): content에 `data-fy-standalone`·`style="--fy-face-width:0.865em"`·획.
      런타임 굵기 보정이 밀도 굵기 계수를 노드에 적는 낱자(ㄻ·ㄼ·ㄾ·ㄿ·ㅃ 0.75, ㅞ 0.9571 — `ELEMENT_DENSITY`)는 style이
      `--fy-face-width:0.865em;--fy-el-density:<k>`다. glyph 겉 요소는 그대로다.
@@ -116,17 +130,19 @@ npm test
   덮어쓰면 런타임은 굵기를 다시 맞추지만 정적 출력은 표 값 그대로다. 기기 글꼴 잉크 맞춤(ADR-023)은 브라우저가 필요하고, 글꼴을 밝힌
   문맥 배치를 JS 없이 원소 획으로 내려면 `scripts/build_static_primitive.py`를 쓴다.
 - **패리티:**
-  1. DOM 계약: `spec/html-cases.json`(1.9)의 `implicitFont` 사례 7건이 짜임별 도장 열쇠 232개(자모마다 그 자모의 짜임 열쇠·모양 열쇠 —
-     `spec/layout-profiles.json` `measured`)와 밀도·꼭지 틈 낱자(ㄻ ㅃ ㅞ ㅎ ㅊ)를 그린다. 네 언어 시험이 바탕 요소·노드 속성과 기능성 style을 부재까지 대조한다.
+  1. DOM 계약: `spec/html-cases.json`(1.12)의 `implicitFont` 사례 12건이 짜임별 도장 열쇠 232개(자모마다 그 자모의 짜임 열쇠·모양 열쇠 —
+     `spec/layout-profiles.json` `measured`), 새 나누기 값 열쇠 전부(`splits` — 깊이 composite·atomic·syllable 사례)와 밀도·꼭지 틈
+     낱자(ㄻ ㅃ ㅞ ㅎ ㅊ)를 그린다. 바탕 요소의 `data-fy-vowel-depth`·`data-fy-coda-depth`는 고른 나누기다. 네 언어 시험이 바탕 요소·노드 속성과 기능성 style을 부재까지 대조한다.
   2. 좌표: `tests/static_html_parity.py`가 같은 사례를 런타임과 계산 위치·변환·경계 상자로 비교한다. `data-fy-layout`·
-     `data-fy-stamp`는 노드 정체에 넣는다. 글꼴을 밝히지 않은 사례는 `[part="hoek"]`·`[part="element"]`도 노드로 모으고
+     `data-fy-draw`는 노드 정체에 넣는다(모양 값이 같은지는 이 좌표 비교가 본다). 글꼴을 밝히지 않은 사례는 `[part="hoek"]`·`[part="element"]`도 노드로 모으고
      host `data-fy-face`·`data-fy-standalone`·`--fy-face-width`·획 `data-hoek*`·`data-element`를 정체에, 마디 변수(`--fy-el-*`)와
      노드의 `--fy-face-width`부터 끝(`--fy-el-density`)까지는 차례·이름·단위가 같고 수가 1e-4 안인지 비교한다.
-  3. 원소 층: `spec/element-layer.json`(1.1, 런타임 64px 정답 — 획과 노드 밀도 굵기 계수 `density`, 수 허용 차 1e-4)을 생성기 표
-     (`tests/element_table.test.js`)와 네 언어 시험(열쇠 283/283, 노드 style 끝, 원소 − 층 = `"device"`)이 대조한다. 화소: 스모크 `test_sidecar_element_face_without_js`(JS 끈 정적 출력 =
+  3. 원소 층: `spec/element-layer.json`(1.2, 런타임 64px 정답 — 획과 노드 밀도 굵기 계수 `density`, 머리 음절 획 묶음 `headInitial`,
+     수 허용 차 1e-4. 새 나누기는 페이지 깊이 변수를 준 바탕 요소 둘로 잰다)을 생성기 표
+     (`tests/element_table.test.js`)와 네 언어 시험(열쇠 477/477, 노드 style 끝, 원소 − 층 = `"device"`)이 대조한다. 화소: 스모크 `test_sidecar_element_face_without_js`(JS 끈 정적 출력 =
      런타임, 24·64px)와 `test_sidecar_element_face_is_device_independent`(기기 글꼴을 바꿔도 같다).
 
-  html-cases(1.9)는 원소 층을 기록하지 않는다 — 화이트리스트에 `data-fy-face`·`--fy-face-width`·`data-fy-standalone`이 없고, 파서는
+  html-cases(1.9부터)는 원소 층을 기록하지 않는다 — 화이트리스트에 `data-fy-face`·`--fy-face-width`·`data-fy-standalone`이 없고, 파서는
   `[part="hoek"]` 하위 트리를 건너뛴다(획 span이 비어 textContent는 그대로). 설계 v1.2 §12.6대로 일차 parity는 논리 계획·좌표이고,
   원소 층은 위 3이 따로 본다. 기기 글꼴(`"device"`)의 픽셀 동일성은 약속하지 않는다.
 - **이전 기본값:** 이 변경 전에는 글꼴을 밝히지 않은 호출이 `sebul` 지금 배치였다. 그 출력을 유지하려면 `font="sebul"`
@@ -134,6 +150,36 @@ npm test
   같고, 예전 Go `WithFont("")`·Rust 빈 이름은 host `font` 속성 값(`""` → `"sebul"`)만 다르다. 0.1.1–0.1.3의 기본 배치(세벌 고정,
   지금 직결식)는 정적 렌더러에 없다 — 그 렌더러 판을 쓴다. 세벌식 배치는 두되 기기 글꼴 글자로
   그리려면 `face="device"`(Ruby `face: "device"`, Go `WithFace("device")`, Rust `face: "device"`)를 넘긴다.
+
+## 짓는 방식(ADR-034)
+
+고르지 않아도 된다 — 인자를 주지 않거나 `auto`면 출력이 지금과 바이트 단위로 같다. 고르려면 프리셋 하나를 넘긴다:
+Python `render_html(..., composition="syllable")`, Ruby `composition: "syllable"`, Go `WithComposition("syllable")`,
+Rust `HtmlOptions { composition: Some("syllable"), .. }`.
+
+| 프리셋 | 화 | 정적 출력 |
+|---|---|---|
+| `auto` | 모양대로 | 지금 그대로(바탕 요소에 아무것도 찍지 않음) |
+| `syllable` | 호 + ㅏ | 모음 `syllable`·받침 `whole`로 그린다 |
+| `whole` | ㅎ + ㅘ | 모음 `whole`·받침 `whole` |
+| `jamo` | ㅎ + ㅗ + ㅏ | 모음 `split`·받침 `split` |
+| `pieces` | (ㅗ+ㅇ) + ㅗ + ㅏ | 나누기만 `split`·`split`, 조각은 그리지 못함 → 진단 |
+| `origins` | (ㆍ+ㅡ+ㅇ) + … | 나누기만 `split`·`split`, 조각은 그리지 못함 → 진단 |
+
+- **차례**는 런타임 페이지 수준과 같다: 낱 깊이 인자(`vowel_depth`·`coda_depth`) > `composition` > 줄임 `jamo_depth` > 글꼴·모양
+  기본. 프리셋 표는 `spec/tables.json`의 `jamoDepth.compositions`(런타임 `FontKku.compositionPresets`에서 나온다)이고, 생성기가 네
+  언어 미러(`COMPOSITIONS`·`compositionPresets`)에 굽는다.
+- **바탕 요소:** 골랐을 때만 글꼴 모양·얼굴 표시 바로 뒤에 `data-fy-composition`(프리셋 이름, 낱 깊이가 축을 바꿨으면 `custom`)을
+  쓴다. 조각 깊이(`pieces`·`origins`)면 그 뒤에 `data-fy-composition-status="COMPOSITION_UNSUPPORTED"`를 쓰고 기본 획을 그대로
+  둔다 — 다른 방식으로 몰래 바꾸지 않는다(ADR-032 §6.1). 원소 조각 표를 굽는 것은 뒤 단계다.
+- **네모꼴의 나누기 맞춤은 없다:** 이름 있는 글꼴(네모꼴)에서 글꼴 기본이 아닌 나누기는 글꼴 CSS가 주는 자리 그대로다. 런타임은
+  브라우저에서 그 자리를 기본 나누기의 자리로 맞추지만(ADR-034 §5) 정적 출력은 맞춤을 돌릴 수 없다 — 런타임에서
+  `--fy-split-fit: none`을 준 것과 같은 출력이다. 세벌식(글꼴을 밝히지 않은 호출)은 모양 값으로 그리므로 차이가 없다.
+- 모르는 값은 오류다(Python `ValueError`, Ruby `ArgumentError`, Go `error`, Rust `FontKkuError::UnknownOption`). 오류 차례는 mode →
+  글꼴 → face → 깊이 → composition이다. `FontDefinition`에는 짓는 방식 칸이 없다(호출 인자로만 고른다).
+- 기계 계약: `spec/capabilities.json`의 `htmlOptions.compositions`·`composition`(`unsupported`·`diagnostic`·`squareSplitFit`)과
+  `depthPrecedence`(`longhand`·`composition`·`shorthand`·`default`). 네 언어 시험이 프리셋마다 "낱 깊이 인자로 그린 출력 + 표시"와
+  같은지, `auto`가 인자 없음과 같은지, 차례와 오류를 본다.
 
 ## 호출별 사용자 글꼴
 

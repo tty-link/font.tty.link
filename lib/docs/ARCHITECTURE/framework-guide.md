@@ -687,13 +687,14 @@ window.FontKku.refresh(host, {
 
 ### 브라우저에서 구조를 직접 보기
 
-데모 페이지가 가장 빠르다.
+데모 페이지가 가장 빠르다. 아래 페이지의 원본은 사이트 저장소의 `src/`에 있다([ADR-029](../ADR/ADR-029-library-authoring-and-site.md)).
 
-- [`site/index.html`](../../studio/index.html): 전체 허브
-- [`site/basic-text.html`](https://font.tty.link/basic-text.html): 선언형 사용 기준점 — `sebul` / `gothic` 두 글꼴 비교, 혼합 콘텐츠 포함
-- [`site/shape-comparison.html`](https://font.tty.link/shape-comparison.html): 탈네모꼴/네모꼴 기준 위에서 짜임별 구조 살펴보기
-- [`site/layout-modes.html`](https://font.tty.link/layout-modes.html): `wrap-unit` 비교 + 포스터·배너 크기
-- [`site/api-studio.html`](https://font.tty.link/api-studio.html): JS API 놀이터 — DOM 출력, `renderText()` 2줄 평문, `createTextModel()` JSON을 한 화면에서 본다
+- [개발 도구 목록](https://font.tty.link/docs.html#dev-tools): 사이트 문서의 '개발 도구' 절 — 아래 페이지를 모아 잇는다
+- [기본 글](https://font.tty.link/basic-text.html)(`src/basic-text.html`): 선언형 사용 기준점 — `sebul` / `gothic` 두 글꼴 비교, 혼합 콘텐츠 포함
+- [짜임 비교](https://font.tty.link/shape-comparison.html)(`src/shape-comparison.html`): 탈네모꼴/네모꼴 기준 위에서 짜임별 구조 살펴보기
+- [줄바꿈](https://font.tty.link/layout-modes.html)(`src/layout-modes.html`): `wrap-unit` 비교 + 포스터·배너 크기
+- [놀이터](https://font.tty.link/api-studio.html)(`src/api-studio.html`): JS API 놀이터 — DOM 출력, `renderText()` 2줄 평문, `createTextModel()` JSON을 한 화면에서 본다
+- [글꼴 작업실](../../studio/index.html)(`studio/index.html`, 이 패키지): 자소를 눌러 값 출처·자리를 본다
 
 ### 콘솔에서 분해 결과 확인하기
 

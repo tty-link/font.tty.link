@@ -64,7 +64,7 @@
 :where(.kku-look-X[data-fy-material]) …         그림·벡터 자소: color만(속 빈 꾸밈은 외곽선 색으로)
 :where(.kku-look-X[data-fy-material]) [part="glyph"]   그림자 → drop-shadow (sprite.glyphFilter)
 :where(.kku-look-X:is(element, svg)) …          element 구간: 속 칠·테두리(rim)·자모 빛(--fy-font-glow)·한글 글자 filter
-:where(.kku-look-X[data-fy-layout-model="fixed-three"]) [data-fy-stamp]   속 빈 꾸밈의 선 폭(기기 글꼴, 도장 획 보정 대신)
+:where(.kku-look-X:is([data-fy-layout="sebul-cases-v1"], …)) :is([part~="choseong"], …)   속 빈 꾸밈의 선 폭(고정 글꼴 모양의 기기 글꼴, 모양 값 획 보정 대신)
 :where(:is(…looks…):is([data-fy-font=…]))   외곽선 폭 되돌리기 — 글꼴이 선언한 --fy-font-stroke
 ```
 
@@ -156,4 +156,4 @@ profiles/<꾸러미>.css 꾸밈 구간 ──────────┘└─> 
 
 - 그림 자소에서 꾸밈은 색과 글자 단위 그림자만 낸다. 자모 역할별 그림자·속 빈 외곽선은 기기 글꼴에서만 된다.
 - 변주 폭은 겹침 감사가 정해 은은하다. 눈에 띄는 무작위는 칠(색조·농담)과 씨앗 반응 글꼴이 낸다.
-- 확장 세 파일과 새 글꼴은 npm 첫 공개 버전인 `@tty.link/font-kku@0.1.4-rc.2`에 들어 있다.
+- 확장 세 파일과 새 글꼴은 npm 첫 공개판 0.1.0(2026-10-11)부터 패키지에 들어 있다.

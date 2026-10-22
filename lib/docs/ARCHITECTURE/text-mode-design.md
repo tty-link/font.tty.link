@@ -202,7 +202,7 @@ console.log(model);
 
 현재 공개 API는 `FontKku.renderText(text)`다. 설계상 모델 → 평문 단계는 분리돼 있지만, 현재 구현은 별도 공개 API `renderTextMode(model)`를 노출하지 않고 `renderText(text)` 내부에 포함한다.
 
-브라우저 데모는 놀이터(`site/api-studio.html`) 한 페이지에서 확인한다. DOM 미리보기, 2줄 평문 출력, TextModel 요약, 예제 입력(개행 포함 / 복합모음 / 단순 인사)과 터미널 명령 예제를 함께 제공한다.
+브라우저 데모는 놀이터(사이트 저장소의 `src/api-studio.html`, 공개판 `https://font.tty.link/api-studio.html`) 한 페이지에서 확인한다. DOM 미리보기, 2줄 평문 출력, TextModel 요약, 예제 입력(개행 포함 / 복합모음 / 단순 인사)과 터미널 명령 예제를 함께 제공한다.
 
 ### 터미널 명령
 
@@ -246,6 +246,7 @@ echo "한글 테스트" | node ./bin/font-kku-text.js
 - 글꼴 기반 위치 보정은 평문 모드에 해당하지 않는다. 순수 자소 분리만 수행한다.
 
 ## Change Log
+- 2026-10-17: 놀이터 페이지 경로를 사이트 저장소 `src/`로(ADR-029)
 - 2026-10-11: 고정 Unicode 숫자·문장부호 분류, 생성된 HTML 표시 계획·의미 역할, 호출별 `FontDefinition`과 평문/HTML 책임 경계 반영
 - 2026-09-27: 비한글 칸 표시 폭 규칙(East_Asian_Width 기반, `spec/tables.json` v1.3 `unicode.displayWidth`) — 좁은 비ASCII가 받침 열을 밀던 문제 수정, 한글 음절 + 뒤 코드포인트 grapheme을 비한글 글자로 그림, Go/Rust 분절 서술을 공유 UAX #29 표 + 한글 전용 NFC로 갱신 (spec text v1.4, html v1.7)
 - 2026-07-10: TRK-032 — ASCII로 시작하는 grapheme의 나머지 보존, spec text v1.2/html v1.4와 줄/단어/자모/그림 자소 인덱스 속성 반영

@@ -1,30 +1,152 @@
 # 용어집
 
-화면 문구와 문서 본문은 아래 한글 용어를 쓴다(2026-10-09 결정). 코드 식별자 — CSS 변수(`--fy-sprite-*`), `data-*` 속성, API 이름(`render`, `seed` 속성 등), 글꼴 id(`sprite-system`), 파일·폴더 이름(`profiles/`) — 는 계약이라 영어로 둔다. 식별자를 가리킬 때는 한글 뒤에 식별자를 코드로 붙인다: "그림 자소(`sprite`) 재료", "씨앗값(`seed`)".
+폰꾸에서 쓰는 말과 그 뜻의 정본이다. 화면 문구, 문서 본문, 사이트 문서의 '용어' 절이 이 파일을 따른다.
+
+## 쓰는 규칙
+
+1. **화면과 문서는 한글 용어를 쓴다**(2026-10-09 결정). 코드 식별자 — CSS 변수(`--fy-sprite-*`), `data-*` 속성, API 이름(`render`, `seed` 속성 등), 글꼴 id(`sprite-system`), 파일·폴더 이름(`profiles/`) — 는 계약이라 영어로 둔다. 식별자를 가리킬 때는 한글 뒤에 코드로 붙인다: "그림 자소(`sprite`) 재료", "씨앗값(`seed`)".
+2. **한 뜻에는 한 말.** 같은 것을 두 이름으로 부르지 않는다. 같은 말이 여러 뜻으로 쓰이는 곳은 맨 끝 [헷갈리는 말](#헷갈리는-말)에 모았다.
+3. **상태 표시.** **(계획)**은 계획·제안 단계라 공개판에 아직 없는 말이다([PLAN-STUDIO-001](PLAN/composition-modes-and-human-review.md), [ADR-030](ADR/ADR-030-one-engine-glyph-shapes.md)의 아직 하지 않은 2–4단계). **(없어질 예정)**은 계획이 받아들여지면 사라지는 말이다.
+4. **새 말을 만들거나 바꾸면** 이 파일과 사이트 문서의 '용어' 절을 같은 변경에서 고친다.
+
+## 한글의 기본 말
+
+| 한글 | 뜻 | 식별자 |
+|---|---|---|
+| 음절 | 완성형 한글 한 글자(회, 닭). 폰꾸가 나누어 다시 짓는 단위 | `part="glyph"`의 `data-source` |
+| 자모 | 음절을 이루는 낱낱의 소리 글자(ㅎ, ㅚ). 문자로서의 단위 | `data-jamo`(조합용 자모 U+1100–) |
+| 자소 | 화면에 그려진 자모 한 조각. 미리보기에서 누르고 고르는 것 — 문자를 말할 때는 자모, 그려진 노드를 말할 때는 자소 | `part~="jamo"` 노드 |
+| 초성 · 중성 · 종성 | 음절의 첫소리 자음 · 가운뎃소리 모음 · 끝소리 자음 | 역할 `initial`·`medial`·`final`, `part` `choseong`·`jungseong`·`jongseong` |
+| 받침 | 종성 | — |
+| 쌍자음 | 같은 자음 둘을 나란히 쓴 자음(ㄲ ㄸ ㅃ ㅆ ㅉ) | 조립식 `double` |
+| 겹받침 | 서로 다른 자음 둘로 된 받침(ㄳ ㄵ ㄶ ㄺ ㄻ ㄼ ㄽ ㄾ ㄿ ㅀ ㅄ, 11개) | 조립식 `final-pair` |
+| 합자 모음 | 두 모음을 합친 모음(ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ). 예전 문서의 '섞임모음'과 같다 | 조립식 `compose` |
+| 기본자 | 훈민정음 자음의 바탕 글자 ㄱ ㄴ ㅁ ㅅ ㅇ | — |
+| 천지인 | 모음의 바탕 ㆍ(하늘) ㅡ(땅) ㅣ(사람) | `data-hoek-role` `heaven`·`earth`·`person` |
+| 가획 | 획을 더해 새 자모를 만드는 원리(ㄱ → ㅋ, ㅇ → ㆆ → ㅎ) | 조립식 `add` |
+| 병서 | 자음을 나란히 써서 만드는 원리(ㄲ, ㄳ) | 조립식 `double`·`final-pair` |
+| 합용 | 모음을 합쳐 만드는 원리(ㅗ + ㅏ = ㅘ) | 조립식 `compose` |
+| 이체 | 가획 차례를 따르지 않는 글자(ㄹ 등) | `data-hoek-role="variant"` |
+
+## 한글 구조
+
+| 한글 | 대신하는 말 | 식별자 |
+|---|---|---|
+| 글자 | glyph, 글리프 (한 음절 상자) | `part="glyph"` |
+| 글자 칸 | cell (글자 하나가 차지하는 칸 — 폭·높이·간격) | `--fy-glyph-width`·`--fy-glyph-height`·`--fy-glyph-gap` |
+| 짜임 | topology, 위상, 유형, case — 모음 모양 셋(세로·가로·합자) × 받침 셋(없음·홑·겹) = 아홉 가지 | `data-layout-key`, 글자 칸 `data-jung-layout`·`data-jong-layout` |
+| 세로모음 · 가로모음 · 합자모음 짜임 | right · bottom · split-right (예전 이름 '섞임모음 짜임') | `right`, `bottom`, `split-right` |
+| 민글자 · 홑받침 · 겹받침 | coda none · single · double | `none`, `single`, `double` |
+| 짜임 열쇠 | case key — 세벌식 값을 고르는 열쇠: 모음 모양 `v`·`h`·`c` + 받침 `0`·`1`·`2`(`"v1"`). 받침과 관계없으면 모양 열쇠 하나(`"v"`) | `caseStamp` |
+| 자리 | slot (자모 노드가 놓이는 자리 이름 — `tlo`·`t`·`trc` 등) | `data-fy-pos`, `--fy-<slot>-*` |
+| 자리 가족 | slot family (부모 자리 하나에 묶인 자리들 — `tt`의 부모 `t`) | `--fy-<부모>-*` |
+| 자리 자모 · 자모 목록 | 글자 칸에 찍힌 이웃 자모 — 자리마다 그 자리 자모, 자모 노드 차례의 자모 목록(2026-10-22). 글꼴 CSS가 이웃 자모를 조상 자리 `:has()` 대신 이것으로 고른다 | `[part="glyph"]`의 `data-fy-at-<자리>`, `data-fy-jamos` |
+| 역할 | role (초성·중성·종성과 그 안의 갈래 — `choseong`·`jung-base`·`jong-left` …, 머리 음절은 `head`) | `data-fy-role`, `--fy-role-*` |
+| 묶음 | cluster (합자 모음·겹받침의 조각들을 감싸는 노드) | `part="…-cluster"` |
+| 낱자 | standalone jamo (음절이 아닌 단독 호환 자모 `ㅋ`·`ㅘ`) | `part="content"` |
+
+## 글꼴을 짓는 체계
+
+글꼴 하나는 **글꼴 모양**과 **재료**로 짓는다. 그 위에 꾸밈·변주·움직임 같은 다른 축([조합 체계](#조합-체계))이 얹힌다. 글꼴을 새로 만들 때는 세 가지를 고른다: **그릴 범위**(몇 자모를 직접 그리나), **음절 나누기**(음절을 몇 조각으로 나누나), **자모 짓기**(그리지 않은 자모를 어떻게 짓나). 계획과 계약은 [PLAN-STUDIO-001](PLAN/composition-modes-and-human-review.md), [ADR-030](ADR/ADR-030-one-engine-glyph-shapes.md).
+
+| 한글 | 뜻 | 식별자 |
+|---|---|---|
+| 글꼴 모양 | 자모 노드를 어디에, 얼마나 크게·굵게 놓는지의 값 묶음. 세벌식·직결식·네모꼴이 모두 글꼴 모양이고, 같은 엔진에 주는 값만 다르다(사용자 결정 2026-10-16). 재료와 따로 고른다 — 그림 자소판 재료는 지금 글꼴 모양을 받지 않는다(좌표 틀이 다르다). 지금 화면·문서의 '배치'와 같은 것이다 | `layout`(디자인), `--fy-font-layout`(글꼴), `data-fy-layout`(바탕 요소), 정본 `spec/layout-profiles.json` |
+| 세벌식 | 초성·중성·종성을 짜임마다 정해진 자리·크기로 놓는 글꼴 모양(ADR-028). 받침 없는 글자는 아래를 비우고, 받침 있는 글자는 칸 높이를 다 쓴다. 글꼴을 밝히지 않은 바탕 요소의 기본 | `sebul-cases-v1` |
+| 직결식 | 같은 역할의 같은 자모를 어느 음절에서나 되도록 같은 자리·크기로 놓는 글꼴 모양(타자기형, ADR-026). 0.1.1–0.1.3의 기본. 예전 이름 '세벌 고정' | `sebul-fixed-v1`, 글꼴 `jikgyeol` |
+| 네모꼴 | 모음 짜임·받침에 따라 자리·크기를 바꾸는 글꼴 모양. 글꼴 CSS가 가진 자기 모양(gothic 같은 네모꼴, sebul)을 그대로 쓴다. 예전 작업실 이름 '네모 문맥'(S3부터 작업실도 '네모꼴'), 사이트 문서 이름 '문맥 배치' | `square-context-v1`, 글꼴 CSS의 자리 값 |
+| 그릴 범위 | 직접 그리는 자모의 수. 나머지는 자모 짓기로 채운다. 예전 이름 '렌더링 깊이'·'제작 단계' | 디자인 `editor.authoringTarget`, `spec/authoring-stages.json` |
+| 원소 5 | 그림 없이 CSS 원소(가로선·세로선·원, 점·사선은 파생)만으로 짓는 범위 | 원소 재료 `element` |
+| 원형 8 | 기본자와 천지인: ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ. ㆍ는 현대 자모가 아니라 짓기에만 쓰는 보조 원본이다 | `origin8` |
+| 기본 24 | 자음 14(ㄱ–ㅎ) + 모음 10(ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ ㅜ ㅠ ㅡ ㅣ). 쌍자음·합자 모음·겹받침은 짓는다 | `basic24` |
+| 확장 40 | 자음 19(쌍자음 포함) + 모음 21(합자 모음 포함). 겹받침만 짓는다. 그림 자소판(19 + 21칸)과 같은 범위 | `full40` |
+| 51 · 67 | 겹받침까지 모두 그린 현대 자모 51, 초성·중성·종성을 따로 그린 역할별 67 | `modernShapes`·`roleSpecific` |
+| 음절 나누기 | 음절을 자모 노드 몇 개로 나누는가. 모음과 겹받침을 따로 정한다. 예전 이름 '자모 깊이'. 세벌식·직결식은 모든 나누기의 자리가 있다. 네모꼴 글꼴은 지금 글꼴마다 기본 나누기만 자리가 다듬어져 있다(TODO_LIST 알려진 문제) | `--fy-vowel-depth`·`--fy-coda-depth`(줄임 `--fy-jamo-depth`: `atomic` 낱 · `composite` 통짜 · `syllable` 머리 음절), 기본값 `spec/fonts.json` |
+| 낱 | 합자 모음·겹받침을 낱낱의 자모로 나눈다 — 회 = ㅎ + ㅗ + ㅣ, 닭의 받침 = ㄹ + ㄱ | `split` |
+| 통짜 | 합자 모음·겹받침을 한 덩어리로 둔다 — 회 = ㅎ + ㅚ, 닭의 받침 = ㄺ | `whole` |
+| 머리 음절 | 합자 모음 음절의 초성과 앞 모음을 받침 없는 음절 한 덩어리로 둔다 — 회 = 호 + ㅣ, 과 = 고 + ㅏ. 합자 모음이 없는 음절은 그대로다 | `syllable`, `part="jamo head"`, 자리 `hs`·`hts`, `data-fy-head-part` |
+| 자모 짓기 | 그리지 않은 자모를 어떻게 얻는가 — 그린 그대로 쓰거나 조립식으로 짓는다 | 디자인 규칙 `method`(`auto`·`direct`·`compose`)·`recipe` |
+| 조립식 | jamo recipe — 다른 자모의 조각으로 자모를 짓는 정해진 방법. 연산은 병서(`double`)·겹받침(`final-pair`)·합용(`compose`)·가획(`add`)·자리 밝힘(`place`). 예: ㅎ = ㆍ + ㅡ + ㅇ(`hieut-added-lines`, 기본) · ㅗ + ㅇ(`hieut-circle-o`) · ㆆ + 획(`hieut-added`) | `spec/jamo-recipes.json` |
+| 조각 | part, piece — 조립식 안의 재료 하나(ㅃ의 왼쪽 ㅂ, ㅎ의 ㅇ) | 조립식 `parts[].id` |
+| 제작 방식 (계획) | 그릴 범위·음절 나누기·자모 짓기의 묶음에 붙인 이름 — '원형 8로', '기본 24로', '확장 40으로'. 그릴 범위를 고르면 짓기 기본값이 따라온다 | — |
+
+**'회'를 짓는 네 길** — 음절 나누기와 자모 짓기의 조합이다.
+
+| 모양 | 음절 나누기 | ㅎ 짓기 |
+|---|---|---|
+| 호 + ㅣ | 머리 음절 | (머리 음절 안 초성) |
+| ㅎ + ㅚ | 통짜 | 그린 ㅎ |
+| ㅎ + ㅗ + ㅣ | 낱 | 그린 ㅎ, 또는 ㆍ + ㅡ + ㅇ |
+| ㅗ + ㅇ + ㅗ + ㅣ | 낱 | 조립식 ㅗ + ㅇ |
+
+세벌식·직결식에서도 네 길을 다 쓴다(ADR-030 §4, 2026-10-17 2단계) — 페이지 깊이 변수나 글꼴 CSS `@layer font-kku.tune`의 `--fy-font-*-depth`로 고르고, 기본은 낱(겹받침은 통짜)이다. 머리 음절·통짜 모음 노드 안의 자모는 낱으로 나눴을 때와 같은 자리에 그린다. 정적 렌더러도 나누기 인자로 같은 네 길을 그린다.
 
 ## 재료와 글꼴
 
 | 한글 | 대신하는 말 | 식별자 |
 |---|---|---|
-| 글꼴 | font, 폰트, profile, 프로필 | `font` 속성, `profiles/*.css`, `--fy-font-id` |
+| 글꼴 | font, 폰트, profile, 프로필 — 폰꾸가 그리는 글꼴(글꼴 모양 + 재료) | `font` 속성, `profiles/*.css`, `--fy-font-id` |
+| 글꼴 CSS | font CSS (글꼴의 자리·크기·굵기·재료·음절 나누기를 밝힌 CSS) | `profiles/*.css`, `@layer font-kku.font, font-kku.jamo, font-kku.context` |
 | 기본 제공 글꼴 | shipped font | `spec/fonts.json` |
 | 파생 글꼴 | derived font | `spec/fonts.json` `derivedFrom` |
 | 꾸러미 글꼴 | shortcut font (칠만 다른 파생 글꼴 — 같은 모양을 CSS 한 장으로) | 테마의 `shortcut` (`neon` = `sebul` + 꾸밈 `neon`) |
-| 재료 | material | `--fy-material` |
+| 재료 (계열) | material — 글꼴의 기존 재료 계열. 구체적인 그리기 방식인 face와 구별한다 | `--fy-material` |
 | 기기 글꼴 (재료) | system font | `--fy-material: system` |
 | 그림 자소 | sprite, 스프라이트, 이미지 자소 | `--fy-material: sprite`, `data-sprite-jamo*` |
 | 그림 자소 글꼴 | sprite font | `sprite-example`, `sprite-system` |
 | 자소판 | sprite sheet, 시트 | `--fy-sprite-url`, `profiles/*.svg` |
 | 자리 상자 | layout box | `spec/sprite-layout.json` — 자소판 칸마다 자모가 놓일 잉크 상자 |
 | 벡터 자소 | vector jamo | `--fy-material` 표면 `vector`, `jamo-set` — 자모 노드마다 인라인 SVG로 그림 |
-| 획 깊이 | stroke depth | `stroke-depth` / `--fy-stroke-depth` — `jamo`(기본) 또는 `stroke`. 벡터 자소를 자모보다 한 단계 더 쪼갠다(ADR-018) |
+| 획 깊이 | stroke depth | `stroke-depth` / `--fy-stroke-depth` — `jamo`(기본) 또는 `stroke`. 벡터 자소를 자모보다 한 단계 더 쪼갠다(ADR-018). 음절 나누기와 다른 말이다 |
 | 획 | hoek | `part="hoek"` — 획 깊이에서 벡터 자소의 획 하나. 이름은 `--fy-stroke`(외곽선 폭)와 겹치지 않게 '획'의 로마자 |
 | 제자원리 역할 | hoek role | `data-hoek-role` — 자음 기본자 `base`·가획 `added`·이체 `variant`, 모음 천 `heaven`·지 `earth`·인 `person` |
 | 마스크 칠 | mask paint | `--fy-sprite-paint: mask`, `--fy-sprite-fill` — 자소판 알파를 마스크로, 칠은 CSS |
 | 글꼴 파일 내보내기 | font export | `font-kku-export.js`, `FontKkuExport.exportFont` — 조립 결과를 TTF·WOFF로 |
 | 자모 세트 | jamo set | `FontKku.registerJamo`, `profiles/*.jamo.js` — 칸 키 `r<행>-<자모>`별 SVG 도형 |
-| 칸 | cell, 셀 | `--fy-sprite-cell` |
+| 칸 | cell, 셀 (자소판의 칸) | `--fy-sprite-cell` |
 | 행 | row | `--fy-sprite-row` |
+| 잉크 · 잉크 상자 | ink · ink box (실제로 칠해진 픽셀과 그것을 감싸는 상자 — 자모 노드의 em 상자와 다르다) | — |
+
+## 한글 원리 렌더링과 조립 디자인
+
+ADR-024(재료 축·원소·뼈대)와 ADR-025(제안 — 디자인·조립식·정책)의 말이다.
+
+| 한글 | 대신하는 말 | 식별자 |
+|---|---|---|
+| 재료 (축) | face | `data-fy-face`, 글꼴 `--fy-font-face`, 페이지 `--fy-face` |
+| 원소 재료 | element face, Primitive 3, 화면 이름 '선·원으로 만들기' | `element` — 획을 CSS 상자로 |
+| 그림 재료 | svg face, SVG Artwork, 화면 이름 '직접 그려 만들기' | `svg` — 칸 계약 그림 세트(`registerJamo(…, { frame: "box" })`) |
+| 글꼴 글자 재료 | device face, Font Glyph, 화면 이름 '기존 글꼴로 만들기' (폰꾸 "글꼴"과 다르다 — 이쪽은 기기·웹 글꼴의 글자를 재료로 쓴다) | `device` |
+| 원소 | primitive, element (가로선·세로선·원, 점·사선은 파생) | `part="element"` |
+| 표준 잉크 상자 | standard ink box (세 재료가 같은 자리에 그리도록 맞추는 자모별 상자) | `spec/jamo-ink-boxes.json` |
+| 뼈대 | skeleton | `spec/jamo-skeletons.json` |
+| 디자인 | design — 무엇으로 그릴지(재료·원본), 어떤 조립식을 쓸지, 어떤 글꼴 모양을 입힐지를 담은 구조 설정. 글꼴 CSS와 따로 저장한다 | `FontKku.registerDesign`, `--fy-design`, `--fy-font-design`, `<id>.design.json` |
+| 디자인 검사 · 교체 | design validation (오류를 모두 코드·자리로) · replace | `FontKku.validateDesign`, `DESIGN_*` 오류 코드, `registerDesign(…, { replace: true })`, `unregisterDesign` |
+| 받지 않는 글꼴 | font that takes no design (그림 자소 재료, 표준 잉크 상자 없음) | `data-fy-design-status="DESIGN_UNSUPPORTED_FONT"` |
+| 원본 | source (직접 그린 그림, 글꼴의 글자, 원소) | 디자인 `sources` |
+| 자동 · 직접 · 조합 | auto · direct · compose (자모 짓기 방법) | 디자인 규칙 `method` |
+| 조립 계획 | assembly plan — 자모의 원본·조립식·조각·출처를 풀어 낸 결과. 현재는 자모 하나이며 텍스트 전체·의미 대응 확장은 ADR-032의 계획이다. `spec/render-plan.json`의 깊이별 표시 계획과 구별한다 | `FontKku.planJamo` |
+| 출처 기록 | trace, provenance | `FontKku.traceOf` |
+| 글꼴 팔레트 | font palette (여러 글꼴을 역할·자모·조각별로) | 디자인 `sources`(글꼴 인스턴스) |
+| 배치 프로파일 | layout profile — 글꼴 모양의 정본 항목(ADR-026). 화면·문서에서는 '글꼴 모양'이라 쓴다 | `spec/layout-profiles.json`, `FontKku.layoutProfiles` |
+| 모양 값 | shape value — 세벌식·직결식 자모의 자리·크기·굵기·획 굵기·밀도. 코어 CSS가 정본에서 짜임(세벌식)·역할·자모로 고르는 규칙을 생성한다(ADR-030). 2026-10-17까지는 런타임이 노드에 직접 적는 **역할 도장**(`data-fy-stamp`, `--fy-stamp-*`)이었다 | `--fy-shape-*`, `@layer font-kku.shape` |
+| 계산 칸 · 손 보정 칸 | 두 칸 — 도구가 다시 써도 되는 값(세벌식·직결식은 역할 상자 짓기가 짓는 모양 값, 코어 CSS 생성 구간) · 사람과 작업실이 쓴 값(글꼴 CSS의 `@layer font-kku.tune`, 다시 계산해도 남는다). 고정 글꼴 모양의 손 보정은 위치·크기와 자모 보정(회전·굵기·획 두께·자르기)을 받는다. 작업실이 만든 파생 글꼴은 바탕 구간 아래가 손 보정이다(ADR-030 §3·§7·§8) | `@layer font-kku.shape` · `@layer font-kku.tune` |
+| 밀도 굵기 계수 | density factor — 평행 획이 촘촘한 자모(ㄹ·ㅌ·ㅋ)와 꼭지 틈을 다 못 연 ㅎ·ㅊ의 원소·그림 획을 0.75–1배로 가늘게 하는 노드 값(ADR-024 §3) | `--fy-el-density`, `--fy-shape-density` |
+| 꼭지 틈 | cap gap — ㅎ·ㅊ 꼭지(점 획)와 가로획 사이. 굵기 보정이 가로획 너머 획을 0.8배까지 눌러 굵기의 0.6배로 연다(ADR-024 §3) | `dotShifts`, 스모크 `element-cap-gap` |
+
+## 한글 구조와 문자 매핑 확장 (계획)
+
+[ADR-032](ADR/ADR-032-hangul-structure-and-materials.md)의 설계 용어다. (계획)이 붙은 확장은 미구현이며 기존 CSS·씨앗·원형 조립을 유지하는 방향이다. 문자 매핑과 재료 후보는 첫 범위가 구현됐다(2026-10-18, ADR-032 §12).
+
+| 한글 | 뜻 | 현재 계약과의 관계 |
+|---|---|---|
+| 문자 구조 (계획) | 원문·역할·자모·방점과 원문 범위의 대응 | 기존 `sourceJamo`·텍스트 모델을 보존하며 옛한글 분석을 부가 |
+| 관계 자료 (계획) | 문자 결합·제자 설명·그림 재사용·획순을 종류별로 기록한 자료 | 기존 획·조립식 정본의 관계를 구별하는 확장 |
+| 조립 계획 확장 (계획) | 기존 자모 조립 계획을 텍스트 전체와 의미 대응으로 확장 | `planJamo`와 기존 표시 계획을 대조하며 단계적 도입 |
+| 표현 재료 (계획 문서의 통칭) | 글자를 그리는 기존 재료들을 설명하는 말 | 새 material/face 값이 아님. 영문·기호는 `source.kind: font`의 확장 |
+| 문자 매핑 | 한글 원문을 유지하면서 그릴 글자만 ㅇ→O 등으로 지정. 글자는 자모 획을 닮게 늘이고 돌리고 마디에서 잘라 놓는다 | 기존 글꼴 글자 재료의 글자 선택을 확장 — `--fy-glyph-text`, 디자인 2.0 `glyphs`. 머리 음절·고정 통짜 모음은 아직 진단만 |
+| 재료 후보 | 선택할 문자열/자산·글꼴·맞춤 설정의 묶음(지금은 글꼴 원본의 문자 후보) | 후보 ID는 저장/잠금용, 변주는 기존 jamo-seeds 값 사용 |
+| 의미 ID (계획) | 원문 요소와 선택·편집·그림의 대응을 유지하는 식별자 | 씨앗 계산의 순번을 대신하지 않으며 후보 ID와 다름 |
 
 ## 조합 체계
 
@@ -34,62 +156,15 @@
 |---|---|---|
 | 조합 체계 | composition system | `spec/themes.json`, `scripts/build_looks.js` |
 | 축 | axis | `axes` — 글꼴 · 꾸밈 · 변주 · 움직임 · 상호작용 · 바탕 |
-| 글꼴 (축) | skeleton, 뼈대 — 짜임(자모 배치) × 획(재료·획 표현) | `font`, 정본 `fonts` |
+| 글꼴 (축) | skeleton, 뼈대 — 글꼴 모양(짜임·자모 배치) × 획(재료·획 표현) | `font`, 정본 `fonts` |
 | 획 표현 | texture, 획 질감 | `textures` (`plain`·`dot`·`stamp`·`chalk`·`crayon`·`stitch`), `scripts/build_jamo_svg.js` `TEXTURES` |
 | 꾸밈 | look, 칠 (색·외곽선·그림자, 자모 역할별) | `class="kku-look-<id>"`, `font-kku-looks.css` — 바탕 요소를 만드는 '클래스 방식'(decorator `class="font-kku"`)과 다르다. 문서에서는 "꾸밈 `kku-look-*`" 또는 "`kku-look-*` 클래스"라고 쓴다 |
 | 변주 | variation (씨앗만큼 자모마다 조금씩) | `seed` + `jamo-seeds` + `class="kku-vary-<id>"` |
 | 움직임 | animation, 애니메이션, 모션 (글자 단위·자모 단위) | `animate`, `font-kku.css`(글자) · `font-kku-motion.css`(자모) |
 | 상호작용 | interaction (타자·흩기·자석·섞기) | `data-kku-fx`, `font-kku-fx.js`, `FontKkuFx` |
 | 바탕 | tone (꾸밈이 사는 배경) | `tones` |
-| 테마 | theme, preset, 프리셋 (축을 고른 조합의 이름) | `themes`, 조합법 `recipes` (`site/themes-data.js`) |
+| 테마 | theme, preset, 프리셋 (축을 고른 조합의 이름) | `themes`, 조합법 `recipes` (`authoring/themes-data.js`) |
 | 조합기 | composer (글꼴 페이지에서 축을 하나씩 고르는 창) | — |
-
-## 한글 구조
-
-| 한글 | 대신하는 말 | 식별자 |
-|---|---|---|
-| 글자 | glyph, 글리프 (한 음절 상자) | `part="glyph"` |
-| 짜임 | topology, 위상, 유형 | `data-layout-key` |
-| 세로모음 · 가로모음 · 섞임모음 짜임 | right · bottom · split-right | `right`, `bottom`, `split-right` |
-| 민글자 · 홑받침 · 겹받침 | coda none · single · double | `none`, `single`, `double` |
-| 자리 | slot | `data-fy-pos`, `--fy-<slot>-*` |
-| 역할 | role | `data-fy-role`, `--fy-role-*` |
-| 묶음 | cluster | `part="…-cluster"` |
-| 자모 깊이 | jamo depth | `--fy-jamo-depth` |
-| 낱자 | standalone jamo (음절이 아닌 단독 호환 자모 `ㅋ`·`ㅘ`) | `part="content"` |
-
-## 한글 원리 렌더링과 조립 디자인
-
-ADR-024(재료 축·원소·뼈대)와 ADR-025(제안 — 디자인·조립식·정책)의 말이다. ADR-025 쪽 식별자는 구현 전 이름이다.
-
-| 한글 | 대신하는 말 | 식별자 |
-|---|---|---|
-| 재료 (축) | face | `data-fy-face`, 글꼴 `--fy-font-face`, 페이지 `--fy-face` |
-| 원소 재료 | element face, Primitive 3 | `element` — 획을 CSS 상자로 |
-| 그림 재료 | svg face, SVG Artwork | `svg` — 칸 계약 그림 세트(`registerJamo(…, { frame: "box" })`) |
-| 글꼴 글자 재료 | device face, Font Glyph (폰꾸 "글꼴"과 다르다 — 이쪽은 기기·웹 글꼴의 글자를 재료로 쓴다) | `device` |
-| 원소 | primitive, element (가로선·세로선·원, 점·사선은 파생) | `part="element"` |
-| 표준 잉크 상자 | standard ink box | `spec/jamo-ink-boxes.json` |
-| 뼈대 | skeleton | `spec/jamo-skeletons.json` |
-| 디자인 | design (팔레트·규칙·조립식 선택을 담은 구조 설정) | `FontKku.registerDesign`, `--fy-design`, `--fy-font-design` |
-| 디자인 검사 · 교체 | design validation (오류를 모두 코드·자리로) · replace | `FontKku.validateDesign`, `DESIGN_*` 오류 코드, `registerDesign(…, { replace: true })`, `unregisterDesign` |
-| 받지 않는 글꼴 | font that takes no design (그림 자소 재료, 표준 잉크 상자 없음) | `data-fy-design-status="DESIGN_UNSUPPORTED_FONT"` |
-| 원본 | source (직접 그린 그림, 글꼴의 글자, 원소) | 디자인 `sources` |
-| 조립식 | jamo recipe (테마의 조합법 `recipes`와 다르다) | `spec/jamo-recipes.json` |
-| 조각 | part, piece (조립식 안의 재료 하나 — ㅃ의 왼쪽 ㅂ) | 조립식 `parts[].id` |
-| 자동 · 직접 · 조합 | auto · direct · compose | 디자인 규칙 `method` |
-| 조립 계획 | assembly plan (`spec/render-plan.json`의 표시 계획과 다르다) | — |
-| 출처 기록 | trace, provenance | — |
-| 원형 8 · 기본 24 · 확장 40 | origin8 · basic24 · full40 — 그림 제작 안내(렌더링 모드가 아니다) | 디자인 `editor.authoringTarget` |
-| 글꼴 팔레트 | font palette (여러 글꼴을 역할·자모·조각별로) | 디자인 `sources`(글꼴 인스턴스) |
-| 배치 프로파일 | layout profile (ADR-026) | `spec/layout-profiles.json`, 디자인 `layout`, `data-fy-layout` |
-| 세벌식 | sebeol cases, case-fixed — 초성·중성·종성을 짜임(모음 모양 세로·가로·합자 × 받침 없음·홑·겹)마다 정해진 자리와 크기로 찍는 배치(ADR-028). 받침 없는 글자는 아래를 비우고 받침 있는 글자는 칸 높이를 다 쓴다. 글꼴을 밝히지 않은 바탕 요소의 기본 | `sebul-cases-v1` |
-| 짜임 | case — 세벌식 도장을 고르는 열쇠: 모음 모양 `v`·`h`·`c` + 받침 `0`·`1`·`2`(`"v1"`), 받침과 관계없으면 모양 열쇠 하나(`"v"`) | 글자 칸 `data-jung-layout`·`data-jong-layout` |
-| 직결식 · 세벌 고정 | jikgyeol, fixed-three — 초성·중성·종성을 역할·자모마다 어느 음절에서나 같은 자리와 크기로 찍는 배치(타자기형 세벌, ADR-026). 0.1.1–0.1.3의 기본, 지금은 글꼴 `jikgyeol` | `sebul-fixed-v1`, `--fy-font-layout` |
-| 네모 문맥 | adaptive-square — 모음 짜임·받침 유무에 따라 자리를 바꾸는 배치(글꼴 CSS의 slot) | `square-context-v1` |
-| 역할 도장 | role stamp — 고정 배치에서 역할·자모 하나(세벌식은 짜임마다)의 자리·크기·굵기 | `data-fy-stamp`, `--fy-stamp-*` |
-| 밀도 굵기 계수 | density factor — 평행 획이 촘촘한 자모(ㄹ·ㅌ·ㅋ)와 꼭지 틈을 다 못 연 ㅎ·ㅊ의 원소·그림 획을 0.75–1배로 가늘게 하는 노드 값(ADR-024 §3) | `--fy-el-density`, `--fy-stamp-density` |
-| 꼭지 틈 | cap gap — ㅎ·ㅊ 꼭지(점 획)와 가로획 사이. 굵기 보정이 가로획 너머 획을 0.8배까지 눌러 굵기의 0.6배로 연다(ADR-024 §3) | `dotShifts`, 스모크 `element-cap-gap` |
 
 ## 쓰는 법
 
@@ -102,7 +177,9 @@ ADR-024(재료 축·원소·뼈대)와 ADR-025(제안 — 디자인·조립식·
 | 씨앗값 | seed | `seed`, `data-seed` |
 | 자모 씨앗값 | jamo seed | `jamo-seeds`, `--fy-jamo-seed` — 자모 노드마다 0–1 |
 | 씨앗 반응 글꼴 | seed-aware font | ADR-016 — 글꼴 CSS가 `--fy-jamo-seed`로 변주하는 글꼴(`jamo-seeds`를 켠 바탕 요소에서만) |
+| 페이지 전용 변수 | page variable (페이지 CSS가 바탕 요소에 주는 조정 변수 — 글꼴 모양과 관계없이 글꼴 값 위에 얹힌다) | `--fy-top`·`--fy-left`·`--fy-scale-x` 등 |
 | 평문 모드 | text mode | `renderText()` |
+| 정적 렌더러 | static renderer, 사이드카 (브라우저 없이 같은 HTML을 내는 Python·Go·Ruby·Rust 렌더러) | `renderers/`, `render_html()` |
 | 터미널 명령 | CLI | `font-kku-text` |
 | 한 줄 설치 | script-tag loader | `data-fonts`, `data-addons` |
 | 확장 | addon | `data-addons="looks motion fx"` — `font-kku-looks.css`·`font-kku-motion.css`·`font-kku-fx.js` |
@@ -113,13 +190,89 @@ ADR-024(재료 축·원소·뼈대)와 ADR-025(제안 — 디자인·조립식·
 |---|---|---|
 | 입력기 | IME, input method, 한글 입력 모듈 | `font-kku-ime.js`, `FontKkuIme` |
 | 자판 배열 | keyboard layout | `layout` |
-| 두벌식 · 세벌식 390 · 세벌식 최종 | 2-set · 3-set 390 · 3-set final(3-91) | `dubeol`, `sebeol-390`, `sebeol-final` |
+| 두벌식 · 세벌식 390 · 세벌식 최종 | 2-set · 3-set 390 · 3-set final(3-91) — 자판 배열 이름이다. 글꼴 모양 세벌식과 다르다 | `dubeol`, `sebeol-390`, `sebeol-final` |
 | 조합 중인 음절 | composing syllable, preedit | `state.composing` |
-| 받침 넘김 | (두벌식) 받침이 다음 음절 초성으로 옮겨 감 | — |
+| 받침 넘김 | (두벌식) 받침이 다음 음절 초성으로 옮겨 감. 입력하는 동안 글자가 들썩여 보여 '도깨비불 현상'이라고도 한다 | — |
 | 한/영 전환 | Korean/English toggle | Shift+Space, `toggleMode()` |
 | 화면 자판 | on-screen keyboard, 가상 키보드 | `keyMap()` |
-| 낱자 | standalone jamo, 호환 자모 한 글자 | `[part="content"][data-sprite-jamo]` |
 | 글꼴 없는 기기 | 한글 글꼴이 없는 기기 | `hasHangulFont()` |
+
+## 글꼴 작업실
+
+| 한글 | 뜻 | 식별자 |
+|---|---|---|
+| 글꼴 작업실 | Font Studio — 브라우저에서 글꼴을 만들고 고치는 화면. 다른 페이지에 붙일 수 있다 | `studio/index.html`, `FontKkuStudio.mount()` |
+| 작업실 페이지 | 디자인(재료·글꼴 모양·그리기) · 고치기(끌어 고치기·편집 범위·값) · 자소판 · 검수. 한 문서 안에서 주소(`?page=`)마다 칸이 바뀌어 고친 것과 되돌리기가 이어진다 | `?page=design\|edit\|sheet\|review`, `[data-studio-pages]` |
+| 미리보기 | preview — 지금 글꼴로 그린 문장. 자소를 눌러 고른다. 머리 막대 바로 아래에 있고(쉬운 모드 첫 화면 위끝 1440 ≤ 200px · 390 ≤ 300px), 문장 칸 '미리보기 문장'과 페이지 안내는 그 아래다(S6) | `[data-studio-preview]`, `[data-studio-text]` |
+| 살펴보기 | inspector — 고른 자소의 자리·값·출처·걸린 규칙 | — |
+| 비교 칸 | 같은 자모가 몇 곳·몇 가지 자리에 찍히는지 나란히 보이는 칸(가 고 과 각 곽 · 가 나 간 난) | `[data-design-compare]` |
+| 글자 짓기 비교 (계획) | 고른 글자를 짓기 방식별로 나란히 그리는 칸('회'의 네 길) | — |
+| 편집 범위 | 값을 고칠 때 어디까지 바뀌는가 — 정밀 모드는 아래 여덟을 넓은 것부터 늘어놓고, 쉬운 모드는 셋(이 글자만 · 같은 짜임 모두 · 이 자모 어디서나)이다 | `scope` |
+| 자리 가족 | 부모 자리를 공유하는 모든 자리의 값을 바꾼다(대체) | `family`, `--fy-<부모>-*` |
+| 이 자리 모두 | 그 자리에 오는 모든 자모의 값을 바꾼다(대체). 예전 이름 '자리 전체' | `slot`, `--fy-<slot>-*` |
+| 이 자리의 이 자모 | 그 자리에 온 그 자모만(대체) | `slotJamo` |
+| 이 자모 어디서나 (보정) | 예전 이름 '이 자모 (모든 자리)'. 그 자모가 어느 자리에 오든 고친다 — 위치·비율·회전·크기·획 두께는 누적, 굵기·자르기는 대체 | `jamo`, `--fy-jamo-dx/dy/scale-x/scale-y/rotate/size/weight/stroke/clip` |
+| 원칙 범위 | 세벌식·직결식 같은 고정 글꼴 모양에서 모양의 원칙대로 고치는 범위 — 세벌식은 같은 짜임의 그 자모, 직결식은 이 자모 어디서나(작업실이 묶고 까닭을 보인다). 네모꼴 노드에서는 이 자리 모두 | `principle`, `@layer font-kku.tune` |
+| 문맥 (보정) | 같은 글자에 다른 자모가 있을 때만 더한다(누적) | `context`, `--fy-ctx-*` |
+| 같은 짜임 모두 (보정) | 모음 모양·받침 수가 같은 글자의 그 자리 그 자모에 더한다(누적) | `case`, `--fy-case-*` |
+| 이 글자만 (보정) | 그 음절의 그 자모에만 더한다(누적) | `glyph`, `--fy-syl-*` |
+| 범위 사다리 | 넓은 범위부터 자리 가족 < 이 자리 모두 < 이 자리의 이 자모 < 이 자모 어디서나 < 같은 짜임 모두 < 문맥 < 이 글자만 — 좁은 범위가 늘 이긴다(선택자 특이도와 상관없이) | ADR-035 |
+| 이 짜임의 이 자모 | '같은 짜임 모두'의 ADR-030 4단계 이름(화면은 S4부터 '같은 짜임 모두'). 같은 짜임(모음 모양 × 받침)의 그 자모만 고치는 작업실 편집 범위. 모든 글꼴에 둔다 — 세벌식은 원칙 범위, 직결식에서는 원칙 밖(ADR-030 §7) | 네모꼴 `[part="glyph"][data-layout-key]`, 고정 모양 `[data-jung-layout][data-jong-layout]` |
+| 이 글자만 | 음절 하나(같은 음절은 어디서나 함께)만 고치는 작업실 편집 범위. 고정 모양에서는 원칙 밖(ADR-030 §7) | `[part="glyph"][data-source]` |
+| 대체 · 보정 | 값을 갈아 끼움 · 원래 값 위에 더함 | — |
+| 공급 규칙 · 가려짐 · 반영 확인 | 지금 그 값을 실제로 주는 CSS 규칙 · 다른 규칙이 덮어 편집이 보이지 않음 · 편집 뒤 계산값이 기대대로인지 다시 봄 | `data-edit-effect` |
+| 직접 조작 | 미리보기에서 자소를 끌어 옮기고, 손잡이로 크기·회전을 바꾸는 것. 끄는 동안은 미리보기만 바뀌고 뗄 때 한 번 적는다 | `pointerdown`, 방향키, `+ − [ ]` |
+| 손잡이 · 손잡이 틀 | 고른 자소의 잉크 상자를 감싸는 틀과 그 조절점 — 오른쪽 아래는 크기, 위는 회전(5°씩, Shift 15°). 누르는 칸은 데스크톱 16px · 터치 44px | `[data-studio-handles]`, `[data-studio-handle]` |
+| 현대 한글 n자 | '미리보기 n곳' 옆의 수 — 고른 범위의 규칙이 현대 한글 11,172자 가운데 몇 음절에 닿는가. 더 좁은 규칙이 가린 글자는 뺀다(S5) | `FontStudio.reach`, `affected().total` |
+| 머리 음절 조각 · 낱으로 나눠 고치기 | 고른 머리 음절을 한 번 더 누르면 안 조각(첫소리 또는 모음 묶음)을 고르고, 그 조각을 따로 고치려면 '낱으로 나눠 고치기'로 글꼴의 모음 나누기를 낱으로 바꾼다(글꼴 전체 출력이 바뀌는 한 걸음, Ctrl+Z로 되돌림) | `FontStudio.piece`·`splitPiece`, `[data-studio-piece-split]` |
+| 잉크 기준 선택 | 누른 점에 실제로 칠해진 자모를 고르는 것(em 상자가 겹쳐도). 같은 점을 다시 누르면 그 아래 다음 자모 | `FontStudio.pickAt` |
+| 새 글꼴로 · 이 글꼴 그대로 | 고친 것을 저장하는 두 갈래 — '이 글꼴로 새 글꼴'은 기본 제공 글꼴을 **바탕 글꼴**로 옮겨 판을 고정하고 그때까지 고친 것을 손 보정으로 붙인 파생 글꼴을 만든다(작업실 기본) · 기본 제공 글꼴을 그 이름 그대로 저장한다(저장소 작업실만 — mount 옵션 `shippedSave`, 전후 시트 승인). 사이트 작업실은 고친 기본 제공 글꼴을 같은 이름으로 내보내지 않는다(ADR-030 §8) | `FontKkuDerive.derive`, `shippedSave` |
+| 바탕 글꼴 · 바탕 구간 | 파생 글꼴이 옮겨 온 글꼴 · 파생 글꼴 파일 안에 바탕을 새 이름으로 옮긴 구간(`BEGIN/END GENERATED` 표시). 작업실은 구간을 잠그고 고친 값은 그 아래 손 보정에 쓴다 | `derivedFrom`, `authoring/font-derive.js` |
+| 바탕 새 판 받기 | 파생 글꼴의 바탕 구간만 지금 판의 바탕 글꼴로 다시 쓰는 작업실 단추. 손 보정은 그대로다(저장소 파생 글꼴은 `scripts/build_derived_fonts.js --write`) | `FontStudio.rebase()`, `[data-studio-rebase]` |
+| 통째로 풀어 저장 | 파생 글꼴을 내보낼 때 바탕 구간 표시와 머리말을 떼어 바탕 관계가 없는 글꼴 한 파일로 저장하는 선택 | `FontKkuDerive.flatten`, `[data-studio-flatten]` |
+| 프로젝트 | 글꼴 CSS·자소판·디자인·그림을 한 파일로 저장한 것(v2). 지금은 읽기만 하고, 새로 저장하는 것은 글꼴 묶음이다(S2) | `.json` 프로젝트 |
+| 초안 | 브라우저에 자동으로 남는 저장 전 상태 | `draftKey` |
+| 편집 기록 | 이름 붙은 바꾸기 목록. 눌러 그 자리로 돌아간다 | `FontStudio.history` |
+| 자동화 계약 (v1) | 바깥(호스트 페이지·개발·검수 사이트·에이전트)이 작업실을 사람 화면과 같은 길로 부리는 이름 붙은 창구. 결과(적용·거절·선언 diff·바뀔 곳)를 돌려주고 바뀜을 사건으로 알린다(PLAN-STUDIO-002 S1) | `FontStudio.api`, mount `call`·`on` |
+| 거절 표 | 작업실이 편집을 받지 않을 때의 까닭 한 줄·해결 길·코드. 화면 알림과 API 결과가 같은 줄에서 나온다 | `authoring/font-studio-refusals.js`, `refused[]` |
+| 미리 셈 | 편집을 적용하지 않고 무엇이 바뀔지(선언 diff·계약 검사)만 셈하기. 글꼴·기록·초안·알림은 그대로다 | `dryRun` |
+| 행위자 | 편집·판정을 한 쪽(사람·에이전트와 그 이름). 기록 줄·바뀜 사건·검수 기록에 남는다 | `setActor({ kind, id })` |
+| 선언 diff | 두 글꼴 CSS에서 규칙마다 바뀐 선언(전·후·줄). 자동화 결과와 개발·검수 사이트 편집 기록의 꼴 | `declarationDiff` |
+| 출처 패널 | 고른 자모가 무엇이고 어디서 왔고 어느 규칙이 이겼는지 다섯 질문으로 답하는 칸 | `FontStudio.provenance` |
+| 잠금 | 자동 섞기 같은 일괄 바꾸기가 건드리지 않게 막은 자모·역할·조각 | 디자인 `editor.locks` |
+| 디자인 묶음 (묶음 파일) | 디자인 JSON과 그 디자인이 쓰는 그림을 한 파일로 저장한 것. 정밀 모드 디자인 '파일' 칸의 '묶음 저장·묶음 열기'. 글꼴 묶음과 다르다 | `<id>.fkk-bundle.json` |
+| 그림 문서 | 작업실에서 그린 자모 그림(칸·부분·도형·출처) | `font-kku-drawing` v1 |
+| 독립 SVG로 떼어 내기 | 조립식·획으로 지은 자모를 지금 모양 그대로 독립 그림으로 바꾸는 것 | `FontStudio.drawDetach` |
+| 임시 등록 | 비교용 후보 디자인을 잠시 등록해 그려 보는 것 | `lease`, `studio-tmp-<n>` |
+| 페이지용 코드 | 작업실 결과를 내 페이지에 붙이는 등록 코드 — '내보내기 ▾ ▸ 내 페이지에 쓰기 — 코드 복사'(디자인 칸의 따로 있던 단추는 S3에서 뺐다) | `[data-studio-export-page]` |
+| 이 모양과 맞지 않는 규칙 | 디자인 규칙이 고른 글꼴 모양과 맞지 않을 때 보이는 한 칸(글꼴 모양 바로 아래, 쉬운 모드에도) — 막음(그 모양이 그릴 수 없는 규칙: 고를 때까지 글꼴 모양을 바꾸지 않음)과 경고(아래 원칙 안내). 예전의 충돌 상자와 원칙 안내를 합쳤다(S5) | `[data-design-mismatch]` |
+| 규칙 목록 | 정밀 모드 디자인 '고급'의 규칙을 조건 → 결과 한 줄씩 보이는 목록. 칸 여덟(자모·역할·짜임·받침·소스·짓기·조립식·늘림)으로 더하고 고치고 지운다 — 한 번이 기록 한 줄이고, 만든 디자인은 디자인 JSON으로 쓴 것과 같다. 예전의 '문맥 규칙' 탭을 합쳤다(S5) | `[data-design-rules]`, `FontStudio.design.addRule`·`updateRule`·`deleteRule` |
+| 칸마다 나눠 가져오기 | 그리기에서 AI 답(여러 칸 SVG)을 통째로 붙이면 칸 이름(`data-jamo`·`id`·`<title>`·앞 줄)으로 나눠 새 칸 · 바꿀 칸 · 이름 모름 · 겹침 · 버린 것을 미리 보이고 한 걸음으로 넣는다(S5) | `draw.importSvg(글)` |
+| 한 번에 부탁하는 글 | 그리기의 '남은 n칸 한 번에 부탁하는 글 복사' — 지금 단계의 남은 칸을 한 벌로 그려 달라는 AI 요청 글. 답의 꼴은 칸마다 나눠 가져오기가 읽는 꼴이다(S5) | — |
+| 부분 회전 | 그리기에서 고른 획 하나만 그 획의 가운데를 축으로 돌리기(↺·↻ 15°, `[` `]` 5° · Shift 15°)(S5) | `Draw.rotatePart` |
+| 원형 8만 그린 셈 · 다 그린 칸만 | 그리기 문장 미리보기의 두 보기 — 원형 8만 그렸을 때의 모습(기본) · 다 그린 칸으로 지을 수 있는 글자만(S5) | — |
+| 원칙 안내 | '이 모양과 맞지 않는 규칙'의 경고 — 디자인 규칙이 고른 글꼴 모양의 원칙(같은 역할·자모를 한 가지로 — 세벌식·직결식)을 깰 때. 규칙은 그대로 그리고, "원칙대로 되돌리기"(조건을 떼어 역할별 값으로)·"문맥 규칙 지우기"를 준다(ADR-030 §5) | `[data-design-principle]`, 진단 `DESIGN_FIXED_CONTEXT`·`DESIGN_FIXED_VARIATION` |
+
+## 검증과 검수
+
+| 한글 | 뜻 | 식별자 |
+|---|---|---|
+| 감사 | audit — 그린 결과를 재어 규칙을 넘는지 보는 자동 검사. 겹침 감사·획 굵기 감사·가독성 감사·헷갈리는 짝 감사 | `scripts/glyph_*_audit.py` |
+| 탐침 | probe — 알려진 결함이 다시 생기는지 찌르는 작은 시험. 매트릭스 탐침은 엔진 × 글꼴 × 꾸밈을 훑는다 | `tests/probes/`, `scripts/matrix_probe.py` |
+| 관문 | gate — 공개 전에 반드시 넘어야 하는 단계. 넘지 못하면 공개하지 않는다 | `scripts/release_gate.py` |
+| 검증 세 층 | 빠른 검증 · 일상 검증 · 공개 검증 | `npm run verify:fast` · `verify` · `verify:release` |
+| 기준선 | baseline — 비교의 기준으로 고정한 결과. 시각 기준선(그림), 조립 기준선(자모 배치 기록) | `tests/baselines/`, `scripts/capture_composition_baseline.py` |
+| 검수 시트 · 전후 시트 | 사람이 눈으로 볼 그림 한 벌 · 직전 공개판과 나란히 놓은 것 | `scripts/review_sheets.py` |
+| 검수 | 사람이 시트를 보고 읽히는지·자연스러운지 판정하는 일. 수치 감사를 넘어도 끝이 아니다 | — |
+| 검수 페이지 | 작업실에서 문장을 16·24·48px 실제 렌더로 보고 판정·메모를 남기고 그 자리에서 고치는 페이지(ADR-031) | `?page=review` |
+| 판정 (통과 · 고칠 것 · 보류) | 검수 항목마다 사람이 남기는 결과. 판정 없음은 미검수, 그린 모양이 바뀌면 다시 검수 | `pass` · `needs-fix` · `hold` |
+| 꾸밈·바탕 바꿔 보기 | 검수 페이지에서 견본을 꾸밈·바탕을 입혀 보는 고르개(견본 아래). 보기만 바꾼다 — 판정 근거(그린 모양 서명)에 들지 않고, 판정 기록에 본 꾸밈·바탕을 참고로 적는다(S5) | `[data-review-look]`·`[data-review-background]`, 기록 `reference.look`·`background` |
+| 차이 칠하기 | 정밀 모드 검수에서 저장한 비교 기준과 지금을 같은 크기로 겹쳐 다른 잉크만 칠하기 — 빨강은 기준에만, 파랑은 지금에만 있는 잉크(S5) | `[data-review-diff]` |
+| 그린 모양 서명 | 판정 때 그 항목 글자가 어떻게 그려졌는지 적은 지문(노드 구조·자리·칠, 그림 자소는 칸 화소). 다시 검수를 항목마다 정한다 | `renderSignature` |
+| 바뀔 곳 | 고른 편집 범위가 바꿀 미리보기 자모 — 점선 상자와 "미리보기 n곳" | `FontStudio.affected()` |
+| 검수 기록 · 교정 파일 (계획) | 항목·판정·메모·전후 값을 남긴 기록 · 기본 제공 글꼴의 고친 값을 저장소 정본에 넣을 파일 | — |
+| LLM 의견 | AI 모델이 시트를 보고 낸 의견. 선택이고 판정을 대신하지 않는다(2026-10-16) | — |
+| 후보판 · 정식판 | `X.Y.Z-rc.N`(npm `next`, 전체 탐색 전) · `X.Y.Z`(npm `latest`) | `--tag next` |
 
 ## 도구와 화면
 
@@ -131,7 +284,7 @@ ADR-024(재료 축·원소·뼈대)와 ADR-025(제안 — 디자인·조립식·
 | 그림 자소 보기 | Sprite Demo |
 | 소개 | Overview |
 | 기본 글 | Basic Text |
-| 줄바꿈 | Layout |
+| 줄바꿈 | Layout (줄 나누기 페이지 — 글꼴 모양과 다르다) |
 | 짜임 비교 | Shape |
 | 움직임 | Animation |
 | 글자 견본 | Live Specimen |
@@ -142,9 +295,70 @@ ADR-024(재료 축·원소·뼈대)와 ADR-025(제안 — 디자인·조립식·
 | 웹 앱 | web app (사례의 전광판·메모장) |
 | 전광판 | LED sign, signboard |
 | 메모장 | notepad, memo |
-| 움직임 (메뉴) | effects, 효과 (공개 메뉴, `site/effects.html` — 움직임·상호작용 견본) |
+| 움직임 (메뉴) | effects, 효과 (공개 메뉴, 사이트 `effects.html` — 움직임·상호작용 견본) |
 | 꾸미기 | customizer (글꼴 페이지에서 글꼴을 바탕으로 나만의 꾸밈 글꼴 CSS를 만드는 창) |
 | 글꼴 뽑기 | random font, font draw (뽑기 번호 하나로 재현되는 무작위 꾸밈 글꼴) |
 | 조합 뽑기 | random composition (조합기에서 축마다 무작위로 고르기) |
 | 이럴 때 폰꾸 | use cases, problems (소개의 문제 카드·증명 데모 구간) |
 | 증명 | proof demo (주장 대신 그 자리에서 확인되는 데모·실측) |
+| 쉬운 모드 · 정밀 모드 | easy · precise mode — 작업실의 두 보기(PLAN-STUDIO-002 S3). 쉬운은 결과 중심(보이는 글자·위치·크기), 정밀은 원인 중심(규칙·범위·출처·CSS 원문). 데이터·되돌리기·저장은 같다. 머리 막대의 '쉬운 / 정밀'로 바꾸고 그 브라우저에 기억한다(주소 `?mode=`·mount `mode`가 먼저). 쉬운 모드만으로 고치고 저장까지 끝난다 |
+| 짓는 방식 | composition — 글자를 어떤 덩어리로 지을지(음절 나누기 × 조각 깊이)를 하나로 고르는 것(ADR-034). 고르지 않아도 된다 — 기본은 모양대로. 작업실 디자인 머리 아래 '짓는 방식' 칸, CSS `--fy-composition`·`--fy-font-composition`, 디자인 `composition`(프리셋 `auto`·`syllable`·`whole`·`jamo`·`pieces`·`origins`) |
+| 모양대로 · 음절로 · 겹모음 통째로 · 자모로 · 조각으로 · 원형으로 | 짓는 방식 프리셋 여섯의 화면 이름(`auto`·`syllable`·`whole`·`jamo`·`pieces`·`origins`). 화로 보면 그 모양의 기본 · 호 + ㅏ · ㅎ + ㅘ · ㅎ + ㅗ + ㅏ · (ㅗ+ㅇ) + ㅗ + ㅏ · 원형 획(ㆍ·ㅡ·ㅇ·ㅣ). 정밀 모드에서 축을 따로 고르면 '직접 고름'(`custom`) |
+| 쉬운 고치기 판 | 쉬운 모드 고치기 페이지의 판 — 뜻 범위 셋('이 글자만'·'같은 짜임 모두'·'이 자모 어디서나'), 위치·크기·회전·굵기 막대와 숫자, 한국어 경고와 해결 단추. 휴대폰에서는 아래에서 올라온다 |
+| 지금 보이는 값 | 그려진 자모에서 잰 값(위치 %·크기 배·회전 °·굵기) — 규칙에 적힌 값(정밀 모드 값 표)과 다를 수 있다. 쉬운 고치기 판의 숫자 |
+| 원문 고쳐 쓰기 | 정밀 모드에서 글꼴 CSS 원문 칸을 직접 고쳐 Ctrl/Cmd+Enter로 적용하기(기록 한 줄). 구문 오류가 있으면 적용하지 않는다 |
+| 글꼴 묶음 | font package(`font-kku-font-package` v1) — 글꼴 하나를 옮기고 저장·서빙하는 단위(CSS·디자인·그림·자소판·검수·저장 환경·판). 작업실의 '저장'·'내보내기 ▸ 글꼴 묶음 파일'·초안이 쓰고, 프로젝트 v2·디자인 묶음·디자인 JSON도 읽는다. 파일은 `<id>.font-kku.json`. '묶음 노드'(합자·겹받침)·'디자인 묶음'(디자인과 그림만)과 다르다 |
+| 하나의 기록 | one timeline — 작업실 문서 하나의 편집 기록(`FontStudio.timeline`). CSS·디자인·그림·자소판·검수 편집이 시각 차례로 한 줄씩 쌓이고, Cmd/Ctrl+Z가 그 마지막 일을 되돌린다. 갈래(lane)는 그 줄의 종류(css·design·sheet·review)다(PLAN-STUDIO-002 S2) |
+| 머리 막대 | studio header bar — 작업실 모든 페이지 위의 막대: 글꼴 고르기 ▾ · 열기(정밀) · 저장 · 내보내기 ▾ · 되돌리기·다시 · 알림 한 줄 · 쉬운/정밀(PLAN-STUDIO-002 S2·S3). 알림 한 줄은 되돌리기 옆(휴대폰은 막대 아래)이라 미리보기를 밀지 않는다(S6). '파일 막대'라고 부르던 것 |
+| 저장 창구 | store adapter — 작업실이 글꼴 묶음을 저장하고 여는 자리. 바꿔 끼운다: 로컬(파일), HTTP(저장 창구 HTTP 약속 v1 — 개발·검수 사이트·대외 서비스), 호스트 객체(mount `store`) |
+| 글자로 만들기 | 문자 매핑의 작업실 화면 이름 — 단추·탭·제목 셋을 이 이름 하나로 모았다(PLAN-STUDIO-002 S3) |
+| 조각 소스 | binding — 조립식의 조각마다 고른 재료(예: ㅎ의 위 조각은 글꼴 B, 동그라미는 그림 세트 A). 작업실 정밀 모드 '조립식·조각 소스' 탭 | 디자인 규칙 `apply.bindings` |
+| 페인트 통 | 자소판 정밀 모드의 영역 채우기 도구(예전 이름 '채우기'). 쉬운 모드의 '채우기'는 빈 칸을 글꼴로 채우는 단추다 | 자소판 도구 `fill` |
+| 개발·검수 사이트 | devsite — 저장소 내부 도구(ADR-033, `devsite/`, 늘 `:8490`). 고치기·검수·작업 화면과 에이전트 API·CLI `fkkdev`. 공개 사이트가 아니라 사이트 문서 용어 절에는 싣지 않는다 |
+| 편집 세션 | edit session — devsite가 저장하는 worktree `tmp/wt-<이름>`과 브랜치 `edit/<이름>`. master 반영은 사람이 한다 |
+| 편집 기록 (devsite) | edit journal — 저장마다 누가(사람·에이전트)·무엇을(선언 diff)·왜(메모). 작업실의 '편집 기록'(하나의 기록 줄 목록)과 다르다 | `tmp/devsite/sessions/<이름>/journal.jsonl` |
+| 시트 열쇠 | sheet key — 검수 시트를 다시 그리게 하는 조건 묶음(글꼴·기준 판·크기·글 세트·꾸밈·바탕). 판정이 이 열쇠에 붙는다 — 작업실 검수의 꾸밈·바탕은 보기만이라 판정에 들지 않는 것과 다르다 |
+| 작업 대기열 | job queue — devsite가 명령 목록(`devsite/jobs.json`)의 검사·검증·감사를 차례로 돌리는 곳. 무거운 것은 한 번에 하나, 결과는 그때 커밋에 묶인다(D4) | `/jobs`, `fkkdev job` |
+
+## 헷갈리는 말
+
+같은 말이 여러 뜻으로 쓰이는 곳이다. 문서에서는 왼쪽의 정확한 말을 쓴다.
+
+| 말 | 뜻 1 | 뜻 2 | 뜻 3 |
+|---|---|---|---|
+| 재료 | **재료 계열**(`--fy-material`) | **재료 축**(`face`)·디자인 원본 종류(`source.kind`)의 기존 대응 | **표현 재료**는 통칭, **재료 후보**는 선택할 구체적 자원이며 새 계열이 아님 |
+| 깊이 | **음절 나누기**(낱·통짜·머리 음절, `--fy-*-depth`) | **획 깊이**(자모를 획으로, `stroke-depth`) | 옛 '렌더링 깊이' → **그릴 범위** |
+| 세벌식 | **글꼴 모양** 세벌식(`sebul-cases-v1`) | **자판 배열** 세벌식 390·최종(입력기) | 글꼴 id `sebul` — 자기 글꼴 CSS 모양을 쓰는 글꼴로, 글꼴 모양 세벌식과 다르다(ADR-026 L16) |
+| 배치 | 지금 화면의 '배치'·'문맥 배치' = **글꼴 모양** | 조립식 연산 **자리 밝힘**(`place`) | 페이지 **줄바꿈**(Layout) |
+| 묶음 | 합자 모음·겹받침 **묶음**(cluster 노드) | 작업실 **묶음 파일**(`.fkk-bundle.json`) | 작업실 '전역·묶음 변수'(묶음 노드의 변환 변수) |
+| 조합 | 자모 짓기 방법 **조합**(`compose`) | **조합 체계**(여섯 축) · 테마의 **조합법**(`recipes`) | 입력기의 **조합 중인 음절** |
+| 조립식 · 조합법 | **조립식**: 자모를 조각으로 짓는 방법(`spec/jamo-recipes.json`) | **조합법**: 테마가 축을 고른 차림(`spec/themes.json` `recipes`) | — |
+| 글꼴 | 폰꾸 **글꼴**(글꼴 모양 + 재료, `font` 속성) | 재료로 쓰는 **기기·웹 글꼴**(글꼴 글자 재료) | **글꼴 (축)**(여섯 축의 하나) |
+| 바탕 | **바탕 요소**(host) | 축 **바탕**(배경색, `tones`) | 파생 글꼴의 **바탕 글꼴**(`derivedFrom`) · 바탕 구간 |
+| 도장 | (없어진 이름) **역할 도장** → 모양 값(`--fy-shape-*`) | 글꼴 id `dojang` | 획 표현 `stamp` |
+| 자모 · 자소 | **자모**: 문자로서의 단위 | **자소**: 화면에 그려진 자모 노드 | — |
+| 짜임 · 자리 | **짜임**: 글자 전체의 모양 갈래(아홉) | **자리**: 자모 하나가 놓이는 이름 붙은 위치(`data-fy-pos`) | — |
+| 합자 모음 · 섞임모음 | 같은 것. **합자 모음**을 쓴다 | — | — |
+| 네모 문맥 · 문맥 배치 · 네모꼴 | 같은 것. **네모꼴**을 쓴다 | — | — |
+
+## Change Log
+- 2026-10-19: 작업실 S3–S5 화면 말에 맞춤(S6) — 편집 범위 여덟(이 자리 모두·이 자모 어디서나·원칙 범위, 쉬운 모드 셋), 현대 한글 n자, 머리 음절 조각·낱으로 나눠 고치기, 이 모양과 맞지 않는 규칙(원칙 안내를 그 경고로), 규칙 목록, 칸마다 나눠 가져오기·한 번에 부탁하는 글·부분 회전·다 그린 칸만, 꾸밈·바탕 바꿔 보기·차이 칠하기, 프로젝트는 읽기만, 디자인 묶음, 페이지용 코드 자리, 머리 막대 알림 한 줄. devsite 말에서 (계획) 뗌·작업 대기열 더함. 사이트 `docs.html` 용어 절 고칠 글은 `tmp/site-patches/2026-10-19-studio-s6/`(사이트 main 작업 트리에 남의 미커밋 변경이 있어 거기에 쓰지 않음)
+- 2026-10-18: 짓는 방식과 프리셋 여섯의 화면 이름(ADR-034, 작업실 C3)
+- 2026-10-18: S3 화면 이름에 맞춤 — 네모꼴(작업실도), 글자로 만들기(계획 표시 뗌), 조각 소스·페인트 통 더함
+- 2026-10-18: 자동화 계약(v1)·거절 표·미리 셈·행위자·선언 diff(작업실 S1). 개발·검수 사이트 내부 말에 가깝지만 mount로 바깥에도 열려 사이트 문서 용어 절에 싣는다(다음 사이트 배포 때).
+- 2026-10-18: 검수 페이지(계획 표시 걷음)·판정 어휘(통과·고칠 것·보류)·그린 모양 서명·바뀔 곳을 더했다(작업실 S0). 사이트 `src/docs.html` 용어 절은 다음 사이트 배포 때 함께 고친다(TODO).
+- 2026-10-18: 글꼴 묶음·저장 창구를 구현에 맞춰 고쳤다(S2 — 형식 이름·파일 이름·창구 셋).
+- 2026-10-18: 쉬운·정밀 모드, 글꼴 묶음, 저장 창구, 글자로 만들기(계획, PLAN-STUDIO-002)를 도구와 화면에 더했다. 구현 때 사이트 `src/docs.html` 용어 절도 함께 고친다.
+- 2026-10-18: 개발·검수 사이트·편집 세션·편집 기록·시트 열쇠(계획, ADR-033)를 도구와 화면에 더했다.
+- 2026-10-18: 문자 매핑·재료 후보의 (계획) 표시를 걷고 첫 구현 범위와 문자 맞춤(획 따라 놓기·마디에서 잘라 늘이기)을 적었다.
+- 2026-10-18: ADR-032 계획 용어·문자 매핑을 추가하고 재료 계열/face/후보의 뜻을 구별했다. 기존 조립 계획의 현재 기능과 전체 텍스트 확장 계획도 구별했다.
+- 2026-10-17: 작업실 단계 (계획) → 작업실 페이지(디자인 · 고치기 · 자소판, 사용자 결정 — 페이지 나누기).
+- 2026-10-17: 직접 조작·손잡이 틀·잉크 기준 선택이 작업실에 들어옴(계획 표시 뗌).
+- 2026-10-17: 새 글꼴로·이 글꼴 그대로가 작업실에 들어옴(계획 표시 뗌), 바탕 글꼴·바탕 구간·바탕 새 판 받기·통째로 풀어 저장(ADR-030 4단계 c). '바탕'의 셋째 뜻(바탕 글꼴)을 헷갈리는 말에.
+- 2026-10-17: 이 짜임의 이 자모·이 글자만이 작업실 편집 범위로 들어옴(ADR-030 4단계, 계획 표시 뗌).
+- 2026-10-17: 원칙 안내(ADR-030 3단계 — 모양의 원칙을 깨는 디자인 규칙을 거부하지 않고 알리는 작업실 칸).
+- 2026-10-17: ADR-030 2단계 — 세벌식·직결식도 모든 음절 나누기('회'의 네 길), 새 말은 없음.
+- 2026-10-17: 계산 칸·손 보정 칸, 이 글자만, 새 글꼴로·이 글꼴 그대로(ADR-030 §3·§7·§8).
+- 2026-10-17: ADR-030 1단계 — 역할 도장을 모양 값으로 바꾸고, 계산 칸·손 보정 칸의 자리(코어 `font-kku.shape` · 글꼴 `font-kku.tune`)를 정함.
+- 2026-10-16: 사용자 요청으로 용어 사전으로 넓힘 — 쓰는 규칙·상태 표시, 한글의 기본 말, 글꼴을 짓는 체계(글꼴 모양·그릴 범위·음절 나누기·자모 짓기, '회'의 네 길), 글꼴 작업실, 검증과 검수, 헷갈리는 말. 짜임 두 항목을 하나로, '섞임모음'을 '합자 모음'으로, 배치 → 글꼴 모양, 역할 도장 (없어질 예정).
+- 2026-10-09: 화면 용어 한글 결정(그림 자소·자소판·글꼴·글꼴 작업실).

@@ -84,13 +84,11 @@
     --fy-tlc-top: -21.1%; --fy-tlc-left: -0.4%; --fy-tlc-size: 0.784em; --fy-tlc-scale-x: 0.836; --fy-tlc-scale-y: 1.031; /* tlc: right-closed 초성. 한의 ㅎ x[0.065,0.545] y[-0.005,0.49] */
     --fy-t-top: -24.7%;   --fy-t-left: 10.3%;   --fy-t-size: 0.98em;    --fy-t-scale-x: 0.782;     --fy-t-scale-y: 1.073;  /* t: bottom-open 초성. 고/그의 ㄱ 전폭 x[0.025,0.75] y[0.035,0.48] */
     --fy-tt-top: -18%;  --fy-tt-left: 9.7%;  --fy-tt-size: 0.864em;    --fy-tt-scale-x: 0.891;    --fy-tt-scale-y: 0.755; /* tt: bottom-closed 초성. 글의 ㄱ x[0.025,0.75] y[0.035,0.34] */
-    --fy-tls-top: -21.8%; --fy-tls-left: -8.6%; --fy-tls-size: 0.744em; --fy-tls-scale-x: 1.098;  --fy-tls-scale-y: 1.1; /* tls: split-open 초성. 의/와의 ㅇ x[0.015,0.42] y[0.0,0.42] */
-    --fy-ttl-top: -19.1%; --fy-ttl-left: -7%; --fy-ttl-size: 0.772em; --fy-ttl-scale-x: 1.059;  --fy-ttl-scale-y: 0.919; /* ttl: split-closed 초성. 왕의 ㅇ 동일 */
+    /* tls·ttl(쪼갠 모음 옆 초성): 쪼갠 나누기 전용 자리(tls·ttl·ml·mtl, 겹받침 bl·blr·bbl·br·brd·bbrd)는 값을 밝히지 않는다 — 기본 나누기(머리 음절·통짜 받침)에서 쓰지 않는 자리라 런타임 나누기 맞춤이 기본 나누기 자리에 그린다(ADR-034 §5). 예전 값(round7/8, 기본 나누기가 낱이고 재료가 기기 글꼴이던 때)은 밝힌 값이 이긴다는 맞춤 규칙에 걸려 낱·짝 나누기에서 화 ㅎ·ㅗ 같은 겹침을 냈다(2026-10-20 지움 — 맞춤을 끈 자리·정적 HTML은 코어 기본 자리) */
     /* Jungseong 세로 — stem을 J 실측 열(0.605/0.635)에 정렬. 받침이 있으면 짧아진다 */
     --fy-tro-top: -7.8%;  --fy-tro-left: 32.6%; --fy-tro-size: 0.964em; --fy-tro-scale-x: 0.85; --fy-tro-scale-y: 0.852; /* tro: right-open 중성. 가의 ㅏ stem [0.605,0.715]. 소스 ᅡ의 곁줄기가 기준보다 길어(0.266 vs 0.233em) 가로 압축 — left/scale-x 짝 산출 */
     --fy-trc-top: -8.9%;  --fy-trc-left: 30.7%; --fy-trc-size: 0.912em; --fy-trc-scale-x: 0.922; --fy-trc-scale-y: 0.712; /* trc: right-closed 중성. 한의 ㅏ 기둥 끝 0.627 실측 정합 — 탈네모틀은 받침이 붙어도 기둥이 충분히 내려와야 한다(민글자 0.727에서 0.10em만 짧아짐) */
-    --fy-trs-top: -12%;  --fy-trs-left: 30.9%; --fy-trs-size: 0.96em; --fy-trs-scale-x: 0.912; --fy-trs-scale-y: 0.917; /* trs: split-open tail. 의/와의 ㅣ/ㅏ stem [0.635,0.745] */
-    --fy-ttr-top: -11.4%;  --fy-ttr-left: 28.8%; --fy-ttr-size: 1.03em; --fy-ttr-scale-x: 0.872; --fy-ttr-scale-y: 0.705; /* ttr: split-closed tail. 왕의 ㅏ (받침 위에서 멈춤) */
+    /* trs·ttr(꼬리)는 머리 음절과 낱 나누기가 같은 자리다 — 머리 음절 값(아래 '쪼갠 모음 꼬리·받침' 묶음)을 모든 나누기에 쓴다 */
     /* Jungseong 가로 — bar 두께는 J(0.10em)에 맞춰 세로 확대(1.25). ㅗ/ㅜ는 per-jamo */
     /* 가로모음 막대 좌우 여백 — 막대가 글자 진행폭(0.865em)을 거의 다 채우면(x 0.015–0.855, 이웃 막대와
      * 0.025em) 받침 없는 글자가 이어질 때(누구보다·도로) 작은 크기에서 막대가 한 줄로 이어져 밑줄처럼
@@ -98,8 +96,7 @@
      * x 0.05–0.815(이웃과 0.10em, 12px에서 약 1.2px)로 좁혀 가운데 둔다 — 두께(scale-y)는 그대로. */
     --fy-m-top: -16.6%;  --fy-m-left: 1.97%;  --fy-m-size: 1em;     --fy-m-scale-x: 0.957; --fy-m-scale-y: 1.096; /* m: bottom-open 중성. 그의 ㅡ bar 두께 0.100em·[0.527,0.627] 실측 정합 (1.25는 0.114em으로 과대) */
     --fy-mt-top: -26.7%; --fy-mt-left: 1.94%; --fy-mt-size: 1.05em;    --fy-mt-scale-x: 0.915; --fy-mt-scale-y: 1.053; /* mt: bottom-closed 중성. 글/늘의 ㅡ bar 두께 0.100em 실측 정합 (1.25는 0.120em으로 과대) */
-    --fy-ml-top: -29.3%; --fy-ml-left: -3.1%; --fy-ml-size: 0.81em; --fy-ml-scale-x: 1.137;    --fy-ml-scale-y: 1.57; /* ml: split-open base. 의의 ㅡ bar [0.505,0.605] x[0.015,0.62] */
-    --fy-mtl-top: -31.3%; --fy-mtl-left: -1.9%; --fy-mtl-size: 0.83em; --fy-mtl-scale-x: 0.913;  --fy-mtl-scale-y: 1.64; /* mtl: split-closed base. 왕은 ㅗ per-jamo로 보정 */
+    /* ml·mtl(쪼갠 모음 밑): tls·ttl과 같은 까닭으로 값을 밝히지 않는다 */
     /* Jongseong — J 실측: 매달림 zone y[0.60,0.99].
      * role 1벌(--fy-jong-*)을 기본선으로 두되, J해바라기가 topology별로 받침을 다르게
      * 매다는 것이 실측으로 확인되어(가로모음 아래 b vs 세로모음 아래 brs) slot 단위로
@@ -112,28 +109,11 @@
     --fy-jong-main-size: 0.992em;
     --fy-jong-main-scale-x: 0.972;
     --fy-jong-main-scale-y: 0.878; /* jong single 기본선: 각/한/글/울의 받침 */
-    --fy-jong-left-top: 26%;
-    --fy-jong-left-left: 5.5%;
-    --fy-jong-left-size: 0.588em;
-    --fy-jong-left-scale-x: 0.961;
-    --fy-jong-left-scale-y: 1.332; /* jong-left 기본선: 읽의 ㄹ */
-    --fy-jong-right-top: 26.8%;
-    --fy-jong-right-left: 30.9%;
-    --fy-jong-right-size: 0.6em;
-    --fy-jong-right-scale-x: 1;
-    --fy-jong-right-scale-y: 1.223; /* jong-right 기본선: 읽의 ㄱ */
+    /* jong-left·jong-right(쪼갠 겹받침의 두 낱자) 역할 값은 밝히지 않는다 — 기본 나누기가 통짜 받침이라 그 자리는 나누기 맞춤이 그린다 */
     /* single 받침 — b(가로모음 아래) / brs(세로모음 아래) / bbrs(split 아래) */
     --fy-b-top: 32.4%;    --fy-b-left: 10.1%;    --fy-b-size: 1.072em;  --fy-b-scale-x: 0.721224;  --fy-b-scale-y: 0.719082;
     --fy-brs-top: 28.3%;  --fy-brs-left: 16.6%;  --fy-brs-size: 1.008em; --fy-brs-scale-x: 0.754272; --fy-brs-scale-y: 0.770884; /* 받침은 topology와 무관하게 한 벌 크기 — b와 같은 유효 가로배율(≈0.79). 위치만 오른쪽으로 몰린다(세로모음 음절의 탈네모틀 관례) */
-    --fy-bbrs-top: 48.341%; --fy-bbrs-left: -3.8%; --fy-bbrs-size: 1.042em; --fy-bbrs-scale-x: 0.966168; --fy-bbrs-scale-y: 0.709424;
-    /* 겹받침 왼칸 — 초성 아래 */
-    --fy-bl-top: 25.1%;   --fy-bl-left: 11.9%;   --fy-bl-size: 0.518em;  --fy-bl-scale-x: 0.923521;  --fy-bl-scale-y: 1.670328;
-    --fy-blr-top: 23.2%;  --fy-blr-left: 10%;  --fy-blr-size: 0.51em; --fy-blr-scale-x: 1.038841; --fy-blr-scale-y: 1.722276;
-    --fy-bbl-top: 26.7%;  --fy-bbl-left: 6.8%;  --fy-bbl-size: 0.568em; --fy-bbl-scale-x: 1.203172; --fy-bbl-scale-y: 1.503828;
-    /* 겹받침 오른칸 — 모음 stem 열에 정렬 */
-    --fy-br-top: 23.1%;   --fy-br-left: 30.9%;   --fy-br-size: 0.6em;  --fy-br-scale-x: 0.93;  --fy-br-scale-y: 1.567886;
-    --fy-brd-top: 26.8%;  --fy-brd-left: 38.5%;  --fy-brd-size: 0.51em; --fy-brd-scale-x: 1.028; --fy-brd-scale-y: 1.581339;
-    --fy-bbrd-top: 23.6%; --fy-bbrd-left: 25.8%; --fy-bbrd-size: 0.542em; --fy-bbrd-scale-x: 1.246; --fy-bbrd-scale-y: 1.660834;
+    /* bbrs(쪼갠 모음 아래 홑받침)는 아래 '쪼갠 모음 꼬리·받침' 묶음. 겹받침 칸(bl·blr·bbl·br·brd·bbrd)은 tls·ttl과 같은 까닭으로 밝히지 않는다 */
   }
 
   /* slot stroke compensation (fit_weight.py --mode stroke) — 자모를 축소 배치하면 획도 같은
@@ -143,24 +123,14 @@
    * 얇아지므로 외곽선으로 되살린다. 값은 줄기 두께 실측(기준 16px @150px em) 기준. */
   :where([data-fy-font="sebul"]) {
     --fy-b-stroke: 0.038em;
-    --fy-bbl-stroke: 0.032em;
-    --fy-bbrd-stroke: 0.032em;
     --fy-bbrs-stroke: 0.038em;
-    --fy-bl-stroke: 0.038em;
-    --fy-blr-stroke: 0.038em;
-    --fy-br-stroke: 0.038em;
-    --fy-brd-stroke: 0.038em;
     --fy-brs-stroke: 0.038em;
-    --fy-ml-stroke: 0.026em;
-    --fy-mtl-stroke: 0.038em;
     --fy-t-stroke: 0.026em;
     --fy-tlc-stroke: 0.038em;
     --fy-tlo-stroke: 0.038em;
-    --fy-tls-stroke: 0.038em;
     --fy-trc-stroke: 0.038em;
     --fy-trs-stroke: 0.038em;
     --fy-tt-stroke: 0.038em;
-    --fy-ttl-stroke: 0.038em;
     --fy-ttr-stroke: 0.038em;
     --fy-tro-stroke: 0.047em;
   }
@@ -172,22 +142,22 @@
    * native 네모꼴 IoU에 끌려 0.83×0.56em·획 0.12em의 덩어리였고(흙·옭·굵), 가로모음 bar와
    * 최대 67% 포개졌다. bw 밑선은 가로모음 홑받침 b(≈1.02~1.03em)에 맞춘다. */
   :where([data-fy-font="sebul"]) {
-    --fy-mw-top: 8%; --fy-mw-left: 8%; --fy-mw-size: 0.62em; --fy-mw-scale-x: 1; --fy-mw-scale-y: 1;
-    --fy-mtw-top: 6%; --fy-mtw-left: 8%; --fy-mtw-size: 0.58em; --fy-mtw-scale-x: 1; --fy-mtw-scale-y: 1;
+    /* mw·mtw(통짜 모음)는 이 글꼴의 기본 나누기(머리 음절)에서 쓰지 않는 자리라 값을 밝히지 않는다 — 런타임 나누기 맞춤이 기본 나누기
+     * 자리에 그린다(ADR-034 §5). 예전 시드값은 코어 기본과 같아 2026-10-18 지웠다(맞춤을 끈 자리도 그대로다) */
     --fy-bw-top: 30.61%; --fy-bw-left: 4.75%; --fy-bw-size: 0.54em; --fy-bw-scale-x: 1.614492; --fy-bw-scale-y: 1.50577;
     --fy-brw-top: 26.76%; --fy-brw-left: 4.75%; --fy-brw-size: 0.54em; --fy-brw-scale-x: 1.614492; --fy-brw-scale-y: 1.50577;
-    --fy-bbw-top: 61.0077%; --fy-bbw-left: 6.2%; --fy-bbw-size: 0.54em; --fy-bbw-scale-x: 1.04004; --fy-bbw-scale-y: 0.806882;
     --fy-hs-top: -5.1%; --fy-hs-left: -3.9%; --fy-hs-size: 0.852em; --fy-hs-scale-x: 1; --fy-hs-scale-y: 1;
     --fy-hts-top: -7.83%; --fy-hts-left: -2.9%; --fy-hts-size: 0.972em; --fy-hts-scale-x: 0.85; --fy-hts-scale-y: 0.833; /* 받침 head는 tail 기둥(x 0.627)과 밀착까지만 — 0.891은 오른끝(0.70)이 기둥을 덮어 hts×ttr 7~24% */
   }
 
-  /* syllable depth 전용 미세 보정 — head가 초성+base를 대신하므로 tail과 받침의
-   * 최적 위치가 atomic과 다르다. 공유 slot을 건드리지 않도록 depth로 게이트한다.
+  /* 쪼갠 모음 꼬리·받침(trs·ttr·bbrs·bbw) — 머리 음절(기본 나누기) 자리에 맞춘 값을 모든 나누기에 쓴다. 이 자리는 쪼갠(합자) 모음에만
+   * 나오고 낱 나누기에서도 같은 자리라, 예전처럼 머리 음절에만 걸면(depth 게이트) 낱·짝 나누기에서 옛 낱 값(꼬리 left 30.9%, 받침
+   * 48.3%)이 나와 화의 ㅗ 막대가 ㅏ 꼬리에 닿고 획의 ㄱ 받침이 줄 아래로 처졌다(2026-10-20 게이트를 풂).
    * split 받침(bbrs·bbw)은 head 아래·tail 기둥 왼쪽에 한 벌 크기로 매단다: 잉크 윗선 ≈0.66em
    * (ㅗ계 head bar 밑과 밀착, ㅜ계 head 내림획 끝과 접촉), 밑선 ≈1.04em(bbrs ᆼ 1.033과 같은 선).
    * 이전 bbrs는 0.58×0.49em로 1.19em까지 처졌고(곽·획, glyph 상자 1.17em 밖), bbw는
    * 0.73×0.56em 덩어리가 head와 최대 24% 포개졌다. */
-  :where([data-fy-font="sebul"][data-fy-vowel-depth="syllable"]) {
+  :where([data-fy-font="sebul"]) {
     --fy-trs-top: -10.5%; --fy-trs-left: 38%; --fy-trs-size: 0.94em; --fy-trs-scale-x: 0.912; --fy-trs-scale-y: 0.878;
     --fy-ttr-top: -7.5%; --fy-ttr-left: 31.6%; --fy-ttr-size: 1.018em; --fy-ttr-scale-x: 0.872; --fy-ttr-scale-y: 0.786;
     --fy-bbrs-top: 34.15%; --fy-bbrs-left: 1.77%; --fy-bbrs-size: 1.022em; --fy-bbrs-scale-x: 0.76; --fy-bbrs-scale-y: 0.744;
@@ -269,14 +239,11 @@
    * 도장이 따로 정한다 */
   :where([data-fy-font="sebul"]) :is([data-jamo="ᄁ"], [data-jamo="ᄄ"], [data-jamo="ᆩ"]) {
     --fy-t-stroke: 0.008em; --fy-tt-stroke: 0.008em; --fy-tlo-stroke: 0.008em; --fy-tlc-stroke: 0.008em;
-    --fy-tls-stroke: 0.008em; --fy-ttl-stroke: 0.008em;
     --fy-b-stroke: 0.008em; --fy-brs-stroke: 0.008em; --fy-bbrs-stroke: 0.008em; --fy-bw-stroke: 0.008em;
-    --fy-brw-stroke: 0.008em; --fy-bbw-stroke: 0.008em; --fy-bl-stroke: 0.008em; --fy-blr-stroke: 0.008em;
-    --fy-bbl-stroke: 0.008em; --fy-br-stroke: 0.008em; --fy-brd-stroke: 0.008em; --fy-bbrd-stroke: 0.008em;
+    --fy-brw-stroke: 0.008em; --fy-bbw-stroke: 0.008em;
   }
   :where([data-fy-font="sebul"]) [data-jamo="ᄈ"] {
     --fy-t-stroke: 0.011em; --fy-tt-stroke: 0.011em; --fy-tlo-stroke: 0.011em; --fy-tlc-stroke: 0.011em;
-    --fy-tls-stroke: 0.011em; --fy-ttl-stroke: 0.011em;
   }
 
   /* 자모별 초성 상자 보정 (glyph_fit_jamo_box.py, slot=t) —
@@ -361,22 +328,17 @@
    * 이제 ㅡ처럼 거의 눌리지 않게 두고(막대 = 그의 ㅡ [0.44,0.54], 글의 ㅡ [0.317,0.417] 높이),
    * 길어진 꼭지는 slot clip의 위쪽만 잘라 예전 꼭지 끝(0.333em / 받침 글자 0.223em)에서
    * 시작하게 한다. 나머지 세 변은 -1em으로 열어 둔다 — 0으로 두면 꾸밈의 빛번짐·그림자까지
-   * 노드 상자에 갇혀 네모로 잘린다. 굵기 보상 외곽선(0.04em)도 필요 없어 font 기본으로 돌린다. */
+   * 노드 상자에 갇혀 네모로 잘린다. 굵기 보상 외곽선(0.04em)도 필요 없어 font 기본으로 돌린다.
+   * 받침 없는 m 자리 꼭지는 0.29em에서 시작한다(막대 위로 0.14em, 2026-10-21) — 예전 0.333em(0.10em)은 16–24px에서
+   * 1–2px라 소/스·노/느가 같은 꼴이었다(헷갈리는 짝 감사). 기본 배치 records-2의 문턱(0.14em)과 같은 원칙이다. 초성 밑이
+   * 꼭지 자리까지 내려오는 ㄹ·ㅌ(0.30em)은 context 레이어가 예전 자리에 둔다. */
   :where([data-fy-font="sebul"]) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-top: -14.9%;
     --fy-m-scale-y: 1.083;
-    --fy-m-clip: inset(46.8% -1em -1em -1em);
+    --fy-m-clip: inset(43% -1em -1em -1em);
     --fy-mt-top: -24.72%;
     --fy-mt-scale-y: 1.022;
     --fy-mt-clip: inset(47.7% -1em -1em -1em);
-  }
-  /* split 계열(과/와/획/왕)의 ㅗ — bar 두께 0.100em과 위치를 기준 실측에 맞춘다.
-   * 이전 값(0.68/0.627)은 bar를 0.060em으로 눌러 놓아 가로획이 실처럼 얇았다. */
-  :where([data-fy-font="sebul"]) :is([data-fy-pos="ml"], [data-fy-pos="mtl"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
-    --fy-ml-top: -10.7%;
-    --fy-ml-scale-y: 1.222;
-    --fy-mtl-top: -10.6%;
-    --fy-mtl-scale-y: 1.045;
   }
 
   /* ㅜ/ㅠ — 막대 두께는 ㅡ와 같은 0.100em. 2026-10 이전 값(0.56)은 막대를 0.053em으로 눌러
@@ -397,16 +359,6 @@
     --fy-mt-scale-y: 1.088;
     --fy-mt-clip: inset(-1em -1em 41.9% -1em);
   }
-  /* split 계열(워/위/월/원)의 ㅜ — mt와 같은 이유로 bar를 기준 위치·두께(0.100em)에
-   * 맞추고, 과도하게 긴 내림획은 clip으로 잘라 받침/세로줄기와 충돌시키지 않는다. */
-  :where([data-fy-font="sebul"]) :is([data-fy-pos="ml"], [data-fy-pos="mtl"]):is([data-jamo="ᅮ"], [data-jamo="ᅲ"]) {
-    --fy-ml-top: -9.5%;
-    --fy-ml-scale-y: 1.25;
-    --fy-mtl-top: -6.1%;
-    --fy-mtl-scale-y: 1.076;
-    --fy-ml-clip: inset(-1em -1em 31% -1em);
-    --fy-mtl-clip: inset(-1em -1em 31% -1em);
-  }
 
   /* 둥근 초성(ㅇ/ㅎ)의 bottom 조합 — J 실측: 오의 ㅇ은 작은 원(x[0.285,0.595] y[0,0.47]),
    * 옷은 더 납작. ㅗ/ㅜ 기둥은 링 하단 아래에서 시작해야 관통이 없다. */
@@ -425,33 +377,6 @@
     --fy-tt-scale-y: 1.356;
   }
 
-  /* 초성 ㅇ — split 슬롯(의/왕)에서도 각진 자음과 다른 원 비례를 쓴다.
-   * 값은 t/tt의 ㅇ 블록과 같은 근거(J의 작은 원)에서 슬롯별로 적합. */
-  :where([data-fy-font="sebul"]) [data-fy-pos="tls"][data-jamo="ᄋ"] {
-    --fy-tls-top: -18.6%;
-    --fy-tls-left: 3.4%;
-    --fy-tls-size: 0.72em;
-    --fy-tls-scale-x: 0.933;
-    --fy-tls-scale-y: 1.019;
-  }
-  /* ㅎ 초성 + split (획/훤) — 소스 ᅙ...ᄒ 글리프가 기준 조합보다 0.07em 넓어 왼쪽으로
-   * 밀려 나오고 ㅗ 기둥과 겹친다. 기준 실측 x[0.120,0.553]에 맞춰 가로 압축·우측 이동. */
-  :where([data-fy-font="sebul"]) [data-fy-pos="ttl"][data-jamo="ᄒ"] {
-    --fy-ttl-left: 3%;
-    --fy-ttl-scale-x: 0.904;
-  }
-  :where([data-fy-font="sebul"]) [data-fy-pos="tls"][data-jamo="ᄒ"] {
-    --fy-tls-left: 3%;
-    --fy-tls-scale-x: 0.904;
-  }
-
-  :where([data-fy-font="sebul"]) [data-fy-pos="ttl"][data-jamo="ᄋ"] {
-    --fy-ttl-top: -17.5%;
-    --fy-ttl-left: 1.3%;
-    --fy-ttl-size: 0.76em;
-    --fy-ttl-scale-x: 0.908;
-    --fy-ttl-scale-y: 0.919;
-  }
 
   /* 받침 ㅇ — J해바라기는 매달린 받침 ㅇ을 각진 받침보다 작고 둥글게 그린다.
    * role 1벌(--fy-jong-main-*)로는 표현되지 않아 슬롯별로 분리한다 (강/왕/응). */
@@ -489,7 +414,7 @@
   /* ㅇ/ㅎ 초성 + ㅗ/ㅛ — 링이 길어(받침 글자의 tt ㅇ 끝 0.293em) 막대를 [0.357,0.457]로 조금
    * 내리고, 꼭지는 링 아랫선(0.343 / 0.26em)에서 시작하게 위쪽만 자른다. 세로 배율(두께)은
    * 자모 규칙 그대로다. */
-  :where([data-fy-font="sebul"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄋ"], [data-jamo="ᄒ"])) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄋ"], [data-fy-jamos~="ᄒ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-top: -14.12%;
     --fy-m-clip: inset(46.9% -1em -1em -1em);
     --fy-mt-top: -21.53%;
@@ -498,7 +423,7 @@
 
   /* ㄱ/ㅋ 초성 + ㅗ/ㅛ — J의 고/곡은 기둥이 길게 올라가 ㄱ 내림획과 나란히 선다
    * (인터리브). ㄱ 중앙이 비어 있어 관통이 없고, 압축이 불필요해 bar도 두껍다. */
-  :where([data-fy-font="sebul"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄁ"], [data-fy-jamos~="ᄏ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     /* 막대는 다른 ㅗ와 같은 자리·두께(0.100em), 꼭지는 위쪽만 잘라 ㄱ 내림획 옆(0.143 / 0.013em)에서 시작 */
     --fy-m-top: -13.72%;
     --fy-m-scale-y: 1.062;
@@ -511,15 +436,29 @@
    * ㄲ 속 ㅗ 기둥은 앞 ㄱ 내림획과 포개진다(쿅 26%, 굑 20%, 쿄 23%, 꼬 18%). 두꺼운 bar는
    * 두고 기둥 윗부분만 잘라 초성 밑에서 시작하게 한다 — 같은 specificity라 위 규칙 뒤에 둔다.
    * 자를 y — 받침 없음 0.343em, 받침 0.227em(노드 원점·배율은 위 ㄱ 문맥 규칙). */
-  :where([data-fy-font="sebul"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅭ"],
-  :where([data-fy-font="sebul"]) [part="glyph"]:has([part~="choseong"][data-jamo="ᄁ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅩ"] {
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄁ"], [data-fy-jamos~="ᄏ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅭ"],
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"] :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅩ"] {
     --fy-m-clip: inset(47.4% -1em -1em -1em);
     --fy-mt-clip: inset(47.5% -1em -1em -1em);
+  }
+  /* ㄲ 초성 + 받침 없는 ㅗ/ㅛ — 앞 ㄱ 내림획(x 0.35–0.45em)이 꼭지와 같은 열에서 막대 0.03em 위(0.40em)까지 내려와
+   * 꼭지가 내림획에 묻혔다 — 꼬가 끄로 읽혔다(16–32px, 120px에서도 내림획이 막대에 닿은 끄 꼴, 헷갈리는 짝 감사 rel 0.00–0.22).
+   * ㄲ은 ㄱ처럼 꼭지와 엇갈려 설 수 없으니 내림획 아래쪽을 다른 초성 밑선(ㄴ·ㅅ 0.245–0.255em)에 맞춰 0.25em에서 자르고,
+   * 꼭지는 일반 ㅗ와 같은 막대 위 0.14em(0.29em)에서 시작한다(틈 0.04em). 끄·꾸의 ㄲ은 그대로다. */
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄁ"] {
+    --fy-t-clip: inset(-1em -1em 48.6% -1em);
+  }
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"] [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-m-clip: inset(42.5% -1em -1em -1em);
+  }
+  /* ㄹ·ㅌ 초성 + 받침 없는 ㅗ/ㅛ — 초성 밑획이 0.30–0.305em까지 내려온다. 꼭지는 예전 자리(0.333em)에서 시작해 밑획과 띄운다 */
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄅ"], [data-fy-jamos~="ᄐ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-m-clip: inset(46.8% -1em -1em -1em);
   }
 
   /* ㄱ/ㄲ/ㅋ 초성 + ㅖ — 두 팔이 초성 내림획(x ≈0.46em)을 뚫는다(곗 19%, 계 18%).
    * 팔 왼쪽 끝만 잘라 내림획과 밀착(자를 x ≈0.445em). */
-  :where([data-fy-font="sebul"]) [part="glyph"]:has([part~="choseong"]:is([data-jamo="ᄀ"], [data-jamo="ᄁ"], [data-jamo="ᄏ"])) :is([data-fy-pos="tro"], [data-fy-pos="trc"])[data-jamo="ᅨ"] {
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄁ"], [data-fy-jamos~="ᄏ"]) :is([data-fy-pos="tro"], [data-fy-pos="trc"])[data-jamo="ᅨ"] {
     --fy-tro-clip: inset(-1em -1em -1em 28.3%);
     --fy-trc-clip: inset(-1em -1em -1em 30.3%);
   }
@@ -527,7 +466,7 @@
   /* ㅜ/ㅠ + 받침 ㅇ — 받침 ㅇ은 b 자리에서 bar 바로 밑(0.56em)에 매달려, 잘라낸 내림획
    * (끝 0.655em)이 링 윗획과 포개진다(흉·융 21%). 내림획 끝까지 링을 내린다 — 링 밑선이
    * 다른 가로모음 받침(≈1.02em)과 같아진다. */
-  :where([data-fy-font="sebul"]) [part="glyph"]:has([data-fy-pos="mt"]:is([data-jamo="ᅮ"], [data-jamo="ᅲ"])) [data-fy-pos="b"][data-jamo="ᆼ"] {
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-at-mt]:is([data-fy-at-mt="ᅮ"], [data-fy-at-mt="ᅲ"]) [data-fy-pos="b"][data-jamo="ᆼ"] {
     --fy-ctx-dy: 0.095em;
   }
 
@@ -536,10 +475,10 @@
    * head를 좁힌다(받침 있는 tail의 ᅢ/ᅦ 왼쪽 보정은 jamo 레이어에서 껐다).
    * 받침 없는 ㅞ(꿰·쒜·뛔)도 같다 — ㅔ 곁가지가 머리(꾸·쑤·뚜) 오른쪽 낱자를 덮어 기기 글꼴 재료에서
    * 꿰가 궤, 쒜가 쉐로 읽혔다(겹침 7–9%라 감사 임계 아래였다, 2026-10-13). */
-  :where([data-fy-font="sebul"]) [part="glyph"]:has([data-fy-pos="trs"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="hs"] {
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-at-trs]:is([data-fy-at-trs="ᅢ"], [data-fy-at-trs="ᅦ"]) [data-fy-pos="hs"] {
     --fy-hs-scale-x: 0.82;
   }
-  :where([data-fy-font="sebul"]) [part="glyph"]:has([data-fy-pos="ttr"]:is([data-jamo="ᅢ"], [data-jamo="ᅦ"])) [data-fy-pos="hts"] {
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-at-ttr]:is([data-fy-at-ttr="ᅢ"], [data-fy-at-ttr="ᅦ"]) [data-fy-pos="hts"] {
     --fy-hts-scale-x: 0.78;
   }
 }
