@@ -1637,6 +1637,7 @@ def assert_sprite_demo(page, url: str, label: str) -> None:
             const cho = style(pick('choseong')), jung = style(pick('jungseong'));
             return {
               paint: host.dataset.fySpritePaint,
+              cell: pick('choseong') ? pick('choseong').getAttribute('data-fy-sprite-cell') : null,
               maskImage: cho && (cho.maskImage || cho.webkitMaskImage),
               choColor: cho && cho.color,
               choBackground: cho && cho.backgroundImage,
@@ -1645,13 +1646,18 @@ def assert_sprite_demo(page, url: str, label: str) -> None:
             };
         }"""
     )
-    if mask["paint"] != "mask" or "sprite-system.svg" not in (mask["maskImage"] or ""):
+    # Firefox·Chromium(0.1.4-rc.4~) 칸 문서는 자소판 칸을 blob 그림으로 준다(data-fy-sprite-cell — "wait"는 아직 받는 중).
+    mask_image = mask["maskImage"] or ""
+    from_cell = mask["cell"] not in (None, "wait") and mask_image.startswith('url("blob:')
+    if mask["paint"] != "mask" or not ("sprite-system.svg" in mask_image or from_cell):
         raise AssertionError(f"{label}: mask paint must mask with the sheet {mask!r}")
     if mask["choColor"] != "rgb(230, 57, 70)" or "linear-gradient" not in mask["choBackground"]:
         raise AssertionError(f"{label}: mask paint must fill with the text color by default {mask!r}")
     if "rgb(37, 99, 235)" not in mask["jungBackground"] or mask["fill"] != "rgba(0, 0, 0, 0)":
         raise AssertionError(f"{label}: --fy-sprite-fill must paint per part and the text stay hidden {mask!r}")
 
+    # Firefox·Chromium(0.1.4-rc.4~): 런타임이 SVG 자소판을 칸 문서로 나누는 동안(data-fy-sprite-cell="wait") 노드 그림이 비어 있다
+    page.wait_for_function("() => !document.querySelector('[data-fy-sprite-cell=\"wait\"]')", timeout=20000)
     gwang = page.locator(
         "font-kku[font='sprite-example'] [part='glyph'][data-source='광']"
     ).first
@@ -1662,6 +1668,7 @@ def assert_sprite_demo(page, url: str, label: str) -> None:
             kind: node.getAttribute('data-sprite-jamo-kind'),
             index: node.getAttribute('data-sprite-jamo-index'),
             pos: node.getAttribute('data-fy-pos'),
+            cell: node.getAttribute('data-fy-sprite-cell'),
             bg: getComputedStyle(node).backgroundImage,
             bgPos: getComputedStyle(node).backgroundPosition,
             bgSize: getComputedStyle(node).backgroundSize,
@@ -1692,7 +1699,9 @@ def assert_sprite_demo(page, url: str, label: str) -> None:
               document.querySelector(`font-kku[font="${font}"][data-fy-upgraded="true"]`));
             return Promise.all(hosts.map(async (host) => {
               const node = host && host.querySelector('[data-sprite-jamo-kind="consonant"]');
-              const bg = node ? getComputedStyle(node).backgroundImage : '';
+              // 칸 문서로 칠한 노드(data-fy-sprite-cell)의 그림은 칸 Blob이다 — 자소판 주소는 --fy-sprite-url에서 읽는다
+              const bg = !node ? '' : node.hasAttribute('data-fy-sprite-cell') ?
+                getComputedStyle(node).getPropertyValue('--fy-sprite-url').trim() : getComputedStyle(node).backgroundImage;
               const match = bg.match(/^url\\("([^"]+)"\\)$/);
               const width = match ? await new Promise((resolve) => {
                 const image = new Image();
@@ -1707,13 +1716,17 @@ def assert_sprite_demo(page, url: str, label: str) -> None:
     for sheet_info, name in zip(sheets, ("sprite-example", "sprite-system")):
         if not sheet_info["url"].endswith(f"/profiles/{name}.svg") or sheet_info["width"] <= 0:
             raise AssertionError(f"{label}: {name} sheet must resolve next to the font and load {sheet_info!r}")
-    if any(item["bg"] != sprite_jamo[0]["bg"] for item in sprite_jamo):
+    # 칸 문서 노드는 칸마다 다른 Blob 그림을 0 0에 둔다 — 자소판 한 장과 자리 규칙 검사는 자소판 전체로 칠할 때만 뜻이 있다.
+    cells = all(item["cell"] is not None for item in sprite_jamo)
+    if cells and any(not item["bg"].startswith('url("blob:') for item in sprite_jamo):
+        raise AssertionError(f"{label}: sprite cell nodes must paint their cell image {sprite_jamo!r}")
+    if not cells and any(item["bg"] != sprite_jamo[0]["bg"] for item in sprite_jamo):
         raise AssertionError(f"{label}: sprite jamo background image drifted between nodes {sprite_jamo!r}")
     # kind별 position 규칙이 base 규칙을 실제로 이기는지 — base 선택자의 특이도가
     # 오르면(:not() 미포장 사고) 전 노드가 0 0(ㄱ 칸)으로 붕괴하는데 DOM 속성
     # 검사는 그걸 못 본다. 광의 ㅗ(vowel row)는 y가 반드시 음수여야 한다.
     vowel_bg = [item["bgPos"] for item in sprite_jamo if item["kind"] == "vowel"]
-    if any(not pos or "-" not in pos.split(" ")[-1] for pos in vowel_bg):
+    if not cells and any(not pos or "-" not in pos.split(" ")[-1] for pos in vowel_bg):
         raise AssertionError(
             f"{label}: vowel row background-position lost to base rule {vowel_bg!r}"
         )
