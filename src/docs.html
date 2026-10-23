@@ -449,7 +449,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
 &lt;font-kku font="sebul" size="44"&gt;가 고 과 각 곽&lt;/font-kku&gt;     &lt;!-- 문맥 배치 --&gt;</code></pre>
         </div>
         <div class="k-table-scroll">
-          <table class="k-table d-table-wide">
+          <table class="k-table d-table-wide d-nowrap-first">
             <thead><tr><th></th><th>세벌식 (기본)</th><th>직결식</th><th>문맥 배치</th></tr></thead>
             <tbody>
               <tr><td>고르는 법</td><td data-label="세벌식">글꼴 속성을 쓰지 않음</td><td data-label="직결식"><code>font="jikgyeol"</code></td><td data-label="문맥 배치"><code>font="sebul"</code> 등 그 밖의 글꼴을 밝힘. 글꼴을 밝히지 않은 채로는 페이지 CSS <code>--fy-layout: square-context-v1</code></td></tr>
@@ -682,7 +682,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
           <div class="k-stage"><font-kku font="sebul" size="56" class="paint">과일 화채</font-kku></div>
         </div>
         <p>
-          글꼴을 밝힌 <code>sebul</code>은 <code>과</code>·<code>화</code> 같은 섞임모음 음절에서 초성과 앞 모음을 완성형 한 덩어리(<code>고</code>+ㅏ)로
+          글꼴을 밝힌 <code>sebul</code>은 <code>과</code>·<code>화</code> 같은 합자 모음 음절에서 초성과 앞 모음을 완성형 한 덩어리(<code>고</code>+ㅏ)로
           그립니다. 이 덩어리가 <code>part="jamo head"</code>라서 초성 색을 줄 때 <code>head</code>도 함께 고릅니다(세벌식·직결식 배치에는 이 덩어리가
           없어 <code>choseong</code>만으로 됩니다). 이 문서 맨 위의 제목도 같은 방법으로 초성만 적색으로 칠했습니다.
         </p>
@@ -1784,7 +1784,7 @@ npm test</code></pre>
             <tbody>
               <tr><td><code>mode</code>, <code>sources</code></td><td data-label="정하는 것">재료 종류(<code>primitive</code> 원소 · <code>svg</code> 그림 세트 · <code>font</code> 글꼴)와 이름 붙인 소스들. <code>svg</code> 소스의 <code>assetSet</code>은 그림 세트 이름이고(기본 제공 <code>pilgi-box</code>·<code>dunggeun-box</code>·<code>butgeul-box</code>는 필요할 때 받습니다), 보이는 칸 <code>cells</code>로 덜 그린 셈 칠 수 있습니다</td></tr>
               <tr><td><code>defaults</code>, <code>roleSources</code></td><td data-label="정하는 것">기본 소스와 방법, 역할(<code>initial</code>·<code>medial</code>·<code>final</code>·<code>standalone</code>)마다 다른 소스</td></tr>
-              <tr><td><code>rules</code></td><td data-label="정하는 것"><code>match: { jamo, role? }</code> → <code>apply: { source?, method?, recipe?, bindings? }</code>. 방법은 <code>auto</code>(그림 → 조립 → 원소) · <code>direct</code>(그 그림만) · <code>compose</code>(그림이 있어도 조립식으로). 조립식과 조각 이름은 <a href="lib/spec/jamo-recipes.json"><code>spec/jamo-recipes.json</code></a>. 더 구체적인 규칙이 이기고, 같은 구체성으로 다르게 고르면 등록이 실패합니다</td></tr>
+              <tr><td><code>rules</code></td><td data-label="정하는 것"><code>match: { jamo, role? }</code> → <code>apply: { source?, method?, recipe?, bindings? }</code>. 규칙마다 겹치지 않는 <code>id</code>를 붙입니다(없거나 겹치면 <code>DESIGN_RULE_ID</code>). 방법은 <code>auto</code>(그림 → 조립 → 원소) · <code>direct</code>(그 그림만) · <code>compose</code>(그림이 있어도 조립식으로). 조립식과 조각 이름은 <a href="lib/spec/jamo-recipes.json"><code>spec/jamo-recipes.json</code></a>. 더 구체적인 규칙이 이기고, 같은 구체성으로 다르게 고르면 등록이 실패합니다</td></tr>
               <tr><td><code>version</code>, <code>layout</code></td><td data-label="정하는 것"><code>"1.2"</code>와 배치 <code>{ profile: "sebul-cases-v1" | "sebul-fixed-v1" | "square-context-v1", revision }</code>(세벌식 <code>"1"</code>, 직결식 <code>"3"</code>, 네모꼴 <code>"1"</code> — 직결식의 이전 revision <code>"1"</code>·<code>"2"</code>는 받아 지금 자리 값으로 그리고 경고 <code>DESIGN_LAYOUT_REVISION_ACCEPTED</code>를 남깁니다). 1.2 디자인은 배치가 꼭 있어야 하고(빠지면 <code>DESIGN_LAYOUT_MISSING</code>), <code>square-context-v1</code>은 그 글꼴의 문맥 배치입니다. 배치를 적지 않은 1.0·1.1 디자인은 지금 배치로 그립니다. 세벌식·직결식의 원칙은 자모·역할로만 고르는 것입니다(짜임은 배치가 맡는다). 문맥 조건(<code>vowelLayout</code>·<code>hasFinal</code>)이나 자리마다 변주(<code>display.variationScope: "occurrence"</code>)를 적으면 받아서 지키되 경고 <code>DESIGN_FIXED_CONTEXT</code>·<code>DESIGN_FIXED_VARIATION</code>을 남깁니다. 합자 모음 통째 그리기(<code>method: "direct"</code>)만 <code>DESIGN_FIXED_COMPOUND</code>로 거부합니다</td></tr>
               <tr><td><code>composition</code></td><td data-label="정하는 것"><a href="#fonts-composition">짓는 방식</a> — 고르지 않아도 됩니다. 프리셋 하나(<code>"syllable"</code> 등) 또는 <code>{ preset?, vowel?, coda?, pieces? }</code>. 어느 판의 디자인에도 적을 수 있고, 페이지 CSS(<code>--fy-composition</code>·깊이 변수)와 자모마다 고른 규칙이 이깁니다. 틀리면 <code>DESIGN_COMPOSITION_INVALID</code></td></tr>
               <tr><td><code>fallback</code></td><td data-label="정하는 것">대체 소스, 원소로 내려갈지, 조립 재료가 없을 때(<code>error</code>·<code>direct</code>·<code>primitive</code>)</td></tr>
@@ -1804,12 +1804,12 @@ FontKku.validateDesign(json);
 <span class="d-out">// { ok: true, errors: [], warnings: [] }</span>
 
 // 세벌식 디자인에 ㅘ를 통째로 그리는 규칙이 있으면 거부한다
-//   rules: [{ match: { jamo: "ㅘ" }, apply: { method: "direct" } }]
+//   rules: [{ id: "whole-wa", match: { jamo: "ㅘ" }, apply: { method: "direct" } }]
 <span class="d-out">// { ok: false, errors: [{ code: "DESIGN_FIXED_COMPOUND",
 //   path: "rules[0].apply.method", message: "…" }], warnings: [] }</span>
 
 // 받침 조건을 적으면 받아서 지키되 알린다
-//   rules: [{ match: { jamo: "ㄱ", role: "final", hasFinal: true }, … }]
+//   rules: [{ id: "final-g", match: { jamo: "ㄱ", role: "final", hasFinal: true }, … }]
 <span class="d-out">// { ok: true, errors: [], warnings: [{ code: "DESIGN_FIXED_CONTEXT",
 //   path: "rules[0].match.hasFinal", message: "…" }] }</span>
 
@@ -1873,8 +1873,8 @@ FontKku.designs();                <span class="d-out">// 등록된 이름들</sp
               <tr><td><code>jamoSets()</code></td><td data-label="돌려줌" class="d-sig"><code>string[]</code></td><td data-label="하는 일">등록된 자모 그림 세트 이름(벡터 자소·그림 세트).</td></tr>
               <tr><td><code>layoutProfiles</code></td><td data-label="돌려줌" class="d-sig"><code>Record&lt;string, LayoutProfile&gt;</code></td><td data-label="하는 일">배치 프로파일(글꼴 모양)의 얼린 사본 — <code>sebul-cases-v1</code>(세벌식, 짜임마다 자리 값)·<code>sebul-fixed-v1</code>(직결식, 자모마다 한 자리)·<code>square-context-v1</code>(네모꼴, 글꼴 CSS의 자리). 모양 이름 <code>model</code>, 원칙(규칙이 고를 수 있는 필드 <code>match</code>, 자리마다 변주 <code>occurrence</code>), 기본 나누기 <code>depth</code>, 기본이 아닌 나누기의 자리 <code>splits</code>를 읽습니다. <a href="#fonts-layout">배치</a></td></tr>
               <tr><td><code>layoutStability(host)</code></td><td data-label="돌려줌" class="d-sig"><code>{ layout, stable, keys, nodes, drifted }</code></td><td data-label="하는 일">고정 배치가 그린 결과에서도 지켜지는지 — 같은 역할·자모(세벌식은 같은 짜임까지) 노드의 계산된 자리·크기·변환을 비교합니다. 문맥 배치면 <code>stable: null</code>.</td></tr>
-              <tr><td><code>registerDesign(name, design, options?)</code> <span class="d-tag">실험</span></td><td data-label="돌려줌" class="d-sig"><code>{ name, revision }</code></td><td data-label="하는 일">디자인 등록. 검사에 걸리면 첫 오류를 던지고(<code>code</code>·<code>path</code>), 같은 이름의 다른 내용은 <code>{ replace: true }</code>일 때만 바꿉니다. <a href="#design">디자인</a></td></tr>
-              <tr><td><code>validateDesign(design)</code> <span class="d-tag">실험</span></td><td data-label="돌려줌" class="d-sig"><code>{ ok, errors }</code></td><td data-label="하는 일">등록과 같은 규칙으로 검사해 오류를 모두 돌려줍니다(던지지 않고 등록하지 않음).</td></tr>
+              <tr><td><code>registerDesign(name, design, options?)</code> <span class="d-tag">실험</span></td><td data-label="돌려줌" class="d-sig"><code>{ name, revision, warnings? }</code></td><td data-label="하는 일">디자인 등록. 검사에 걸리면 첫 오류를 던지고(<code>code</code>·<code>path</code>), 같은 이름의 다른 내용은 <code>{ replace: true }</code>일 때만 바꿉니다. 받아들이되 알릴 것(<code>DESIGN_FIXED_CONTEXT</code> 등)이 있으면 <code>warnings</code>를 붙이고 콘솔에도 남깁니다. <a href="#design">디자인</a></td></tr>
+              <tr><td><code>validateDesign(design)</code> <span class="d-tag">실험</span></td><td data-label="돌려줌" class="d-sig"><code>{ ok, errors, warnings }</code></td><td data-label="하는 일">등록과 같은 규칙으로 검사해 오류를 모두 돌려줍니다(던지지 않고 등록하지 않음). <code>warnings</code>는 받아들이지만 알리는 것입니다(<code>DESIGN_FIXED_CONTEXT</code> 등).</td></tr>
               <tr><td><code>unregisterDesign(name)</code> · <code>designs()</code> <span class="d-tag">실험</span></td><td data-label="돌려줌" class="d-sig"><code>boolean</code> · <code>string[]</code></td><td data-label="하는 일">등록 지우기(그 이름을 쓰던 바탕 요소는 <code>DESIGN_NOT_REGISTERED</code>로 다시 그림) · 등록된 이름.</td></tr>
               <tr><td><code>planJamo(jamo, options?)</code> · <code>traceOf(host)</code> <span class="d-tag">실험</span></td><td data-label="돌려줌" class="d-sig"><code>JamoPlan</code> · <code>HostTrace | null</code></td><td data-label="하는 일">자모 하나의 조립 계획(그리지 않음) · 그린 바탕 요소의 자모마다 조각·소스·규칙·상태.</td></tr>
               <tr><td><code>stagePreview(set, stage)</code> · <code>authoringProgress(set)</code> <span class="d-tag">실험</span></td><td data-label="돌려줌" class="d-sig"><code>Design</code> · <code>AuthoringProgress</code></td><td data-label="하는 일">그림 세트를 원형 8·기본 24·확장 40 단계만큼 그린 셈 치는 디자인 · 단계마다 그린 자모와 남은 자모.</td></tr>
@@ -2228,7 +2228,7 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
 
         <h3 id="reference-depth">자모 깊이</h3>
         <p>
-          섞임모음(ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ)과 겹받침을 얼마나 쪼갤지 정합니다. 글꼴마다 기본값이 있고(<code>sebul</code>은
+          합자 모음(ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ)과 겹받침을 얼마나 쪼갤지 정합니다. 글꼴마다 기본값이 있고(<code>sebul</code>은
           <code>syllable</code>), 페이지가 바탕 요소에 변수로 덮을 수 있습니다. 축별 변수(<code>--fy-vowel-depth</code>,
           <code>--fy-coda-depth</code>)가 줄임형(<code>--fy-jamo-depth</code>)을 이깁니다. 글꼴을 밝히지 않은 세벌식(과 직결식)의 기본은 합자 모음 조각,
           겹받침 통짜(<code>data-fy-vowel-depth="split"</code>·<code>data-fy-coda-depth="whole"</code>)이고, 이 변수로 바꿉니다. 묶어서 고르려면
