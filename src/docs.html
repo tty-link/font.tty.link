@@ -221,7 +221,7 @@ FontKku.renderText("안녕하세요").forEach((line) =&gt; console.log(line));</
           <div class="k-code-bar"><span>터미널</span><button type="button" data-copy="#c-exact">복사</button></div>
           <pre id="c-exact"><code>npm install --save-exact @tty.link/font-kku@0.1.4-rc.4</code></pre>
         </div>
-        <p>판을 올릴 때 보이는 차이와 예전 모양을 지키는 법입니다(0.1.0 → 0.1.1, 0.1.1 → 0.1.2, 0.1.3 → 0.1.4).</p>
+        <p>판을 올릴 때 보이는 차이와 예전 모양을 지키는 법입니다(0.1.0 → 0.1.1, 0.1.1 → 0.1.2, 0.1.3 → 0.1.4). 0.1.4는 아직 후보판(<code>next</code>)이고, 표는 0.1.3에서 <span data-fk-version>0.1.4-rc.4</span>까지 바뀐 것입니다. 예전 판 그대로 그리려면 CDN 주소를 <code>@0.1.3</code>으로 둡니다.</p>
         <div class="k-table-scroll">
           <table class="k-table d-table-wide">
             <thead><tr><th>0.1.1에서 바뀐 것</th><th>예전처럼 그리려면</th></tr></thead>
@@ -252,6 +252,16 @@ FontKku.renderText("안녕하세요").forEach((line) =&gt; console.log(line));</
             <thead><tr><th>0.1.4에서 바뀐 것</th><th>예전처럼 그리려면</th></tr></thead>
             <tbody>
               <tr><td>글꼴을 밝히지 않은 <code>&lt;font-kku&gt;</code>가 <a href="#fonts-layout">세벌식</a>으로 그립니다 — 짜임마다 다듬은 자리라 가로 모음 글자의 초성이 막대 가운데에 서고, 받침 없는 글자는 아래를 비우며 받침 있는 글자는 칸을 다 씁니다. 정적 렌더러의 <code>render_html(text)</code>도 같습니다.</td><td data-label="예전처럼"><code>font="jikgyeol"</code>(직결식)을 밝힙니다. 저장한 디자인의 <code>layout.profile: "sebul-fixed-v1"</code>은 그대로 직결식입니다. 정적 렌더러에는 직결식이 없어 0.1.3 렌더러를 씁니다.</td></tr>
+              <tr><td>자모 노드의 <code>data-fy-stamp</code>·인라인 <code>--fy-stamp-*</code>와 바탕 요소의 <code>data-fy-layout-model</code>이 없어졌습니다(정적 렌더러 넷도). 세벌식·직결식의 자리는 코어 CSS가 <code>--fy-shape-*</code>로 줍니다. 그리는 모양은 같습니다.</td><td data-label="예전처럼">역할은 <code>part</code>로 고릅니다 — <code>[data-fy-stamp="initial"]</code> → <code>[part~="choseong"]</code>, <code>"medial"</code> → <code>[part~="jungseong"]</code>, <code>"final"</code> → <code>[part~="jongseong"]</code>. 글꼴 모양은 <code>data-fy-layout</code>과 <code>FontKku.fontInfo(host).layout.model</code>로 읽습니다.</td></tr>
+              <tr><td>세벌식·직결식도 페이지의 <a href="#reference-depth">깊이 변수</a>와 <a href="#fonts-composition">짓는 방식</a>을 듣습니다(전에는 깊이가 정해져 있었습니다). 적지 않은 페이지는 그대로입니다.</td><td data-label="예전처럼">깊이 변수를 적지 않으면 됩니다.</td></tr>
+              <tr><td><code>--fy-design: legacy</code>는 디자인만 끊습니다. 글꼴을 밝히지 않은 바탕 요소는 그래도 세벌식입니다.</td><td data-label="예전처럼">글꼴을 밝히지 않은 채 문맥 배치로 그리려면 페이지 CSS <code>--fy-layout: square-context-v1</code>을 더합니다.</td></tr>
+              <tr><td>세벌식·직결식 디자인의 짜임 조건(<code>match.vowelLayout</code>·<code>match.hasFinal</code>)과 자리마다 변주(<code>display.variationScope: "occurrence"</code>)를 거부하지 않고 받아 지킵니다. <code>DESIGN_FIXED_CONTEXT</code>·<code>DESIGN_FIXED_VARIATION</code>은 오류에서 경고가 됐습니다. 합자 모음 통째 그리기는 그대로 거부합니다(<code>DESIGN_FIXED_COMPOUND</code>).</td><td data-label="예전처럼">예전처럼 막으려면 <code>validateDesign(json).warnings</code>를 보고 등록하지 않습니다(<a href="#design-register">등록·검사</a>).</td></tr>
+              <tr><td>저장한 디자인의 명시적 조립식(<code>method: "compose"</code>)과 가획 <code>bindings.base</code>를 지킵니다(전에는 무시했습니다). 페이지 재료 <code>--fy-face</code>가 글꼴이 고른 디자인을 이깁니다.</td><td data-label="예전처럼">예전 모양은 그 규칙을 <code>method: "auto"</code>로 저장합니다.</td></tr>
+              <tr><td>그림 세트(<code>jamo-set</code>)가 글꼴 재료와 맞지 않으면 쓰지 않고 <code>data-fy-jamo-set-status="JAMO_SET_FRAME_MISMATCH"</code>·<code>fontInfo(host).jamoSetStatus</code>로 알립니다(전에는 말없이 다른 재료로 그렸습니다).</td><td data-label="예전처럼">재료에 맞는 세트를 겁니다 — 그림 자소 글꼴에는 자소판 칸 세트(<code>frame: "sprite"</code>), 세벌·고딕 계열에는 칸 계약 세트(<code>frame: "box"</code>).</td></tr>
+              <tr><td>그림 자소 글꼴(자소판 그림)에 페이지의 <code>text-shadow</code>·<code>--fy-stroke</code>·외곽선 낱자 칠이 더는 그려지지 않습니다(그림 안에 숨은 글자를 덧그리던 것).</td><td data-label="예전처럼">그림 자소의 그림자·테두리는 <code>[part="glyph"]</code>의 <code>filter: drop-shadow(…)</code>로 겁니다.</td></tr>
+              <tr><td>한글 글자 칸에 자리 자모 <code>data-fy-at-&lt;자리&gt;</code>와 자모 목록 <code>data-fy-jamos</code>, 꾸밈 class를 단 바탕 요소에 <code>data-fy-look</code>이 붙습니다(<code>spec/html-cases.json</code> 1.12). 기본 글꼴 CSS가 이웃 자모를 <code>:has()</code> 대신 이 속성으로 고릅니다 — 모양은 같고 페이지가 class를 바꿀 때 다시 계산이 줄었습니다.</td><td data-label="예전처럼">따로 필요 없습니다. 페이지·글꼴 CSS의 <code>:has()</code>는 그대로 듣습니다.</td></tr>
+              <tr><td>작은 글씨에서 읽히게 다듬은 글자 모양: 그림 자소 글꼴의 쌍자음 + ㅐ·ㅔ·ㅙ·ㅞ(때·쌔·꿰), 받침 ㅎ·ㄶ·ㅀ 꼭지, <code>gothic</code> 계열의 쌍자음·기둥·ㅜ·ㅠ, ㅗ·ㅛ 꼭지(꼬·소), 원소 획·SVG의 ㅇ·ㅎ 고리 테두리를 화소에 맞춤.</td><td data-label="예전처럼">되돌리는 옵션은 없습니다. 예전 모양은 CDN <code>@0.1.3</code>.</td></tr>
+              <tr><td><a href="#make-studio">글꼴 작업실</a>이 페이지 넷(디자인 · 고치기 · 자소판 · 검수)과 쉬운·정밀 모드로 바뀌고, 저장은 글꼴 묶음 한 파일(<code>&lt;이름&gt;.font-kku.json</code>)입니다. 고친 기본 제공 글꼴은 새 이름의 파생 글꼴로 저장합니다.</td><td data-label="예전처럼">예전 프로젝트 파일(v2)·디자인 묶음도 그대로 엽니다. 옛 그림 자소 프로젝트(v1)는 글꼴 묶음으로 바꿔 엽니다.</td></tr>
             </tbody>
           </table>
         </div>
@@ -442,17 +452,18 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
           <table class="k-table d-table-wide">
             <thead><tr><th></th><th>세벌식 (기본)</th><th>직결식</th><th>문맥 배치</th></tr></thead>
             <tbody>
-              <tr><td>고르는 법</td><td data-label="세벌식">글꼴 속성을 쓰지 않음</td><td data-label="직결식"><code>font="jikgyeol"</code></td><td data-label="문맥 배치"><code>font="sebul"</code> 등 그 밖의 글꼴을 밝힘. 글꼴을 밝히지 않은 채로는 <code>--fy-design: legacy</code></td></tr>
+              <tr><td>고르는 법</td><td data-label="세벌식">글꼴 속성을 쓰지 않음</td><td data-label="직결식"><code>font="jikgyeol"</code></td><td data-label="문맥 배치"><code>font="sebul"</code> 등 그 밖의 글꼴을 밝힘. 글꼴을 밝히지 않은 채로는 페이지 CSS <code>--fy-layout: square-context-v1</code></td></tr>
               <tr><td>같은 자모의 자리</td><td data-label="세벌식">짜임(모음 모양·받침)마다 하나</td><td data-label="직결식">어느 글자에서나 하나</td><td data-label="문맥 배치">글꼴 CSS가 음절마다 정함</td></tr>
-              <tr><td>바탕 요소 표시</td><td data-label="세벌식"><code>data-fy-layout="sebul-cases-v1"</code>, <code>data-fy-layout-model="case-fixed"</code></td><td data-label="직결식"><code>data-fy-layout="sebul-fixed-v1"</code>, <code>data-fy-layout-model="fixed-three"</code></td><td data-label="문맥 배치">두 속성이 없음</td></tr>
+              <tr><td>바탕 요소 표시</td><td data-label="세벌식"><code>data-fy-layout="sebul-cases-v1"</code></td><td data-label="직결식"><code>data-fy-layout="sebul-fixed-v1"</code></td><td data-label="문맥 배치">속성이 없음(<code>--fy-layout: square-context-v1</code>로 고르면 그 값)</td></tr>
               <tr><td>자모 깊이</td><td data-label="세벌식">기본은 합자 모음 조각, 겹받침 통짜. <a href="#fonts-composition">짓는 방식</a>과 페이지의 <a href="#reference-depth">깊이 변수</a>로 바꿉니다</td><td data-label="직결식">같음</td><td data-label="문맥 배치">글꼴 기본값(<code>sebul</code>은 머리 음절), 페이지가 덮을 수 있음</td></tr>
-              <tr><td>글꼴 CSS의 자리 보정</td><td data-label="세벌식">쓰지 않음 — 자모마다 도장(<code>data-fy-stamp</code>)이 자리를 정합니다</td><td data-label="직결식">같음</td><td data-label="문맥 배치">씀</td></tr>
+              <tr><td>자리 값</td><td data-label="세벌식">코어 CSS가 짜임마다 줍니다(<code>--fy-shape-*</code>). 글꼴 CSS는 그 위 손 보정만 <code>@layer font-kku.tune</code>에 둡니다(<a href="#make-contract">글꼴 계약</a>)</td><td data-label="직결식">같음(자모마다 한 자리)</td><td data-label="문맥 배치">글꼴 CSS가 음절마다 정함</td></tr>
               <tr><td>페이지 CSS</td><td data-label="세벌식">색·굵기·페이지 전용 변수(<code>--fy-scale-x</code> …) 모두 듣습니다</td><td data-label="직결식">같음</td><td data-label="문맥 배치">같음</td></tr>
             </tbody>
           </table>
         </div>
         <ul>
-          <li>배치는 <code>FontKku.fontInfo(host).layout</code>(<code>{ profile, revision, model }</code>, 문맥 배치면 <code>null</code>)으로 읽습니다.</li>
+          <li>배치는 <code>FontKku.fontInfo(host).layout</code>(<code>{ profile, revision, model }</code>, 글꼴의 문맥 배치면 <code>null</code>)으로 읽습니다. 모양 이름 <code>model</code>(<code>case-fixed</code>·<code>fixed-three</code>·<code>adaptive-square</code>)은 여기서 읽고, 바탕 요소에는 <code>data-fy-layout</code>만 붙습니다.</li>
+          <li>페이지 CSS <code>--fy-layout</code>(<code>sebul-cases-v1</code>·<code>sebul-fixed-v1</code>·<code>square-context-v1</code>)로 글꼴 모양만 따로 고를 수 있습니다. 고르지 않아도 됩니다. 글꼴과 글꼴이 고른 디자인의 모양을 이기고, 페이지 <code>--fy-design</code>으로 고른 디자인에 <code>layout</code>이 있으면 그것이 이깁니다. 고르지 못하면 <code>data-fy-layout-status</code>에 까닭(<code>LAYOUT_NOT_REGISTERED</code>·<code>LAYOUT_UNSUPPORTED_FONT</code>)을 남깁니다.</li>
           <li>페이지 CSS가 이웃 자모를 보고(<code>:has()</code> 같은 문맥 선택자) 자모를 옮기면 고정 배치가 깨집니다. <code>FontKku.layoutStability(host)</code>가 그린 결과에서 같은 역할·자모(세벌식은 같은 짜임까지)가 모두 같은 자리인지 재서 <code>stable: false</code>와 어긋난 자모(<code>"initial ᄀ v1"</code>)를 돌려줍니다(<a href="#api-layout">배치 확인</a>).</li>
           <li>배치는 <a href="#design">디자인</a>으로도 고르고, 디자인의 배치가 글꼴(<code>jikgyeol</code>)의 배치를 이깁니다. 세 재료(원소·기기 글꼴·그림 세트)는 같은 배치를 씁니다 — 재료를 바꿔도 자리는 그대로입니다.</li>
           <li>정적 렌더러의 <code>render_html(text)</code>도 글꼴을 밝히지 않으면 같은 세벌식입니다(<a href="#text-renderers">보조 렌더러</a>). 직결식은 정적 렌더러에 없습니다. 비교는 <a href="./faces.html">재료 페이지의 배치 칸</a>에서도 볼 수 있습니다.</li>
@@ -493,8 +504,8 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
             <thead><tr><th><code>--fy-composition</code></th><th>화</th><th>짓는 법</th></tr></thead>
             <tbody>
               <tr><td><code>auto</code> (기본)</td><td data-label="화">모양대로 (세벌식은 ㅎ + ㅗ + ㅏ)</td><td data-label="짓는 법">그 글꼴 모양의 기본 — 적지 않은 것과 같습니다</td></tr>
-              <tr><td><code>syllable</code></td><td data-label="화">호 + ㅏ</td><td data-label="짓는 법">섞임모음 글자(ㅘ·ㅚ·ㅢ …)를 받침 없는 머리 음절과 뒤 모음으로</td></tr>
-              <tr><td><code>whole</code></td><td data-label="화">ㅎ + ㅘ</td><td data-label="짓는 법">섞임모음과 겹받침을 통째로 한 덩이</td></tr>
+              <tr><td><code>syllable</code></td><td data-label="화">호 + ㅏ</td><td data-label="짓는 법">합자 모음 글자(ㅘ·ㅚ·ㅢ …)를 받침 없는 머리 음절과 뒤 모음으로</td></tr>
+              <tr><td><code>whole</code></td><td data-label="화">ㅎ + ㅘ</td><td data-label="짓는 법">합자 모음과 겹받침을 통째로 한 덩이</td></tr>
               <tr><td><code>jamo</code></td><td data-label="화">ㅎ + ㅗ + ㅏ</td><td data-label="짓는 법">자모를 하나씩 — 겹받침도 ㄹ + ㄱ</td></tr>
               <tr><td><code>pieces</code></td><td data-label="화">(ㅗ+ㅇ) + ㅗ + ㅏ</td><td data-label="짓는 법">자모도 다른 자모 조각으로(ㅎ = ㅗ + ㅇ, ㄲ = ㄱ + ㄱ)</td></tr>
               <tr><td><code>origins</code></td><td data-label="화">(ㆍ+ㅡ+ㅇ) + (ㆍ+ㅡ) + (ㅣ+ㆍ)</td><td data-label="짓는 법">원형 8과 천지인까지 내려가 짓기</td></tr>
@@ -1693,6 +1704,7 @@ cp -R skills/font-kku-use ~/.claude/skills/</code></pre>
           <li>바탕 요소 규칙에 메타데이터 <code>--fy-font-id: &lt;이름&gt;</code>, <code>--fy-contract: 2</code>, <code>--fy-material: system | sprite</code>를 둡니다.</li>
           <li>자소에는 자리·자모·문맥 레벨 변수로만 닿습니다. 페이지 전용 변수(<code>--fy-top</code>, <code>--fy-weight</code> …)와 <code>transform</code>·<code>font-size</code> 같은 코어 속성은 선언하지 않습니다.</li>
           <li>세벌·고딕 계열처럼 재료를 고를 수 있게 하려면 표준 잉크 상자 <code>--fy-font-ink-boxes: standard</code>와 재료 <code>--fy-font-face: element | device</code>, 원소 획 굵기 <code>--fy-font-element-width</code>를 둡니다. 글꼴이 기본 디자인을 고를 때는 <code>--fy-font-design</code>입니다(페이지 <code>--fy-design</code>이 이깁니다). 글꼴이 배치 프로파일을 고를 때는 <code>--fy-font-layout: &lt;프로파일&gt;</code>입니다(<code>jikgyeol</code>이 <code>sebul-fixed-v1</code>을 고릅니다 — 디자인의 <code>layout</code>이 이깁니다).</li>
+          <li>세벌식·직결식의 모양 값은 코어 CSS가 <code>@layer font-kku.shape</code>로 짓습니다. 글꼴이 그 자리를 손으로 고칠 때는 <code>@layer font-kku.tune</code> 블록에 <code>--fy-shape-left</code>·<code>--fy-shape-top</code>·<code>--fy-shape-size</code>·<code>--fy-shape-scale-x</code>·<code>--fy-shape-scale-y</code>를 둡니다. 이 블록이 있으면 첫 규칙은 다섯 레이어 <code>@layer font-kku.font, font-kku.jamo, font-kku.context, font-kku.shape, font-kku.tune;</code>입니다.</li>
         </ul>
         <p>
           자세한 문법은 <a href="lib/docs/ADR/ADR-008-font-contract-v2.md">ADR-008 글꼴 계약 v2</a>, 교정 절차는
@@ -1773,7 +1785,7 @@ npm test</code></pre>
               <tr><td><code>mode</code>, <code>sources</code></td><td data-label="정하는 것">재료 종류(<code>primitive</code> 원소 · <code>svg</code> 그림 세트 · <code>font</code> 글꼴)와 이름 붙인 소스들. <code>svg</code> 소스의 <code>assetSet</code>은 그림 세트 이름이고(기본 제공 <code>pilgi-box</code>·<code>dunggeun-box</code>·<code>butgeul-box</code>는 필요할 때 받습니다), 보이는 칸 <code>cells</code>로 덜 그린 셈 칠 수 있습니다</td></tr>
               <tr><td><code>defaults</code>, <code>roleSources</code></td><td data-label="정하는 것">기본 소스와 방법, 역할(<code>initial</code>·<code>medial</code>·<code>final</code>·<code>standalone</code>)마다 다른 소스</td></tr>
               <tr><td><code>rules</code></td><td data-label="정하는 것"><code>match: { jamo, role? }</code> → <code>apply: { source?, method?, recipe?, bindings? }</code>. 방법은 <code>auto</code>(그림 → 조립 → 원소) · <code>direct</code>(그 그림만) · <code>compose</code>(그림이 있어도 조립식으로). 조립식과 조각 이름은 <a href="lib/spec/jamo-recipes.json"><code>spec/jamo-recipes.json</code></a>. 더 구체적인 규칙이 이기고, 같은 구체성으로 다르게 고르면 등록이 실패합니다</td></tr>
-              <tr><td><code>version</code>, <code>layout</code></td><td data-label="정하는 것"><code>"1.2"</code>와 배치 <code>{ profile: "sebul-cases-v1" | "sebul-fixed-v1" | "square-context-v1", revision }</code>(세벌식 <code>"1"</code>, 직결식 <code>"3"</code>, 네모꼴 <code>"1"</code> — 직결식의 이전 revision <code>"1"</code>·<code>"2"</code>는 받아 지금 도장으로 그리고 경고 <code>DESIGN_LAYOUT_REVISION_ACCEPTED</code>를 남깁니다). 1.2 디자인은 배치가 꼭 있어야 하고(빠지면 <code>DESIGN_LAYOUT_MISSING</code>), <code>square-context-v1</code>은 그 글꼴의 문맥 배치입니다. 배치를 적지 않은 1.0·1.1 디자인은 지금 배치로 그립니다. 세벌식·직결식은 자모·역할로만 고르므로(짜임은 배치가 맡는다) 문맥 조건(<code>vowelLayout</code>·<code>hasFinal</code>)과 합자 모음 통째 그리기는 받지 않습니다</td></tr>
+              <tr><td><code>version</code>, <code>layout</code></td><td data-label="정하는 것"><code>"1.2"</code>와 배치 <code>{ profile: "sebul-cases-v1" | "sebul-fixed-v1" | "square-context-v1", revision }</code>(세벌식 <code>"1"</code>, 직결식 <code>"3"</code>, 네모꼴 <code>"1"</code> — 직결식의 이전 revision <code>"1"</code>·<code>"2"</code>는 받아 지금 자리 값으로 그리고 경고 <code>DESIGN_LAYOUT_REVISION_ACCEPTED</code>를 남깁니다). 1.2 디자인은 배치가 꼭 있어야 하고(빠지면 <code>DESIGN_LAYOUT_MISSING</code>), <code>square-context-v1</code>은 그 글꼴의 문맥 배치입니다. 배치를 적지 않은 1.0·1.1 디자인은 지금 배치로 그립니다. 세벌식·직결식의 원칙은 자모·역할로만 고르는 것입니다(짜임은 배치가 맡는다). 문맥 조건(<code>vowelLayout</code>·<code>hasFinal</code>)이나 자리마다 변주(<code>display.variationScope: "occurrence"</code>)를 적으면 받아서 지키되 경고 <code>DESIGN_FIXED_CONTEXT</code>·<code>DESIGN_FIXED_VARIATION</code>을 남깁니다. 합자 모음 통째 그리기(<code>method: "direct"</code>)만 <code>DESIGN_FIXED_COMPOUND</code>로 거부합니다</td></tr>
               <tr><td><code>composition</code></td><td data-label="정하는 것"><a href="#fonts-composition">짓는 방식</a> — 고르지 않아도 됩니다. 프리셋 하나(<code>"syllable"</code> 등) 또는 <code>{ preset?, vowel?, coda?, pieces? }</code>. 어느 판의 디자인에도 적을 수 있고, 페이지 CSS(<code>--fy-composition</code>·깊이 변수)와 자모마다 고른 규칙이 이깁니다. 틀리면 <code>DESIGN_COMPOSITION_INVALID</code></td></tr>
               <tr><td><code>fallback</code></td><td data-label="정하는 것">대체 소스, 원소로 내려갈지, 조립 재료가 없을 때(<code>error</code>·<code>direct</code>·<code>primitive</code>)</td></tr>
             </tbody>
@@ -1789,10 +1801,20 @@ npm test</code></pre>
           <div class="k-code-bar"><span>JavaScript</span><button type="button" data-copy="#c-design-api">복사</button></div>
           <pre id="c-design-api"><code>// 등록 전에 검사 — 던지지 않고 틀린 곳을 모두 돌려준다
 FontKku.validateDesign(json);
-<span class="d-out">// { ok: false, errors: [{ code: "DESIGN_FIXED_CONTEXT",
+<span class="d-out">// { ok: true, errors: [], warnings: [] }</span>
+
+// 세벌식 디자인에 ㅘ를 통째로 그리는 규칙이 있으면 거부한다
+//   rules: [{ match: { jamo: "ㅘ" }, apply: { method: "direct" } }]
+<span class="d-out">// { ok: false, errors: [{ code: "DESIGN_FIXED_COMPOUND",
+//   path: "rules[0].apply.method", message: "…" }], warnings: [] }</span>
+
+// 받침 조건을 적으면 받아서 지키되 알린다
+//   rules: [{ match: { jamo: "ㄱ", role: "final", hasFinal: true }, … }]
+<span class="d-out">// { ok: true, errors: [], warnings: [{ code: "DESIGN_FIXED_CONTEXT",
 //   path: "rules[0].match.hasFinal", message: "…" }] }</span>
 
 // 틀리면 첫 오류를 던진다(error.code, error.path)
+// 경고는 돌려준 값의 warnings와 콘솔에 남는다
 FontKku.registerDesign("hand", json);
 // 같은 이름을 바꾼다 — 그 이름을 쓰는 글자가 다시 그려진다
 FontKku.registerDesign("hand", changed, { replace: true });
@@ -1802,7 +1824,7 @@ FontKku.designs();                <span class="d-out">// 등록된 이름들</sp
         <ul>
           <li><code>replace</code> 없이 같은 이름에 다른 내용을 등록하면 <code>DESIGN_NAME_TAKEN</code>입니다. 두 스크립트가 같은 이름을 몰래 덮지 않게 하려는 것입니다.</li>
           <li>바탕 요소가 디자인을 쓰면 <code>data-fy-design="hand"</code>가 붙습니다. 쓰지 못하면 지금 설정으로 그리고 <code>data-fy-design-status</code>(= <code>fontInfo(host).designStatus</code>)에 까닭을 남깁니다 — <code>DESIGN_NOT_REGISTERED</code>(등록하지 않은 이름, 등록하는 순간 다시 그립니다) · <code>DESIGN_TOKEN_INVALID</code>(이름은 소문자·숫자·<code>-</code>) · <code>DESIGN_UNSUPPORTED_FONT</code>(디자인을 받지 않는 글꼴 — 그림 자소 글꼴 등).</li>
-          <li><code>--fy-design: legacy</code>는 위에서 물려받은 디자인을 끊고 지금 배치로 그립니다 — 글꼴을 밝히지 않은 바탕 요소도 세벌식 대신 문맥 배치가 됩니다.</li>
+          <li><code>--fy-design: legacy</code>는 위에서 물려받은 디자인을 끊습니다. 글꼴 모양은 그대로라 글꼴을 밝히지 않은 바탕 요소는 세벌식으로 그립니다 — 문맥 배치로 그리려면 <code>--fy-layout: square-context-v1</code>을 씁니다(<a href="#fonts-layout">배치</a>).</li>
         </ul>
 
         <h3 id="design-tools">미리보기와 기록</h3>
@@ -1849,7 +1871,7 @@ FontKku.designs();                <span class="d-out">// 등록된 이름들</sp
               <tr><td><code>applyJamoSeeds(target, options?)</code></td><td data-label="돌려줌" class="d-sig"><code>number</code></td><td data-label="하는 일">각 <code>[data-jamo]</code> 노드에 <code>--fy-jamo-seed</code>를 씁니다. 처리한 노드 수를 돌려줍니다.</td></tr>
               <tr><td><code>registerJamo(name, cells, options?)</code></td><td data-label="돌려줌" class="d-sig"><code>{ name, cells }</code></td><td data-label="하는 일">자모 그림 세트를 등록합니다. 벡터 자소면 <code>cells</code>는 <code>{ "r0-ㄱ": "M8 12 H44 V30", … }</code>(칸 0–100), <code>options</code>는 <code>stroke</code>·<code>cap</code>·<code>join</code>·<code>hoek</code>. <code>{ frame: "box" }</code>면 세벌·고딕 계열에 거는 그림 세트이고 칸 키는 <code>ㄱ</code>·<code>ㄱ@bar</code>·<code>@line</code> …입니다(<a href="#make-svg">SVG로 자모 그리기</a>). 그 세트를 쓰는 바탕 요소를 다시 그립니다. 일부 칸만 등록할 수 있고 누락 칸은 기반 재료로 표시합니다. 빈 세트·빈 도형 배열은 오류입니다.</td></tr>
               <tr><td><code>jamoSets()</code></td><td data-label="돌려줌" class="d-sig"><code>string[]</code></td><td data-label="하는 일">등록된 자모 그림 세트 이름(벡터 자소·그림 세트).</td></tr>
-              <tr><td><code>layoutProfiles</code></td><td data-label="돌려줌" class="d-sig"><code>Record&lt;string, LayoutProfile&gt;</code></td><td data-label="하는 일">배치 프로파일의 얼린 사본 — <code>sebul-cases-v1</code>(세벌식, 짜임마다 역할 도장)·<code>sebul-fixed-v1</code>(직결식, 역할 도장 표)·<code>square-context-v1</code>(네모 문맥). <a href="#fonts-layout">배치</a></td></tr>
+              <tr><td><code>layoutProfiles</code></td><td data-label="돌려줌" class="d-sig"><code>Record&lt;string, LayoutProfile&gt;</code></td><td data-label="하는 일">배치 프로파일(글꼴 모양)의 얼린 사본 — <code>sebul-cases-v1</code>(세벌식, 짜임마다 자리 값)·<code>sebul-fixed-v1</code>(직결식, 자모마다 한 자리)·<code>square-context-v1</code>(네모꼴, 글꼴 CSS의 자리). 모양 이름 <code>model</code>, 원칙(규칙이 고를 수 있는 필드 <code>match</code>, 자리마다 변주 <code>occurrence</code>), 기본 나누기 <code>depth</code>, 기본이 아닌 나누기의 자리 <code>splits</code>를 읽습니다. <a href="#fonts-layout">배치</a></td></tr>
               <tr><td><code>layoutStability(host)</code></td><td data-label="돌려줌" class="d-sig"><code>{ layout, stable, keys, nodes, drifted }</code></td><td data-label="하는 일">고정 배치가 그린 결과에서도 지켜지는지 — 같은 역할·자모(세벌식은 같은 짜임까지) 노드의 계산된 자리·크기·변환을 비교합니다. 문맥 배치면 <code>stable: null</code>.</td></tr>
               <tr><td><code>registerDesign(name, design, options?)</code> <span class="d-tag">실험</span></td><td data-label="돌려줌" class="d-sig"><code>{ name, revision }</code></td><td data-label="하는 일">디자인 등록. 검사에 걸리면 첫 오류를 던지고(<code>code</code>·<code>path</code>), 같은 이름의 다른 내용은 <code>{ replace: true }</code>일 때만 바꿉니다. <a href="#design">디자인</a></td></tr>
               <tr><td><code>validateDesign(design)</code> <span class="d-tag">실험</span></td><td data-label="돌려줌" class="d-sig"><code>{ ok, errors }</code></td><td data-label="하는 일">등록과 같은 규칙으로 검사해 오류를 모두 돌려줍니다(던지지 않고 등록하지 않음).</td></tr>
@@ -2080,7 +2102,7 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
               <tr><td><code>data-fy-font-pending</code></td><td>필요할 때 받는 글꼴 CSS·자모 모듈이 오는 동안만. 조립 전 자모를 가립니다(늦어도 3초)</td></tr>
               <tr><td><code>data-fy-host</code></td><td><code>custom-element</code>(전용 태그) · <code>decorator</code>(클래스 방식)</td></tr>
               <tr><td><code>data-fy-font</code>, <code>data-fy-profile</code></td><td>정규화한 글꼴 이름(소문자, 별칭을 푼 이름). 글꼴을 밝히지 않았으면 <code>sebul</code></td></tr>
-              <tr><td><code>data-fy-layout</code>, <code>data-fy-layout-model</code></td><td>배치 — 글꼴을 밝히지 않았으면 <code>sebul-cases-v1</code> / <code>case-fixed</code>(세벌식), <code>font="jikgyeol"</code>이면 <code>sebul-fixed-v1</code> / <code>fixed-three</code>(직결식), 1.2 디자인이면 그 배치. 글꼴의 문맥 배치면 둘 다 없음(<a href="#fonts-layout">배치</a>)</td></tr>
+              <tr><td><code>data-fy-layout</code>, <code>data-fy-layout-status</code></td><td>배치(글꼴 모양) — 글꼴을 밝히지 않았으면 <code>sebul-cases-v1</code>(세벌식), <code>font="jikgyeol"</code>이면 <code>sebul-fixed-v1</code>(직결식), 페이지 <code>--fy-layout</code>이나 1.2 디자인이면 그 배치. 글꼴의 문맥 배치면 없음. 모양 이름(<code>case-fixed</code> …)은 <code>fontInfo(host).layout.model</code>로 읽습니다. 고른 배치를 쓰지 못하면 <code>-status</code>에 까닭(<code>LAYOUT_NOT_REGISTERED</code>·<code>LAYOUT_UNSUPPORTED_FONT</code>) — <a href="#fonts-layout">배치</a></td></tr>
               <tr><td><code>data-fy-face</code></td><td>재료 — <code>element</code>(원소 획) · <code>device</code>(기기 글꼴) · <code>svg</code>(그림 세트). 세벌·고딕 계열에만</td></tr>
               <tr><td><code>data-fy-element-cap</code></td><td>원소 획 끝이 <code>round</code>·<code>butt</code>일 때</td></tr>
               <tr><td><code>data-fy-design</code>, <code>data-fy-design-status</code></td><td>쓰고 있는 디자인 이름, 또는 쓰지 못한 까닭(<code>DESIGN_NOT_REGISTERED</code>·<code>DESIGN_TOKEN_INVALID</code>·<code>DESIGN_UNSUPPORTED_FONT</code>) — <a href="#design">디자인</a></td></tr>
@@ -2097,6 +2119,8 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
               <tr><td><code>data-fy-sprite-paint</code></td><td><code>mask</code> — 그림 자소에 마스크 칠(<code>--fy-sprite-paint: mask</code>)을 걸었을 때</td></tr>
               <tr><td><code>data-fy-glow</code></td><td><code>filter</code> — 기기 글꼴 재료에 빛 칠(<code>--fy-glow</code>)을 걸었을 때</td></tr>
               <tr><td><code>data-fy-jamo-set</code></td><td>벡터 자소로 그릴 때 자모 세트 이름. 자모 노드마다 <code>&lt;svg part="vector" data-cell="r0-ㄱ"&gt;</code>이 붙습니다</td></tr>
+              <tr><td><code>data-fy-jamo-set-status</code></td><td><code>JAMO_SET_FRAME_MISMATCH</code> — 건 그림 세트의 칸 계약이 글꼴 재료와 맞지 않아 쓰지 않았을 때(<code>fontInfo(host).jamoSetStatus</code>)</td></tr>
+              <tr><td><code>data-fy-look</code></td><td>바탕 요소 class에 꾸밈(<code>kku-look-*</code>)이 있을 때만(빈 값). 움직임 CSS가 이것으로 고릅니다</td></tr>
               <tr><td><code>data-fy-stroke-depth</code></td><td>획 깊이를 요청했을 때만. 벡터 자소면 <code>stroke</code>(획마다 <code>part="hoek"</code>), 쪼갤 수 없는 재료(원소 획·그림 세트·기기 글꼴·자소판)면 <code>jamo</code></td></tr>
               <tr><td><code>data-source</code></td><td>원문 기록. 바탕 요소에 <code>aria-label</code>은 쓰지 않습니다(작성자 라벨은 그대로)</td></tr>
             </tbody>
@@ -2115,7 +2139,7 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
               <tr><td>컨테이너</td><td><code>root</code> <code>line</code> <code>word</code> <code>space</code> <code>glyph</code> <code>glyph-body</code> <code>content</code>(비한글 글자)</td></tr>
               <tr><td>묶음</td><td><code>cluster</code> <code>jungseong-cluster</code> <code>jongseong-cluster</code></td></tr>
               <tr><td>자소</td><td><code>jamo</code> <code>choseong</code> <code>jungseong</code> <code>jungseong-base</code> <code>jungseong-tail</code> <code>jongseong</code> <code>jongseong-left</code> <code>jongseong-right</code></td></tr>
-              <tr><td>완성형 머리</td><td><code>head</code> — <code>syllable</code> 깊이에서만 (<code>part="jamo head"</code>). 세벌식·직결식에는 없음</td></tr>
+              <tr><td>완성형 머리</td><td><code>head</code> — <code>syllable</code> 깊이에서만 (<code>part="jamo head"</code>). 세벌식·직결식도 깊이나 <a href="#fonts-composition">짓는 방식</a>으로 고르면 생깁니다. 그 안의 원소 획·그림은 <code>data-fy-head-part</code>(<code>initial</code>·<code>medial</code>)로 나뉩니다</td></tr>
               <tr><td>획과 그림</td><td><code>hoek</code> 획(원소 획·그림 세트는 늘, 벡터 자소는 획 깊이 <code>stroke</code>일 때) · <code>element</code> 획 마디(<code>data-element="line|ring|box"</code>) · <code>vector</code> SVG 그림 · <code>leaf</code> 글꼴 팔레트 조각(실험)</td></tr>
               <tr><td>접근성</td><td><code>sr-source</code> — 관리 root의 형제, 원문, 화면에서는 숨김</td></tr>
             </tbody>
@@ -2130,10 +2154,11 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
               <tr><td>글자</td><td data-label="속성"><code>data-hangul</code>, <code>data-glyph-kind</code></td><td data-label="뜻">한글인지, <code>hangul</code>·<code>latin</code>·<code>digit</code>·<code>punctuation</code>·<code>symbol</code></td></tr>
               <tr><td>글자</td><td data-label="속성"><code>data-jung-layout</code>, <code>data-jong-layout</code></td><td data-label="뜻">짜임: <code>right</code>·<code>bottom</code>·<code>split-right</code> / 받침: <code>none</code>·<code>single</code>·<code>double</code></td></tr>
               <tr><td>글자</td><td data-label="속성"><code>data-layout-key</code></td><td data-label="뜻">위 둘을 합친 9가지 (<code>right:none</code> … <code>split-right:double</code>)</td></tr>
+              <tr><td>글자</td><td data-label="속성"><code>data-fy-at-&lt;자리&gt;</code>, <code>data-fy-jamos</code></td><td data-label="뜻">한글 글자 칸의 자리마다 그 자리 자모(자리 이름은 자소의 <code>data-fy-pos</code>와 같습니다), 자모 노드 차례의 자모 목록(빈칸으로 나눔). 이웃 자모로 고를 때 <code>:has()</code> 대신 씁니다</td></tr>
               <tr><td>자소</td><td data-label="속성"><code>data-jamo</code></td><td data-label="뜻">조합형 자모 값 (<code>ᄀ</code>, <code>ᅡ</code>, <code>ᆼ</code>)</td></tr>
               <tr><td>자소</td><td data-label="속성"><code>data-fy-role</code></td><td data-label="뜻"><code>choseong</code> <code>jung-main</code> <code>jung-base</code> <code>jung-tail</code> <code>jong-main</code> <code>jong-left</code> <code>jong-right</code> (<code>head</code>)</td></tr>
               <tr><td>자소</td><td data-label="속성"><code>data-fy-pos</code></td><td data-label="뜻">배치 자리 토큰 (<code>tlo</code>, <code>trc</code>, <code>bbrs</code> …). 세벌식·직결식에서는 정보로만 남습니다</td></tr>
-              <tr><td>자소</td><td data-label="속성"><code>data-fy-stamp</code>, <code>data-fy-draw</code></td><td data-label="뜻">고정 배치의 역할 도장 <code>initial</code>·<code>medial</code>·<code>final</code>(자리는 인라인 <code>--fy-stamp-*</code>, 세벌식은 짜임마다), 그림 문맥(세벌식 받침은 <code>sebeol</code> 겹받침 뼈대, 직결식 초성은 늘 <code>bar</code>)</td></tr>
+              <tr><td>자소</td><td data-label="속성"><code>data-fy-draw</code></td><td data-label="뜻">그림 문맥 — 세벌식 받침과 겹받침 낱자는 <code>sebeol</code> 겹받침 뼈대, 직결식 초성은 늘 <code>bar</code>. 역할은 <code>part</code>(<code>choseong</code>·<code>jungseong</code>·<code>jongseong</code>)로 고릅니다 — 고정 배치의 <code>data-fy-stamp</code>와 인라인 <code>--fy-stamp-*</code>는 0.1.4-rc.3에서 없앴습니다</td></tr>
               <tr><td>자소</td><td data-label="속성"><code>data-jamo-base</code></td><td data-label="뜻">완성형 머리(<code>head</code>)를 만든 바탕 모음 — ㅗ계·ㅜ계 머리를 가를 때</td></tr>
               <tr><td>획</td><td data-label="속성"><code>data-hoek-kind</code>, <code>data-hoek-from</code>, <code>data-hoek-letter</code>, <code>data-hoek-role</code>, <code>data-fy-head-part</code></td><td data-label="뜻">획 종류·들여온 글자·속한 자모·제자원리 역할(<a href="#stroke-depth">획 깊이</a>), 머리 음절 안의 초성·모음 묶음(<code>initial</code>·<code>medial</code>)</td></tr>
               <tr><td>낱자</td><td data-label="속성"><code>data-fy-standalone</code></td><td data-label="뜻">음절이 아닌 자모 글자(ㅋㅋ의 ㅋ)를 원소 획·그림 세트로 그릴 때 그 자모</td></tr>
@@ -2151,7 +2176,8 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
               <tr><td><code>--fy-top</code>, <code>--fy-left</code>, <code>--fy-font-size</code></td><td>자소 위치·크기. 자리 값을 대신합니다(자모·문맥 보정은 그대로 더해짐)</td></tr>
               <tr><td><code>--fy-face</code></td><td>세벌·고딕 계열의 재료 — <code>element</code> · <code>device</code>. 글꼴의 재료를 이깁니다. 그림 세트는 <code>jamo-set</code> 속성으로</td></tr>
               <tr><td><code>--fy-element-width</code>, <code>--fy-element-cap</code>, <code>--fy-element-outline</code>, <code>--fy-element-fill</code></td><td>원소 획의 굵기(글자 크기 기준 길이), 끝(<code>square</code>·<code>round</code>·<code>butt</code>), 외곽선 두께, 속 칠. 글꼴 값을 대신합니다</td></tr>
-              <tr><td><code>--fy-design</code></td><td>등록한 디자인 이름(실험). <code>legacy</code>는 물려받은 선택을 끊습니다 — <a href="#design">디자인</a></td></tr>
+              <tr><td><code>--fy-design</code></td><td>등록한 디자인 이름(실험). <code>legacy</code>는 물려받은 디자인을 끊습니다(글꼴 모양은 그대로) — <a href="#design">디자인</a></td></tr>
+              <tr><td><code>--fy-layout</code></td><td>글꼴 모양 — <code>sebul-cases-v1</code>(세벌식) · <code>sebul-fixed-v1</code>(직결식) · <code>square-context-v1</code>(글꼴의 문맥 배치). 고르지 않아도 됩니다. 글꼴(<code>--fy-font-layout</code>)과 글꼴이 고른 디자인의 모양을 이깁니다 — <a href="#fonts-layout">배치</a></td></tr>
               <tr><td><code>--fy-ink-boxes</code></td><td><code>none</code>이면 표준 잉크 상자를 끄고 자모를 기기 글꼴 글자 그대로 그립니다(재료·디자인을 쓰지 않음)</td></tr>
               <tr><td><code>--fy-weight</code>, <code>--fy-stroke</code>, <code>--fy-clip</code></td><td>굵기, 글자 외곽선 두께(둘 다 기기 글꼴 재료), 잘라내기. 글꼴 값을 대신합니다</td></tr>
               <tr><td><code>--fy-glow</code></td><td>기기 글꼴 재료의 빛 칠(<code>drop-shadow(…)</code> 목록). 자른 획에서도 빛이 끊기지 않습니다</td></tr>
@@ -2194,7 +2220,7 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
               <tr><td><code>--fy-face-width</code></td><td data-label="위치">자소·낱자</td><td data-label="뜻">원소·기기 글꼴·그림 세트 재료의 표준 전진폭</td></tr>
               <tr><td><code>--fy-el-density</code></td><td data-label="위치">자소·낱자</td><td data-label="뜻">밀도 굵기 계수 0.75–1 — 획이 촘촘한 자모(ㄹ·ㅌ·겹받침 …)의 원소 획을 그만큼 가늘게</td></tr>
               <tr><td><code>--fy-el-*</code></td><td data-label="위치">획 마디</td><td data-label="뜻">원소 획의 자리·길이·각도와 굵기 되돌림(<code>--fy-el-k</code> …). 페이지가 고치는 값이 아닙니다</td></tr>
-              <tr><td><code>--fy-stamp-*</code></td><td data-label="위치">자소</td><td data-label="뜻">고정 배치 도장(자리·크기·배율·밀도). 내부 값이라 페이지가 고치지 않습니다 — 자모를 옮기려면 페이지 전용 변수를 씁니다</td></tr>
+              <tr><td><code>--fy-shape-*</code></td><td data-label="위치">자소</td><td data-label="뜻">세벌식·직결식의 모양 값(자리·크기·배율·굵기·밀도) — 코어 CSS가 짜임마다 줍니다(<code>@layer font-kku.shape</code>). 페이지가 고치지 않습니다 — 자모를 옮기려면 페이지 전용 변수를 씁니다. 글꼴 CSS는 손 보정 <code>--fy-shape-left</code>·<code>top</code>·<code>size</code>·<code>scale-x</code>·<code>scale-y</code>만 <code>@layer font-kku.tune</code>에 둡니다. 0.1.4-rc.2까지의 <code>--fy-stamp-*</code>를 대신합니다</td></tr>
               <tr><td><code>--fy-hoek-index</code>, <code>--fy-hoek-order</code></td><td data-label="위치">획</td><td data-label="뜻">자모 안 획 차례, 바탕 요소 전체의 읽는 차례 — 획순 움직임에</td></tr>
             </tbody>
           </table>
@@ -2218,9 +2244,27 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
             </tbody>
           </table>
         </div>
+        <div class="d-example">
+          <div class="d-example-bar"><span>세벌식(글꼴 없음)에서 깊이만 다르게 — 노드마다 다른 색</span></div>
+          <div class="d-pair">
+            <div class="k-stage">
+              <font-kku size="44" class="d-pieces" style="--fy-jamo-depth: atomic">과 닭</font-kku>
+              <span class="d-label">atomic · ㄱ+ㅗ+ㅏ · ㄷ+ㅏ+ㄹ+ㄱ</span>
+            </div>
+            <div class="k-stage">
+              <font-kku size="44" class="d-pieces" style="--fy-jamo-depth: composite">과 닭</font-kku>
+              <span class="d-label">composite · ㄱ+ㅘ · ㄷ+ㅏ+ㄺ</span>
+            </div>
+            <div class="k-stage">
+              <font-kku size="44" class="d-pieces" style="--fy-jamo-depth: syllable">과 닭</font-kku>
+              <span class="d-label">syllable · 고+ㅏ · ㄷ+ㅏ+ㄺ</span>
+            </div>
+          </div>
+        </div>
         <div class="k-code">
           <div class="k-code-bar"><span>HTML · JavaScript</span><button type="button" data-copy="#c-depth">복사</button></div>
-          <pre id="c-depth"><code>&lt;font-kku font="sebul" style="--fy-jamo-depth: atomic"&gt;과일 밟기&lt;/font-kku&gt;
+          <pre id="c-depth"><code>&lt;font-kku style="--fy-jamo-depth: syllable"&gt;과일 밟기&lt;/font-kku&gt;              &lt;!-- 세벌식(기본) --&gt;
+&lt;font-kku font="sebul" style="--fy-jamo-depth: atomic"&gt;과일 밟기&lt;/font-kku&gt;  &lt;!-- 문맥 배치 --&gt;
 
 &lt;script&gt;
   // 인라인 style이나 load 이벤트 없는 스타일로 깊이를 바꾼 뒤에는 직접 다시 그린다
