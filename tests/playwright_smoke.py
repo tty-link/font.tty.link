@@ -2216,6 +2216,17 @@ def assert_studio_page_shell(page, url: str, label: str) -> None:
     })""")
     if state != {"inView": True, "font": "sprite-example"}:
         raise AssertionError(f"{label}: #studio-material should reach the component through the wrapper {state!r}")
+    # ?page= · ?mode= reach the component as mount options; an unknown value is dropped instead of failing the mount
+    page.goto(studio_url(url, "?page=review&mode=precise"), wait_until="load")
+    frame = studio_content(page)
+    opened = frame.evaluate("""() => { const root = document.querySelector('[data-studio]');
+      return { page: root.dataset.page, mode: root.dataset.studioMode }; }""")
+    if opened != {"page": "review", "mode": "precise"}:
+        raise AssertionError(f"{label}: ?page=review&mode=precise should open that studio page and view {opened!r}")
+    page.goto(studio_url(url, "?page=nowhere&mode=loud"), wait_until="load")
+    frame = studio_content(page)
+    if frame.evaluate("() => document.querySelector('[data-studio]').dataset.page") != "design":
+        raise AssertionError(f"{label}: an unknown ?page= should fall back to the design page")
 
 
 def assert_animation_catalog(page, url: str, label: str) -> None:
