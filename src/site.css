@@ -804,7 +804,7 @@ code {
 /* 예시 꾸밈 글꼴 — AI 설명서 §5의 kku-berry */
 .kku-berry { --fy-weight: 800; }
 .kku-berry :is([part~="choseong"], [part~="head"]) { color: #c2185b; }
-.kku-berry [part~="jungseong"] { color: #7b1fa2; }
+.kku-berry :is([part~="jungseong"], [data-fy-head-part="medial"]) { color: #7b1fa2; }
 .kku-berry [part~="jongseong"] { color: #f06292; }
 .kku-berry [part~="jamo"] { text-shadow: 0.04em 0.04em 0 #ffd1e3; }
 

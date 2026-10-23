@@ -97,7 +97,7 @@
 
     /* 폰꾸 글자의 자모 색 — 범례·풀이 칩과 같은 변수로 칠해, 글꼴을 바꿔도 색 풀이가 맞는다 */
     .sheet :is([part~="choseong"], [part~="head"]) { color: var(--cho); }
-    .sheet [part~="jungseong"] { color: var(--jung); }
+    .sheet :is([part~="jungseong"], [data-fy-head-part="medial"]) { color: var(--jung); }
     .sheet [part~="jungseong-tail"] { color: var(--tail); }
     .sheet [part~="jongseong"] { color: var(--jong); }
     .sheet [part~="jongseong-right"] { color: var(--jong2); }
