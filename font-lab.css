@@ -231,7 +231,7 @@ html:not([data-fl-vary="off"]) .k-fontrow-tags .fl-seed-tag {
 
 /* 카드 견본의 꾸밈 — 페이지 CSS가 글꼴보다 이긴다 */
 .fl-demo-paint :is([part~="choseong"], [part~="head"]) { color: #d62839; }
-.fl-demo-paint [part~="jungseong"] { color: #1f4fd1; }
+.fl-demo-paint :is([part~="jungseong"], [data-fy-head-part="medial"]) { color: #1f4fd1; }
 .fl-demo-paint [part~="jongseong"] { color: #12965f; }
 .fl-demo-paint [part~="jamo"] { text-shadow: 0.03em 0.04em 0 #ffd166; }
 

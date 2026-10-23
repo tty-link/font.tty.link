@@ -164,7 +164,7 @@
     }
     /* 제목과 원고지의 크레용 글자 — 고른 크레용 색으로 자모마다 칠한다(도장은 빼고) */
     :is(#title-view, .manuscript) :is([part~="choseong"], [part~="head"]) { color: var(--cho); }
-    :is(#title-view, .manuscript) [part~="jungseong"] { color: var(--jung); }
+    :is(#title-view, .manuscript) :is([part~="jungseong"], [data-fy-head-part="medial"]) { color: var(--jung); }
     :is(#title-view, .manuscript) [part~="jongseong"] { color: var(--jong); }
 
     .teacher {

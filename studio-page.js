@@ -8,6 +8,9 @@
   ["font", "src", "text"].forEach(function (key) {
     if (params.has(key)) options[key] = params.get(key);
   });
+  // ?page= and ?mode= open a studio page and view; mount() rejects unknown values, so pass only the ones it takes.
+  if (["design", "edit", "sheet", "review"].indexOf(params.get("page")) >= 0) options.page = params.get("page");
+  if (["easy", "precise"].indexOf(params.get("mode")) >= 0) options.mode = params.get("mode");
   var status = document.querySelector("[data-studio-load-status]");
   var studio = window.FontKkuStudio.mount(document.querySelector("[data-studio-host]"), options);
   // The site owns navigation; editing, project storage and export belong to the packaged UI.

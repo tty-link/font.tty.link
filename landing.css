@@ -1018,7 +1018,7 @@
 }
 
 .k-nfd span:nth-child(3n + 2),
-.k-jamo-paint [part~="jungseong"] {
+.k-jamo-paint :is([part~="jungseong"], [data-fy-head-part="medial"]) {
   color: var(--k-blue);
 }
 
