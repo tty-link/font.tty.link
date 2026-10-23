@@ -297,8 +297,9 @@ def assert_demo(page, label: str) -> None:
           return [node.clipPath, node.visibility, node.filter.startsWith('drop-shadow'), before.clipPath.startsWith('inset'), before.content]; }"""
     )
     # 기기 글꼴 맞춤(ADR-023)이 켜져 있으면 ::before는 그 글꼴의 조합용 자모(ᅩ)가 표준 상자에 있으면 그대로,
-    # 아니면 낱자(ㅗ)를 그린다(ADR-024 §6)
-    if glow[:4] != ["none", "hidden", True, True] or glow[4] not in ('"ᅩ"', '"ㅗ"'):
+    # 아니면 낱자(ㅗ)를 그린다(ADR-024 §6). 0.1.4-rc.4부터 맞춤 노드는 숨기지 않는다 — 노드 글자는 이미 ::first-letter
+    # 크기 0이고, 보이는 글자가 있어야 WebKit 그림자 트리 선택이 닿는다(font-kku 145139d, ADR-021)
+    if glow[:4] != ["none", "visible", True, True] or glow[4] not in ('"ᅩ"', '"ㅗ"'):
         raise AssertionError(f"{label}: neon look on a device font should move the slot clip to ::before and glow from the jamo {glow!r}")
     page.evaluate("() => document.querySelector('#late-glow').classList.remove('kku-look-neon')")
     page.wait_for_function("() => !document.querySelector('#late-glow').dataset.fyGlow", timeout=5000)
