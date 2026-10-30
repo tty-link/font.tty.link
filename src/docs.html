@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="alternate" type="text/markdown" href="lib/skill/SKILL.md" title="AI 에이전트용 사용 설명서 (SKILL.md)" />
   <title>문서 — 폰꾸 font-kku</title>
-  <meta name="description" content="폰꾸(font-kku) 문서 — 한 줄 설치와 버전, 바탕 요소와 속성, 글꼴·배치(세벌식·직결식)·재료 고르기, 줄바꿈, 페이지 CSS로 꾸미기, 조합(글꼴·꾸밈·변주·움직임·상호작용·바탕과 테마), 움직임과 변주, 평문 모드와 정적 렌더러, AI와 쓰기, 글꼴 만들기와 디자인, JavaScript API 레퍼런스." />
+  <meta name="description" content="폰꾸(font-kku) 문서 — 한 줄 설치와 버전, 바탕 요소와 속성, 글꼴·배치(세벌식·직결식)·재료 고르기, 줄바꿈, 페이지 CSS로 꾸미기, 조합(글꼴·꾸밈·변주·움직임·상호작용·바탕과 테마), 움직임과 변주, 평문 모드와 정적 렌더러, AI와 쓰기, 글꼴 만들기와 디자인, JavaScript API 레퍼런스, 용어(음절 나누기·글꼴 모양·재료·작업실)." />
   <script src="lib/font-kku.js" data-fonts="sebul" data-addons="looks motion fx"></script>
   <script src="lib/font-kku-ime.js"></script>
   <link rel="stylesheet" href="./site.css" />
@@ -55,6 +55,7 @@
           <ul>
             <li><a href="#api">JavaScript API</a></li>
             <li><a href="#reference">속성·part·CSS 변수</a></li>
+            <li><a href="#terms">용어</a></li>
             <li><a href="#a11y">접근성과 지원 범위</a></li>
             <li><a href="#faq">자주 묻는 질문</a></li>
           </ul>
@@ -73,7 +74,7 @@
         <p class="k-lead">
           폰꾸는 한글 음절을 초성·중성·종성으로 나눠 다시 조립해 그리는 브라우저 런타임입니다. 이 문서는 스크립트 한 줄로
           붙이는 법부터 글꼴·배치·재료 고르기, 페이지 CSS로 꾸미기, 움직임, 평문 모드, 글꼴 만들기, JavaScript API까지 한 페이지에
-          모았습니다. 고를 것에는 모두 기본값이 있습니다 — 간단하게 시작하고, 원하면 세세하게 고칩니다. 이 페이지의 제목도 모두 폰꾸로 그렸습니다. 앞 판에서 올라왔다면 <a href="#start-version">판마다 바뀐 것</a>부터 봅니다.
+          모았습니다. 고를 것에는 모두 기본값이 있습니다 — 간단하게 시작하고, 원하면 세세하게 고칩니다. 이 페이지의 제목도 모두 폰꾸로 그렸습니다. 앞 판에서 올라왔다면 <a href="#start-version">판마다 바뀐 것</a>부터 봅니다. 처음 보는 말은 <a href="#terms">용어</a>에서 찾습니다.
         </p>
         <ul class="d-quick">
           <li><a href="#start"><span>1</span>한 줄로 붙이기</a></li>
@@ -2226,9 +2227,9 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
           </table>
         </div>
 
-        <h3 id="reference-depth">자모 깊이</h3>
+        <h3 id="reference-depth">음절 나누기 (자모 깊이)</h3>
         <p>
-          합자 모음(ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ)과 겹받침을 얼마나 쪼갤지 정합니다. 글꼴마다 기본값이 있고(<code>sebul</code>은
+          음절 나누기 — 합자 모음(ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ)과 겹받침을 얼마나 쪼갤지 정합니다(<a href="#terms-build">용어</a>). 글꼴마다 기본값이 있고(<code>sebul</code>은
           <code>syllable</code>), 페이지가 바탕 요소에 변수로 덮을 수 있습니다. 축별 변수(<code>--fy-vowel-depth</code>,
           <code>--fy-coda-depth</code>)가 줄임형(<code>--fy-jamo-depth</code>)을 이깁니다. 글꼴을 밝히지 않은 세벌식(과 직결식)의 기본은 합자 모음 조각,
           겹받침 통짜(<code>data-fy-vowel-depth="split"</code>·<code>data-fy-coda-depth="whole"</code>)이고, 이 변수로 바꿉니다. 묶어서 고르려면
@@ -2271,6 +2272,150 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
   host.style.setProperty("--fy-vowel-depth", "whole");
   FontKku.refresh(host);
 &lt;/script&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- ── 용어 ─────────────────────────────────────────── -->
+      <section id="terms">
+        <p class="d-kicker">레퍼런스</p>
+        <h2 class="font-kku k-h2" data-font="sebul" data-size="clamp(28px, 3.4vw, 38px)">용어</h2>
+        <p>
+          이 문서와 글꼴 작업실에서 쓰는 말을 모았습니다. 화면과 문서는 한글 용어를 쓰고, CSS 변수·속성·API 이름은 계약이라 영어
+          그대로 둡니다. 코드 이름까지 담은 전체 목록은 <a href="lib/docs/GLOSSARY.md">용어집</a>에 있습니다.
+        </p>
+
+        <h3 id="terms-hangul">한글을 나누는 말</h3>
+        <div class="k-table-scroll">
+          <table class="k-table">
+            <thead><tr><th>말</th><th>뜻</th><th>예</th></tr></thead>
+            <tbody>
+              <tr><td>음절</td><td data-label="뜻">완성형 한글 한 글자. 폰꾸가 나누어 다시 짓는 단위입니다</td><td data-label="예">회, 닭</td></tr>
+              <tr><td>자모 · 자소</td><td data-label="뜻">자모는 음절을 이루는 소리 글자, 자소는 화면에 그려진 자모 한 조각입니다. 미리보기에서 누르고 고르는 것이 자소입니다</td><td data-label="예">ㅎ, ㅚ</td></tr>
+              <tr><td>초성 · 중성 · 종성</td><td data-label="뜻">첫소리 자음 · 가운뎃소리 모음 · 끝소리 자음. 종성을 받침이라고도 합니다</td><td data-label="예">닭 = ㄷ · ㅏ · ㄺ</td></tr>
+              <tr><td>쌍자음 · 겹받침 · 합자 모음</td><td data-label="뜻">같은 자음 둘 · 서로 다른 자음 둘로 된 받침(11개) · 두 모음을 합친 모음(7개, '섞임모음'과 같은 말)</td><td data-label="예">ㄲ · ㄺ · ㅚ</td></tr>
+              <tr><td>짜임</td><td data-label="뜻">글자 전체의 모양 갈래. 모음 모양(세로·가로·합자) × 받침(없음·홑·겹)으로 아홉 가지입니다</td><td data-label="예">가 · 고 · 과 · 각 · 곽</td></tr>
+              <tr><td>자리</td><td data-label="뜻">자모 하나가 놓이는 이름 붙은 위치. 같은 ㄱ도 짜임에 따라 다른 자리에 섭니다</td><td data-label="예"><code>data-fy-pos</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="terms-build">글꼴을 짓는 세 가지 선택</h3>
+        <p>
+          폰꾸 글꼴은 자모 몇 개만 그려도 11,172자를 조립합니다. 글꼴을 지을 때는 세 가지를 고릅니다 — 몇 자모를 직접 그릴지,
+          음절을 몇 조각으로 나눌지, 그리지 않은 자모를 어떻게 지을지.
+        </p>
+        <div class="k-table-scroll">
+          <table class="k-table">
+            <thead><tr><th>선택</th><th>뜻</th><th>값</th></tr></thead>
+            <tbody>
+              <tr><td>그릴 범위</td><td data-label="뜻">직접 그리는 자모의 수. 나머지는 자모 짓기로 채웁니다</td><td data-label="값">원형 8(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ) · 기본 24(자음 14 · 모음 10) · 확장 40(자음 19 · 모음 21)</td></tr>
+              <tr><td>음절 나누기</td><td data-label="뜻">음절을 자모 노드 몇 개로 나누는가. 합자 모음과 겹받침을 따로 정합니다(<a href="#reference-depth">깊이 변수</a>)</td><td data-label="값">낱 · 통짜 · 머리 음절</td></tr>
+              <tr><td>자모 짓기</td><td data-label="뜻">그리지 않은 자모를 얻는 법. 그린 그대로 쓰거나, 조립식(다른 자모의 조각으로 짓는 정해진 방법 — 병서·합용·가획)으로 짓습니다</td><td data-label="값">ㅎ = ㆍ + ㅡ + ㅇ(기본) · ㅗ + ㅇ · ㆆ + 획</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="k-table-scroll">
+          <table class="k-table">
+            <thead><tr><th>음절 나누기</th><th>회</th><th>닭의 받침</th><th>깊이 변수</th></tr></thead>
+            <tbody>
+              <tr><td>낱</td><td data-label="회">ㅎ + ㅗ + ㅣ</td><td data-label="닭의 받침">ㄹ + ㄱ</td><td data-label="깊이 변수"><code>split</code>(줄임 <code>atomic</code>)</td></tr>
+              <tr><td>통짜</td><td data-label="회">ㅎ + ㅚ</td><td data-label="닭의 받침">ㄺ</td><td data-label="깊이 변수"><code>whole</code>(줄임 <code>composite</code>)</td></tr>
+              <tr><td>머리 음절</td><td data-label="회">호 + ㅣ</td><td data-label="닭의 받침">(받침은 낱이나 통짜)</td><td data-label="깊이 변수"><code>syllable</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-example">
+          <div class="d-example-bar"><span>글꼴마다 기본 나누기 — 초성 빨강 · 중성 파랑 · 종성 초록</span></div>
+          <div class="d-pair">
+            <div class="k-stage">
+              <font-kku font="gothic" size="44" class="paint">회 과 닭</font-kku>
+              <span class="d-label">gothic 기본 — 낱: 회 = ㅎ + ㅗ + ㅣ, 받침 ㄹ + ㄱ</span>
+            </div>
+            <div class="k-stage">
+              <font-kku font="sebul" size="44" class="paint">회 과 닭</font-kku>
+              <span class="d-label">sebul 기본 — 머리 음절: 회 = 호 + ㅣ, 받침 ㄺ</span>
+            </div>
+          </div>
+        </div>
+        <p>음절 나누기와 자모 짓기를 함께 고르면 같은 '회'도 네 길로 지을 수 있습니다.</p>
+        <div class="k-table-scroll">
+          <table class="k-table">
+            <thead><tr><th>모양</th><th>음절 나누기</th><th>ㅎ 짓기</th></tr></thead>
+            <tbody>
+              <tr><td>호 + ㅣ</td><td data-label="음절 나누기">머리 음절</td><td data-label="ㅎ 짓기">머리 음절 안의 초성</td></tr>
+              <tr><td>ㅎ + ㅚ</td><td data-label="음절 나누기">통짜</td><td data-label="ㅎ 짓기">그린 ㅎ</td></tr>
+              <tr><td>ㅎ + ㅗ + ㅣ</td><td data-label="음절 나누기">낱</td><td data-label="ㅎ 짓기">그린 ㅎ, 또는 ㆍ + ㅡ + ㅇ</td></tr>
+              <tr><td>ㅗ + ㅇ + ㅗ + ㅣ</td><td data-label="음절 나누기">낱</td><td data-label="ㅎ 짓기">조립식 ㅗ + ㅇ</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="k-note">
+          글꼴마다 기본 나누기에 맞춰 자리를 다듬었습니다. 지금은 기본이 아닌 나누기로 덮으면 자모가 겹치거나 작게 그려질 수 있습니다
+          (예: 통짜 모음 ㅚ, <code>gothic</code>의 통짜 받침, <code>sebul</code>의 낱 모음) — 모든 글꼴에서 모든 나누기를 맞추는 작업을 하고
+          있습니다. 세벌식과 직결식은 나누기가 낱(합자 모음은 조각, 겹받침은 통짜)으로 정해져 있습니다.
+        </p>
+
+        <h3 id="terms-structure-plan">한글 구조와 문자 매핑 (계획)</h3>
+        <p>다음은 앞으로 확장할 기능의 설계 용어이며 아직 구현되지 않았습니다. 한글 원문은 유지하면서
+          ㅣ를 1·I·l·|로, ㅇ을 0·o·O로 그리는 방식입니다. 기존 글꼴 글자 재료를 확장하며,
+          CSS 직접 저작·씨앗 변주·원형 조립·꾸밈·직접 조작을 이어가는 방향입니다.</p>
+        <div class="k-table-scroll">
+          <table class="k-table">
+            <thead><tr><th>말 (계획)</th><th>뜻</th></tr></thead>
+            <tbody>
+              <tr><td>문자 구조</td><td data-label="뜻">원문과 초성·중성·종성·방점의 대응. 기존 문자 정보를 보존하며 옛한글 분석을 덧붙입니다</td></tr>
+              <tr><td>관계 자료</td><td data-label="뜻">문자 결합·제자 설명·그림 재사용·획순을 구별해 기록한 자료</td></tr>
+              <tr><td>조립 계획 확장</td><td data-label="뜻">현재 자모 하나의 원본·조립식·조각을 푸는 계획을 텍스트 전체와 원문 대응으로 넓히는 것</td></tr>
+              <tr><td>표현 재료</td><td data-label="뜻">기존 재료들을 통틀어 설명하는 말. 새 재료 계열이나 face 값은 아닙니다</td></tr>
+              <tr><td>문자 매핑</td><td data-label="뜻">한글 원문을 바꾸지 않고 그릴 글자만 ㅇ→O 등으로 지정하는 것</td></tr>
+              <tr><td>재료 후보</td><td data-label="뜻">고를 문자열·그림·글꼴·맞춤 설정의 묶음. 후보를 고정하거나 기존 자모 씨앗값으로 변주합니다</td></tr>
+              <tr><td>의미 ID</td><td data-label="뜻">선택·편집과 원문 요소의 대응을 유지하는 식별자. 기존 씨앗 계산의 순번을 대신하지 않습니다</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>재료 계열(<code>--fy-material</code>), 재료 축(<code>--fy-face</code>), 디자인 원본 종류는 기존 계약입니다.
+          표현 재료는 그 통칭이고, 재료 후보는 실제로 고르는 자원입니다. 문자 매핑을 별도의 재료 계열로 추가하지 않습니다.</p>
+
+        <h3 id="terms-font">글꼴 = 글꼴 모양 + 재료</h3>
+        <div class="k-table-scroll">
+          <table class="k-table">
+            <thead><tr><th>말</th><th>뜻</th><th>값</th></tr></thead>
+            <tbody>
+              <tr><td>글꼴 모양</td><td data-label="뜻">자모를 어디에, 얼마나 크게·굵게 놓는지의 값 묶음. 이 문서의 <a href="#fonts-layout">배치</a>와 같은 것입니다</td><td data-label="값">세벌식(기본) · 직결식(<code>font="jikgyeol"</code>) · 네모꼴(글꼴 CSS 자기 모양 — 이 문서의 '문맥 배치')</td></tr>
+              <tr><td>재료</td><td data-label="뜻">자모를 무엇으로 그리나. 글꼴 모양과 따로 고릅니다(<a href="#fonts-material">재료</a>)</td><td data-label="값">원소(CSS 선·원) · 그림(SVG) · 글꼴 글자(기기·웹 글꼴) · 그림 자소(자소판)</td></tr>
+              <tr><td>꾸밈 · 변주 · 움직임</td><td data-label="뜻">그 위에 얹는 칠 · 씨앗값만큼의 흔들림 · 동작(<a href="#compose">조합</a>)</td><td data-label="값"><code>kku-look-*</code> · <code>seed</code> · <code>animate</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="terms-studio">작업실에서 쓰는 말</h3>
+        <div class="k-table-scroll">
+          <table class="k-table">
+            <thead><tr><th>말</th><th>뜻</th></tr></thead>
+            <tbody>
+              <tr><td>미리보기 · 살펴보기</td><td data-label="뜻">지금 글꼴로 그린 문장 · 고른 자소의 자리·값·출처·걸린 규칙</td></tr>
+              <tr><td>편집 범위</td><td data-label="뜻">값을 고칠 때 어디까지 바뀌는가 — 자리 가족 · 자리 전체 · 이 자리의 이 자모 · 이 자모(모든 자리) · 문맥(같은 글자에 다른 자모가 있을 때만)</td></tr>
+              <tr><td>대체 · 보정</td><td data-label="뜻">값을 갈아 끼움(자리 범위) · 원래 값 위에 더함(자모·문맥 범위)</td></tr>
+              <tr><td>디자인</td><td data-label="뜻">무엇으로 그리고 어떤 조립식·글꼴 모양을 쓸지 담은 구조 설정(JSON). 글꼴 CSS와 따로 저장합니다(<a href="#design">디자인</a>)</td></tr>
+              <tr><td>프로젝트 · 초안 · 묶음 파일</td><td data-label="뜻">글꼴 CSS·자소판·디자인·그림을 한 파일로 · 브라우저에 자동으로 남는 저장 전 상태 · 디자인과 그 디자인이 쓰는 그림을 한 파일로</td></tr>
+              <tr><td>감사 · 검수 시트</td><td data-label="뜻">그린 결과를 재어 규칙을 넘는지 보는 자동 검사 · 사람이 눈으로 보는 그림 한 벌. 읽히는지는 사람이 보고 판정합니다</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="terms-confusing">헷갈리는 말</h3>
+        <div class="k-table-scroll">
+          <table class="k-table">
+            <thead><tr><th>말</th><th>구별</th></tr></thead>
+            <tbody>
+              <tr><td>깊이</td><td data-label="구별">음절 나누기(<a href="#reference-depth">깊이 변수</a>)와 획 깊이(<a href="#stroke-depth">자모를 획으로</a>)는 다른 말입니다</td></tr>
+              <tr><td>세벌식</td><td data-label="구별">글꼴 모양 세벌식과 입력기 자판 배열 세벌식 390·최종은 다릅니다. 글꼴 id <code>sebul</code>은 세벌식 모양이 아니라 자기 글꼴 CSS 모양(네모꼴)으로 그립니다</td></tr>
+              <tr><td>묶음</td><td data-label="구별">합자 모음·겹받침 조각을 감싸는 노드(<code>part="…-cluster"</code>)와 작업실의 묶음 파일(<code>.fkk-bundle.json</code>)은 다릅니다</td></tr>
+              <tr><td>조립식 · 조합법</td><td data-label="구별">조립식은 자모를 조각으로 짓는 방법, 조합법은 테마가 여섯 축을 고른 차림입니다</td></tr>
+              <tr><td>바탕</td><td data-label="구별">바탕 요소(폰꾸가 그리는 요소)와 여섯 축의 바탕(꾸밈이 사는 배경색)은 다릅니다</td></tr>
+              <tr><td>네모꼴 · 문맥 배치 · 네모 문맥</td><td data-label="구별">같은 것입니다. 문서는 앞으로 '네모꼴'로 맞춥니다</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 

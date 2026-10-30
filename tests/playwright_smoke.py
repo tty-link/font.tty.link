@@ -593,7 +593,7 @@ def assert_public_pages(page, url: str, label: str) -> None:
     )
     if missing:
         raise AssertionError(f"{label}: docs sidebar links to missing sections {missing!r}")
-    for section in ("start", "hosts", "wrap", "customize", "motion", "text", "ai", "api", "dev-tools"):
+    for section in ("start", "hosts", "wrap", "customize", "motion", "text", "ai", "api", "terms", "dev-tools"):
         if page.locator(f"#{section}").count() != 1:
             raise AssertionError(f"{label}: docs is missing the #{section} section")
 
