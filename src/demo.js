@@ -24,9 +24,9 @@
   /* 개발 도구 — 짜임·그리기 검증과 실험 페이지. 공개 메뉴에서 빼고 문서 끝과 서로의
    * 머리말(이전·다음)에서만 잇는다. 브라우저 회귀 테스트가 이 페이지들을 쓴다. */
   var devPages = [
-    { slug: "basic-text", href: "./basic-text.html", title: "기본 글", desc: "기본 세벌식과 네모꼴 글꼴 sebul·gothic을 같은 문장·혼합 콘텐츠·구조 스트레스 문장으로 비교" },
+    { slug: "basic-text", href: "./basic-text.html", title: "기본 글", desc: "기본 세벌식과 sebul(둥근 탈네모꼴)·gothic(네모꼴)을 같은 문장·혼합 콘텐츠·구조 스트레스 문장으로 비교" },
     { slug: "layout-modes", href: "./layout-modes.html", title: "줄바꿈", desc: "글자·낱말·줄 단위 줄바꿈과 포스터형 대형 배치" },
-    { slug: "shape-comparison", href: "./shape-comparison.html", title: "짜임 비교", desc: "네모꼴 글꼴 sebul·gothic의 짜임별 자리를 기기 글꼴 기준과 견주고 문제 글자를 점검" },
+    { slug: "shape-comparison", href: "./shape-comparison.html", title: "짜임 비교", desc: "글꼴을 밝힌 sebul·gothic(글꼴 모양 네모꼴)의 짜임별 자리를 기기 글꼴 기준과 견주고 문제 글자를 점검" },
     { slug: "api-studio", href: "./api-studio.html", title: "놀이터", desc: "render·renderText·createTextModel을 조작하며 DOM·평문·구조 모델을 나란히 확인" },
     { slug: "sprite-demo", href: "./sprite-demo.html", title: "그림 자소 보기", desc: "자소판에서 자소를 잘라 조합하는 계약과 작은 크기 비교" },
     { slug: "animation-catalog", href: "./animation-catalog.html", title: "움직임 훅", desc: "글자 단위 내장 훅·자모 움직임 확장·직접 만드는 자소 훅과 씨앗값 변주" },

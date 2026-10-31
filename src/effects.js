@@ -53,8 +53,16 @@
     if (!text) return dedent(template.innerHTML);
     var box = template.content.ownerDocument.createElement("div");
     box.appendChild(template.content.cloneNode(true));
-    hostsIn(box).forEach(function (host) { host.textContent = text; });
+    hostsIn(box).forEach(function (host) {
+      host.textContent = text;
+      wrapByGlyph(host);
+    });
     return dedent(box.innerHTML);
+  }
+
+  /* 방문자 문장은 띄어 쓰지 않은 긴 낱말일 수 있다 — 낱말 단위 줄바꿈(기본)이면 카드 밖으로 밀어내므로 글자 단위로 바꾼다 */
+  function wrapByGlyph(host) {
+    host.setAttribute(host.localName === "font-kku" ? "wrap-unit" : "data-wrap-unit", "glyph");
   }
 
   function literal(value) {
@@ -166,15 +174,27 @@
     var samples = new Map();
     textCards.forEach(function (card) {
       var originals = hostsIn(card.querySelector("template[data-fx-html]").content);
-      stageHosts(card).forEach(function (host, i) { samples.set(host, originals[i].textContent); });
+      stageHosts(card).forEach(function (host, i) { samples.set(host, originals[i]); });
     });
+    /* 처음 견본의 줄바꿈 단위로 되돌린다(속성이 없었으면 뗀다) */
+    var restoreWrap = function (host, original) {
+      ["wrap-unit", "data-wrap-unit"].forEach(function (name) {
+        if (original.hasAttribute(name)) host.setAttribute(name, original.getAttribute(name));
+        else host.removeAttribute(name);
+      });
+    };
     var shown = "";
     var applyText = function () {
       var text = (textInput.value || "").replace(/\s+/g, " ").trim();
       if (text === shown) return;
       shown = text;
       textCards.forEach(function (card) {
-        stageHosts(card).forEach(function (host) { window.FontKku.refresh(host, { text: text || samples.get(host) }); });
+        stageHosts(card).forEach(function (host) {
+          var original = samples.get(host);
+          if (text) wrapByGlyph(host);
+          else restoreWrap(host, original);
+          window.FontKku.refresh(host, { text: text || original.textContent });
+        });
         document.getElementById("fx-code-" + card.getAttribute("data-fx")).firstChild.textContent = snippet(card, text);
       });
     };

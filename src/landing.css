@@ -567,6 +567,10 @@
   scroll-margin-top: 90px;
 }
 
+.k-shape #make-compose {
+  scroll-margin-top: 90px;
+}
+
 .k-shape .k-sub + .k-note {
   margin-block-start: 0;
 }

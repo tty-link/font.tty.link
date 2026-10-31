@@ -1204,6 +1204,11 @@ def assert_landing_problems(page, url: str, label: str) -> None:
         raise AssertionError(f"{label}: a closed stroke should survive, and drawing should offer keep actions and save a draft {kept!r}")
     page.click("[data-maker-set='claude-pen-1']")
     page.wait_for_function("() => document.querySelector('[data-web-host]').getAttribute('jamo-set') === 'claude-pen-1'")
+    # 모양 × 재료 표의 '그린 8칸' 칸도 고른 세트를 따라간다. 짓는 방식 견본은 원소 획 그대로다(8칸 세트에는 ㅘ 칸이 없다)
+    page.wait_for_function(
+        """() => [...document.querySelectorAll('.k-shape-table [data-follow-set]')].every((h) => h.getAttribute('jamo-set') === 'claude-pen-1' && h.dataset.fyFace === 'svg')
+          && [...document.querySelectorAll('[data-compose] font-kku')].every((h) => !h.hasAttribute('jamo-set') && h.dataset.fyFace === 'element')"""
+    )
     page.click("[data-maker-set='claude-marker-1']")
 
     # 씨앗 변주: 같은 AI 마커 세트로 그린 글자(음절) 노드 넷에 화면의 6줄을 그대로 돌린다 — 글꼴은 같고
@@ -1479,9 +1484,13 @@ def assert_effects_page(page, url: str, label: str) -> None:
       assemble: document.querySelector('#fx-assemble font-kku').dataset.source,
       mine: document.querySelector('#fx-mine font-kku').dataset.source,
       shuffle: [...document.querySelectorAll('#fx-shuffle font-kku')].map((h) => h.dataset.source),
-      type: document.querySelector('#fx-type font-kku').getAttribute('data-kku-phrases'),
+      typeCode: document.getElementById('fx-code-type').textContent.includes('바람이 분다'),
+      compose: [...document.querySelectorAll('#fx-compose font-kku')].map((h) => h.dataset.source),
+      basic: document.querySelector('#fx-basic font-kku').dataset.source,
       origin: document.querySelector('#fx-origin font-kku').dataset.source,
       code: document.getElementById('fx-code-drop').textContent.includes('>바람이 분다</font-kku>'),
+      wrap: document.querySelector('#fx-drop font-kku').getAttribute('wrap-unit'),
+      overflow: document.documentElement.scrollWidth - innerWidth,
     })"""
     page.fill("#fx-text", "바람이 분다")
     page.press("#fx-text", "Enter")
@@ -1490,8 +1499,17 @@ def assert_effects_page(page, url: str, label: str) -> None:
     page.press("#fx-text", "Enter")
     back = page.evaluate(texts)
     if mine["assemble"] != "바람이 분다" or mine["mine"] != "바람이 분다" or mine["shuffle"] != ["바람이 분다"] * 2 or not mine["code"] or \
-            mine["type"] != back["type"] or mine["origin"] != back["origin"] or back["assemble"] != "한글 조립" or back["code"]:
+            mine["typeCode"] or mine["compose"] != ["화요일 과일"] * 2 or mine["basic"] != "떠올라" or mine["origin"] != back["origin"] or \
+            mine["wrap"] != "glyph" or back["assemble"] != "한글 조립" or back["code"] or back["wrap"] is not None:
         raise AssertionError(f"{label}: '내 문장으로 보기' should redraw the samples and their code, got {mine!r} → {back!r}")
+    # 띄어 쓰지 않은 긴 문장도 카드 안에서 글자 단위로 줄을 바꾼다 — 페이지가 옆으로 밀리지 않는다
+    page.fill("#fx-text", "안녕하세요여러분반갑습니다오늘도좋은하루")
+    page.press("#fx-text", "Enter")
+    long = page.evaluate(texts)
+    page.fill("#fx-text", "")
+    page.press("#fx-text", "Enter")
+    if long["overflow"] > 0:
+        raise AssertionError(f"{label}: an unspaced visitor sentence should wrap inside the cards, page overflow {long['overflow']}px")
 
 
 def assert_shared_demo_chrome(page, label: str, slug: str, next_slug: str) -> None:

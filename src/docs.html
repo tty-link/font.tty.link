@@ -82,8 +82,8 @@
         <ul class="d-quick">
           <li><a href="#start"><span>1</span>한 줄로 붙이기</a></li>
           <li><a href="#fonts"><span>2</span>글꼴 고르기</a></li>
-          <li><a href="#make"><span>3</span>8칸 그려 글꼴 만들기</a></li>
-          <li><a href="#ai"><span>4</span>AI에게 맡기기</a></li>
+          <li><a href="#ai"><span>3</span>AI에게 맡기기</a></li>
+          <li><a href="#make"><span>4</span>8칸 그려 글꼴 만들기</a></li>
         </ul>
       </header>
 
@@ -397,7 +397,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
             <tbody>
               <tr><td class="d-swatch-cell"><span class="d-swatch"><font-kku size="30">세벌식</font-kku></span></td><td data-label="font">(비움)</td><td data-label="기반">기본 — <code>sebul</code> CSS 위에 짓습니다</td><td data-label="모양"><strong>처음엔 이것.</strong> 세벌식 — 짜임마다 다듬은 자리로, 받침 없는 글자는 아래를 비우고 받침 있는 글자는 칸을 다 씁니다(<a href="#fonts-layout">글꼴 모양</a>)</td><td data-label="바탕">아무 바탕</td></tr>
               <tr><td class="d-swatch-cell"><span class="d-swatch"><font-kku font="jikgyeol" size="30">직결</font-kku></span></td><td data-label="font"><code>jikgyeol</code></td><td data-label="기반"><code>sebul</code></td><td data-label="모양">직결식 — 세벌 타자기처럼 자모마다 어느 글자에서나 한 자리, 아래 끝이 들쭉날쭉합니다. 0.1.1–0.1.3의 기본 모양</td><td data-label="바탕">아무 바탕</td></tr>
-              <tr><td class="d-swatch-cell"><span class="d-swatch"><font-kku font="sebul" size="30">세벌</font-kku></span></td><td data-label="font"><code>sebul</code></td><td data-label="기반">기본 제공</td><td data-label="모양">네모꼴로 그리는 세벌 글꼴 — 모음·받침에 따라 자리와 크기가 바뀌는 둥근 조합. 글꼴을 비운 기본 세벌식과는 다른 글꼴입니다</td><td data-label="바탕">아무 바탕</td></tr>
+              <tr><td class="d-swatch-cell"><span class="d-swatch"><font-kku font="sebul" size="30">세벌</font-kku></span></td><td data-label="font"><code>sebul</code></td><td data-label="기반">기본 제공</td><td data-label="모양">둥근 탈네모꼴 세벌 글꼴 — 글꼴 모양은 네모꼴이라 이 글꼴 CSS가 모음·받침에 따라 자리와 크기를 정합니다. 글꼴을 비운 기본 세벌식과는 다른 글꼴입니다</td><td data-label="바탕">아무 바탕</td></tr>
               <tr><td class="d-swatch-cell"><span class="d-swatch"><font-kku font="gothic" size="30">고딕</font-kku></span></td><td data-label="font"><code>gothic</code></td><td data-label="기반">기본 제공</td><td data-label="모양">음절 높이를 묶는 단정한 네모꼴</td><td data-label="바탕">아무 바탕</td></tr>
               <tr><td class="d-swatch-cell"><span class="d-swatch" data-tone="dark"><font-kku font="neon" size="30">네온</font-kku></span></td><td data-label="font"><code>neon</code></td><td data-label="기반"><code>sebul</code></td><td data-label="모양">속을 비운 획과 겹 그림자 빛번짐</td><td data-label="바탕"><strong>어두운 바탕 필수</strong></td></tr>
               <tr><td class="d-swatch-cell"><span class="d-swatch" data-tone="pink"><font-kku font="sticker" size="30">스티커</font-kku></span></td><td data-label="font"><code>sticker</code></td><td data-label="기반"><code>sebul</code></td><td data-label="모양">역할별 색, 흰 테두리, 뜬 그림자</td><td data-label="바탕"><strong>색 바탕</strong> (흰 바탕이면 테두리가 안 보임)</td></tr>
@@ -434,7 +434,8 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
           받침을 오른쪽 아래에 둡니다. ㅘ는 ㅗ 조각과 ㅏ 조각으로 찍습니다.
           <strong>직결식</strong>(<code>font="jikgyeol"</code>)은 세벌 타자기처럼 같은 초성 ㄱ을 가·고·과·각·곽 어디서나 같은 자리와 크기로 찍고
           받침 자리는 늘 비워 둡니다 — 0.1.1–0.1.3의 기본 모양입니다. <code>font="sebul"</code>처럼 그 밖의 세벌·고딕 계열 글꼴을 밝히면 그 글꼴 CSS의 자기 모양
-          <strong>네모꼴</strong>로 그립니다 — 모음과 받침에 따라 자리와 크기가 바뀌고, 과·궈 같은 음절은 머리 음절(고·구)에 나머지 모음을 붙입니다.
+          <strong>네모꼴</strong>로 그립니다 — 모음과 받침에 따라 자리와 크기가 바뀝니다. <code>sebul</code>(과 파생 <code>malang</code>)은 과·궈 같은 음절을 머리 음절(고·구)에 나머지 모음을 붙여 짓습니다.
+          여기서 네모꼴은 글꼴 모양(자리를 정하는 방식)의 이름이고, 글자의 바깥 모양은 글꼴마다 달라 <code>sebul</code>은 둥근 탈네모꼴, <code>gothic</code>은 네모꼴입니다.
           세 모양은 한 엔진에 주는 값만 다르고, 어느 재료(원소 획·그림 세트·기기 글꼴)에도 그대로 걸립니다.
         </p>
         <div class="d-example">
@@ -474,7 +475,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
           </table>
         </div>
         <ul>
-          <li>글꼴 모양은 <code>FontKku.fontInfo(host).layout</code>(<code>{ profile, revision, model }</code>, 네모꼴이면 <code>null</code>)으로 읽습니다. 모양 이름 <code>model</code>(<code>case-fixed</code>·<code>fixed-three</code>·<code>adaptive-square</code>)은 여기서 읽고, 바탕 요소에는 <code>data-fy-layout</code>만 붙습니다.</li>
+          <li>글꼴 모양은 <code>FontKku.fontInfo(host).layout</code>(<code>{ profile, revision, model }</code>)으로 읽습니다. 글꼴 이름만 밝힌 네모꼴(<code>font="sebul"</code> 등)이면 <code>null</code>이고, <code>--fy-layout: square-context-v1</code>로 고르면 <code>model: "adaptive-square"</code>입니다. 모양 이름 <code>model</code>(<code>case-fixed</code>·<code>fixed-three</code>·<code>adaptive-square</code>)은 여기서 읽고, 바탕 요소에는 <code>data-fy-layout</code>만 붙습니다.</li>
           <li>페이지 CSS <code>--fy-layout</code>(<code>sebul-cases-v1</code>·<code>sebul-fixed-v1</code>·<code>square-context-v1</code>)로 글꼴 모양만 따로 고를 수 있습니다. 고르지 않아도 됩니다. 글꼴과 글꼴이 고른 디자인의 모양을 이기고, 페이지 <code>--fy-design</code>으로 고른 디자인에 <code>layout</code>이 있으면 그것이 이깁니다. 고르지 못하면 <code>data-fy-layout-status</code>에 까닭(<code>LAYOUT_NOT_REGISTERED</code>·<code>LAYOUT_UNSUPPORTED_FONT</code>)을 남깁니다.</li>
           <li>페이지 CSS가 이웃 자모를 보고(<code>:has()</code> 같은 문맥 선택자) 자모를 옮기면 세벌식·직결식의 고정 자리가 깨집니다. <code>FontKku.layoutStability(host)</code>가 그린 결과에서 같은 역할·자모(세벌식은 같은 짜임까지)가 모두 같은 자리인지 재서 <code>stable: false</code>와 어긋난 자모(<code>"initial ᄀ v1"</code>)를 돌려줍니다(<a href="#api-layout">글꼴 모양 확인</a>).</li>
           <li>글꼴 모양은 <a href="#design">디자인</a>으로도 고르고, 디자인의 모양이 글꼴(<code>jikgyeol</code>)의 모양을 이깁니다. 세 재료(원소·기기 글꼴·그림 세트)는 같은 모양을 씁니다 — 재료를 바꿔도 자리는 그대로입니다(<a href="#fonts-faces">재료 바꾸기</a>).</li>
@@ -1483,7 +1484,7 @@ render_html("광화문", composition="syllable")  # 짓는 방식 — 고르지 
         </p>
         <p>
           아래 8칸 프롬프트는 글꼴을 적지 않아, 받은 8칸을 기본 세벌식에 겁니다. <a href="./index.html#ai">소개 페이지</a>에 고치지 않고 실은 Claude Code의 답은
-          이 프롬프트와 한 곳만 다른 앞 글로 받았습니다 — 제목 태그에 <code>font="sebul"</code>을 적었습니다. 그래서 그 답들은 답이 적은 대로 네모꼴 글꼴 <code>sebul</code>로 그립니다.
+          이 프롬프트에서 느낌 줄만 바꾸고 제목 태그에 <code>font="sebul"</code>을 적게 한 예전 프롬프트로 받았습니다(풍선 글씨 둘째 답은 이어서 한 부탁에 받은 답). 그래서 그 답들은 답에 적힌 대로 <code>sebul</code> 글꼴로 그립니다.
           그린 8칸은 재료라 글꼴 모양과 따로 고릅니다(<a href="#fonts-faces">글꼴 모양 × 재료</a>). 대화창에 링크만 주고 받은 답은 아직 싣지 않았습니다.
         </p>
         <ol class="k-steps">
@@ -1609,11 +1610,11 @@ cp -R skills/font-kku-use ~/.claude/skills/</code></pre>
         <ul>
           <li><strong>페이지 넷</strong>: 디자인(재료·글꼴 모양·짓는 방식·그리기) · 고치기(미리보기에서 자모를 눌러 끌어 고치기) · 자소판(그림 자소 글꼴의 칸) · 검수(실제 글자로 판정·메모). 한 문서 안에서 바뀌어 페이지를 오가도 고친 것과 되돌리기 기록이 이어집니다. 주소 <code>?page=design</code> · <code>edit</code> · <code>sheet</code> · <code>review</code>로 그 페이지를 바로 엽니다(옛 주소 <code>#studio-material</code>은 자소판).</li>
           <li><strong>쉬운 모드 · 정밀 모드</strong>: 머리 막대의 '쉬운 / 정밀'로 바꿉니다. 작업실은 쉬운 모드로 열리고, 머리 막대에서 바꾼 보기는 그 브라우저가 기억합니다(주소 <code>?mode=easy</code> · <code>?mode=precise</code>가 먼저). 쉬운 모드는 보이는 글자 · 위치 · 크기만, 정밀 모드는 비교 칸 · 조립식 · 규칙 · 편집 범위 · 출처 · 글꼴 CSS 원문까지 보입니다. 보기만 바뀌고 데이터 · 되돌리기 · 저장은 같습니다.</li>
-          <li><strong>머리 막대</strong>: 글꼴 ▾(기본 제공 글꼴 견본, 맨 위 '파일 열기…') · 저장 · 내보내기 ▾ · 되돌리기 · 다시, 그 옆에 알림 한 줄. 바로 아래가 미리보기입니다. 저장은 글꼴 묶음 한 파일(<code>&lt;이름&gt;.font-kku.json</code> — CSS · 디자인 · 그림 · 자소판 · 검수)이고, 다시 열면 그대로입니다. 내보내기에는 CSS만 내려받기(빠지는 것을 알려 줍니다) · CSS 복사 · '내 페이지에 쓰기 — 코드 복사'(런타임 · 글꼴 CSS · 그린 그림 세트 · 디자인 등록을 한 덩어리로) · 글꼴 묶음 파일 · 글꼴 파일(TTF) · 자소판 PNG · 그림 세트 <code>.jamo.js</code>가 있습니다. Cmd/Ctrl+Z 한 번이 CSS · 디자인 · 그림 · 자소판 · 검수 어느 편집이든 마지막 일을 되돌립니다.</li>
+          <li><strong>머리 막대</strong>: 글꼴 ▾(기본 제공 글꼴 견본, 맨 위 '파일 열기…') · 저장 · 내보내기 ▾ · 되돌리기 · 다시, 그 옆에 알림 한 줄. 바로 아래가 미리보기입니다. 저장은 글꼴 묶음 한 파일(<code>&lt;이름&gt;.font-kku.json</code> — CSS · 디자인 · 그림 · 자소판 · 검수)이고, 다시 열면 그대로입니다. 내보내기에는 CSS만 내려받기(빠지는 것을 알려 줍니다) · CSS 복사 · '내 페이지에 쓰기 — 코드 복사'(런타임·글꼴 CSS를 잇는 태그와 그린 그림 세트·디자인 등록 — 페이지 옆에 둘 파일은 코드 주석이 알려 주고, 글꼴 CSS는 'CSS만 내려받기'로 받습니다) · 글꼴 묶음 파일 · 글꼴 파일(TTF) · 자소판 PNG · 그림 세트 <code>.jamo.js</code>가 있습니다. Cmd/Ctrl+Z 한 번이 CSS · 디자인 · 그림 · 자소판 · 검수 어느 편집이든 마지막 일을 되돌립니다.</li>
           <li><strong>기본 제공 글꼴을 고치면</strong>: <code>sebul</code>·<code>gothic</code> 같은 기본 제공 글꼴은 고친 채 같은 이름으로 저장 · CSS 내보내기 · 복사하지 않습니다. 처음 저장할 때 새 이름(<code>my-&lt;글꼴&gt;</code>을 제안)을 묻고 '이 글꼴로 새 글꼴'과 같은 <a href="#make-derived">파생 글꼴</a>로 저장합니다 — 바탕 글꼴 CSS를 파일 안 구간에 옮겨 고정하고, 고친 것은 그 아래 손 보정으로 적습니다.</li>
           <li><strong>디자인</strong>: 재료('선·원으로 만들기' · '직접 그려 만들기' · '기존 글꼴로 만들기')와 글꼴 모양(세벌식 · 직결식 · 네모꼴)을 따로 고릅니다. 바꾸기 전에 사라질 규칙이 있으면 먼저 묻습니다. '기존 글꼴로 만들기'는 <strong>글자로 만들기</strong> 칸(실험)에서 자모마다 그 글꼴의 어느 글자로 그릴지 고릅니다. 정밀 모드에는 비교 칸, 조립식 · 조각 소스(조각마다 고른 재료), 글꼴 팔레트(실험, 씨앗 섞기), 출처(무엇으로 · 어디서 · 어느 규칙으로 그렸는지), 규칙 목록(조건 → 결과 한 줄씩 더하고 고칩니다), 디자인 JSON(실험 — <a href="#design">디자인</a>)이 있습니다. 규칙이 고른 글꼴 모양과 맞지 않으면 '이 모양과 맞지 않는 규칙' 칸이 알립니다.</li>
           <li><strong>짓는 방식</strong>: 디자인 페이지의 접힌 한 줄 '짓는 방식'(처음엔 '모양대로 — 고르지 않아도 됩니다'). 쉬운 모드는 그림 단추 여섯(모양대로 · 음절로 · 겹모음 통째로 · 자모로 · 조각으로 · 원형으로)이 지금 글꼴로 '화 흙'을 그려 보이고, 지금 재료로 못 짓는 단추는 까닭과 함께 막혀 있습니다. 정밀 모드는 모음 나누기 · 받침 나누기 · 조각 깊이를 따로 고르고, 글꼴 모양 × 프리셋 지원표와 '자모마다 조립식 고르기'가 있습니다(<a href="#fonts-composition">짓는 방식</a>).</li>
-          <li><strong>그리기</strong>: '직접 그려 만들기'로 원형 8(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)부터 그립니다. 그리지 않은 자모는 기본 세트와 조립식이 대신 그려 문장 미리보기에 바로 보이고, 기본 24 · 확장 40칸은 더 다듬고 싶을 때 고르는 것이지 거쳐야 할 단계가 아닙니다. 다른 도구나 AI가 그린 SVG는 'SVG 가져오기 — AI·다른 도구에서'에 붙여 '이 칸에 가져오기'로 한 칸씩, 여러 칸이 든 답은 '칸마다 나눠 가져오기'로 칸 이름대로 나눠 미리 본 뒤 한 번에 넣습니다. 남은 칸은 '남은 칸 한 번에 부탁하는 글 복사'로 AI에게 맡깁니다. 고른 획만 돌리는 부분 회전과 '다 그린 칸만' 보기도 있습니다. 가져온 SVG는 허용한 도형만 넣고, 조립된 자모는 독립 그림으로 떼어 내 고칠 수 있습니다.</li>
+          <li><strong>그리기</strong>: '직접 그려 만들기'로 원형 8(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)부터 그립니다. 그리지 않은 자모는 기본 세트와 조립식이 대신 그려 문장 미리보기에 바로 보이고, 기본 24 · 확장 40칸은 더 다듬고 싶을 때 고르는 것이지 거쳐야 할 단계가 아닙니다. 다른 도구나 AI가 그린 SVG는 'SVG 가져오기 — AI·다른 도구에서'에 붙여 '이 칸에 가져오기'로 한 칸씩, 여러 칸이 든 답은 '칸마다 나눠 가져오기'로 칸 이름대로 나눠 미리 본 뒤 한 번에 넣습니다. 남은 칸은 '남은 n칸 한 번에 부탁하는 글 복사'로 AI에게 맡깁니다. 고른 획만 돌리는 부분 회전과 '다 그린 칸만' 보기도 있습니다. 가져온 SVG는 허용한 도형만 넣고, 조립된 자모는 독립 그림으로 떼어 내 고칠 수 있습니다.</li>
           <li><strong>고치기</strong>: 미리보기에서 자모를 눌러 고르고 끌어 옮기거나 손잡이로 크기 · 회전을 바꿉니다(방향키 · <code>+ −</code> · <code>[ ]</code>도). 누른 점의 잉크로 고르므로 겹친 자모도 그린 획을 누르면 잡히고, 같은 점을 다시 누르면 그 아래 다음 자모로 돕니다. 휴대폰에서는 두드려 고릅니다. 세벌식 · 직결식 · 네모꼴 모두 같은 범위로 고칩니다. 쉬운 모드는 이 글자만 · 같은 짜임 모두 · 이 자모 어디서나 가운데서 고르고 막대로 고치며, 바뀔 글자에 점선과 '미리보기 n곳 · 현대 한글 n자'가 보입니다. 정밀 모드는 편집 범위 여덟(넓은 것부터 — 좁은 범위가 늘 이깁니다)과 문맥 조건, 지금 보이는 값 칸, 걸린 규칙, 글꼴 CSS 원문 고쳐 쓰기, 글꼴 계약 검사(줄 번호)가 있습니다. 원문의 그 선언만 고칩니다.</li>
           <li><strong>자소판</strong>: 그림 자소 글꼴의 자음 19 + 모음 21칸을 칸마다 그립니다. 쉬운 모드는 펜 · 지우개와 채우기 하나 · 비우기 하나, 정밀 모드에 페인트 통 · 직선 · 사각형 · 색 · 안내선 · 광학 보정이 더해집니다. PNG를 가져와 칸에 맞추고, SVG 자소판을 열어 픽셀로 고치면 옆의 PNG로 저장합니다(획 자체는 SVG를 직접 고칩니다). 옛 그림 자소 프로젝트(v1 JSON)는 작업실에서 열지 않습니다 — 폰꾸 저장소의 <code>node scripts/convert_sprite_project_v1.js &lt;v1.json&gt;</code>이 글꼴 묶음으로 바꾸고, 그것을 '파일 열기'로 엽니다.</li>
           <li><strong>검수</strong>: 대표 낱말 · 짜임과 받침 · 헷갈리는 글자 · 문장과 띄어쓰기를 16 · 24 · 48px과 120px 머리글로 보고 통과 · 고칠 것 · 보류와 메모를 남깁니다. 꾸밈 · 바탕을 입혀 볼 수 있고(판정은 그대로입니다), 글꼴이 바뀌면 모양이 바뀐 항목만 '다시 검수'가 됩니다. 정밀 모드에서는 비교 기준을 저장해 두고 차이를 칠해 봅니다.</li>
@@ -1893,7 +1894,7 @@ FontKku.designs();                <span class="d-out">// 등록된 이름들</sp
               <tr><td><code>refreshAll(root?)</code></td><td data-label="돌려줌" class="d-sig"><code>HTMLElement[]</code></td><td data-label="하는 일">현재 스타일로 글꼴 메타데이터를 다시 해석합니다. 구조가 바뀌면 다시 만들고, 벡터 자소의 행만 바뀌면 해당 SVG를 교체하며 자모 트리는 유지합니다. shadow root 안도 포함하고, 메타데이터·구조·벡터 칠이 바뀐 바탕 요소를 돌려줍니다.</td></tr>
               <tr><td><code>retryFont(host)</code></td><td data-label="돌려줌" class="d-sig"><code>HTMLElement | null</code></td><td data-label="하는 일">현재 URL의 글꼴·자모 세트 자동 로딩을 다시 시도합니다. 연결된 진행 중 요청은 공유합니다. 관리 중인 바탕 요소와 자동 로딩 기준 주소가 있으면 그 요소, 없으면 <code>null</code>을 돌려줍니다.</td></tr>
               <tr><td><code>loadFont(href, { root }?)</code></td><td data-label="돌려줌" class="d-sig"><code>Promise&lt;HTMLElement[]&gt;</code></td><td data-label="하는 일">글꼴 CSS를 <code>&lt;link&gt;</code>로 넣고 도착하면 다시 해석합니다.</td></tr>
-              <tr><td><code>fontInfo(host)</code></td><td data-label="돌려줌" class="d-sig"><code>FontInfo | null</code></td><td data-label="하는 일">직전 그리기의 <code>{ font, id, contract, material, face, design, designStatus, layout, loaded }</code> — 재료(<code>element</code>·<code>device</code>·<code>svg</code>), 디자인과 못 쓴 까닭, 글꼴 모양(<code>{ profile, revision, model }</code>, 네모꼴이면 <code>null</code>). 그리기 전이면 <code>null</code>.</td></tr>
+              <tr><td><code>fontInfo(host)</code></td><td data-label="돌려줌" class="d-sig"><code>FontInfo | null</code></td><td data-label="하는 일">직전 그리기의 <code>{ font, id, contract, material, face, design, designStatus, layout, loaded }</code> — 재료(<code>element</code>·<code>device</code>·<code>svg</code>), 디자인과 못 쓴 까닭, 글꼴 모양(<code>{ profile, revision, model }</code>, 글꼴 이름만 밝힌 네모꼴이면 <code>null</code>). 그리기 전이면 <code>null</code>.</td></tr>
               <tr><td><code>decomposeGlyph(char, index?, depth?)</code></td><td data-label="돌려줌" class="d-sig"><code>Glyph</code></td><td data-label="하는 일">한 글자를 분해해 짜임(<code>topology</code>)과 자모를 돌려줍니다.</td></tr>
               <tr><td><code>createTextModel(text, depth?)</code></td><td data-label="돌려줌" class="d-sig"><code>TextModel</code></td><td data-label="하는 일">줄 → 낱말·공백 → 글자 트리. 모든 그리기 경로가 이 트리를 씁니다.</td></tr>
               <tr><td><code>isHangulSyllable(char?)</code></td><td data-label="돌려줌" class="d-sig"><code>boolean</code></td><td data-label="하는 일">완성형 한글 음절인지.</td></tr>
@@ -2436,7 +2437,7 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
               <tr><td>규칙 목록</td><td data-label="뜻">디자인 규칙을 조건 → 결과 한 줄씩 보이고 더하고 고치는 목록(정밀 모드). 디자인 JSON으로 쓴 것과 같습니다</td></tr>
               <tr><td>이 모양과 맞지 않는 규칙</td><td data-label="뜻">고른 글꼴 모양이 그릴 수 없는 규칙(막음)이나 그 모양의 원칙을 깨는 규칙(경고)을 알리는 칸</td></tr>
               <tr><td>글자로 만들기</td><td data-label="뜻">영문·숫자·기호 같은 글자를 자모 획을 닮게 늘이고 돌려 한글로 짓는 것(문자 매핑)</td></tr>
-              <tr><td>칸마다 나눠 가져오기</td><td data-label="뜻">AI 답(여러 칸 SVG)을 통째로 붙이면 칸 이름으로 나눠 미리 보이고 한 번에 넣는 것. '남은 칸 한 번에 부탁하는 글'이 그 답의 꼴을 알려 줍니다</td></tr>
+              <tr><td>칸마다 나눠 가져오기</td><td data-label="뜻">AI 답(여러 칸 SVG)을 통째로 붙이면 칸 이름으로 나눠 미리 보이고 한 번에 넣는 것. '남은 n칸 한 번에 부탁하는 글'이 그 답의 꼴(칸마다 <code>&lt;svg data-jamo&gt;</code>)을 알려 줍니다. 8칸 프롬프트의 답(<code>registerJamo</code> 코드)은 칸마다 경로를 '이 칸에 가져오기'로 넣습니다</td></tr>
               <tr><td>글꼴 묶음</td><td data-label="뜻">'저장'이 쓰는 한 파일(<code>&lt;id&gt;.font-kku.json</code>) — CSS · 디자인 · 그림 · 자소판 · 검수. 다시 열면 그대로입니다</td></tr>
               <tr><td>프로젝트 · 초안 · 디자인 묶음</td><td data-label="뜻">예전 저장 파일(지금은 열기만 합니다) · 브라우저에 자동으로 남는 저장 전 상태 · 디자인과 그 디자인이 쓰는 그림만 담은 파일(정밀 모드, <code>.fkk-bundle.json</code>)</td></tr>
               <tr><td>하나의 기록</td><td data-label="뜻">CSS · 디자인 · 그림 · 자소판 · 검수 편집이 한 줄씩 쌓이는 기록. Cmd/Ctrl+Z 한 번이 마지막 일을 되돌립니다</td></tr>

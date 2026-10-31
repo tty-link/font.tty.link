@@ -282,7 +282,7 @@
               <code>font</code>를 적지 않은 <code>&lt;font-kku&gt;</code>는 <strong>세벌식</strong>으로 그립니다. 같은 짜임(모음 모양 × 받침)의 같은
               자모는 어디서나 같은 자리, 같은 크기이고, 받침 없는 글자는 아래를 비우며 받침 있는 글자는 칸을 다 씁니다.
               <code>font="jikgyeol"</code>은 <strong>직결식</strong>으로, 같은 역할의 같은 자모가 11,172자 어디서나 같은 자리, 같은 크기입니다(0.1.1–0.1.3의 기본).
-              <code>font="sebul"</code>처럼 글꼴 이름을 밝히면 그 글꼴의 <strong>네모꼴</strong>로, 모음과 받침에 따라 자모의 자리와 크기가 바뀌어 글자마다 꽉 찹니다(0.1.0까지의 기본).
+              <code>font="sebul"</code>처럼 글꼴 이름을 밝히면 글꼴 모양 <strong>네모꼴</strong>로, 그 글꼴 CSS가 모음과 받침에 따라 자모의 자리와 크기를 정합니다(0.1.0까지의 기본). 네모꼴은 자리를 정하는 방식의 이름이고, 글자 바깥 모양은 글꼴마다 달라 <code>sebul</code>은 둥근 탈네모꼴, <code>gothic</code>은 네모꼴입니다.
               글꼴 모양은 재료와 따로 고릅니다 — 글꼴을 비운 글에 페이지 CSS <code>--fy-layout</code>(<code>sebul-fixed-v1</code> · <code>square-context-v1</code>)을 주면 원소 획·그림 세트·기기 글꼴 어느 재료로든 직결식·네모꼴이 됩니다.
             </p>
             <div class="k-vs k-vs--three">
@@ -389,7 +389,7 @@
             <article class="fl-card fl-card--wide">
               <div class="k-stage fl-sample" data-tone="linen"><font-kku font="jasu" size="44">글꼴 파일</font-kku></div>
               <h3>자소판 40칸 — 글꼴 파일이 필요할 때</h3>
-              <p>워드·키노트·피그마에서 쓸 TTF가 필요하면 자소판을 그립니다. 자음 19·모음 21, 40칸을 음절 속 제자리에 그린 판이라, 11,172자 글꼴 파일을 서버 없이 브라우저에서 만듭니다. <strong>그림 세트(<code>jamo-set</code>)는 8칸이든 다 그렸든 아직 글꼴 파일이 되지 않습니다.</strong></p>
+              <p>워드·키노트·피그마에서 쓸 TTF가 필요하면 자소판을 그립니다. 자음 19·모음 21, 40칸을 음절 속 제자리에 그린 판이라, 11,172자 글꼴 파일을 서버 없이 브라우저에서 만듭니다. <strong>칸 계약 그림 세트(<code>frame: "box"</code> — 8칸이든 다 그렸든)는 아직 글꼴 파일이 되지 않습니다.</strong></p>
               <div class="fl-actions">
                 <a class="k-btn k-btn--small k-btn--primary" href="./font-studio.html?font=sprite-example&amp;page=sheet">자소판 그리기</a>
                 <button type="button" class="k-btn k-btn--small" data-lab-export="jasu">자수 TTF 받기</button>
@@ -445,7 +445,7 @@
             lead: "기본 제공 세트(<code>pilgi-box</code>·<code>dunggeun-box</code>·<code>butgeul-box</code>)는 필기·둥근·붓 그림 자소판 글꼴과 같은 획 뼈대로 자모를 모두 그렸고, " +
               "AI 세트는 소개에 실은 답의 8칸입니다. 그림 세트는 재료라 글꼴 모양과 따로 고릅니다 — 아래 줄은 기본 세벌식에 걸었고, 같은 태그에 " +
               "<code>style=\"--fy-layout: sebul-fixed-v1\"</code>(직결식)이나 <code>square-context-v1</code>(네모꼴)을 주면 다른 모양에도 겁니다. " +
-              "AI 답은 제목 태그에 <code>font=\"sebul\"</code>을 적은 앞 프롬프트로 받았습니다."
+              "AI 답은 제목 태그에 <code>font=\"sebul\"</code>을 적게 한 예전 프롬프트로 받았습니다."
           },
           { id: "sprite", name: "그림 자소판", note: "직접 그린 자소판(SVG)으로 긋는 글꼴 — 획 모양이 다르다" },
           { id: "texture", name: "획 표현", note: "같은 자소판 자리에 획 표현만 바꾼 글꼴" },
@@ -497,13 +497,16 @@
         /* 정본 소개 가운데 sebul을 기본이라 적거나 옛 말(배치·짜임)을 쓴 것은 고쳐 보인다 — 기본은 글꼴을 비운 세벌식이고,
          * sebul의 글꼴 모양은 네모꼴이다(용어집). */
         var DESC = {
-          sebul: "모음과 받침에 따라 자모의 자리·크기를 바꿔 글자마다 꽉 차는 네모꼴입니다. 0.1.0까지 글꼴을 비운 글이 이 모양이었습니다. " +
+          sebul: "받침 유무에 따라 글줄이 흐르는 둥근 탈네모꼴입니다. 글꼴 모양은 네모꼴이라 이 글꼴 CSS가 모음과 받침에 따라 자리·크기를 정합니다. 0.1.0까지 글꼴을 비운 글이 이 모양이었습니다. " +
             "기본 세벌식도 이 글꼴 CSS 위에 지어, 한 줄 설치의 data-fonts에는 sebul을 적습니다.",
           jikgyeol: "세벌식 타자기처럼 초성·중성·종성을 어느 글자에서나 같은 자리·같은 크기로 찍는 직결식입니다. 0.1.1–0.1.3에서 글꼴을 비운 글이 이 모양이었습니다.",
-          malang: "sebul의 자리에 자리마다 다른 기울기를 줘 손으로 오려 붙인 듯 흔들리는 리듬. 같은 글은 언제나 같은 모양입니다.",
+          malang: "세벌(sebul) 글꼴의 자리에 자리마다 다른 기울기를 줘 손으로 오려 붙인 듯 흔들리는 리듬. 같은 글은 언제나 같은 모양입니다.",
           "sprite-system": "직접 그린 SVG 자소판에서 자모마다 잰 자리로 짓는 그림 자소 글꼴입니다. 필기·둥근·붓 획과 도트·도장·분필·크레용·자수 획 표현이 이 자소판의 자리를 씁니다.",
           "sprite-example": "자리 기본값 그대로인 출발용 자소판. 작업실의 자소판 페이지에서 내 자소를 그려 넣습니다."
         };
+
+        /* 정본 쓰임이 '기본 제목'이라 기본 세벌식 줄과 헷갈리는 것 — fonts.md 글꼴 표의 쓰임 */
+        var USE = { sebul: "포스터 제목" };
 
         function fontItem(id, font) {
           var tone = font.tone || "light";
@@ -538,6 +541,7 @@
         var FONTS = [DEFAULT_FONT].concat(Object.keys(T.fonts).map(function (id) {
           var item = fontItem(id, T.fonts[id]);
           if (DESC[id]) item.desc = DESC[id];
+          if (USE[id]) item.use = USE[id];
           return item;
         }));
 

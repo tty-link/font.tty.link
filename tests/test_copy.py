@@ -26,7 +26,8 @@ RETIRED = {
     "역할 도장": "모양 값",
     "페이지용 코드 복사": "내보내기 ▾ → 내 페이지에 쓰기",
 }
-OLD_NAME_NOTE = re.compile(r"예전|그때 이름")
+OLD_NAME_NOTE = re.compile(r"예전 이름|그때 이름|예전의 |예전 이 문서|예전 '")
+ATTRIBUTE = re.compile(r'data-label="[^"]*"')  # 판 표의 '예전처럼' 칸 이름은 옛 이름 풀이가 아니다
 
 
 def site_files():
@@ -40,6 +41,7 @@ class RetiredTerms(unittest.TestCase):
         found = []
         for path in site_files():
             for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                line = ATTRIBUTE.sub("", line)
                 for old, new in RETIRED.items():
                     if old in line and not OLD_NAME_NOTE.search(line):
                         found.append(f"{path.relative_to(SRC)}:{number}: '{old}' → '{new}'")

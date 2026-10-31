@@ -256,6 +256,8 @@
     var hasCells = state.mode !== "draw" || Object.keys(currentCells()).length > 0;
     followers().forEach(function (node) {
       var attr = setAttrOf(node);
+      /* 모양 × 재료 표의 '그린 8칸' 칸은 그린 칸이 하나도 없으면 앞 세트를 그대로 둔다 — 비우면 원소 획 칸과 같아진다 */
+      if (!hasCells && node.closest(".k-shape")) return;
       node.style.setProperty("--fy-element-width", widthFor(node));
       if (hasCells) {
         if (node.getAttribute(attr) !== setName) node.setAttribute(attr, setName);
