@@ -170,7 +170,7 @@
 
         <p class="k-lead k-land-lead">
           <span class="k-jamo-line">ㄱ ㄴ ㅁ ㅅ ㅇ ㅡ ㅣ</span>에 ㅏ와 ㅗ의 짧은 획을 더한 여덟 칸을 직접 그리거나 AI에게 부탁하면, 나머지 자모와 11,172자는 폰꾸가 조립합니다.
-          <span class="k-land-lead-more">칸 하나를 고치면 그 자모가 든 글자가 모두 바뀌고, 만든 글꼴은 스크립트 한 줄과 1KB 안팎의 칸 자료로 내 페이지에 씁니다.</span>
+          <span class="k-land-lead-more">칸 하나를 고치면 그 자모가 든 글자가 모두 바뀌고, 만든 글꼴은 스크립트 한 줄과 SVG 경로 몇 줄로 내 페이지에 씁니다.</span>
         </p>
         <div class="k-hero-actions k-land-actions">
           <a class="k-btn k-btn--primary" href="./font-studio.html#draw" data-maker-cta>8칸 그려서 내 글꼴 만들기</a>
@@ -250,7 +250,7 @@
                 <tr><th scope="row">완성형 글꼴</th><td data-label="그리는 것"><strong>2,350~11,172자</strong>를 글꼴 편집기(Glyphs·FontForge)로 한 자씩</td><td data-label="고칠 때">글자를 고치고 글꼴 파일을 다시 내보내 올립니다</td><td data-label="쓰는 곳">글꼴 파일(TTF·WOFF) — 워드·디자인 도구·웹 어디서나</td></tr>
                 <tr><th scope="row">조합형 글꼴(8·4·4벌)</th><td data-label="그리는 것">자모 변형 <strong>약 344벌</strong>과 짜임 보정, 조합 규칙</td><td data-label="고칠 때">완성형과 같습니다</td><td data-label="쓰는 곳">글꼴 파일 — 어디서나</td></tr>
                 <tr><th scope="row">손글씨 글꼴 서비스</th><td data-label="그리는 것">손글씨 표본 <strong>수백 자</strong>를 써서 보냄</td><td data-label="고칠 때">글꼴 편집기로 열어 고치거나 다시 맡깁니다</td><td data-label="쓰는 곳">글꼴 파일 — 어디서나</td></tr>
-                <tr class="k-amount-us"><th scope="row">폰꾸</th><td data-label="그리는 것"><strong>8칸</strong> — 조립이 마음에 들지 않는 자모만 더(최대 40칸)</td><td data-label="고칠 때">칸 하나를 다시 그으면 그 자모가 든 글자가 모두 그 자리에서 바뀝니다</td><td data-label="쓰는 곳"><strong>웹 페이지</strong>(스크립트 한 줄 + 칸 자료 1KB 안팎)와 작업실 파일. 워드·피그마용 글꼴 파일은 8칸이 아니라 자소판으로 만듭니다</td></tr>
+                <tr class="k-amount-us"><th scope="row">폰꾸</th><td data-label="그리는 것"><strong>8칸</strong> — 조립이 마음에 들지 않는 자모만 더(최대 40칸)</td><td data-label="고칠 때">칸 하나를 다시 그으면 그 자모가 든 글자가 모두 그 자리에서 바뀝니다</td><td data-label="쓰는 곳"><strong>웹 페이지</strong>(스크립트 한 줄 + SVG 경로 몇 줄)와 작업실 파일. 워드·피그마용 글꼴 파일은 8칸이 아니라 자소판으로 만듭니다</td></tr>
               </tbody>
             </table>
           </div>
@@ -325,7 +325,7 @@
             <h2 id="ai-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">대화창 답 하나가 글꼴 하나</h2>
             <p class="k-lead">
               AI에게 '우리만의 한글 글꼴'을 부탁하면 보통 Google Fonts에서 하나를 골라 줍니다. 대화창 답으로 글자 그림 수천 개짜리 글꼴 파일을 만들 수는 없기 때문입니다.
-              폰꾸의 8칸은 SVG 경로 열 개 남짓, 1KB 안팎이라 답 하나에 들어갑니다. 설명서 링크와 원하는 느낌을 주면 AI가 8칸을 그려 HTML 한 장으로 돌려주고, 그 답이 그대로 11,172자 글꼴입니다.
+              폰꾸의 8칸은 SVG 경로 몇 줄이라 대화창 답 하나에 다 들어갑니다. 설명서 링크와 원하는 느낌을 주면 AI가 8칸을 그려 HTML 한 장으로 돌려주고, 그 답이 그대로 11,172자 글꼴입니다.
             </p>
           </header>
 
@@ -355,7 +355,7 @@
           <div class="k-answers" data-ai-result="set" id="ai-answers">
             <h3 class="k-sub">이 프롬프트로 받은 답 — 같은 문장으로 나란히</h3>
             <p class="k-note">
-              답 HTML을 고치지 않고 그 안의 등록 코드를 그대로 돌려 그렸습니다. 여기 실린 답 <span data-ai-count>6</span>개는 모두 2026-10-13 Claude Code 안의 Claude Opus 5.5가 이 저장소의 설명서를 읽고, 그려 보기 전에 한 번에 쓴 것입니다.
+              답 HTML을 고치지 않고 그 안의 등록 코드를 그대로 돌려 그렸습니다. 여기 실린 답 <span data-ai-count>6</span>개는 모두 Claude Code가 이 저장소의 설명서를 읽고, 그려 보기 전에 한 번에 쓴 것입니다. 답을 쓴 모델과 날짜는 답 원문을 펼치면 나옵니다.
               ChatGPT나 Claude.ai 대화창에 링크만 주고 받은 답은 아직 싣지 않았습니다. 같은 부탁을 한 번 더 하면 비슷하지만 다른 답이 나오고(마커 둘), 느낌을 바꾸면 다른 글꼴이 나옵니다.
             </p>
             <div data-ai-answers></div>
@@ -464,7 +464,7 @@
             </figure>
           </div>
           <p class="k-note">
-            Splitting.js와 GSAP SplitText는 글자(음절)까지만 쪼갭니다. 자모를 NFD로 풀어 span마다 색을 입히면, 2026-10-13에 본 Chromium은 음절 전체를 첫 span의 색으로 칠했고, 움직이려고 inline-block을 주자 음절이 흩어졌습니다. WebKit은 색 span만 줘도 흩어졌습니다.
+            Splitting.js와 GSAP SplitText는 글자(음절)까지만 쪼갭니다. 자모를 NFD로 풀어 span마다 색을 입히면, 시험해 본 Chromium은 음절 전체를 첫 span의 색으로 칠했고, 움직이려고 inline-block을 주자 음절이 흩어졌습니다. WebKit은 색 span만 줘도 흩어졌습니다.
             음절 안 자모의 자리를 직접 계산하는 엔진을 만들면, 그것이 폰꾸입니다.
           </p>
 
@@ -528,9 +528,9 @@
           </div>
           <ul class="k-list k-after">
             <li><strong>작업실에서 만든 글꼴</strong> — 디자인 JSON이나 묶음 파일(<code>.fkk-bundle.json</code>)로 저장하고, '페이지용 코드 복사'로 같은 모양의 코드를 받습니다.</li>
-            <li><strong>글꼴 파일(TTF·WOFF)</strong> — 자소판(자모 40칸을 음절 속 제자리에 그린 판)에서 나옵니다(글자 11,223개, WOFF2 16–35KB).</li>
-            <li><strong>자바스크립트가 없는 곳</strong> — 서버에서 Python·Go·Rust·Ruby의 <code>render_html</code>이 기본 획을 정적 HTML로 그립니다(그린 8칸은 아직 브라우저에서만).</li>
-            <li><strong>설치</strong> — <code>npm install @tty.link/font-kku</code>. CDN 없이 쓰려면 <code>font-kku.js</code>·<code>font-kku.css</code>·<code>profiles/</code>를 같은 폴더 구조로 둡니다. 속성·꾸미기는 <a href="./docs.html#start">문서</a>에 있습니다.</li>
+            <li><strong>글꼴 파일(TTF·WOFF)</strong> — 자소판(자모를 칸마다 그려 모은 그림 한 장)으로 만든 글꼴은 현대 한글 11,172자와 낱자를 모두 담은 글꼴 파일로 받습니다.</li>
+            <li><strong>자바스크립트가 없는 곳</strong> — 페이지 글씨는 런타임이 그리므로, 스크립트가 막힌 곳에서는 위의 글꼴 파일이나 명령줄 <code>font-kku-text</code>의 2줄 평문을 씁니다. 서버에서 정적 HTML을 내는 렌더러는 아직 공개하지 않았습니다.</li>
+            <li><strong>설치</strong> — <code>npm install @tty.link/font-kku@0.1.4-rc.4</code>(이 페이지의 코드와 같은 판). CDN 없이 쓰려면 <code>font-kku.js</code>·<code>font-kku.css</code>·<code>profiles/</code>를 같은 폴더 구조로 둡니다. 속성·꾸미기는 <a href="./docs.html#start">문서</a>에 있습니다.</li>
           </ul>
         </div>
       </section>
@@ -541,41 +541,46 @@
           <aside class="k-limits" aria-labelledby="limits-title">
             <h2 id="limits-title" class="k-limits-title">폰꾸가 맞지 않을 때</h2>
             <ul>
-              <li><strong>고정된 제목 하나이거나 이미 마음에 드는 글꼴이 있으면 웹폰트가 가볍고 간단합니다.</strong> 무게는 아래 표에 조건과 함께 적었습니다.</li>
-              <li><strong>제목과 강조용입니다.</strong> 12px 본문은 읽기 어렵고, 글자마다 DOM 노드가 16–26개라 1,000자를 그리는 데 데스크톱 Chromium에서 약 0.3초가 걸립니다(휴대폰은 더 느립니다).</li>
-              <li><strong>브라우저에서는 자바스크립트가 필요합니다.</strong> 메일 본문, RSS, README, 오픈마켓 상세페이지처럼 스크립트가 막힌 곳에는 못 갑니다(서버의 <code>render_html</code>은 기본 획만). 옛한글도 대상이 아닙니다.</li>
+              <li><strong>고정된 제목 하나이거나 이미 마음에 드는 글꼴이 있으면 웹폰트가 가볍고 간단합니다.</strong> 무게는 아래 표에 쓰임별로 견주었습니다.</li>
+              <li><strong>제목과 강조용입니다.</strong> 글자마다 자모 노드를 여럿 만들어 그리므로 제목·이름·짧은 문구는 바로 그려지지만, 긴 본문이나 작은 본문 글씨에는 맞지 않고 휴대폰에서는 더 무겁습니다.</li>
+              <li><strong>브라우저에서는 자바스크립트가 필요합니다.</strong> 메일 본문, RSS, README, 오픈마켓 상세페이지처럼 스크립트가 막힌 곳에는 못 갑니다. 옛한글도 대상이 아닙니다.</li>
               <li><strong>8칸 그림은 글꼴 파일이 되지 않습니다.</strong> 워드·키노트·피그마에서 쓸 TTF·WOFF가 필요하면 자소판을 그립니다.</li>
-              <li><strong>독창성이 미치는 범위:</strong> 획 모양, 재료, 변주는 내 것이고, 자모를 놓는 자리 뼈대는 폰꾸 규칙이라 폰꾸 글꼴끼리는 비례가 닮습니다. 세트 하나에 획 굵기는 한 가지이고, 음절마다 손으로 짜임을 다듬는 상업 글꼴 수준의 마감은 아닙니다.</li>
+              <li><strong>독창성이 미치는 범위:</strong> 획 모양, 재료, 변주는 내 것입니다. 자모를 놓는 자리는 폰꾸의 글꼴 모양(세벌식·직결식·네모꼴)에서 시작하므로, 그대로 두면 폰꾸 글꼴끼리 비례가 닮습니다. 작업실 '고치기'에서 같은 짜임이나 한 글자만 골라 자리·크기·획 두께를 고칠 수 있지만, 한 자씩 다듬는 상업 글꼴 수준의 마감을 대신하지는 않습니다.</li>
             </ul>
           </aside>
 
           <div class="k-table-wrap">
             <table class="k-ltable k-weight">
-              <caption>무게 — 0.1.2 공개판 실측 2026-10-13</caption>
+              <caption>무게 — 쓰임에 따라 다릅니다</caption>
               <thead>
                 <tr><th scope="col">상황</th><th scope="col">웹폰트</th><th scope="col">폰꾸</th></tr>
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row">고정된 제목 하나(7자)</th>
-                  <td data-label="웹폰트">Google Fonts <code>text=</code> 부분 집합 약 5–22KB(Do Hyeon·Black Han Sans·Noto Sans KR·Jua·나눔손글씨 펜) — <strong>웹폰트가 가볍습니다</strong></td>
-                  <td data-label="폰꾸">런타임 약 68KB(js 50.5KB + css 14.9KB + 세벌 css 2.9KB, gzip)와 JS 해석 시간</td>
+                  <th scope="row">고정된 제목 하나</th>
+                  <td data-label="웹폰트">그 글자만 담은 부분 집합(Google Fonts <code>text=</code>)이면 충분합니다 — <strong>웹폰트가 가볍고 간단합니다</strong></td>
+                  <td data-label="폰꾸">런타임(스크립트와 CSS)을 한 번 받고 해석해야 합니다</td>
                 </tr>
                 <tr>
-                  <th scope="row">사용자가 입력하는 문장(25자)</th>
-                  <td data-label="웹폰트">글꼴 CSS를 통째로 실으면 패밀리 하나에 약 50–170KB(한글 조각 9개). 입력이 바뀔 때마다 <code>text=</code>로 그 글자만 받으면 요청 한 번에 약 5–22KB(위 줄과 같은 방식, 글자 수만큼 늘어남)</td>
-                  <td data-label="폰꾸">처음 한 번 런타임 약 68KB + 8칸 1KB 안팎 ≈ 69KB. 문장이 바뀌어도 더 받지 않습니다</td>
+                  <th scope="row">사용자가 입력하는 문장·이름</th>
+                  <td data-label="웹폰트">입력이 바뀔 때마다 새 글자를 다시 받거나, 한글 글꼴을 통째로 받아 둡니다</td>
+                  <td data-label="폰꾸">처음 한 번 받은 뒤로는 문장이 바뀌어도, 11,172자 가운데 어느 글자가 와도 더 받지 않습니다</td>
+                </tr>
+                <tr>
+                  <th scope="row">내가 그린 글꼴</th>
+                  <td data-label="웹폰트">글자만 즉석에서 골라 받는 방법(Google Fonts <code>text=</code>)은 Google Fonts에 있는 글꼴에만 됩니다. 직접 만든 글꼴은 미리 쪼개 두거나 통째로 올립니다</td>
+                  <td data-label="폰꾸">8칸이 SVG 경로 몇 줄이라 페이지 코드 안에 들어갑니다</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p class="k-note">무게는 지키는 근거일 뿐입니다. <code>text=</code>로 글자만 받는 방법은 Google Fonts에 이미 있는 글꼴에만 되고, 내가 그린 글꼴은 그렇게 받을 수 없습니다. 웹폰트 값은 Chromium이 Google Fonts에서 실제로 받은 바이트, 폰꾸 값은 jsDelivr가 보낸 0.1.2 공개판(이 페이지의 코드가 가리키는 판)의 gzip 크기입니다.</p>
+          <p class="k-note">정확한 크기는 판마다 달라 적지 않습니다. 스크립트의 <code>data-fonts</code>에 적지 않은 글꼴과 그림 세트는 그 글꼴을 쓰는 글이 화면 가까이 올 때 받습니다.</p>
 
           <dl class="k-faq">
             <dt>iOS 잠금 모드처럼 웹 글꼴을 끄는 환경에서는?</dt>
             <dd>기본 획과 그린 8칸은 CSS·SVG로 그어서 그대로 보입니다. 다만 폐쇄망이나 보안 정책이라면 woff2를 같은 출처에 올리는 것으로도 대개 풀립니다.</dd>
             <dt>한글 글꼴이 없는 기기에서는?</dt>
-            <dd>기본 획과 그린 8칸은 기기의 한글 글꼴 없이 그립니다(네온·스티커처럼 기기 글꼴을 재료로 쓰는 글꼴은 기기마다 조금 다릅니다). 그런 기기에서 한글을 쓰는 <a href="./sign.html">전광판</a>·<a href="./memo.html">메모장</a>이 있습니다.</dd>
+            <dd>기본 획과 그린 8칸은 기기의 한글 글꼴 없이 그립니다. 네온·스티커처럼 기기 글꼴을 재료로 쓰는 글꼴은 그런 기기에서 네모(두부)로 깨집니다. 같은 칠을 원소 획에 입혀 바꾸는 법은 <a href="./docs.html#nofont">문서</a>에 있습니다. 그런 기기에서 한글을 쓰는 <a href="./sign.html">전광판</a>·<a href="./memo.html">메모장</a>이 있습니다.</dd>
             <dt>화면 읽기와 복사는?</dt>
             <dd>숨은 원문 하나만 읽히고, 꾸민 글자를 골라 복사해도 원문 한글이 들어갑니다.</dd>
           </dl>
@@ -593,7 +598,7 @@
             <p class="k-lead">
               청첩장·네온 간판·예능 자막·한글 학습지·칭찬 상장처럼 쓰임이 다른 사례 <span data-cases-count>16</span>가지가 모두 HTML 한 장입니다.
               그대로 가져가 글만 바꾸거나, 글씨를 내가 그린 8칸으로 갈아 끼우거나, 사례 페이지에서 요청 글을 만들어 AI에게 새 페이지를 부탁합니다.
-              <a href="./showcase.html#case-house-warming-note">집들이 쪽지</a>와 <a href="./showcase.html#case-bakery-board">빵집 칠판</a>은 그 요청 글을 <time datetime="2026-10-13">2026-10-13</time> Claude Code 안의 Claude Opus 5.5에게 그대로 주고(설명서는 이 저장소에서 읽음) 받은 첫 답입니다. 런타임 주소만 사례 폴더에 맞게 바꿨습니다.
+              <a href="./showcase.html#case-house-warming-note">집들이 쪽지</a>와 <a href="./showcase.html#case-bakery-board">빵집 칠판</a>은 그 요청 글을 Claude Code에 그대로 주고(설명서는 이 저장소에서 읽음) 받은 첫 답입니다. 런타임 주소만 사례 폴더에 맞게 바꿨습니다.
             </p>
           </header>
           <div class="k-cases" data-cases></div>
@@ -601,7 +606,7 @@
           <p class="k-after"><a class="k-btn" href="./showcase.html"><span>사례 <span data-cases-count>16</span>가지 모두 보기</span></a></p>
           <ul class="k-list k-after">
             <li><strong>글꼴·테마 조합기</strong> — 기본 제공 글꼴에 꾸밈·변주·움직임을 골라 섞습니다. <a href="./fonts.html#compose">조합기 열기</a> · <a href="./fonts.html#themes">테마 모두 보기</a></li>
-            <li><strong>터미널·봇용 두 줄 한글</strong> — 같은 분해 엔진으로 한글을 2줄 평문으로 풀어 씁니다(CLI·Node·Python·Go·Rust·Ruby). <a href="./docs.html#text">문서 · 평문 모드와 봇</a></li>
+            <li><strong>터미널·봇용 두 줄 한글</strong> — 같은 분해 엔진으로 한글을 2줄 평문으로 풀어 씁니다(명령줄·Node). <a href="./docs.html#text">문서 · 평문 모드와 봇</a></li>
             <li><strong>한글 입력기 없는 기기</strong> — 영문 자판으로 두벌식·세벌식 한글을 쳐서 <a href="./sign.html">전광판</a>에 띄우거나 <a href="./memo.html">메모장</a>에 씁니다.</li>
           </ul>
         </div>

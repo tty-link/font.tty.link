@@ -81,10 +81,6 @@ html:not([data-fl-vary="off"]) .k-fontrow-tags .fl-seed-tag {
 }
 
 /* ── 견본 행: 8칸 그림 세트와 출발용 뼈대 ── */
-.fl-nowrap {
-  white-space: nowrap;
-}
-
 .k-fontrow-tags .fl-nofile {
   color: var(--k-ink-2);
   font-weight: 700;

@@ -133,11 +133,12 @@
           npm 패키지는 <a href="https://www.npmjs.com/package/@tty.link/font-kku"><code>@tty.link/font-kku</code></a>입니다.
           CommonJS <code>require()</code>, 빌드 없는 ES module 진입점(<code>font-kku.mjs</code>), TypeScript 선언
           (<code>font-kku.d.ts</code>, 별도 <code>@types</code> 없음), CSS·글꼴·spec 서브패스를 제공합니다. 위 jsDelivr 주소도
-          같은 패키지의 파일입니다.
+          같은 패키지의 파일입니다. 설치할 때는 이 문서와 같은 판을 붙입니다 — 판 없이 받으면 npm의 <code>latest</code> 판이 와서 이 문서와
+          기능·모양이 다를 수 있습니다.
         </p>
         <div class="k-code">
           <div class="k-code-bar"><span>터미널</span><button type="button" data-copy="#c-npm">복사</button></div>
-          <pre id="c-npm"><code>npm install @tty.link/font-kku
+          <pre id="c-npm"><code>npm install @tty.link/font-kku@0.1.4-rc.4
 
 # 저장소 checkout에서 시험할 때: tarball을 만들어 설치
 npm pack
@@ -229,11 +230,11 @@ FontKku.renderText("안녕하세요").forEach((line) =&gt; console.log(line));</
             <tbody>
               <tr><td>글꼴을 밝히지 않은 <code>&lt;font-kku&gt;</code>가 <a href="#fonts-layout">세벌 고정 배치</a>(지금 직결식)로 그립니다(초성·중성·종성이 역할마다 같은 자리와 크기).</td><td data-label="예전처럼"><code>font="sebul"</code>을 밝힙니다(그 글꼴의 문맥 배치).</td></tr>
               <tr><td><code>sebul</code>·<code>gothic</code>·<code>malang</code>과 글꼴을 밝히지 않은 바탕 요소가 자모를 기기 한글 글꼴 대신 <a href="#fonts-material">원소 획</a>(CSS로 긋는 획)으로 그립니다. 한글 글꼴이 없는 기기에서도 같은 모양인 대신 글자 칠(<code>text-shadow</code>·<code>-webkit-text-stroke</code>·<code>--fy-weight</code>)은 듣지 않습니다. 꾸러미 글꼴(<code>neon</code>·<code>sticker</code> …)은 전처럼 기기 글꼴로 그립니다.</td><td data-label="예전처럼">그림자·테두리는 <code>[part="glyph"]</code>의 <code>filter: drop-shadow(…)</code>, 굵기는 <code>--fy-element-width</code>로 옮깁니다(<a href="#customize-vars">페이지 전용 변수</a>). 기기 글꼴 글자 그대로는 페이지 CSS <code>--fy-face: device</code>를 더합니다.</td></tr>
-              <tr><td>정적 렌더러 넷의 <code>render_html(text)</code>(글꼴 없이 부른 것)도 세벌 고정으로, 자모를 기기 글꼴 대신 원소 획으로 그립니다. 그만큼 <code>&lt;font-kku&gt;</code> 조각이 약 두 배로 커집니다.</td><td data-label="예전처럼">배치까지 예전대로는 <code>font="sebul"</code>, 세벌 고정에 기기 글꼴 글자는 <code>face="device"</code> (<a href="#text-renderers">보조 렌더러</a>)</td></tr>
+              <tr><td>정적 렌더러 넷(<a href="#text-renderers">공개 전</a>)의 <code>render_html(text)</code>(글꼴 없이 부른 것)도 세벌 고정으로, 자모를 기기 글꼴 대신 원소 획으로 그립니다. 그만큼 <code>&lt;font-kku&gt;</code> 조각이 커집니다.</td><td data-label="예전처럼">배치까지 예전대로는 <code>font="sebul"</code>, 세벌 고정에 기기 글꼴 글자는 <code>face="device"</code> (<a href="#text-renderers">보조 렌더러</a>)</td></tr>
               <tr><td>바탕 요소에 <code>aria-label</code>을 쓰지 않습니다. 스크린리더는 숨긴 원문(<code>sr-source</code>) 하나만 읽습니다.</td><td data-label="예전처럼">따로 필요 없습니다. 직접 붙인 <code>aria-label</code>은 그대로 둡니다(<a href="#a11y">접근성</a>).</td></tr>
               <tr><td>원소 획에서 획이 촘촘한 자모(받침 ㄹ·ㅌ·겹받침, 초성 ㄹ·ㅂ·ㅋ·ㅌ)가 조금 가늘어지고, ㅎ·ㅊ의 꼭지가 가로획과 떨어집니다. 그림 세트(<code>pilgi-box</code>·<code>dunggeun-box</code>·<code>butgeul-box</code>)의 획 굵기도 고르게 맞췄습니다.</td><td data-label="예전처럼">작은 글씨에서 획이 뭉치지 않게 한 교정이라 되돌리는 옵션은 없습니다.</td></tr>
               <tr><td>글꼴을 밝힌 <code>sebul</code>·<code>malang</code>(과 파생)의 원소 획·그림 세트에서 과·궈·의 같은 음절의 머리(고·구·그)가 그 글꼴의 받침 없는 음절과 같은 모양으로 맞춰집니다.</td><td data-label="예전처럼">되돌리는 옵션은 없습니다. 기기 글꼴 재료와 <code>gothic</code>은 예전 그대로입니다.</td></tr>
-              <tr><td>복사해 가는 설치 주소가 압축본 <code>font-kku.min.js</code>입니다. 첫 화면 전송량이 약 107KB → 60KB(gzip, <code>sebul neon</code> 기준)입니다.</td><td data-label="예전처럼">소스를 읽을 때는 <code>.min</code>을 뺀 <code>font-kku.js</code></td></tr>
+              <tr><td>복사해 가는 설치 주소가 압축본 <code>font-kku.min.js</code>입니다. 첫 화면에 받는 양이 압축하지 않은 파일보다 훨씬 적습니다.</td><td data-label="예전처럼">소스를 읽을 때는 <code>.min</code>을 뺀 <code>font-kku.js</code></td></tr>
             </tbody>
           </table>
         </div>
@@ -252,8 +253,8 @@ FontKku.renderText("안녕하세요").forEach((line) =&gt; console.log(line));</
           <table class="k-table d-table-wide">
             <thead><tr><th>0.1.4에서 바뀐 것</th><th>예전처럼 그리려면</th></tr></thead>
             <tbody>
-              <tr><td>글꼴을 밝히지 않은 <code>&lt;font-kku&gt;</code>가 <a href="#fonts-layout">세벌식</a>으로 그립니다 — 짜임마다 다듬은 자리라 가로 모음 글자의 초성이 막대 가운데에 서고, 받침 없는 글자는 아래를 비우며 받침 있는 글자는 칸을 다 씁니다. 정적 렌더러의 <code>render_html(text)</code>도 같습니다.</td><td data-label="예전처럼"><code>font="jikgyeol"</code>(직결식)을 밝힙니다. 저장한 디자인의 <code>layout.profile: "sebul-fixed-v1"</code>은 그대로 직결식입니다. 정적 렌더러에는 직결식이 없어 0.1.3 렌더러를 씁니다.</td></tr>
-              <tr><td>자모 노드의 <code>data-fy-stamp</code>·인라인 <code>--fy-stamp-*</code>와 바탕 요소의 <code>data-fy-layout-model</code>이 없어졌습니다(정적 렌더러 넷도). 세벌식·직결식의 자리는 코어 CSS가 <code>--fy-shape-*</code>로 줍니다. 그리는 모양은 같습니다.</td><td data-label="예전처럼">역할은 <code>part</code>로 고릅니다 — <code>[data-fy-stamp="initial"]</code> → <code>[part~="choseong"]</code>, <code>"medial"</code> → <code>[part~="jungseong"]</code>, <code>"final"</code> → <code>[part~="jongseong"]</code>. 글꼴 모양은 <code>data-fy-layout</code>과 <code>fontInfo(host).layout</code>의 <code>model</code>로 읽습니다.</td></tr>
+              <tr><td>글꼴을 밝히지 않은 <code>&lt;font-kku&gt;</code>가 <a href="#fonts-layout">세벌식</a>으로 그립니다 — 짜임마다 다듬은 자리라 가로 모음 글자의 초성이 막대 가운데에 서고, 받침 없는 글자는 아래를 비우며 받침 있는 글자는 칸을 다 씁니다. 정적 렌더러(공개 전)의 <code>render_html(text)</code>도 같습니다.</td><td data-label="예전처럼"><code>font="jikgyeol"</code>(직결식)을 밝힙니다. 저장한 디자인의 <code>layout.profile: "sebul-fixed-v1"</code>은 그대로 직결식입니다. 정적 렌더러에는 직결식이 없어 0.1.3 렌더러를 씁니다.</td></tr>
+              <tr><td>자모 노드의 <code>data-fy-stamp</code>·인라인 <code>--fy-stamp-*</code>와 바탕 요소의 <code>data-fy-layout-model</code>이 없어졌습니다(공개 전인 정적 렌더러 넷도). 세벌식·직결식의 자리는 코어 CSS가 <code>--fy-shape-*</code>로 줍니다. 그리는 모양은 같습니다.</td><td data-label="예전처럼">역할은 <code>part</code>로 고릅니다 — <code>[data-fy-stamp="initial"]</code> → <code>[part~="choseong"]</code>, <code>"medial"</code> → <code>[part~="jungseong"]</code>, <code>"final"</code> → <code>[part~="jongseong"]</code>. 글꼴 모양은 <code>data-fy-layout</code>과 <code>fontInfo(host).layout</code>의 <code>model</code>로 읽습니다.</td></tr>
               <tr><td>세벌식·직결식도 페이지의 <a href="#reference-depth">깊이 변수</a>와 <a href="#fonts-composition">짓는 방식</a>을 듣습니다(전에는 깊이가 정해져 있었습니다). 적지 않은 페이지는 그대로입니다.</td><td data-label="예전처럼">깊이 변수를 적지 않으면 됩니다.</td></tr>
               <tr><td><code>--fy-design: legacy</code>는 디자인만 끊습니다. 글꼴을 밝히지 않은 바탕 요소는 그래도 세벌식입니다.</td><td data-label="예전처럼">글꼴을 밝히지 않은 채 문맥 배치로 그리려면 페이지 CSS <code>--fy-layout: square-context-v1</code>을 더합니다.</td></tr>
               <tr><td>세벌식·직결식 디자인의 짜임 조건(<code>match.vowelLayout</code>·<code>match.hasFinal</code>)과 자리마다 변주(<code>display.variationScope: "occurrence"</code>)를 거부하지 않고 받아 지킵니다. <code>DESIGN_FIXED_CONTEXT</code>·<code>DESIGN_FIXED_VARIATION</code>은 오류에서 경고가 됐습니다. 합자 모음 통째 그리기는 그대로 거부합니다(<code>DESIGN_FIXED_COMPOUND</code>).</td><td data-label="예전처럼">예전처럼 막으려면 <code>validateDesign(json).warnings</code>를 보고 등록하지 않습니다(<a href="#design-register">등록·검사</a>).</td></tr>
@@ -467,7 +468,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
           <li>페이지 CSS <code>--fy-layout</code>(<code>sebul-cases-v1</code>·<code>sebul-fixed-v1</code>·<code>square-context-v1</code>)로 글꼴 모양만 따로 고를 수 있습니다. 고르지 않아도 됩니다. 글꼴과 글꼴이 고른 디자인의 모양을 이기고, 페이지 <code>--fy-design</code>으로 고른 디자인에 <code>layout</code>이 있으면 그것이 이깁니다. 고르지 못하면 <code>data-fy-layout-status</code>에 까닭(<code>LAYOUT_NOT_REGISTERED</code>·<code>LAYOUT_UNSUPPORTED_FONT</code>)을 남깁니다.</li>
           <li>페이지 CSS가 이웃 자모를 보고(<code>:has()</code> 같은 문맥 선택자) 자모를 옮기면 고정 배치가 깨집니다. <code>FontKku.layoutStability(host)</code>가 그린 결과에서 같은 역할·자모(세벌식은 같은 짜임까지)가 모두 같은 자리인지 재서 <code>stable: false</code>와 어긋난 자모(<code>"initial ᄀ v1"</code>)를 돌려줍니다(<a href="#api-layout">배치 확인</a>).</li>
           <li>배치는 <a href="#design">디자인</a>으로도 고르고, 디자인의 배치가 글꼴(<code>jikgyeol</code>)의 배치를 이깁니다. 세 재료(원소·기기 글꼴·그림 세트)는 같은 배치를 씁니다 — 재료를 바꿔도 자리는 그대로입니다.</li>
-          <li>정적 렌더러의 <code>render_html(text)</code>도 글꼴을 밝히지 않으면 같은 세벌식입니다(<a href="#text-renderers">보조 렌더러</a>). 직결식은 정적 렌더러에 없습니다. 비교는 <a href="./faces.html">재료 페이지의 배치 칸</a>에서도 볼 수 있습니다.</li>
+          <li>정적 렌더러의 <code>render_html(text)</code>도 글꼴을 밝히지 않으면 같은 세벌식입니다(<a href="#text-renderers">보조 렌더러</a>, 공개 전). 직결식은 정적 렌더러에 없습니다. 비교는 <a href="./faces.html">재료 페이지의 배치 칸</a>에서도 볼 수 있습니다.</li>
         </ul>
 
         <h3 id="fonts-composition">짓는 방식 — 글자를 몇 덩이로 짓나</h3>
@@ -519,7 +520,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
           <li>고른 결과는 바탕 요소의 <code>data-fy-composition</code>(축을 섞었으면 <code>custom</code>)과 <code>FontKku.fontInfo(host).composition</code>으로 봅니다.</li>
           <li>못 짓는 것은 몰래 바꾸지 않고 <code>data-fy-composition-status</code>로 알립니다 — 기기 글꼴 글자(꾸러미 글꼴, <code>--fy-face: device</code> — 글꼴 팔레트 디자인을 걸면 짓습니다)와 그림 자소 글꼴은 <code>pieces</code>·<code>origins</code>를 못 지어 <code>COMPOSITION_UNSUPPORTED</code>(나누기만 따릅니다), 옛한글 글자는 아직 그대로라 <code>COMPOSITION_OLD_HANGUL</code>, 모르는 값은 <code>COMPOSITION_INVALID</code>.</li>
           <li>네모꼴 글꼴(<code>font="sebul"</code>·<code>"gothic"</code> 등)에서 그 글꼴 기본이 아닌 나누기를 고르면 런타임이 조각을 기본 나누기의 자리에 맞춥니다. 글꼴 CSS가 그 자리 값을 밝혔으면 그 값이 이기고, <code>--fy-split-fit: none</code>이면 맞추지 않습니다.</li>
-          <li><a href="./font-studio.html">글꼴 작업실</a>의 디자인 페이지에 '짓는 방식' 줄이 있습니다(<a href="#make-studio">글꼴 작업실</a>). <a href="#text-renderers">보조 렌더러</a>의 <code>render_html</code>도 <code>composition</code>을 받습니다.</li>
+          <li><a href="./font-studio.html">글꼴 작업실</a>의 디자인 페이지에 '짓는 방식' 줄이 있습니다(<a href="#make-studio">글꼴 작업실</a>). <a href="#text-renderers">보조 렌더러</a>(공개 전)의 <code>render_html</code>도 <code>composition</code>을 받습니다.</li>
         </ul>
 
         <h3 id="fonts-material">재료 — 자모를 무엇으로 그리나</h3>
@@ -534,8 +535,8 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
               <tr><td>원소</td><td data-label="고르는 법">기본 — <code>sebul</code> <code>gothic</code> <code>malang</code>, 글꼴을 밝히지 않은 바탕 요소. 페이지에서 <code>--fy-face: element</code></td><td data-label="모양">한글의 원리대로 획(ㅡ ㅣ ㆍ ○)을 CSS 상자로 긋습니다. 받는 파일이 없습니다. 굵기 <code>--fy-element-width</code>(글자 크기 기준, <code>sebul</code> 0.1em·<code>gothic</code> 0.072em), 끝 <code>--fy-element-cap: round</code></td><td data-label="없는 기기">같은 모양</td></tr>
               <tr><td>기기 글꼴</td><td data-label="고르는 법">꾸러미 <code>neon</code> <code>sticker</code> <code>geumbak</code> <code>glitch</code> <code>retro</code> <code>saekdong</code> <code>riso</code> <code>blueprint</code>. 페이지에서 <code>--fy-face: device</code></td><td data-label="모양">방문자 기기의 한글 글꼴을 자모마다 표준 자리에 맞춰 그립니다. 다듬은 획 모양이지만 기기마다 조금 다릅니다. 굵기 <code>--fy-weight</code></td><td data-label="없는 기기">네모(두부)로 보임 — <a href="#nofont">대처</a></td></tr>
               <tr><td>그림 세트</td><td data-label="고르는 법">세벌·고딕 계열 + <code>jamo-set="pilgi-box"</code>(<code>dunggeun-box</code>·<code>butgeul-box</code>)</td><td data-label="모양">직접 그린 자모 그림(SVG)으로 그립니다. 그리지 않은 자모는 짝·가획·천지인·원소로 조립합니다. 세트 모듈 하나를 받습니다</td><td data-label="없는 기기">같은 모양</td></tr>
-              <tr><td>그림 자소</td><td data-label="고르는 법"><code>pilgi</code> <code>dunggeun</code> <code>butgeul</code> <code>pixel</code> <code>dojang</code> <code>chalk</code> <code>crayon</code> <code>jasu</code>, 기본 <code>sprite-example</code> <code>sprite-system</code></td><td data-label="모양">자음 19 + 모음 21칸을 그린 자소판(SVG·PNG) 한 장으로 그립니다(기본 제공 SVG는 gzip 약 4KB, 어느 크기에서나 선명)</td><td data-label="없는 기기">같은 모양</td></tr>
-              <tr><td>벡터 자소</td><td data-label="고르는 법">그림 자소 배치 글꼴 + <code>jamo-set</code>(기본 세트 <code>sprite-system</code> <code>sprite-example</code> <code>pixel</code>)</td><td data-label="모양">자모마다 코드로 등록한 SVG 경로(<code>FontKku.registerJamo</code>, 모듈 gzip 약 3KB). 자모마다 색·굵기·끝 모양을 CSS로 바꾸고, 눌린 자리도 획 굵기가 그대로입니다</td><td data-label="없는 기기">같은 모양</td></tr>
+              <tr><td>그림 자소</td><td data-label="고르는 법"><code>pilgi</code> <code>dunggeun</code> <code>butgeul</code> <code>pixel</code> <code>dojang</code> <code>chalk</code> <code>crayon</code> <code>jasu</code>, 기본 <code>sprite-example</code> <code>sprite-system</code></td><td data-label="모양">자음 19 + 모음 21칸을 그린 자소판(SVG·PNG) 한 장으로 그립니다(기본 제공 SVG는 작고 어느 크기에서나 선명)</td><td data-label="없는 기기">같은 모양</td></tr>
+              <tr><td>벡터 자소</td><td data-label="고르는 법">그림 자소 배치 글꼴 + <code>jamo-set</code>(기본 세트 <code>sprite-system</code> <code>sprite-example</code> <code>pixel</code>)</td><td data-label="모양">자모마다 코드로 등록한 SVG 경로(<code>FontKku.registerJamo</code>, 작은 모듈 하나). 자모마다 색·굵기·끝 모양을 CSS로 바꾸고, 눌린 자리도 획 굵기가 그대로입니다</td><td data-label="없는 기기">같은 모양</td></tr>
             </tbody>
           </table>
         </div>
@@ -793,8 +794,8 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
         </div>
         <ul>
           <li>자모 위치(<code>--fy-top</code>, <code>--fy-left</code>)와 크기는 바꾸지 않습니다. 조립이 무너집니다.</li>
-          <li>기울기는 변주 클래스에 맡깁니다. 직접 기울일 때는 ±3° 이하, 세로 모음 옆 초성부터 줍니다. 자모가 이웃 자모에 쉽게 닿기 때문입니다(겹침 감사에서 ±3°로도 '꽤'·'셊'의 자모가 15% 넘게 포개졌습니다). 굵기·외곽선은 작은 크기(24px)에서도 획이 뭉치지 않는지 봅니다.</li>
-          <li>AI에게 맡기려면 <a href="#ai">AI와 쓰기</a>의 "나만의 글꼴" 프롬프트를 씁니다.</li>
+          <li>기울기는 변주 클래스에 맡깁니다. 직접 기울일 때는 ±3° 이하, 세로 모음 옆 초성부터 줍니다. 자모가 이웃 자모에 쉽게 닿기 때문입니다(겹침 감사에서 ±3°로도 '꽤'·'셊'의 자모가 크게 포개졌습니다). 굵기·외곽선은 작은 크기(24px)에서도 획이 뭉치지 않는지 봅니다.</li>
+          <li>AI에게 맡기려면 <a href="#ai">AI와 쓰기</a>의 "나만의 꾸밈 글꼴(CSS)" 프롬프트를 씁니다.</li>
         </ul>
       </section>
 
@@ -1009,7 +1010,7 @@ document.querySelector("h2.font-kku").dataset.size = "48";</code></pre>
             <tbody>
               <tr><td><code>type(target, phrases, options)</code></td><td data-label="하는 일">두벌식으로 치듯 자모 단위로 지웠다 다시 칩니다. 숨은 탭·화면 밖에서 쉽니다. 선언형은 <code>data-kku-phrases="a|b"</code></td></tr>
               <tr><td><code>scatter(target, { on })</code></td><td data-label="하는 일">올리기·누르기에 자모가 흩어졌다 모입니다(<code>"auto"</code>·<code>"hover"</code>·<code>"click"</code>)</td></tr>
-              <tr><td><code>magnet(target, options)</code></td><td data-label="하는 일">커서 가까운 자모를 끌어당깁니다</td></tr>
+              <tr><td><code>magnet(target, options)</code></td><td data-label="하는 일">커서 가까운 자모를 밀어냅니다</td></tr>
               <tr><td><code>shuffle(target, { on, every })</code></td><td data-label="하는 일">누르기·올리기·주기마다 씨앗을 새로 뽑아 다시 그립니다. 선언형은 <code>data-kku-shuffle="click | hover | 2000"</code></td></tr>
               <tr><td><code>replay</code> · <code>bind</code> · <code>unbind</code></td><td data-label="하는 일">한 번 도는 움직임 다시 · 선언형 연결·해제</td></tr>
             </tbody>
@@ -1273,7 +1274,7 @@ FontKku.renderText("안녕하세요").forEach((line) =&gt; console.log(line));
 npx font-kku-text "배포 완료"
 
 # 설치 없이 한 번만
-npx -p @tty.link/font-kku font-kku-text "배포 완료"
+npx -p @tty.link/font-kku@0.1.4-rc.4 font-kku-text "배포 완료"
 
 # 저장소에서
 node ./bin/font-kku-text.js "안녕하세요 반갑습니다"
@@ -1312,14 +1313,14 @@ node ./bin/font-kku-text.js --version</code></pre>
 const big = renderText("배포 완료").join("\n");
 await say("```\n" + big + "\n```"); // 슬랙 Bolt의 say 예</code></pre>
         </div>
-        <div class="k-code">
-          <div class="k-code-bar"><span>Python 봇</span><button type="button" data-copy="#c-bot-py">복사</button></div>
-          <pre id="c-bot-py"><code>from font_kku import render_text
+        <p>다른 언어로 만든 봇은 <a href="#text-cli">터미널 명령 <code>font-kku-text</code></a>를 불러 평문을 받습니다.</p>
 
-message = "```\n" + "\n".join(render_text("배포 완료")) + "\n```"</code></pre>
-        </div>
-
-        <h3 id="text-renderers">다른 언어 보조 렌더러</h3>
+        <h3 id="text-renderers">다른 언어 보조 렌더러 (공개 전)</h3>
+        <p>
+          <strong>아직 공개하지 않았습니다.</strong> PyPI·Go 모듈·crates.io·RubyGems에 올리지 않았으니 <code>pip install</code> 같은 명령으로
+          받지 않습니다(같은 이름의 다른 패키지가 올 수 있습니다). 지금 공개된 것은 npm 패키지 하나 — 브라우저 런타임과 Node·명령줄 평문 모드입니다.
+          아래는 공개할 때의 API입니다.
+        </p>
         <p>
           Python·Go·Rust·Ruby 구현은 JavaScript를 감싼 것이 아니라 같은 명세(<code>spec/</code>)를 따로 구현한 보조 렌더러입니다.
           모두 같은 2줄 평문과, 서버에서 쓰는 정적 HTML을 냅니다.
@@ -1352,8 +1353,8 @@ render_html("광화문", composition="syllable")  # 짓는 방식 — 고르지 
           <li>그 호출은 자모도 런타임 기본처럼 <strong>원소 획</strong>으로 그립니다(<code>data-fy-face="element"</code>, 자모 안의 <code>[part="hoek"]</code>, 낱자 <code>data-fy-standalone</code>). 브라우저 스크립트 없이도, 읽는 기기의 한글 글꼴과 상관없이 같은 모양입니다. 기기 글꼴 글자를 원하면 <code>face="device"</code>(Ruby <code>face:</code>, Go <code>WithFace</code>, Rust <code>HtmlOptions.face</code>) — 세벌식 자리에 기기 글꼴 글자를 둡니다.</li>
           <li>글꼴을 밝힌 호출과 <code>FontDefinition</code>은 예전처럼 기기 글꼴 글자이고, 여기에 <code>face="element"</code>를 주면 오류입니다(원소 획은 기본 배치에서만). 오류는 mode → 글꼴 → face → 깊이 차례로 봅니다. Rust <code>HtmlOptions</code>에 <code>face</code> 필드가 생겨, 모든 필드를 적은 구조체 리터럴은 <code>..Default::default()</code>가 필요합니다.</li>
           <li><a href="#fonts-composition">짓는 방식</a>은 고르지 않아도 됩니다(<code>None</code>·<code>""</code>·<code>"auto"</code>는 지금 출력 그대로). 고르면 나누기를 깊이 인자와 같은 길로 그리고 바탕 요소에 <code>data-fy-composition</code>을 씁니다. 차례는 <code>vowel_depth</code>·<code>coda_depth</code> &gt; <code>composition</code> &gt; <code>jamo_depth</code> &gt; 글꼴 기본입니다. 조각 깊이(<code>pieces</code>·<code>origins</code>)는 정적 출력에서 조각을 그리지 못해 기본 획 그대로 <code>data-fy-composition-status="COMPOSITION_UNSUPPORTED"</code>를 남기고, 네모꼴의 나누기 맞춤은 브라우저에서만 합니다. Rust <code>HtmlOptions</code>에 <code>composition</code> 필드가 생겨, 모든 필드를 적은 구조체 리터럴은 <code>..Default::default()</code>가 필요합니다.</li>
-          <li><code>render_html</code>은 서버에서 정적 HTML을 만드는 공식 경로입니다. 이렇게 만든 바탕 요소 위에 브라우저 런타임을 다시 얹지 않습니다.</li>
-          <li>현재는 저장소의 <code>renderers/</code> 폴더를 로컬 패키지·경로 의존성으로 씁니다. 설치와 언어별 한계는 <a href="lib/docs/PLAN/multi-language-renderers.md">Multi-language Renderers</a>를 봅니다.</li>
+          <li><code>render_html</code>로 만든 바탕 요소 위에는 브라우저 런타임을 다시 얹지 않습니다.</li>
+          <li>언어별 구현 기록과 한계는 <a href="lib/docs/PLAN/multi-language-renderers.md">Multi-language Renderers</a>를 봅니다.</li>
         </ul>
       </section>
 
@@ -1464,14 +1465,27 @@ render_html("광화문", composition="syllable")  # 짓는 방식 — 고르지 
         <h2 class="font-kku k-h2" data-font="sebul" data-size="clamp(28px, 3.4vw, 38px)">AI와 쓰기</h2>
         <p>
           폰꾸에는 AI가 읽는 사용 설명서 <a href="lib/skill/SKILL.md"><code>skills/font-kku-use/SKILL.md</code></a>가
-          있습니다(npm 패키지에 포함). ChatGPT·Claude 같은 AI에게 이 설명서 링크와 함께 부탁하면 AI가 만드는 HTML의 제목과 강조
-          문구를 폰꾸로 꾸미고, 브랜드에 맞는 나만의 꾸밈 글꼴을 만들고, 봇·터미널 출력에 한글을 두 줄 평문으로 풀어 씁니다.
+          있습니다(npm 패키지에 포함). ChatGPT·Claude 같은 AI에게 이 설명서 링크와 원하는 느낌을 주면 AI가 원형 8칸을 SVG로 그려
+          HTML 한 장으로 돌려주도록 설명서를 썼고, 그 답이 그대로 11,172자 한글 글꼴이 됩니다. 같은 설명서로 AI가 만드는 HTML의 제목과 강조 문구를
+          폰꾸로 꾸미고, 브랜드에 맞는 꾸밈 글꼴을 만들고, 봇·터미널 출력에 한글을 두 줄 평문으로 풀어 씁니다. 아래 8칸 프롬프트로
+          Claude Code에서 받은 답을 <a href="./index.html#ai">소개 페이지</a>에 고치지 않고 실었습니다(대화창에 링크만 주고 받은 답은 아직 싣지 않았습니다).
         </p>
         <ol class="k-steps">
-          <li><strong>복사해서 붙여 넣기</strong>아래 프롬프트를 AI 대화창에 붙여 넣고 만들 내용만 바꿉니다.</li>
+          <li><strong>복사해서 붙여 넣기</strong>아래 프롬프트를 AI 대화창에 붙여 넣고 느낌이나 만들 내용만 바꿉니다.</li>
           <li><strong>미리보기로 확인</strong>만들어진 HTML을 대화창 미리보기로 보거나 <code>.html</code> 파일로 저장해 브라우저로 엽니다.</li>
-          <li><strong>말로 고치기</strong>"제목은 네온 말고 분필로, 바탕은 칠판색으로", "고딕에 네온 칠, 깜빡이게"처럼 이어서 부탁합니다. 설명서는 글꼴·꾸밈·움직임을 따로 고르는 <a href="#compose">조합</a>을 알려 주므로 축마다 따로 말해도 됩니다.</li>
+          <li><strong>말로 고치기</strong>"획이 뭉쳐 보여, 더 가늘게", "제목은 네온 말고 분필로, 바탕은 칠판색으로"처럼 이어서 부탁합니다. 설명서는 글꼴·꾸밈·움직임을 따로 고르는 <a href="#compose">조합</a>을 알려 주므로 축마다 따로 말해도 됩니다.</li>
         </ol>
+        <div class="k-code k-code--wrap">
+          <div class="k-code-bar"><span>프롬프트 — 세상에 없던 한글 글꼴(8칸)</span><button type="button" data-copy="#c-prompt-draw">복사</button></div>
+          <pre id="c-prompt-draw"><code>이 설명서를 읽고 따라 해 줘: https://font.tty.link/lib/skill/SKILL.md
+
+폰꾸로 세상에 없던 한글 글꼴을 하나 만들어 줘.
+느낌: 굵은 마커로 삐뚤빼뚤하게 쓴 손글씨
+
+- draw-jamo.md의 「세벌·고딕에 그림 세트 걸기」대로 원형 8칸 ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ만 SVG 경로로 그려 줘. 나머지 자모와 한글 11,172자는 폰꾸가 조립해.
+- FontKku.registerJamo("my-font", { "ㄱ": { box, shapes }, … }, { frame: "box", cap: "round", join: "round" })로 등록하고, 획은 중심선 경로로.
+- 답은 HTML 한 장: 런타임 스크립트 한 줄, 등록 코드, '다람쥐 헌 쳇바퀴에 타고파'를 &lt;font-kku font="sebul" jamo-set="my-font" size="64"&gt;로 크게. 획 굵기는 --fy-element-width로.</code></pre>
+        </div>
         <div class="k-code k-code--wrap">
           <div class="k-code-bar"><span>프롬프트 — 문서·페이지 꾸미기</span><button type="button" data-copy="#c-prompt-doc">복사</button></div>
           <pre id="c-prompt-doc"><code>이 설명서를 읽고 따라 해 줘: https://font.tty.link/lib/skill/SKILL.md
@@ -1480,7 +1494,7 @@ render_html("광화문", composition="syllable")  # 짓는 방식 — 고르지 
 주요 제목과 강조하고 싶은 문구는 폰꾸로 꾸며 줘.</code></pre>
         </div>
         <div class="k-code k-code--wrap">
-          <div class="k-code-bar"><span>프롬프트 — 나만의 글꼴</span><button type="button" data-copy="#c-prompt-font">복사</button></div>
+          <div class="k-code-bar"><span>프롬프트 — 나만의 꾸밈 글꼴(CSS)</span><button type="button" data-copy="#c-prompt-font">복사</button></div>
           <pre id="c-prompt-font"><code>이 설명서를 읽고 따라 해 줘: https://font.tty.link/lib/skill/SKILL.md
 
 우리 딸기 디저트 가게(분홍·보라, 귀엽고 말랑한 느낌)에 맞는
@@ -1676,8 +1690,7 @@ cp -R skills/font-kku-use ~/.claude/skills/</code></pre>
 &lt;/script&gt;</code></pre>
         </div>
         <p>
-          저장소에서는 <code>python scripts/export_font_file.py --font pixel --out tmp/pixel.ttf --woff2 tmp/pixel.woff2 --compare</code>가
-          같은 일을 헤드리스 브라우저에서 하고 fontTools로 검증합니다(WOFF2 약 20KB). 결정 근거는 <a href="lib/docs/ADR/ADR-015-font-file-export.md">ADR-015</a>에 있습니다.
+          결정 근거와 폰꾸 저장소의 검증 방법은 <a href="lib/docs/ADR/ADR-015-font-file-export.md">ADR-015</a>에 있습니다.
         </p>
 
         <h3 id="make-use">만든 글꼴 붙이기</h3>
@@ -2449,7 +2462,7 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
         <h3 id="a11y-seo">검색과 서버 HTML</h3>
         <ul>
           <li>바탕 요소 안의 원래 텍스트 DOM은 관리 DOM으로 바뀝니다. 검색 노출이나 hydration을 보장한다고 기대하지 않습니다.</li>
-          <li>브라우저 런타임에는 서버 DOM·hydration API가 없습니다. 서버에서 정적 HTML이 필요하면 <a href="#text-renderers">보조 렌더러의 <code>render_html</code></a>을 쓰거나, 서버는 원문만 내보내고 브라우저에서 그립니다. 둘을 겹쳐 쓰지 않습니다.</li>
+          <li>브라우저 런타임에는 서버 DOM·hydration API가 없습니다. 서버는 원문만 내보내고 브라우저에서 그립니다. 서버에서 정적 HTML을 내는 <a href="#text-renderers">보조 렌더러의 <code>render_html</code></a>은 아직 공개 전이고, 공개된 뒤에도 그 출력에 브라우저 런타임을 겹쳐 쓰지 않습니다.</li>
         </ul>
         <h3 id="a11y-motion">움직임과 대비</h3>
         <ul>
@@ -2459,8 +2472,8 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
         </ul>
         <h3 id="a11y-browsers">지원 브라우저</h3>
         <ul>
-          <li>기본 제공 글꼴이 <code>:has()</code>와 <code>@layer</code>를 쓰므로 실제 기준선은 <code>:has()</code>를 지원하는 브라우저(Chrome 105, Safari 15.4, Firefox 121 이상)입니다.</li>
-          <li>자동 브라우저 회귀 검사는 Playwright Chromium을 기준으로 합니다. Firefox는 설치돼 있을 때 그림 세트 획 굵기 검사를 함께 돌고, WebKit(Safari 엔진)은 세벌 고정(지금 직결식) 배치를 세 재료 × 11,172자로 확인했습니다. 실기기(삼성·Pixel·iPhone)와 화면 낭독기(VoiceOver·TalkBack·NVDA) 확인은 사람이 합니다.</li>
+          <li>바탕 CSS(<code>font-kku.css</code>)가 <code>:has()</code>와 <code>@layer</code>를 쓰므로 실제 기준선은 <code>:has()</code>를 지원하는 브라우저(Chrome 105, Safari 15.4, Firefox 121 이상)입니다.</li>
+          <li>npm에 올리기 전 공개 검증은 Playwright Chromium에서 스모크 시험 전체를, Firefox·WebKit(Safari 엔진)에서 엔진별 검사를 돌리고, 세 엔진에 글꼴·꾸밈·움직임을 그린 매트릭스 탐침 결과를 눈으로 봅니다. 실기기(삼성·Pixel·iPhone)와 화면 낭독기(VoiceOver·TalkBack·NVDA) 확인은 사람이 할 남은 일입니다.</li>
           <li>세벌·고딕 계열은 자모를 CSS 획으로 그려 어느 운영체제에서나 같은 모양입니다. 획을 기울이는 <code>rotate</code>와 획 굵기를 바탕 요소에서 굳히는 <code>@property</code>(Safari 16.4, Firefox 128 이상)를 씁니다 — <code>@property</code>가 없으면 작은 자리의 획이 조금 가늘어집니다. 기기 글꼴로 그리면(<code>--fy-face: device</code>, 칠만 다른 꾸러미 글꼴) 자리는 같고 획 모양만 운영체제마다 조금 다릅니다.</li>
         </ul>
       </section>
@@ -2535,7 +2548,7 @@ FontKku.hashSeed("poster-v1");  <span class="d-out">// 0~1 사이의 같은 값<
             <p>
               0.1.0에서 0.1.1로 올렸다면 글꼴 속성을 쓰지 않은 바탕 요소가 세벌 고정 배치(지금 직결식 <code>jikgyeol</code>)로 바뀌었고(<a href="#fonts-layout">배치</a>), <code>sebul</code>·<code>gothic</code>·<code>malang</code>은 자모를
               기기 한글 글꼴 대신 CSS 획으로 긋습니다(<a href="#fonts-material">재료</a>). 예전 배치는 <code>font="sebul"</code>(클래스 방식은 <code>data-font="sebul"</code>)을
-              밝히면 돌아오고, 예전 획 모양과 <code>text-shadow</code>·<code>--fy-weight</code>까지는 거기에 페이지 CSS <code>--fy-face: device</code>를 더합니다(기기 글꼴 글자를 표준 자리에 맞추는 보정 같은 작은 차이는 남습니다). 서버에서 <code>render_html</code>로 만든
+              밝히면 돌아오고, 예전 획 모양과 <code>text-shadow</code>·<code>--fy-weight</code>까지는 거기에 페이지 CSS <code>--fy-face: device</code>를 더합니다(기기 글꼴 글자를 표준 자리에 맞추는 보정 같은 작은 차이는 남습니다). 서버에서 <code>render_html</code>(공개 전)로 만든
               글도 같고, 그쪽은 <code>font="sebul"</code>이나 <code>face="device"</code>로 고릅니다(<a href="#start-version">0.1.1에서 바뀐 것</a>).
             </p>
             <p>

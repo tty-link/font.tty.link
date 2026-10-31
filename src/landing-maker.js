@@ -309,8 +309,9 @@
         (state.edited.length ? ". 고친 칸: " + escapeHtml(state.edited.join(" ")) : ". 칸을 누르고 그어 보세요") +
         ". 아래 <a href=\"#web\">내 페이지에 쓰기</a> 코드에도 그대로 들어갑니다.";
     } else {
-      var from = set.by + " · " + set.where + " · " + set.date + " · " + set.attempt + (set.edited ? " · 고침" : " · 고치지 않음");
-      metaOut.innerHTML = "AI 답 그대로 — " + escapeHtml(from) + " · 느낌 '" + escapeHtml(set.feel) + "' · <a href=\"#ai-answers\">프롬프트와 답 원문</a>";
+      /* 받은 모델·날짜는 답 원문(#ai-answers)을 펼친 곳에만 적는다 */
+      var from = (set.attempt === "1번째 답" ? "첫 답" : set.attempt) + (set.edited ? " · 고침" : " · 고치지 않음");
+      metaOut.innerHTML = "AI 답 그대로 — 느낌 '" + escapeHtml(set.feel) + "' · " + escapeHtml(from) + " · <a href=\"#ai-answers\">프롬프트와 답 원문</a>";
     }
   }
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="alternate" type="text/markdown" href="lib/skill/SKILL.md" title="AI 에이전트용 사용 설명서 (SKILL.md)" />
     <title>글꼴과 테마 — 폰꾸 font-kku</title>
-    <meta name="description" content="폰꾸의 기본 제공 글꼴 12종과 테마 35개. 테마를 골라 코드를 복사하거나, 조합기에서 글꼴·꾸밈·변주·움직임·상호작용·바탕을 하나씩 골라 섞습니다. 마음에 드는 글꼴이 없으면 8칸을 그리거나 AI에게 부탁해 내 글꼴을 만듭니다." />
+    <meta name="description" content="폰꾸의 기본 제공 글꼴과 테마. 테마를 골라 코드를 복사하거나, 조합기에서 글꼴·꾸밈·변주·움직임·상호작용·바탕을 하나씩 골라 섞습니다. 마음에 드는 글꼴이 없으면 8칸을 그리거나 AI에게 부탁해 내 글꼴을 만듭니다." />
     <script src="lib/font-kku.js" data-fonts="sebul" data-addons="looks motion" data-jamo-sets="sprite-system"></script>
     <!-- 소개의 AI 8칸 답(claude-*) — 런타임 바로 뒤에 실어야 그 세트를 쓰는 견본이 처음부터 그 그림으로 그려진다 -->
     <script src="./landing-ai-sets.js"></script>
@@ -550,7 +550,7 @@
          * 이어서 부탁해 받은 답(followup)은 첫 답이 어디서 왔는지를 같은 느낌의 첫 답 기록에서 찾는다. */
         function provenance(set) {
           var where = whereOf(set);
-          var text = where.place + "에서 " + set.by + "가 설명서를 읽고, 그려 보기 전에 한 번에 쓴 8칸입니다.";
+          var text = where.place + "가 설명서를 읽고, 그려 보기 전에 한 번에 쓴 8칸입니다.";
           var first = set.followup ? SETS.sets.filter(function (other) { return other.feel === set.feel && !other.followup; })[0] : null;
           var origin = whereOf(first || set).how;
           // '앞의 세 답'은 소개에 실은 차례다 — 이 페이지의 행 차례로 읽히지 않게 밝힌다
@@ -565,9 +565,8 @@
 
         function setRow(item) {
           var set = item.set;
-          // 날짜는 줄에서 끊기지 않게
-          var desc = escapeHtml("느낌 ‘" + set.feel + "’. ") + '<span class="fl-nowrap">' + escapeHtml(set.date) + "</span> " +
-            escapeHtml(provenance(set));
+          // 쓴 모델과 날짜는 소개의 답 원문(#ai-answers)에만 적는다
+          var desc = escapeHtml("느낌 ‘" + set.feel + "’. " + provenance(set));
           var tags = [
             "짜임 <code>sebul</code> · 문맥 배치",
             "펜 굵기 " + escapeHtml(item.width),
