@@ -648,7 +648,7 @@
   }
 
   function headingCode(info, text, size) {
-    return '<h1><font-kku font="sebul" jamo-set="my-font" size="' + size + '"\n' +
+    return '<h1><font-kku jamo-set="my-font" size="' + size + '"\n' +
       '  style="--fy-element-width: ' + info.width + '">' + escapeHtml(text) + "</font-kku></h1>";
   }
 
@@ -826,7 +826,7 @@
     return list.map(function (j) {
       var terms = recipeTerms(j, info.set, drawn);
       return '<li data-jamo="' + j + '" data-drawn="' + Boolean(drawn[j]) + '" title="' + j + " = " + escapeHtml(terms.join(" + ")) + '">' +
-        '<font-kku font="sebul" jamo-set="' + info.set + '" size="40" style="--fy-element-width:' + info.width + '">' + j + "</font-kku>" +
+        '<font-kku jamo-set="' + info.set + '" size="40" style="--fy-element-width:' + info.width + '">' + j + "</font-kku>" +
         "<small>" + terms.map(function (term) { return "<span>" + escapeHtml(term) + "</span>"; }).join("+<wbr>") + "</small></li>";
     }).join("");
   }
@@ -874,7 +874,6 @@
       fullSample.innerHTML = "";
       var probe = document.createElement("font-kku");
       probe.className = "k-fullcheck-probe";
-      probe.setAttribute("font", "sebul");
       probe.setAttribute("jamo-set", current.set);
       probe.setAttribute("size", "14");
       probe.setAttribute("wrap-unit", "glyph");
@@ -912,7 +911,7 @@
         var cells = [];
         for (var k = 0; k < 48; k += 1) cells.push(String.fromCharCode(0xac00 + Math.floor(k * 11172 / 48) + (k * 37) % 200));
         fullSample.innerHTML = cells.map(function (ch) {
-          return '<span><font-kku font="sebul" jamo-set="' + current.set + '" size="34" style="--fy-element-width:' + current.width + '">' + ch + "</font-kku></span>";
+          return '<span><font-kku jamo-set="' + current.set + '" size="34" style="--fy-element-width:' + current.width + '">' + ch + "</font-kku></span>";
         }).join("");
         fullSample.hidden = false;
         fullButton.disabled = false;

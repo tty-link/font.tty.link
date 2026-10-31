@@ -243,9 +243,9 @@ def assert_demo(page, label: str) -> None:
     if hero != {"links": ["./font-studio.html#draw", "#web"], "prompt": "#ai", "title": "8칸만 그리면, 세상에 없던 한글 글꼴", "typing": 0}:
         raise AssertionError(f"{label}: the hero should lead to drawing, the AI prompt and the page code under one fixed title {hero!r}")
 
-    # 랜딩은 한 줄 설치로 런타임·바탕 CSS·세벌(data-fonts="sebul")과 꾸밈·움직임 확장만 미리 받는다.
-    # 다른 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다(필요할 때 받기,
-    # ADR-019) — 처음 화면에는 글꼴 CSS가 몇 장뿐이고, 움직임 타일까지 내려가면 '고장 난 네온'의 네온 글꼴이 받아진다.
+    # 랜딩은 한 줄 설치로 런타임·바탕 CSS·세벌(data-fonts="sebul" — 글꼴을 비운 기본 세벌식도 이 CSS 위에 짓는다)과
+    # 꾸밈·움직임 확장만 미리 받는다. 다른 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다
+    # (필요할 때 받기, ADR-019) — 처음 화면에는 글꼴 CSS가 몇 장뿐이고, 아래에서 화면에 붙인 도트 글꼴(pixel)은 그때 받아진다.
     def profile_links():
         return page.evaluate(
             """() => [...document.querySelectorAll('link[rel="stylesheet"]')]
@@ -254,21 +254,15 @@ def assert_demo(page, label: str) -> None:
               .map((path) => path.slice(path.lastIndexOf('/') + 1))"""
         )
     first = profile_links()
-    if not first or first[0] != "font-kku.css" or "sebul.css" not in first or len(first) > 8 or "neon.css" in first:
+    if not first or first[0] != "font-kku.css" or "sebul.css" not in first or len(first) > 8 or "pixel.css" in first:
         raise AssertionError(f"{label}: the landing should fetch only a few font CSS files up front {first!r}")
     page.locator("[data-fxgrid]").scroll_into_view_if_needed()
     page.wait_for_function(
-        """() => {
-          const host = document.querySelector('[data-fxgrid] font-kku[font="neon"]');
-          return host && FontKku.fontInfo(host)?.loaded && !host.hasAttribute('data-fy-font-pending');
-        }""",
+        """() => [...document.querySelectorAll('[data-fxgrid] font-kku')].every((host) => host.querySelector('[part~="glyph"]'))""",
         timeout=15000,
     )
     if page.evaluate("document.querySelectorAll('style[data-font-kku-loader]').length") != 0:
         raise AssertionError(f"{label}: the script-tag loader left its veil in place")
-    fetched = profile_links()
-    if "neon.css" not in fetched:
-        raise AssertionError(f"{label}: the neon tile font was not fetched on demand {fetched!r}")
     page.evaluate("window.scrollTo(0, 0)")
     # 그린 뒤에 꾸밈 클래스를 붙이거나 떼도 그림 자소의 마스크 칠이 따라온다(런타임이 class를 지켜본다). 소개는 그림 자소 글꼴을
     # 미리 받지 않으므로 화면 안(고정 위치)에 붙여 그 글꼴을 받게 한다
@@ -277,6 +271,9 @@ def assert_demo(page, label: str) -> None:
           h.style.cssText = 'position: fixed; top: 0; left: 0'; h.textContent = '가'; document.body.append(h); }"""
     )
     page.wait_for_function("() => document.querySelector('#late-look [part~=\"jamo\"]') && !document.querySelector('#late-look').dataset.fySpritePaint", timeout=15000)
+    fetched = profile_links()
+    if "pixel.css" not in fetched:
+        raise AssertionError(f"{label}: a font the page did not list should be fetched when it comes on screen {fetched!r}")
     page.evaluate("() => document.querySelector('#late-look').classList.add('kku-look-neon')")
     page.wait_for_function("() => document.querySelector('#late-look').dataset.fySpritePaint === 'mask'", timeout=5000)
     page.evaluate("() => document.querySelector('#late-look').classList.remove('kku-look-neon')")
@@ -346,25 +343,43 @@ def assert_demo(page, label: str) -> None:
     if len(presets) != 4 or not all(answer for _, answer in presets):
         raise AssertionError(f"{label}: every feel preset should point at at least one real answer {presets!r}")
 
-    # 히어로 데모는 네모 글꼴(font="sebul" 문맥 배치)로 그리고, 제목 둘째 줄도 고른 세트를 따라간다(data-follow-set)
+    # 히어로 데모와 제목은 글꼴을 밝히지 않아 기본 세벌식(sebul-cases-v1)으로 그리고 — 작업실의 첫 모양과 같다 —, 제목 둘째 줄도
+    # 고른 세트를 따라간다(data-follow-set)
     hero_follow = page.evaluate(
-        """() => [document.querySelector('[data-maker-host]').getAttribute('font'),
-          document.querySelector('#hero-title [data-follow-set]')?.dataset.jamoSet, document.querySelector('#hero-title [data-follow-set]')?.dataset.fyFace]"""
+        """() => { const host = document.querySelector('[data-maker-host]'), line = document.querySelector('#hero-title [data-follow-set]');
+          return [host.getAttribute('font'), host.dataset.fyLayout, line?.dataset.jamoSet, line?.dataset.fyFace, line?.dataset.fyLayout]; }"""
     )
-    if hero_follow != ["sebul", "claude-marker-1", "svg"]:
-        raise AssertionError(f"{label}: the hero sentence and the title's second line should draw with the picked set {hero_follow!r}")
+    if hero_follow != [None, "sebul-cases-v1", "claude-marker-1", "svg", "sebul-cases-v1"]:
+        raise AssertionError(f"{label}: the hero sentence and the title's second line should draw the picked set on the default 세벌식 {hero_follow!r}")
+    if page.evaluate("""() => [...document.querySelectorAll('font-kku[font], .font-kku[data-font]')]
+          .filter((host) => !host.closest('.k-answer') && /^(sebul|gothic)$/.test(host.getAttribute('font') || host.dataset.font)).length"""):
+        raise AssertionError(f"{label}: landing demos should leave the font empty (default 세벌식); only the AI answer cards keep the font their answer wrote")
 
-    sebul_host = page.locator("font-kku[font='sebul']").first
-    if sebul_host.get_attribute("data-fy-upgraded") != "true":
-        raise AssertionError(f"{label}: sebul custom element was not upgraded")
-    if sebul_host.get_attribute("data-fy-expression") != "sebeol":
-        raise AssertionError(f"{label}: sebul font expression mode mismatch")
+    element_host = page.locator("font-kku[data-maker-host]")
+    if element_host.get_attribute("data-fy-upgraded") != "true" or element_host.get_attribute("data-fy-expression") != "sebeol":
+        raise AssertionError(f"{label}: the hero custom element was not upgraded in 세벌 expression mode")
 
-    decorator_host = page.locator(".font-kku[data-font='sebul']").first
+    decorator_host = page.locator("#make-title .font-kku").first
     if decorator_host.get_attribute("data-fy-host") != "decorator":
         raise AssertionError(f"{label}: decorator mode host not marked correctly")
-    if decorator_host.get_attribute("data-fy-expression") != "sebeol":
-        raise AssertionError(f"{label}: sebul decorator expression mode mismatch")
+    if decorator_host.get_attribute("data-fy-expression") != "sebeol" or decorator_host.get_attribute("data-fy-layout") != "sebul-cases-v1":
+        raise AssertionError(f"{label}: section titles should draw in the default 세벌식")
+
+    # 하나: 글꼴 모양 × 재료 — 세 모양(줄) × 세 재료(칸)가 CSS 한 줄씩만 달리 그대로 그려진다. 그린 8칸 칸은 고른 세트를 따라간다
+    shape_grid = page.evaluate(
+        """() => [...document.querySelectorAll('.k-shape-table tbody tr')].map((row) =>
+          [...row.querySelectorAll('font-kku')].map((host) => [host.dataset.fyLayout, host.dataset.fyFace, host.dataset.fyLayoutStatus || null]))"""
+    )
+    want_grid = [[[layout, face, None] for face in ("element", "svg", "device")]
+                 for layout in ("sebul-cases-v1", "sebul-fixed-v1", "square-context-v1")]
+    if shape_grid != want_grid:
+        raise AssertionError(f"{label}: the shape × material grid should draw every layout with every material {shape_grid!r}")
+    compose = page.evaluate(
+        """() => [...document.querySelectorAll('[data-compose] font-kku')].map((host) => [host.dataset.fyComposition, host.dataset.fyCompositionStatus || null,
+          [...host.querySelector('[part~="glyph"]').querySelectorAll('[part~="jamo"]')].length])"""
+    )
+    if compose != [["syllable", None, 2], ["whole", None, 2], ["jamo", None, 3]]:
+        raise AssertionError(f"{label}: the composition samples should build 화 as 호+ㅏ, ㅎ+ㅘ and ㅎ+ㅗ+ㅏ {compose!r}")
 
 
 SCROLL_THROUGH_JS = """async () => {

@@ -13,8 +13,9 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="theme-color" content="#ffffff" />
-    <!-- 이 페이지도 한 줄 설치로 런타임과 세벌 CSS, 꾸밈·움직임 확장을 불러온다. 다른 글꼴은 그 글꼴을 쓰는 요소가
-         화면 가까이 올 때 런타임이 CSS 한 장씩 받는다(필요할 때 받기, ADR-019). 상호작용 확장(타자·흩어지기)은 차례를
+    <!-- 이 페이지도 한 줄 설치로 런타임과 세벌 CSS, 꾸밈·움직임 확장을 불러온다. 데모와 제목은 글꼴을 밝히지 않아 기본 세벌식으로
+         그리는데, 세벌식도 sebul 글꼴 CSS 위에 짓기 때문에 data-fonts에 sebul을 적는다(setup.md). 다른 글꼴은 그 글꼴을 쓰는
+         요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다(필요할 때 받기, ADR-019). 상호작용 확장(타자·흩어지기)은 차례를
          지키는 script로 따로 붙인다. AI가 그린 8칸 세트는 런타임 바로 뒤에 등록해 첫 그리기부터 그 그림으로 그린다. -->
     <script src="lib/font-kku.js" data-fonts="sebul" data-addons="looks motion"></script>
     <script src="lib/font-kku-fx.js"></script>
@@ -27,7 +28,7 @@
     <header class="k-header">
       <div class="k-wrap k-header-inner">
         <a class="k-brand" href="./index.html">
-          <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20">꾸</font-kku></span>
+          <span class="k-stamp" aria-hidden="true"><font-kku size="20">꾸</font-kku></span>
           <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
         </a>
         <nav class="k-nav" aria-label="사이트" data-demo-nav><a href="lib/skill/SKILL.md" data-demo-nav-ai>AI 설명서 (SKILL.md)</a></nav>
@@ -163,8 +164,8 @@
         <div class="k-land-head">
           <p class="k-eyebrow"><span class="k-eyebrow-cells"><span>그리는 칸 8</span> <span class="k-eyebrow-to">쓰는 글자 11,172</span></span> <span class="k-eyebrow-note">보통 한글 글꼴은 2,350~11,172자를 한 자씩 그립니다</span></p>
           <h1 class="k-hero-title" id="hero-title">
-            <span class="font-kku k-h1" data-font="sebul" data-size="clamp(30px, 8.2vw, 54px)">8칸만 그리면,</span>
-            <span class="font-kku k-h1 k-mark" data-font="sebul" data-jamo-set="claude-marker-1" style="--fy-element-width: 0.13em" data-size="clamp(30px, 8.2vw, 54px)" data-follow-set>세상에 없던 한글 글꼴</span>
+            <span class="font-kku k-h1" data-size="clamp(30px, 8.2vw, 54px)">8칸만 그리면,</span>
+            <span class="font-kku k-h1 k-mark" data-jamo-set="claude-marker-1" style="--fy-element-width: 0.13em" data-size="clamp(30px, 8.2vw, 54px)" data-follow-set>세상에 없던 한글 글꼴</span>
           </h1>
         </div>
 
@@ -201,7 +202,7 @@
               </div>
             </div>
             <div class="k-maker-stage" data-maker-stage>
-              <font-kku data-maker-host data-follow-set font="sebul" jamo-set="claude-marker-1" style="--fy-element-width: 0.13em" size="clamp(28px, 4.1vw, 46px)">다람쥐 헌 쳇바퀴에 타고파</font-kku>
+              <font-kku data-maker-host data-follow-set jamo-set="claude-marker-1" style="--fy-element-width: 0.13em" size="clamp(28px, 4.1vw, 46px)">다람쥐 헌 쳇바퀴에 타고파</font-kku>
             </div>
             <p class="k-maker-count" data-maker-count aria-live="polite">그린 칸 8 · 이 문장 11자 · 쓸 수 있는 글자 11,172자 모두</p>
             <div class="k-maker-keep" data-maker-keep hidden>
@@ -227,13 +228,28 @@
         </div>
       </section>
 
+      <!-- 새 판 띠: 0.1.3(npm latest)에서 지금 판까지 크게 바뀐 넷. 판 번호는 scripts/update_package.py가 판을 올릴 때 함께 고친다
+           (data-fk-version). 자세한 표와 예전 모양을 지키는 법은 문서 #start-version -->
+      <div class="k-wrap">
+      <aside class="k-new" aria-labelledby="new-title">
+        <p class="k-new-title" id="new-title"><strong>새 판</strong> <code data-fk-version>0.1.4-rc.4</code> — 0.1.3에서 크게 바뀐 넷</p>
+        <ul class="k-new-list">
+          <li><strong>기본 모양이 세벌식</strong>글꼴을 적지 않으면 짜임마다 다듬은 세벌식으로 그립니다. 예전 타자기형 모양은 직결식(<code>font="jikgyeol"</code>)으로 고릅니다.</li>
+          <li><strong>글꼴 모양 × 재료</strong>그린 8칸·선 획·기기 글꼴 가운데 무엇으로 긋든 세벌식·직결식·네모꼴에 그대로 겁니다. <a href="#make-shape">견주어 보기</a></li>
+          <li><strong>새 작업실</strong>디자인·고치기·자소판·검수 네 페이지로 나눴고, 쉬운 모드만으로 그리기부터 저장까지 끝납니다. <a href="#make-studio">작업실 보기</a></li>
+          <li><strong>짓는 방식</strong>글자를 몇 덩이로 지을지(화 = 호 + ㅏ, ㅎ + ㅘ, ㅎ + ㅗ + ㅏ …)를 CSS 한 줄로 고릅니다. 고르지 않아도 됩니다.</li>
+        </ul>
+        <p class="k-new-more"><a href="./docs.html#start-version">바뀐 것 모두와 예전 모양 지키기 →</a></p>
+      </aside>
+      </div>
+
       <!-- 하나: 직접 만드는 한글 글꼴 -->
       <section class="k-section k-section--tint" id="make" aria-labelledby="make-title">
         <div class="k-wrap">
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true">하나</span>
             <span class="k-kicker">직접 만드는 한글 글꼴</span>
-            <h2 id="make-title" class="k-h2-lines"><span class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">고를 글꼴은 많은데</span> <span class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">내 글꼴은 없다</span></h2>
+            <h2 id="make-title" class="k-h2-lines"><span class="font-kku k-h2" data-size="clamp(30px, 4.4vw, 52px)">고를 글꼴은 많은데</span> <span class="font-kku k-h2" data-size="clamp(30px, 4.4vw, 52px)">내 글꼴은 없다</span></h2>
             <p class="k-lead">
               고를 수 있는 한글 글꼴은 수백 종이지만, 모두 남이 만든 것이라 다른 페이지와 겹칩니다. 내 글꼴을 만들려면 수천 자를 그려야 해서 직접 만드는 사람이 거의 없습니다.
               폰꾸는 그리는 양을 8칸으로 줄이고, 고치는 일을 칸 하나로 줄입니다.
@@ -256,6 +272,67 @@
           </div>
           <p class="k-note">조합형 344벌 = 초성 19 × 8벌 + 중성 21 × 4벌 + 받침 27 × 4벌. 완성형 2,350자는 KS X 1001, 11,172자는 현대 한글 전부입니다.</p>
 
+          <!-- 글꼴 = 글꼴 모양 × 재료(0.1.4, 한 엔진). 같은 글을 세 모양 × 세 재료로 — 칸마다 CSS 한 줄만 다르다. 그린 8칸 열과
+               짓는 방식 견본은 히어로에서 고른 세트를 따라간다(data-follow-set). 짓는 방식은 고르지 않아도 되는 선택이라 뒤에 작게 -->
+          <div class="k-shape" id="make-shape">
+            <h3 class="k-sub">그린 8칸은 재료 — 글꼴 모양은 따로 고릅니다</h3>
+            <p class="k-note">
+              폰꾸 글꼴은 <strong>글꼴 모양</strong>(자모를 어디에 얼마나 크게 놓나)과 <strong>재료</strong>(자모를 무엇으로 긋나)를 따로 고릅니다.
+              그래서 위에서 고른 8칸도, 기본 선 획도, 기기의 한글 글꼴도 같은 세 모양에 그대로 걸립니다. 같은 ㄱ이 어디에 서는지 보이게 초성만 빨갛게 칠했습니다.
+            </p>
+            <div class="k-table-wrap">
+              <table class="k-ltable k-shape-table">
+                <caption>글꼴 모양 × 재료 — 같은 글 '가 고 과 각 곽'</caption>
+                <thead>
+                  <tr><th scope="col">글꼴 모양</th><th scope="col">선 획 <small>기본</small></th><th scope="col">그린 8칸 <small><code>jamo-set</code></small></th><th scope="col">기기 글꼴 <small><code>--fy-face: device</code></small></th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">세벌식 <small>기본 — 짜임마다 정한 자리, 받침 없는 글자는 아래를 비웁니다</small></th>
+                    <td data-label="선 획"><font-kku class="k-cho-paint" size="clamp(24px, 2.5vw, 30px)">가 고 과 각 곽</font-kku></td>
+                    <td data-label="그린 8칸"><font-kku class="k-cho-paint" jamo-set="claude-marker-1" style="--fy-element-width: 0.13em" size="clamp(24px, 2.5vw, 30px)" data-follow-set>가 고 과 각 곽</font-kku></td>
+                    <td data-label="기기 글꼴"><font-kku class="k-cho-paint" style="--fy-face: device" size="clamp(24px, 2.5vw, 30px)">가 고 과 각 곽</font-kku></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">직결식 <small><code>--fy-layout: sebul-fixed-v1</code> — 같은 ㄱ은 어디서나 같은 자리(타자기형)</small></th>
+                    <td data-label="선 획"><font-kku class="k-cho-paint" style="--fy-layout: sebul-fixed-v1" size="clamp(24px, 2.5vw, 30px)">가 고 과 각 곽</font-kku></td>
+                    <td data-label="그린 8칸"><font-kku class="k-cho-paint" jamo-set="claude-marker-1" style="--fy-layout: sebul-fixed-v1; --fy-element-width: 0.13em" size="clamp(24px, 2.5vw, 30px)" data-follow-set>가 고 과 각 곽</font-kku></td>
+                    <td data-label="기기 글꼴"><font-kku class="k-cho-paint" style="--fy-layout: sebul-fixed-v1; --fy-face: device" size="clamp(24px, 2.5vw, 30px)">가 고 과 각 곽</font-kku></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">네모꼴 <small><code>--fy-layout: square-context-v1</code> — 글자마다 자리·크기를 바꿔 네모 칸을 채웁니다</small></th>
+                    <td data-label="선 획"><font-kku class="k-cho-paint" style="--fy-layout: square-context-v1" size="clamp(24px, 2.5vw, 30px)">가 고 과 각 곽</font-kku></td>
+                    <td data-label="그린 8칸"><font-kku class="k-cho-paint" jamo-set="claude-marker-1" style="--fy-layout: square-context-v1; --fy-element-width: 0.13em" size="clamp(24px, 2.5vw, 30px)" data-follow-set>가 고 과 각 곽</font-kku></td>
+                    <td data-label="기기 글꼴"><font-kku class="k-cho-paint" style="--fy-layout: square-context-v1; --fy-face: device" size="clamp(24px, 2.5vw, 30px)">가 고 과 각 곽</font-kku></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="k-note">
+              모양과 재료는 고르지 않아도 됩니다 — 적지 않으면 세벌식 선 획입니다. 직결식은 <code>font="jikgyeol"</code>로도 고르고, 기기 글꼴 재료는 방문자 기기의 한글 글꼴로 그려 기기마다 획이 조금 다릅니다.
+            </p>
+
+            <h3 class="k-sub">짓는 방식 — 고르고 싶을 때만</h3>
+            <p class="k-note">
+              글자를 몇 덩이로 지을지도 CSS 한 줄(<code>--fy-composition</code>)로 고릅니다. 덩이마다 색을 달리 칠했습니다. 고르지 않으면 그 글꼴 모양대로 짓습니다 — 세벌식은 모음을 자모로 나누고 겹받침 ㄺ은 한 덩이로 둡니다.
+              ㅎ을 ㅗ + ㅇ처럼 다른 자모 조각으로 짓는 '조각으로', ㆍ + ㅡ + ㅇ까지 내려가는 '원형으로'도 있습니다(<a href="./docs.html#fonts-composition">문서 · 짓는 방식</a>).
+            </p>
+            <div class="k-compose" data-compose>
+              <figure>
+                <div class="k-stage"><font-kku class="k-pieces-paint" jamo-set="claude-marker-1" style="--fy-composition: syllable; --fy-element-width: 0.13em" size="clamp(40px, 5vw, 56px)" data-follow-set>화 흙</font-kku></div>
+                <figcaption><strong>음절로</strong> 호 + ㅏ <code>syllable</code></figcaption>
+              </figure>
+              <figure>
+                <div class="k-stage"><font-kku class="k-pieces-paint" jamo-set="claude-marker-1" style="--fy-composition: whole; --fy-element-width: 0.13em" size="clamp(40px, 5vw, 56px)" data-follow-set>화 흙</font-kku></div>
+                <figcaption><strong>겹모음 통째로</strong> ㅎ + ㅘ <code>whole</code></figcaption>
+              </figure>
+              <figure>
+                <div class="k-stage"><font-kku class="k-pieces-paint" jamo-set="claude-marker-1" style="--fy-composition: jamo; --fy-element-width: 0.13em" size="clamp(40px, 5vw, 56px)" data-follow-set>화 흙</font-kku></div>
+                <figcaption><strong>자모로</strong> ㅎ + ㅗ + ㅏ, ㄹ + ㄱ <code>jamo</code></figcaption>
+              </figure>
+            </div>
+          </div>
+
           <div class="k-ways">
             <h3 class="k-sub">더 적게 그리거나, 그리지 않고 만드는 길</h3>
             <ul>
@@ -265,22 +342,28 @@
             </ul>
           </div>
 
+          <!-- 작업실 카드: 작업실 페이지 넷(디자인·고치기·자소판·검수, ?page=)과 같은 갈래. 쉬운 모드만으로 저장까지 된다 -->
+          <h3 class="k-sub" id="make-studio">글꼴 작업실 — 쉬운 모드만으로 그리기부터 저장까지</h3>
+          <p class="k-note">
+            브라우저에서 여는 작업실은 네 페이지입니다. 저장은 글꼴 묶음 파일 하나이고, 내 페이지에 붙일 코드는 '내보내기 ▾ → 내 페이지에 쓰기'로 한 번에 복사합니다.
+            규칙·편집 범위·CSS 원문까지 보고 싶으면 머리 막대에서 정밀 모드로 바꿉니다.
+          </p>
           <div class="k-make">
             <a class="k-make-card" href="./font-studio.html#draw">
-              <font-kku font="sebul" jamo-set="claude-marker-1" style="--fy-element-width: 0.13em" size="34">8칸 그리기</font-kku>
-              <span>작업실에서 8칸부터 그립니다. 조립된 모양이 마음에 들지 않는 자모만 더 그리고(40칸까지), SVG를 칸마다 가져오거나 칸마다 AI에게 줄 요청 글을 복사합니다. 디자인 JSON이나 묶음 파일로 저장합니다.</span>
+              <font-kku jamo-set="claude-marker-1" style="--fy-element-width: 0.13em" size="34">8칸 그리기</font-kku>
+              <span><strong>디자인</strong> — 재료·글꼴 모양·짓는 방식을 고르고 원형 8칸부터 긋습니다. 조립이 마음에 들지 않는 자모만 더 그리고(40칸까지), 다른 도구나 AI가 그린 SVG는 칸 이름대로 나눠 한 번에 가져옵니다. 남은 칸을 한 번에 그려 달라는 AI 요청 글도 복사합니다.</span>
             </a>
-            <a class="k-make-card" href="./font-studio.html">
-              <font-kku size="34">글꼴 작업실</font-kku>
-              <span>선 획, 내가 그린 그림, 가진 글꼴 가운데 무엇으로 그릴지 고르고, 자모마다 어디서 왔는지 보며 다듬습니다.</span>
+            <a class="k-make-card" href="./font-studio.html?page=edit">
+              <font-kku size="34">끌어 고치기</font-kku>
+              <span><strong>고치기</strong> — 미리보기의 자모를 눌러 끌어 옮기고 손잡이로 크기·회전을 바꿉니다. '이 글자만 · 같은 짜임 모두 · 이 자모 어디서나'에서 범위를 고르면 바뀔 곳이 먼저 점선으로 보입니다.</span>
             </a>
-            <a class="k-make-card k-make-card--grid" href="./font-studio.html?font=sprite-example#studio-material">
-              <font-kku font="sebul" size="34">자소판 40칸</font-kku>
-              <span>워드·피그마에서도 쓸 글꼴 파일(TTF·WOFF)이 필요하면 이 길입니다. 자모 40칸을 그린 판을 PNG·SVG와 글꼴 파일로 내보냅니다.</span>
+            <a class="k-make-card k-make-card--grid" href="./font-studio.html?font=sprite-example&amp;page=sheet">
+              <font-kku size="34">자소판 40칸</font-kku>
+              <span><strong>자소판</strong> — 워드·피그마에서도 쓸 글꼴 파일이 필요하면 이 길입니다. 자모 40칸을 칸마다 그린 판을 자소판 PNG와 글꼴 파일(TTF)로 내보냅니다.</span>
             </a>
-            <a class="k-make-card" href="./font-studio.html?font=sebul">
-              <font-kku font="sebul" size="34">글꼴 CSS 다듬기</font-kku>
-              <span>자모를 누르면 그 값이 어느 규칙에서 왔는지 보입니다. 자리·자모·문맥 범위로 고쳐 CSS로 내보냅니다.</span>
+            <a class="k-make-card" href="./font-studio.html?page=review">
+              <font-kku size="34">검수</font-kku>
+              <span><strong>검수</strong> — 만든 글꼴을 크기별 실제 글자로 보며 판정과 메모를 남기고, 저장해 둔 비교 기준과 견주어 바뀐 곳을 칠해 봅니다.</span>
             </a>
           </div>
 
@@ -322,7 +405,7 @@
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true">둘</span>
             <span class="k-kicker">AI에게 맡기는 한글 글꼴</span>
-            <h2 id="ai-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">대화창 답 하나가 글꼴 하나</h2>
+            <h2 id="ai-title" class="font-kku k-h2" data-size="clamp(30px, 4.4vw, 52px)">대화창 답 하나가 글꼴 하나</h2>
             <p class="k-lead">
               AI에게 '우리만의 한글 글꼴'을 부탁하면 보통 Google Fonts에서 하나를 골라 줍니다. 대화창 답으로 글자 그림 수천 개짜리 글꼴 파일을 만들 수는 없기 때문입니다.
               폰꾸의 8칸은 SVG 경로 몇 줄이라 대화창 답 하나에 다 들어갑니다. 설명서 링크와 원하는 느낌을 주면 AI가 8칸을 그려 HTML 한 장으로 돌려주고, 그 답이 그대로 11,172자 글꼴입니다.
@@ -335,7 +418,7 @@
                 <li><strong>복사해서 붙여 넣기</strong>프롬프트를 복사해 ChatGPT·Claude 대화창에 붙여 넣고 '느낌'만 바꿉니다.</li>
                 <li><strong>받은 HTML 열기</strong>Claude 아티팩트·ChatGPT 캔버스로 보거나 <code>.html</code> 파일로 저장해 브라우저로 엽니다.</li>
                 <li><strong>말로 고치기</strong>"획이 뭉쳐 보여, 더 가늘게"처럼 이어서 부탁합니다. 아래 풍선 글씨의 둘째 답이 그렇게 받은 것입니다.</li>
-                <li><strong>손으로 다듬기</strong>작업실 '그리기 8 → 24 → 40'에서 칸을 고르고, 'SVG 가져오기'에 받은 칸의 경로를 따옴표 없이 한 줄에 하나씩 붙여 넣은 뒤 이어서 그립니다. 타원으로 받은 칸은 <code>fill="none" stroke="#000"</code>인 <code>&lt;ellipse&gt;</code>를 <code>&lt;svg viewBox="0 0 100 100"&gt;</code>에 담아 붙여 넣습니다.</li>
+                <li><strong>손으로 다듬기</strong>작업실 그리기(원형 8 · 기본 24 · 확장 40)에서 칸을 고르고, 'SVG 가져오기 — AI·다른 도구에서'에 받은 칸의 경로를 따옴표 없이 붙여 넣어 '이 칸에 가져오기'를 누른 뒤 이어서 그립니다. 타원으로 받은 칸은 <code>fill="none" stroke="#000"</code>인 <code>&lt;ellipse&gt;</code>를 <code>&lt;svg viewBox="0 0 100 100"&gt;</code>에 담아 붙여 넣습니다. 더 그릴 칸은 '남은 칸 한 번에 부탁하는 글 복사'로 AI에게 이어서 맡깁니다.</li>
               </ol>
               <p class="k-note">
                 AI가 링크를 열지 못하면(웹 검색이 꺼져 있을 때)
@@ -353,10 +436,14 @@
           </div>
 
           <div class="k-answers" data-ai-result="set" id="ai-answers">
-            <h3 class="k-sub">이 프롬프트로 받은 답 — 같은 문장으로 나란히</h3>
+            <h3 class="k-sub">받은 답 — 같은 문장으로 나란히</h3>
             <p class="k-note">
               답 HTML을 고치지 않고 그 안의 등록 코드를 그대로 돌려 그렸습니다. 여기 실린 답 <span data-ai-count>6</span>개는 모두 Claude Code가 이 저장소의 설명서를 읽고, 그려 보기 전에 한 번에 쓴 것입니다. 답을 쓴 모델과 날짜는 답 원문을 펼치면 나옵니다.
               ChatGPT나 Claude.ai 대화창에 링크만 주고 받은 답은 아직 싣지 않았습니다. 같은 부탁을 한 번 더 하면 비슷하지만 다른 답이 나오고(마커 둘), 느낌을 바꾸면 다른 글꼴이 나옵니다.
+            </p>
+            <p class="k-note">
+              이 답들은 위 프롬프트와 한 곳만 다른 앞 글로 받았습니다 — 제목 태그에 <code>font="sebul"</code>을 적었습니다. 그래서 아래 줄은 답이 적은 대로 네모꼴 글꼴 <code>sebul</code>로 그리고,
+              이 페이지의 다른 데모는 같은 8칸을 기본 세벌식에 겁니다. 그린 8칸은 재료라 글꼴 모양과 따로 고릅니다(<a href="#make-shape">모양 × 재료</a>).
             </p>
             <div data-ai-answers></div>
           </div>
@@ -369,7 +456,7 @@
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true">셋</span>
             <span class="k-kicker">씨앗 변주</span>
-            <h2 id="vary-title" class="k-h2-lines"><span class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">같은 글자도 손글씨처럼</span> <span class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">매번 다르게</span></h2>
+            <h2 id="vary-title" class="k-h2-lines"><span class="font-kku k-h2" data-size="clamp(30px, 4.4vw, 52px)">같은 글자도 손글씨처럼</span> <span class="font-kku k-h2" data-size="clamp(30px, 4.4vw, 52px)">매번 다르게</span></h2>
             <p class="k-lead">
               손으로 쓴 글씨는 같은 글자를 두 번 똑같이 쓰지 않습니다. 보통 글꼴은 같은 글자가 늘 같은 그림이고, 글자 단위로 흔들어도 음절이 통째로 기울 뿐입니다.
               폰꾸는 한 글자 안의 초성·중성·받침이 따로 기울고 자리를 비켜, 내가 그린 8칸도 손글씨처럼 같은 글자가 매번 조금씩 다르게 나옵니다. 받을 파일은 늘지 않습니다.
@@ -379,11 +466,11 @@
           <div class="k-vary" data-vary>
             <div class="k-vary-row">
               <span class="k-vary-label">글자 단위 JS 흔들기<small>같은 AI 마커 세트에 아래 6줄을 그대로 돌렸습니다 — 네 '깔'은 같은 그림을 돌리고 옮긴 것</small></span>
-              <div class="k-stage"><font-kku class="k-vary-color" font="sebul" jamo-set="claude-marker-1" size="clamp(48px, 7.5vw, 88px)" data-vary-js>깔깔깔깔</font-kku></div>
+              <div class="k-stage"><font-kku class="k-vary-color" jamo-set="claude-marker-1" size="clamp(48px, 7.5vw, 88px)" data-vary-js>깔깔깔깔</font-kku></div>
             </div>
             <div class="k-vary-row k-vary-row--us">
               <span class="k-vary-label">폰꾸 — 자모 단위<small>AI 마커 세트 + 자모마다 기울기·자리 — ㄲ·ㅏ·ㄹ이 저마다 움직여 네 '깔'의 모양이 다릅니다</small></span>
-              <div class="k-stage"><font-kku class="k-vary-color k-hand" font="sebul" jamo-set="claude-marker-1" seed="auto" jamo-seeds size="clamp(48px, 7.5vw, 88px)" data-vary-host>깔깔깔깔</font-kku></div>
+              <div class="k-stage"><font-kku class="k-vary-color k-hand" jamo-set="claude-marker-1" seed="auto" jamo-seeds size="clamp(48px, 7.5vw, 88px)" data-vary-host>깔깔깔깔</font-kku></div>
             </div>
           </div>
           <div class="k-proof-row">
@@ -421,9 +508,9 @@
             <button type="button" class="k-btn k-btn--small" data-name-redraw>세 이름 다시 그리기</button>
           </form>
           <div class="k-names">
-            <figure class="k-vs-side"><div class="k-stage"><font-kku class="k-vary-color k-hand" font="sebul" jamo-set="claude-marker-1" seed="김폰꾸" jamo-seeds size="clamp(26px, 5vw, 52px)" data-name-host>김폰꾸</font-kku></div></figure>
-            <figure class="k-vs-side"><div class="k-stage"><font-kku class="k-vary-color k-hand" font="sebul" jamo-set="claude-marker-1" seed="이영희" jamo-seeds size="clamp(26px, 5vw, 52px)" data-name-host>이영희</font-kku></div></figure>
-            <figure class="k-vs-side"><div class="k-stage"><font-kku class="k-vary-color k-hand" font="sebul" jamo-set="claude-marker-1" seed="박민수" jamo-seeds size="clamp(26px, 5vw, 52px)" data-name-host>박민수</font-kku></div></figure>
+            <figure class="k-vs-side"><div class="k-stage"><font-kku class="k-vary-color k-hand" jamo-set="claude-marker-1" seed="김폰꾸" jamo-seeds size="clamp(26px, 5vw, 52px)" data-name-host>김폰꾸</font-kku></div></figure>
+            <figure class="k-vs-side"><div class="k-stage"><font-kku class="k-vary-color k-hand" jamo-set="claude-marker-1" seed="이영희" jamo-seeds size="clamp(26px, 5vw, 52px)" data-name-host>이영희</font-kku></div></figure>
+            <figure class="k-vs-side"><div class="k-stage"><font-kku class="k-vary-color k-hand" jamo-set="claude-marker-1" seed="박민수" jamo-seeds size="clamp(26px, 5vw, 52px)" data-name-host>박민수</font-kku></div></figure>
           </div>
           <p class="k-note" data-name-check aria-live="polite"></p>
           <p class="k-note">
@@ -439,7 +526,7 @@
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true">넷</span>
             <span class="k-kicker">자모 단위 칠과 움직임</span>
-            <h2 id="jamo-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">어떤 문장이든 자모마다</h2>
+            <h2 id="jamo-title" class="font-kku k-h2" data-size="clamp(30px, 4.4vw, 52px)">어떤 문장이든 자모마다</h2>
             <p class="k-lead">
               고정 문구라면 After Effects·Lottie나 SVG로 만들면 됩니다. 하지만 사용자가 친 닉네임이나 데이터로 바뀌는 문장은 그때마다 다시 만들 수 없습니다.
               폰꾸는 어떤 문장이든 초성·중성·받침을 따로 칠하고 따로 움직입니다. 꾸민 글자도 텍스트라 화면 읽기는 원문을 한 번 읽고, 복사하면 원문이 들어갑니다.
@@ -458,8 +545,8 @@
             </figure>
             <figure class="k-vs-side">
               <figcaption>폰꾸 — 초성·중성·받침이 각자 노드</figcaption>
-              <div class="k-stage"><font-kku class="k-jamo-paint" font="sebul" size="clamp(30px, 4vw, 44px)" data-jamo-host>받침이 톡 떨어진다</font-kku></div>
-              <div class="k-stage"><font-kku class="k-jamo-paint" font="sebul" animate="drop" size="clamp(30px, 4vw, 44px)" data-jamo-host data-jamo-replay>받침이 톡 떨어진다</font-kku></div>
+              <div class="k-stage"><font-kku class="k-jamo-paint" size="clamp(30px, 4vw, 44px)" data-jamo-host>받침이 톡 떨어진다</font-kku></div>
+              <div class="k-stage"><font-kku class="k-jamo-paint" animate="drop" size="clamp(30px, 4vw, 44px)" data-jamo-host data-jamo-replay>받침이 톡 떨어진다</font-kku></div>
               <p class="k-note">아래 줄은 받침만 떨어지는 <code>animate="drop"</code>입니다. 칸에 커서를 올리면 다시 떨어집니다.</p>
             </figure>
           </div>
@@ -470,32 +557,32 @@
 
           <div class="k-fxgrid" data-fxgrid>
             <a class="k-fxtile" href="./effects.html#fx-drop">
-              <span class="k-fxtile-stage"><font-kku font="sebul" jamo-set="claude-marker-1" animate="drop" size="34" style="--fy-element-width: 0.13em" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
+              <span class="k-fxtile-stage"><font-kku jamo-set="claude-marker-1" animate="drop" size="34" style="--fy-element-width: 0.13em" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
               <strong>받침 톡</strong>
               <span>받침만 위에서 떨어져 두 번 튀고 자리를 잡습니다. 직접 그린 8칸 글꼴에도 걸립니다.</span>
             </a>
             <a class="k-fxtile" href="./effects.html#fx-flicker">
-              <span class="k-fxtile-stage" data-tone="dark"><font-kku font="neon" animate="flicker" size="34" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
+              <span class="k-fxtile-stage" data-tone="dark"><font-kku class="kku-look-neon" animate="flicker" size="34" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
               <strong>고장 난 네온</strong>
-              <span>글자 전체가 아니라 네온관 하나만 끊어질 듯 깜빡입니다(네온 글꼴).</span>
+              <span>글자 전체가 아니라 네온관 하나만 끊어질 듯 깜빡입니다(네온 꾸밈).</span>
             </a>
             <a class="k-fxtile" href="./effects.html#fx-assemble">
-              <span class="k-fxtile-stage"><font-kku font="sebul" jamo-set="claude-pen-1" style="--fy-element-width: 0.05em" animate="assemble" size="34" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
+              <span class="k-fxtile-stage"><font-kku jamo-set="claude-pen-1" style="--fy-element-width: 0.05em" animate="assemble" size="34" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
               <strong>자모 조립</strong>
               <span>초성·중성·받침이 저마다 다른 쪽에서 날아와 맞물립니다(AI 가는 펜 세트).</span>
             </a>
             <a class="k-fxtile" href="./effects.html#fx-type">
-              <span class="k-fxtile-stage"><font-kku font="sebul" size="34" data-fx-tile data-fx-type>받침이 톡 떨어진다</font-kku></span>
+              <span class="k-fxtile-stage"><font-kku size="34" data-fx-tile data-fx-type>받침이 톡 떨어진다</font-kku></span>
               <strong>두벌식 타자</strong>
               <span>자모 단위로 칩니다 — ㅂ → 바 → 받. 칸에 커서를 올리면 다시 칩니다.</span>
             </a>
             <a class="k-fxtile" href="./effects.html#fx-scatter">
-              <span class="k-fxtile-stage"><font-kku font="sebul" class="kku-look-saekdong" size="34" data-kku-fx="scatter" tabindex="-1" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
+              <span class="k-fxtile-stage"><font-kku class="kku-look-saekdong" size="34" data-kku-fx="scatter" tabindex="-1" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
               <strong>흩어졌다 모이기</strong>
               <span>마우스를 올리거나 누르면 자모가 제 자리 쪽으로 흩어졌다 돌아옵니다.</span>
             </a>
             <a class="k-fxtile" href="./effects.html#fx-origin">
-              <span class="k-fxtile-stage"><font-kku class="k-hoek-added" font="sebul" size="34" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
+              <span class="k-fxtile-stage"><font-kku class="k-hoek-added" size="34" data-fx-tile>받침이 톡 떨어진다</font-kku></span>
               <strong>더한 획만 칠하기</strong>
               <span>획마다 역할이 붙어, ㅋ·ㅌ·ㅊ처럼 기본 자음에 더한 획만 따로 칠합니다.</span>
             </a>
@@ -510,7 +597,7 @@
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true">다섯</span>
             <span class="k-kicker">내 페이지에 쓰기</span>
-            <h2 id="web-title" class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">스크립트 한 줄과 8칸</h2>
+            <h2 id="web-title" class="font-kku k-h2" data-size="clamp(30px, 4.4vw, 52px)">스크립트 한 줄과 8칸</h2>
             <p class="k-lead">
               런타임 스크립트 한 줄을 넣고, 만든 8칸을 <code>registerJamo</code>로 등록한 뒤 <code>jamo-set</code>으로 고릅니다.
               아래 코드는 지금 위에서 보고 있는 8칸 그대로입니다 — 직접 그린 칸도 들어갑니다.
@@ -522,12 +609,13 @@
               <pre id="web-code"><code data-web-code></code></pre>
             </div>
             <div class="k-stack" aria-label="위 코드의 결과">
-              <div class="k-stage"><font-kku font="sebul" jamo-set="claude-marker-1" style="--fy-element-width: 0.13em" size="48" data-web-host data-follow-set>오늘의 기록</font-kku></div>
+              <div class="k-stage"><font-kku jamo-set="claude-marker-1" style="--fy-element-width: 0.13em" size="48" data-web-host data-follow-set>오늘의 기록</font-kku></div>
               <p class="k-note" data-web-size></p>
             </div>
           </div>
           <ul class="k-list k-after">
-            <li><strong>작업실에서 만든 글꼴</strong> — 디자인 JSON이나 묶음 파일(<code>.fkk-bundle.json</code>)로 저장하고, '페이지용 코드 복사'로 같은 모양의 코드를 받습니다.</li>
+            <li><strong>작업실에서 만든 글꼴</strong> — '저장'이 글꼴 묶음 파일 하나로 남기고, '내보내기 ▾ → 내 페이지에 쓰기'가 런타임·글꼴 CSS·그린 그림 세트까지 같은 모양의 코드를 한 번에 복사합니다.</li>
+            <li><strong>작업실을 내 서비스에</strong> — <code>@tty.link/font-kku/studio</code>의 <code>mount</code>로 작업실을 내 페이지에 끼웁니다. 이 사이트의 <a href="./font-studio.html">작업실</a>도 그렇게 붙였습니다. 자세한 것은 <a href="./docs.html#make-studio">문서</a>에 있습니다.</li>
             <li><strong>글꼴 파일(TTF·WOFF)</strong> — 자소판(자모를 칸마다 그려 모은 그림 한 장)으로 만든 글꼴은 현대 한글 11,172자와 낱자를 모두 담은 글꼴 파일로 받습니다.</li>
             <li><strong>자바스크립트가 없는 곳</strong> — 페이지 글씨는 런타임이 그리므로, 스크립트가 막힌 곳에서는 위의 글꼴 파일이나 명령줄 <code>font-kku-text</code>의 2줄 평문을 씁니다. 서버에서 정적 HTML을 내는 렌더러는 아직 공개하지 않았습니다.</li>
             <li><strong>설치</strong> — <code>npm install @tty.link/font-kku@0.1.4-rc.4</code>(이 페이지의 코드와 같은 판). CDN 없이 쓰려면 <code>font-kku.js</code>·<code>font-kku.css</code>·<code>profiles/</code>를 같은 폴더 구조로 둡니다. 속성·꾸미기는 <a href="./docs.html#start">문서</a>에 있습니다.</li>
@@ -594,7 +682,7 @@
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true">덤</span>
             <span class="k-kicker">사례</span>
-            <h2 id="more-title" class="k-h2-lines"><span class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">그대로 쓰고 고쳐 쓰고</span> <span class="font-kku k-h2" data-font="sebul" data-size="clamp(30px, 4.4vw, 52px)">새로 만드는 사례</span></h2>
+            <h2 id="more-title" class="k-h2-lines"><span class="font-kku k-h2" data-size="clamp(30px, 4.4vw, 52px)">그대로 쓰고 고쳐 쓰고</span> <span class="font-kku k-h2" data-size="clamp(30px, 4.4vw, 52px)">새로 만드는 사례</span></h2>
             <p class="k-lead">
               청첩장·네온 간판·예능 자막·한글 학습지·칭찬 상장처럼 쓰임이 다른 사례 <span data-cases-count>16</span>가지가 모두 HTML 한 장입니다.
               그대로 가져가 글만 바꾸거나, 글씨를 내가 그린 8칸으로 갈아 끼우거나, 사례 페이지에서 요청 글을 만들어 AI에게 새 페이지를 부탁합니다.

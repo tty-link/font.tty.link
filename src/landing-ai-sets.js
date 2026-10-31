@@ -15,8 +15,14 @@
 
   var GUIDE = "https://font.tty.link/lib/skill/SKILL.md";
 
-  /* 프롬프트 — feel만 바꿔 쓴다. 소개 페이지의 'AI에게 맡길 문장 복사'도 이 글을 복사한다. */
-  function prompt(feel) {
+  /* 프롬프트 — feel만 바꿔 쓴다. 소개 페이지의 'AI에게 맡길 문장 복사'도 이 글을 복사한다.
+   * 0.1.4부터 글꼴을 비운 기본이 세벌식이라 프롬프트도 글꼴을 밝히지 않는다(그린 8칸을 기본 세벌식에 건다).
+   * 아래 답들은 그 전 프롬프트로 받았다 — 다른 글은 같고 제목 태그에 font="sebul"(ANSWERED_FONT)을 적었다.
+   * prompt(feel, ANSWERED_FONT)가 그때 글을 한 글자도 다르지 않게 돌려준다(tests/landing_sets.test.js). */
+  var ANSWERED_FONT = "sebul";
+
+  function prompt(feel, font) {
+    var tag = "<font-kku " + (font ? "font=\"" + font + "\" " : "") + "jamo-set=\"my-font\" size=\"64\">";
     return [
       "이 설명서를 읽고 따라 해 줘: " + GUIDE,
       "",
@@ -25,7 +31,7 @@
       "",
       "- draw-jamo.md의 「세벌·고딕에 그림 세트 걸기」대로 원형 8칸 ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ만 SVG 경로로 그려 줘. 나머지 자모와 한글 11,172자는 폰꾸가 조립해.",
       "- FontKku.registerJamo(\"my-font\", { \"ㄱ\": { box, shapes }, … }, { frame: \"box\", cap: \"round\", join: \"round\" })로 등록하고, 획은 중심선 경로로.",
-      "- 답은 HTML 한 장: 런타임 스크립트 한 줄, 등록 코드, '다람쥐 헌 쳇바퀴에 타고파'를 <font-kku font=\"sebul\" jamo-set=\"my-font\" size=\"64\">로 크게. 획 굵기는 --fy-element-width로."
+      "- 답은 HTML 한 장: 런타임 스크립트 한 줄, 등록 코드, '다람쥐 헌 쳇바퀴에 타고파'를 " + tag + "로 크게. 획 굵기는 --fy-element-width로."
     ].join("\n");
   }
 
@@ -320,7 +326,7 @@
     return null;
   }
 
-  var api = { GUIDE: GUIDE, MARKER: MARKER, BRUSH: BRUSH, BALLOON: BALLOON, PEN: PEN, prompt: prompt, sets: sets, read: read, byId: byId };
+  var api = { GUIDE: GUIDE, MARKER: MARKER, BRUSH: BRUSH, BALLOON: BALLOON, PEN: PEN, ANSWERED_FONT: ANSWERED_FONT, prompt: prompt, sets: sets, read: read, byId: byId };
   if (typeof module === "object" && module.exports) {
     module.exports = api;
   }

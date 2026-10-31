@@ -98,3 +98,16 @@ test("the prompt links the usage guide and asks for the 8 origin cells", () => {
     assert.ok(typeof set.followup === "string" && set.followup.length > 0, set.id);
   }
 });
+
+test("the copied prompt uses the default 세벌식 and the answered prompt differs only by font", () => {
+  /* 지금 복사되는 글은 글꼴을 밝히지 않는다 — 그린 8칸을 기본 세벌식에 건다 */
+  const now = Sets.prompt(Sets.MARKER);
+  assert.ok(now.includes('<font-kku jamo-set="my-font" size="64">'), now);
+  assert.ok(!/font="/.test(now), now);
+  /* 실린 답은 제목 태그에 font="sebul"을 적던 글로 받았다 — 그 한 곳만 다르고, 답도 그 글꼴을 적었다 */
+  const then = Sets.prompt(Sets.MARKER, Sets.ANSWERED_FONT);
+  assert.equal(then.replace(' font="' + Sets.ANSWERED_FONT + '"', ""), now);
+  for (const set of Sets.sets) {
+    assert.ok(set.answer.includes('font="' + Sets.ANSWERED_FONT + '"'), set.id);
+  }
+});
