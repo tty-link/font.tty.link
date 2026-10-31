@@ -611,6 +611,17 @@ def assert_public_pages(page, url: str, label: str) -> None:
     for section in ("start", "hosts", "wrap", "customize", "motion", "text", "ai", "api", "terms", "dev-tools"):
         if page.locator(f"#{section}").count() != 1:
             raise AssertionError(f"{label}: docs is missing the #{section} section")
+    # 제목은 글꼴을 밝히지 않아 기본 세벌식으로 그리고, 글꼴 표는 기본(비움) → 직결식 → 네모꼴 sebul 차례로 시작한다
+    shapes = page.evaluate(
+        """() => ({
+          heads: [...document.querySelectorAll('.k-prose :is(h1, h2).font-kku')].map((h) => [h.hasAttribute('data-font'), h.dataset.fyLayout]),
+          rows: [...document.querySelectorAll('#fonts > .k-table-scroll:first-of-type tbody tr')].slice(0, 3)
+            .map((row) => { const host = row.querySelector('font-kku'); return [host.getAttribute('font'), host.dataset.fyLayout || null]; }),
+        })"""
+    )
+    if (not shapes["heads"] or any(named or layout != "sebul-cases-v1" for named, layout in shapes["heads"])
+            or shapes["rows"] != [[None, "sebul-cases-v1"], ["jikgyeol", "sebul-fixed-v1"], ["sebul", None]]):
+        raise AssertionError(f"{label}: docs headings should use the default 세벌식 and the font table should start with it {shapes!r}")
 
 
 SHOWCASE_PROMPT_GOLDEN = (
@@ -652,14 +663,16 @@ def assert_showcase_page(page, url: str, label: str) -> None:
     """사례(사례 모음·고쳐 쓰기·새로 만들기): 요청 글 만들기(buildPrompt)는 정해진 글을 바이트까지 그대로 만들고, 화면의 고르기도
     같은 글을 낸다. 쓰임 고르기는 그 쓰임 카드만 남기고(차례는 그대로) 셈이 index.json과 맞다. 카드의 글꼴 표는 index.json의
     fonts이고 "fixed"(글꼴 이름을 비운 곳)는 '세벌식' → fonts.html#layout이다. 'AI에게 고쳐 달라기'는 공개 사이트의 사례
-    주소를 담는다. 고쳐 쓰기는 마커 세트를 고르면 미리보기의 바탕 요소가 모두 그 세트(SVG 그림)로 그려지고, 복사할 HTML에
-    registerJamo와 jsDelivr 런타임이 들며, '원래 글꼴'이면 'HTML 복사'와 같은 글이다. 글꼴 이름이 없는 바탕 요소는 제 칩
-    '세벌식'으로 켜고 끄며 그림 세트만 걸어 세벌식 배치를 지킨다. 세트를 골랐는데 켠 칩이 없으면 '바꿀 글꼴을 하나 이상
-    켜세요'와 함께 복사·내려받기가 막힌다. 다른 탭에서 그린 칸을 지우면 '내가 그린 8칸'으로 만든 글도 마커로 다시 만든다.
-    폭을 바꿔도 미리보기 틀이 window 오류(ResizeObserver loop)를 내지 않는다. 요청 글 만들기 옆 '이 설정 불러오기'는 AI 첫 답의
-    요청 글(made.prompt)을 그대로 다시 만든다. 카드의 펼침 제목과 증거 줄이 같은 말을 쓰고, 쓰임 고르기로 숨은 카드를 가리키는
-    링크는 고르기를 풀고 간다. 주소의 #apps·#case-<이름>은 카드가 늦게 서도 그 자리(머리말 밑)에 닿는다. made(AI에게 받은 답
-    기록)가 있는 항목은 표지와 요청 원문을 보인다. file://에서는 고쳐 쓰기 대신 안내가 보인다."""
+    주소를 담는다. 고쳐 쓰기는 마커 세트를 고르면 미리보기의 바탕 요소가 모두 그 세트(SVG 그림)로 그려지고(이름 있는 글꼴은
+    네모꼴 sebul로 — 사례가 짠 글자 폭을 지킨다), 복사할 HTML에 registerJamo와 jsDelivr 런타임이 들며, '원래 글꼴'이면
+    'HTML 복사'와 같은 글이다. 폰꾸에 든 그림 세트(pilgi-box)는 등록 코드 없이 이름만 걸고 런타임이 필요할 때 받아 그린다.
+    글꼴 이름이 없는 바탕 요소는 제 칩 '세벌식'으로 켜고 끄며 그림 세트만 걸어 글꼴 모양 세벌식을 지킨다. 세트를 골랐는데 켠
+    칩이 없으면 '바꿀 글꼴을 하나 이상 켜세요'와 함께 복사·내려받기가 막힌다. 다른 탭에서 그린 칸을 지우면 '내가 그린 8칸'으로
+    만든 글도 마커로 다시 만든다. 폭을 바꿔도 미리보기 틀이 window 오류(ResizeObserver loop)를 내지 않는다. 요청 글 만들기 옆
+    '이 설정 불러오기'는 AI 첫 답의 요청 글(made.prompt)을 그대로 다시 만든다. 카드의 펼침 제목과 증거 줄이 같은 말을 쓰고,
+    쓰임 고르기로 숨은 카드를 가리키는 링크는 고르기를 풀고 간다. 주소의 #apps·#case-<이름>은 카드가 늦게 서도 그 자리(머리말
+    밑)에 닿는다. made(AI에게 받은 답 기록)가 있는 항목은 카드에 'AI 답' 표지만 두고, 받은 내력(몇 번째 답·손봤는지·모델·날짜)은
+    카드의 펼침 안에만 보인다 — 카드 몸과 요청 글 만들기 옆 증거에는 모델·날짜가 없다. file://에서는 고쳐 쓰기 대신 안내가 보인다."""
     errors, stop = collect_page_errors(page)
     showcase_url = url.replace("index.html", "showcase.html")
     page.add_init_script(
@@ -750,6 +763,19 @@ def assert_showcase_page(page, url: str, label: str) -> None:
     if ('FontKku.registerJamo("my-font"' not in html or f'<script src="{runtime}" data-fonts="sebul"></script>' not in html
             or "cdn.jsdelivr.net" not in runtime or "<base" in html or not re.fullmatch(r"바뀐 줄 \(\+\d+ −\d+\)", diff_title)):
         raise AssertionError(f"{label}: the remixed HTML should register the set and load the jsDelivr runtime ({diff_title!r})")
+    # 폰꾸에 든 그림 세트: 등록 코드 없이 이름만 걸고, 미리보기의 런타임이 profiles/pilgi-box.jamo.js를 받아 SVG로 그린다
+    page.check("[data-remix-sets] input[value='pilgi-box']")
+    page.wait_for_function("() => { const s = FontKkuShowcase.remixState(); return s.ready && s.set === 'pilgi-box'; }")
+    page.wait_for_function(REMIX_PREVIEW_READY_JS, timeout=20000)
+    builtin = page.evaluate(
+        """() => ({ hosts: [...document.querySelector('[data-remix-preview]').contentDocument.querySelectorAll('font-kku, .font-kku')]
+          .map((host) => [host.getAttribute('jamo-set') || host.getAttribute('data-jamo-set'), host.dataset.fyFont, host.dataset.fyFace]),
+          html: FontKkuShowcase.remixState().html })"""
+    )
+    if (not builtin["hosts"] or any(host != ["pilgi-box", "sebul", "svg"] for host in builtin["hosts"])
+            or 'registerJamo("my-font"' in builtin["html"] or 'registerJamo("pilgi-box"' in builtin["html"]
+            or f'<script src="{runtime}" data-fonts="sebul"></script>' not in builtin["html"]):
+        raise AssertionError(f"{label}: a built-in set should be named on every host without registration code {builtin['hosts']!r}")
     # 원래 글꼴이면 바뀐 줄이 없고, 복사할 글이 'HTML 복사'와 같다
     page.check("[data-remix-sets] input[value='']")
     page.wait_for_function("() => { const s = FontKkuShowcase.remixState(); return s.ready && s.set === ''; }")
@@ -840,8 +866,24 @@ def assert_showcase_page(page, url: str, label: str) -> None:
     summaries, evidence = page.evaluate(
         "() => [[...document.querySelectorAll('[data-made] summary')].map((s) => s.textContent), document.querySelector('[data-evidence]').textContent]"
     )
-    if not summaries or any(not re.fullmatch(r"이 페이지를 받은 요청 글 \(.+\)", text) or f"'{text}'" not in evidence for text in summaries):
+    if not summaries or any(text != "이 페이지를 받은 요청 글" or f"'{text}'" not in evidence for text in summaries):
         raise AssertionError(f"{label}: the evidence line should quote the card label exactly {summaries!r} {evidence!r}")
+    # 받은 내력(모델·날짜)은 카드의 made 펼침 안에만 — 카드 몸(펼침 밖), 증거 줄, 요청 글 만들기 옆 증거에는 없다
+    places = page.evaluate("""() => ({
+      cards: Object.fromEntries([...document.querySelectorAll('[data-showcase] [data-case]')].map((card) => {
+        const copy = card.cloneNode(true); copy.querySelectorAll('[data-made], iframe').forEach((node) => node.remove());
+        return [card.dataset.case, copy.textContent + ' ' + [...copy.querySelectorAll('[title]')].map((n) => n.title).join(' ')];
+      })),
+      inside: Object.fromEntries([...document.querySelectorAll('[data-made]')].map((d) => [d.closest('[data-case]').dataset.case, d.textContent])),
+      outside: document.querySelector('[data-evidence]').textContent + ' ' + document.querySelector('[data-builder-made]').textContent })""")
+    for item in data:
+        made = item.get("made") if isinstance(item.get("made"), dict) else None
+        if not made:
+            continue
+        marks = [mark for mark in (made.get("by"), made.get("date")) if mark]
+        leaked = [mark for mark in marks if mark in places["cards"][item["file"]] or mark in places["outside"]]
+        if leaked or any(mark not in places["inside"].get(item["file"], "") for mark in marks):
+            raise AssertionError(f"{label}: {item['file']} should show its model and date only inside the made disclosure (leaked {leaked!r})")
     # 쓰임 고르기로 숨은 카드를 가리키는 증거 줄 링크는 고르기를 풀고 그 카드로 간다
     hidden = next(item for item in made_items if item.get("kind") != "학교·배움")
     case_id = "case-" + hidden["file"].removesuffix(".html")
@@ -896,7 +938,7 @@ def assert_showcase_page(page, url: str, label: str) -> None:
     if errors:
         raise AssertionError(f"{label}: showcase console errors {errors!r}")
 
-    # made — 요청 글로 AI에게 받은 답이라는 기록: 표지, 요청 원문, 새로 만들기의 증거 줄
+    # made — 요청 글로 AI에게 받은 답이라는 기록: 표지('AI 답'만), 펼침 안의 받은 내력과 요청 원문, 새로 만들기의 증거 줄
     made = {"by": "Claude Opus 5.5", "where": "Claude Code — 설명서 링크만", "date": "2026-10-13", "attempt": "1번째 답",
             "edited": False, "prompt": SHOWCASE_PROMPT_GOLDEN[0][1]}
 
@@ -913,20 +955,22 @@ def assert_showcase_page(page, url: str, label: str) -> None:
         shown = page.evaluate(
             """(file) => { const card = document.querySelector(`[data-case="${file}"]`);
               return { badge: card.querySelector('.sc-badge')?.textContent, prompt: card.querySelector('.sc-made-prompt')?.textContent,
+                       meta: card.querySelector('[data-made] .k-note')?.textContent || '',
                        evidence: document.querySelector('[data-evidence]').textContent }; }""",
             first["file"],
         )
     finally:
         page.unroute("**/examples/index.json", with_made)
-    if (shown["badge"] != "AI 답 · 고치지 않음" or shown["prompt"] != made["prompt"]
-            or first["title"] not in shown["evidence"] or "고치지 않음" not in shown["evidence"]):
-        raise AssertionError(f"{label}: a made entry should show its badge, request and evidence {shown!r}")
+    if (shown["badge"] != "AI 답" or shown["prompt"] != made["prompt"] or first["title"] not in shown["evidence"]
+            or not shown["meta"].startswith("첫 답 · 고치지 않음 · Claude Opus 5.5 · Claude Code — 설명서 링크만 · 2026-10-13")):
+        raise AssertionError(f"{label}: a made entry should show its badge, provenance, request and evidence {shown!r}")
 
 
 def assert_fonts_themes(page, url: str, label: str) -> None:
     """글꼴 페이지의 여섯 축(ADR-017): 축 그림 여섯 칸, 테마 카드 수 = 정본(FontKkuThemes) 테마 수,
     거르기, 테마 코드(확장이 필요하면 data-addons), 화면에 다가온 카드만 견본을 그린다, 조합기(축을 고르면
-    견본의 font·class·seed·animate와 코드가 바뀐다), 주소 해시 왕복, 옛 글꼴 주소(#neon)가 테마 카드로 잇는다."""
+    견본의 font·class·seed·animate와 코드가 바뀐다), 주소 해시 왕복, 옛 글꼴 주소(#neon)가 테마 카드로 잇는다.
+    글꼴을 비운 기본 세벌식이 조합기·견본 행·그림 세트 행·꾸미기의 첫 글꼴이다(font를 적지 않고 data-fonts는 sebul)."""
     fonts_url = url.replace("index.html", "fonts.html")
     page.goto(fonts_url, wait_until="load")
     page.wait_for_function("() => window.FontKkuThemesPage && document.querySelectorAll('[data-theme-card]').length > 0")
@@ -956,6 +1000,23 @@ def assert_fonts_themes(page, url: str, label: str) -> None:
     runtimes = page.evaluate("""() => [FontKkuSite.RUNTIME, /<script src="([^"]+)"/.exec(FontKkuThemesPage.snippet(FontKkuThemes.recipes.neon, '네온'))?.[1]]""")
     if not runtimes[0].endswith("/font-kku.min.js") or runtimes[1] != runtimes[0]:
         raise AssertionError(f"{label}: copied code should load the jsDelivr .min runtime {runtimes!r}")
+    # 기본 세벌식(글꼴을 비운 글)이 첫 값이다 — 조합기의 첫 글꼴, 견본 행의 맨 앞(정본 행과 다른 data-default-row), 그림 세트
+    # 행(기본 제공 세트 포함)도 글꼴을 비워 세벌식에 건다. 코드는 font를 적지 않고 한 줄 설치에 sebul을 적는다
+    page.wait_for_function("""() => { const h = document.querySelector('[data-default-row] .k-fontrow-stage font-kku');
+      return h && h.dataset.fyLayout === 'sebul-cases-v1'; }""")
+    default = page.evaluate("""() => {
+      const compose = document.querySelector('[data-compose-host]');
+      const first = document.querySelector('[data-compose] input[name="font"]');
+      const code = document.querySelector('[data-compose-code]').textContent;
+      const rows = [...document.querySelectorAll('[data-fontgroups] .k-fontrow')];
+      return [compose.hasAttribute('font'), first.value, first.checked,
+        code.includes('data-fonts="sebul"') && code.includes('<font-kku size="72">'),
+        rows[0].hasAttribute('data-default-row'), rows[0].querySelector('font-kku').hasAttribute('font'),
+        [...document.querySelectorAll('[data-set-row] font-kku')].every((h) => !h.hasAttribute('font')),
+        ['pilgi-box', 'dunggeun-box', 'butgeul-box'].every((id) => document.querySelector(`[data-set-row="${id}"]`) !== null)];
+    }""")
+    if default != [False, "", True, True, True, False, True, True]:
+        raise AssertionError(f"{label}: the default 세벌식 (no font) should come first in the composer and the sample rows {default!r}")
     # 거르기: 움직임이 있는 테마만
     page.click("[data-theme-filter='motion']")
     shown = page.evaluate("() => [...document.querySelectorAll('[data-theme-card]:not([hidden])')].map((c) => c.dataset.themeCard)")
@@ -1000,6 +1061,10 @@ def assert_fonts_themes(page, url: str, label: str) -> None:
     page.wait_for_function("() => window.FontKkuThemesPage && FontKkuThemesPage.state()")
     if page.evaluate("() => JSON.stringify(FontKkuThemesPage.state())") != state:
         raise AssertionError(f"{label}: #compose= link should restore the same combination {link!r}")
+    # 다른 글꼴에서 기본 세벌식으로 돌아오면 견본의 font 속성과 주소의 font=가 빠진다
+    page.check("[data-compose] input[name='font'][value='']")
+    page.wait_for_function("""() => !document.querySelector('[data-compose-host]').hasAttribute('font') &&
+      FontKkuThemesPage.state().font === '' && location.hash.startsWith('#compose=') && !location.hash.includes('font=')""")
     # 제 색을 가진 글꼴을 꾸밈 없이 반대 밝기 바탕에 두면 바탕 글자색으로 칠한다(검은 자소판 + 어두운 바탕)
     page.evaluate("() => FontKkuThemesPage.setState({font: 'sprite-system', look: '', vary: [], seed: 'off', motion: '', fx: '', tone: 'dark', text: ''})")
     page.wait_for_function("() => document.querySelector('[data-compose-host]')?.dataset.fySpritePaint === 'mask'")
@@ -1031,10 +1096,17 @@ def assert_fonts_themes(page, url: str, label: str) -> None:
     restored = poll(page, "() => location.hash", lambda value: value == composed, timeout=5)
     if restored != composed:
         raise AssertionError(f"{label}: closing the customizer must restore the composer hash {composed!r}, got {restored!r}")
-    # 조합 뽑기는 정본에 있는 것만 고른다
+    # 꾸미기도 기본 세벌식을 기반으로 연다 — 미리보기에 font가 없고, 클래스 이름은 kku-my-sebeolsik
+    page.evaluate("() => FontKkuCustomizer.open('')")
+    page.wait_for_function("() => FontKkuCustomizer.state()?.f === '' && document.querySelector('[data-kku-live]')?.dataset.fyLayout === 'sebul-cases-v1'")
+    base = page.evaluate("() => [document.querySelector('[data-kku-live]').hasAttribute('font'), FontKkuCustomizer.state().n, FontKkuCustomizer.css().includes('기반 세벌식')]")
+    page.evaluate("() => FontKkuCustomizer.close()")
+    if base != [False, "kku-my-sebeolsik", True]:
+        raise AssertionError(f"{label}: the customizer should take the default 세벌식 as a base {base!r}")
+    # 조합 뽑기는 정본에 있는 것(과 기본 세벌식)만 고른다
     for _ in range(8):
         drawn = page.evaluate("() => FontKkuThemesPage.random()")
-        valid = page.evaluate("""(s) => s.font in FontKkuThemes.fonts && (!s.look || s.look in FontKkuThemes.looks) &&
+        valid = page.evaluate("""(s) => (s.font === '' || s.font in FontKkuThemes.fonts) && (!s.look || s.look in FontKkuThemes.looks) &&
           s.vary.every((v) => v in FontKkuThemes.variations) && (!s.motion || s.motion in FontKkuThemes.motions) &&
           (!s.fx || s.fx in FontKkuThemes.interactions) && s.tone in FontKkuThemes.tones""", drawn)
         if not valid:
@@ -1249,17 +1321,18 @@ def assert_landing_problems(page, url: str, label: str) -> None:
 
 
 def assert_effects_page(page, url: str, label: str) -> None:
-    """움직임 페이지(effects.html): 한 줄 설치의 data-addons="motion fx"로 확장이 붙고, 카드 13장이
-    견본을 그린다. animate 이름이 자모 움직임으로 풀리고, 복사 코드는 data-addons가 든 CDN 주소의
-    HTML 한 장이며, 다시 재생·움직임 멈추기(data-kku-paused)·커서 자석·씨앗 섞기·획 그리기·
-    마스크 칠·스크롤 조립이 동작한다."""
+    """움직임 페이지(effects.html): 한 줄 설치의 data-addons="looks motion fx"로 확장이 붙고, 카드 16장이
+    견본을 그린다. 견본은 글꼴을 비운 기본 세벌식이 바탕이고(그림 자소·벡터 자소 카드만 sprite-system),
+    AI 8칸 세트도 움직이며, 짓는 방식을 바꾸면 덩이가 바뀐다. animate 이름이 자모 움직임으로 풀리고,
+    복사 코드는 data-addons가 든 CDN 주소의 HTML 한 장이며, 다시 재생·움직임 멈추기(data-kku-paused)·
+    커서 자석·씨앗 섞기·획 그리기·마스크 칠·스크롤 조립·내 문장으로 보기가 동작한다."""
     page.set_viewport_size({"width": 1280, "height": 900})
     page.goto(url.replace("index.html", "effects.html"), wait_until="load")
     scroll_and_wait_fonts(page, ".fx-stage font-kku")
     page.wait_for_function(
         """() => {
           const hosts = [...document.querySelectorAll('.fx-stage font-kku')];
-          return window.FontKkuFx && hosts.length >= 19;
+          return window.FontKkuFx && hosts.length >= 22;
         }""",
         timeout=15000,
     )
@@ -1288,10 +1361,18 @@ def assert_effects_page(page, url: str, label: str) -> None:
             names: [jamoAnimation('wave', 'jungseong'), jamoAnimation('cycle', 'jongseong'), jamoAnimation('shine', 'choseong')],
             snippet: document.getElementById('fx-code-wave')?.textContent || '',
             draw: host('draw') && [host('draw').dataset.fyStrokeDepth, host('draw').querySelectorAll('[part="hoek"][pathLength="1"]').length],
+            // 기본 세벌식의 원소 획도 획마다 역할이 붙어 제자원리 보기가 color로 칠한다
             origin: [...document.querySelectorAll('#fx-origin font-kku')].map((h) => {
               const added = h.querySelector('[data-hoek-role="added"]'), person = h.querySelector('[data-hoek-role="person"]');
-              return [h.dataset.fyStrokeDepth, added && getComputedStyle(added).stroke, person && getComputedStyle(person).stroke];
+              return [FontKku.fontInfo(h).face, added && getComputedStyle(added).color, person && getComputedStyle(person).color];
             }),
+            // data-fx-fonts="sebul" 카드의 견본은 글꼴을 비운 기본 세벌식이다
+            notDefault: [...document.querySelectorAll('[data-fx][data-fx-fonts="sebul"] .fx-stage font-kku')]
+              .filter((h) => h.hasAttribute('font') || FontKku.fontInfo(h).layout?.profile !== 'sebul-cases-v1')
+              .map((h) => h.closest('[data-fx]').dataset.fx),
+            mine: host('mine') && [FontKku.fontInfo(host('mine')).face, host('mine').dataset.fyAnimate,
+              (document.getElementById('fx-code-mine')?.textContent || '').includes('FontKku.registerJamo("claude-marker-1", {')],
+            compose: [...document.querySelectorAll('#fx-compose font-kku')].map((h) => [h.dataset.fyComposition, !!h.querySelector('[part~="head"]')]),
             mask: host('shine')?.dataset.fySpritePaint,
             overflow: document.documentElement.scrollWidth - innerWidth,
           };
@@ -1299,8 +1380,10 @@ def assert_effects_page(page, url: str, label: str) -> None:
     )
     if state["nav"] != PUBLIC_NAV or state["current"] != "effects" or state["navLabel"] != "움직임" or "움직임" not in state["title"]:
         raise AssertionError(f"{label}: the effects page should be the '움직임' menu entry, got {state!r}")
-    if not state["motionCss"] or state["cards"] != 14 or state["groups"] != [9, 4, 1] or not all(state["codes"]):
+    if not state["motionCss"] or state["cards"] != 16 or state["groups"] != [11, 4, 1] or not all(state["codes"]):
         raise AssertionError(f"{label}: addons / cards / CDN snippets with data-addons broken: {state!r}")
+    if state["notDefault"] or state["mine"] != ["svg", "assemble", True] or state["compose"] != [["syllable", True], ["jamo", False]]:
+        raise AssertionError(f"{label}: default-font samples / AI set card / composition card broken: {state!r}")
     if state["animate"] != ["assemble", "drop", "wave", "flicker", "cycle", "shine", "scroll-assemble", "draw"] or \
             state["names"] != ["kku-wave", "kku-cycle", "kku-shine"]:
         raise AssertionError(f"{label}: animate names should resolve to the motion addon's jamo keyframes: {state!r}")
@@ -1309,7 +1392,7 @@ def assert_effects_page(page, url: str, label: str) -> None:
     # 획 깊이(ADR-018): 획순 그리기는 벡터 자소를 획으로 쪼개고, 제자원리 보기는 획 역할로 칠한다
     if state["draw"] is None or state["draw"][0] != "stroke" or state["draw"][1] < 10 or state["mask"] != "mask" or state["overflow"] > 0:
         raise AssertionError(f"{label}: stroke draw / mask paint / overflow broken: {state!r}")
-    if state["origin"] != [["stroke", "rgb(230, 57, 70)", None], ["stroke", "rgb(230, 57, 70)", "rgb(58, 110, 165)"]]:
+    if state["origin"] != [["element", "rgb(230, 57, 70)", None], ["element", "rgb(230, 57, 70)", "rgb(58, 110, 165)"]]:
         raise AssertionError(f"{label}: the stroke-origin recipe should color strokes by data-hoek-role {state['origin']!r}")
     # animate를 지우면 획 깊이도 꺼진다 — 런타임이 찍은 data-fy-animate 도장이 다시 그릴 때 획 깊이를 붙들면 안 된다
     undrawn = page.evaluate("""() => {
@@ -1391,6 +1474,25 @@ def assert_effects_page(page, url: str, label: str) -> None:
         if not (low < 0.2 and mid > 0.95):
             raise AssertionError(f"{label}: scroll assembly should follow the scroll position, got {low} → {mid}")
 
+    # 내 문장으로 보기: 받는 카드의 견본과 복사 코드가 그 문장으로, 정해진 글의 카드는 그대로, 비우면 처음 견본으로
+    texts = """() => ({
+      assemble: document.querySelector('#fx-assemble font-kku').dataset.source,
+      mine: document.querySelector('#fx-mine font-kku').dataset.source,
+      shuffle: [...document.querySelectorAll('#fx-shuffle font-kku')].map((h) => h.dataset.source),
+      type: document.querySelector('#fx-type font-kku').getAttribute('data-kku-phrases'),
+      origin: document.querySelector('#fx-origin font-kku').dataset.source,
+      code: document.getElementById('fx-code-drop').textContent.includes('>바람이 분다</font-kku>'),
+    })"""
+    page.fill("#fx-text", "바람이 분다")
+    page.press("#fx-text", "Enter")
+    mine = page.evaluate(texts)
+    page.fill("#fx-text", "")
+    page.press("#fx-text", "Enter")
+    back = page.evaluate(texts)
+    if mine["assemble"] != "바람이 분다" or mine["mine"] != "바람이 분다" or mine["shuffle"] != ["바람이 분다"] * 2 or not mine["code"] or \
+            mine["type"] != back["type"] or mine["origin"] != back["origin"] or back["assemble"] != "한글 조립" or back["code"]:
+        raise AssertionError(f"{label}: '내 문장으로 보기' should redraw the samples and their code, got {mine!r} → {back!r}")
+
 
 def assert_shared_demo_chrome(page, label: str, slug: str, next_slug: str) -> None:
     """개발 도구 페이지: 공개 메뉴(5개)에는 없고, 개발 도구 머리말이 이전·다음으로 잇는다."""
@@ -1455,6 +1557,14 @@ def assert_gothic_context_page(page, url: str, label: str) -> None:
     sentence_host = page.locator("font-kku[font='gothic'][size='60']").first
     if sentence_host.get_attribute("data-size-tier") is not None:
         raise AssertionError(f"{label}: deprecated sentence size tier attribute still present")
+    # 문장 비교에는 글꼴을 비운 기본 세벌식 줄이 sebul·gothic(네모꼴)과 나란히 있고, 이름이 그 모양을 밝힌다
+    page.wait_for_function("() => document.querySelector('.demo-specimen-sentence font-kku:not([font])[data-fy-layout]') !== null")
+    default_rows = page.evaluate(
+        """() => [...document.querySelectorAll('.demo-specimen-sentence')].filter((row) => row.querySelector('font-kku:not([font])'))
+            .map((row) => [row.querySelector('.demo-specimen-label').textContent.trim(), row.querySelector('font-kku').dataset.fyLayout])"""
+    )
+    if len(default_rows) != 4 or any(row != ["세벌식 · 기본", "sebul-cases-v1"] for row in default_rows):
+        raise AssertionError(f"{label}: each sentence group should show the default 세벌식 row {default_rows!r}")
 
     ga = page.locator("[part='glyph'][data-source='가']").first
     if ga.get_attribute("data-fy-layout-bucket") != "right-open":

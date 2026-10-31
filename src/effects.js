@@ -7,14 +7,18 @@
  * 움직임(animate)과 상호작용(data-kku-fx)은 확장이 맡으므로 대개 마크업 한 줄이다. 복사하는
  * 코드도 같은 조각이라 화면의 견본과 가져가는 코드가 어긋나지 않는다.
  *
- * 카드 속성: data-fx-fonts(한 줄 설치에 적을 글꼴), data-fx-addons(한 줄 설치의 data-addons),
- * data-fx-jamo-sets(벡터 자소 모듈), data-fx-replay(한 번 도는 움직임 — '다시 재생' 단추를 달고
- * 화면에 들어올 때 처음부터 돌린다. 값이 "class"면 견본의 is-playing 클래스로 돌리는 조리법 카드). */
+ * 카드 속성: data-fx-fonts(한 줄 설치에 적을 글꼴 — 글꼴을 비운 기본 세벌식도 sebul),
+ * data-fx-addons(한 줄 설치의 data-addons), data-fx-jamo-sets(벡터 자소 모듈), data-fx-ai-set(견본이 쓰는
+ * AI 8칸 세트 — landing-ai-sets.js가 이 페이지에 등록한 것. 복사하는 코드에는 그 등록 코드를 넣는다),
+ * data-fx-replay(한 번 도는 움직임 — '다시 재생' 단추를 달고 화면에 들어올 때 처음부터 돌린다. 값이 "class"면
+ * 견본의 is-playing 클래스로 돌리는 조리법 카드), data-fx-fixed-text('내 문장으로 보기'를 받지 않는 카드 —
+ * 타자 문장·움직임 이름·자모 목록처럼 견본 글이 곧 보여 줄 것일 때). */
 (function () {
   "use strict";
 
   window.FontKkuDemo.renderNav("effects");
   var site = window.FontKkuSite;
+  var sets = window.FontKkuLandingSets;
   var cards = Array.prototype.slice.call(document.querySelectorAll("[data-fx]"));
 
   /* 앞뒤 빈 줄을 떼고 공통 들여쓰기를 걷어 낸다. */
@@ -38,21 +42,60 @@
     return node ? dedent(node.textContent) : "";
   }
 
+  function hostsIn(root) {
+    return Array.prototype.slice.call(root.querySelectorAll("font-kku, .font-kku"));
+  }
+
+  /* 견본 마크업. text가 있으면 바탕 요소의 글만 그 문장으로 바꾼다 — 화면의 견본과 같은 글이 복사된다.
+   * 틀(template)의 문서는 그리지 않는 문서라 여기서 만든 바탕 요소는 그려지지 않는다. */
+  function sampleHtml(card, text) {
+    var template = card.querySelector("template[data-fx-html]");
+    if (!text) return dedent(template.innerHTML);
+    var box = template.content.ownerDocument.createElement("div");
+    box.appendChild(template.content.cloneNode(true));
+    hostsIn(box).forEach(function (host) { host.textContent = text; });
+    return dedent(box.innerHTML);
+  }
+
+  function literal(value) {
+    return "{ " + Object.keys(value).map(function (key) { return key + ": " + JSON.stringify(value[key]); }).join(", ") + " }";
+  }
+
+  /* AI 8칸 세트의 등록 코드 — 이 페이지가 등록한 답의 칸 그대로(landing-ai-sets.js). */
+  function setCode(name) {
+    var set = sets && sets.byId(name);
+    var answer = set && sets.read(set);
+    if (!answer) return "";
+    return [
+      "<script>",
+      "  /* 8칸 그림 세트 「" + set.feel + "」 — 소개(https://font.tty.link/#ai-answers)에 실은 AI 답을 고치지 않고 옮겼다.",
+      "     원형 8칸만 그렸고 나머지 자모는 폰꾸가 조립한다. 내 세트로 바꾸려면 칸만 바꾼다 */",
+      '  FontKku.registerJamo("' + name + '", {',
+      Object.keys(answer.cells).map(function (key) {
+        return "    " + JSON.stringify(key) + ": " + literal(answer.cells[key]);
+      }).join(",\n"),
+      "  }, " + literal(answer.options) + ");",
+      "</" + "script>"
+    ].join("\n");
+  }
+
   /* 가져가서 그대로 여는 HTML 한 장 — 런타임은 jsDelivr 주소로. */
-  function snippet(card) {
+  function snippet(card, text) {
     var id = card.getAttribute("data-fx");
     var css = piece('style[data-fx-css="' + id + '"]');
     var js = piece('script[data-fx-js="' + id + '"]');
-    var html = dedent(card.querySelector("template[data-fx-html]").innerHTML);
-    var sets = card.getAttribute("data-fx-jamo-sets");
+    var html = sampleHtml(card, text);
+    var jamoSets = card.getAttribute("data-fx-jamo-sets");
+    var aiSet = card.getAttribute("data-fx-ai-set");
     var addons = card.getAttribute("data-fx-addons");
     var out = [
       "<!doctype html>",
       '<meta charset="utf-8">',
       '<script src="' + site.RUNTIME + '" data-fonts="' + card.getAttribute("data-fx-fonts") + '"' +
         (addons ? ' data-addons="' + addons + '"' : "") +
-        (sets ? ' data-jamo-sets="' + sets + '"' : "") + "></" + "script>"
+        (jamoSets ? ' data-jamo-sets="' + jamoSets + '"' : "") + "></" + "script>"
     ];
+    if (aiSet) out.push(setCode(aiSet));
     if (css) out.push("<style>", indent(css, "  "), "</style>");
     out.push("", html);
     if (js) out.push("", "<script>", indent(js, "  "), "</" + "script>");
@@ -69,7 +112,7 @@
   }
 
   function stageHosts(card) {
-    return Array.prototype.slice.call(card.querySelectorAll("[data-fx-stage] font-kku, [data-fx-stage] .font-kku"));
+    return hostsIn(card.querySelector("[data-fx-stage]"));
   }
 
   /* 한 번 도는 움직임을 처음부터: 확장 움직임은 다시 그리면 자모 노드가 새로 생겨 다시 돈다
@@ -113,6 +156,39 @@
 
   /* 견본은 나중에 넣었으니 직접 그린다. data-kku-fx는 상호작용 확장이 그리기 이벤트를 보고 단다. */
   window.FontKku.upgradeAll(document.querySelector("main"));
+
+  /* 내 문장으로 보기 — 받는 카드의 견본을 그 문장으로 다시 그리고(한 번 도는 움직임은 다시 돈다) 복사할 코드도
+   * 같은 문장으로 바꾼다. 비우면 처음 견본 글로. 치는 동안은 잠깐 기다렸다 한 번 그린다. */
+  var textForm = document.querySelector("[data-fx-text-form]");
+  if (textForm) {
+    var textInput = textForm.elements.text;
+    var textCards = cards.filter(function (card) { return !card.hasAttribute("data-fx-fixed-text"); });
+    var samples = new Map();
+    textCards.forEach(function (card) {
+      var originals = hostsIn(card.querySelector("template[data-fx-html]").content);
+      stageHosts(card).forEach(function (host, i) { samples.set(host, originals[i].textContent); });
+    });
+    var shown = "";
+    var applyText = function () {
+      var text = (textInput.value || "").replace(/\s+/g, " ").trim();
+      if (text === shown) return;
+      shown = text;
+      textCards.forEach(function (card) {
+        stageHosts(card).forEach(function (host) { window.FontKku.refresh(host, { text: text || samples.get(host) }); });
+        document.getElementById("fx-code-" + card.getAttribute("data-fx")).firstChild.textContent = snippet(card, text);
+      });
+    };
+    var textTimer = 0;
+    textInput.addEventListener("input", function () {
+      clearTimeout(textTimer);
+      textTimer = setTimeout(applyText, 250);
+    });
+    textForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      clearTimeout(textTimer);
+      applyText();
+    });
+  }
 
   /* 견본을 꽂은 뒤에 카드 JS를 실행한다 — 복사하는 코드와 같은 글이다. */
   Array.prototype.forEach.call(document.querySelectorAll('script[type="text/plain"][data-fx-js]'), function (source) {

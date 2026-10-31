@@ -17,6 +17,9 @@
  * (data-single)는 '더 보기' 뒤에 접는다. 카드는 모두 문서에 남아 옛 주소(#neon 등)가 닿으면 펼친다.
  * 조합기 상태는 주소 해시 #compose=…에 담겨 링크로 나눈다(꾸미기 창의 #kku=와 따로 논다).
  *
+ * 글꼴 축의 첫 값은 글꼴을 비운 글(font "", 기본 세벌식)이다. 정본 fonts에는 없는 값이라 견본·코드에서는 font 속성을 빼고,
+ * 한 줄 설치에는 sebul을 적는다 — 기본 세벌식도 sebul 글꼴 CSS 위에 짓는다(setup.md). 주소에는 font를 적지 않는다.
+ *
  * 쓰는 법: FontKkuThemesPage.init({ cdn, copyText, onFont }) — onFont(id)는 글꼴 견본 행으로. */
 (function () {
   "use strict";
@@ -24,12 +27,22 @@
   var T = window.FontKkuThemes;
   var AXIS_IDS = ["font", "look", "vary", "motion", "interaction", "tone"];
   var DARK_TONES = ["dark", "board", "blueprint"];
-  /* 출발용 뼈대(sprite-example)는 고를 글꼴이 아니라 조합기에 두지 않는다 — 글꼴 견본 행과 작업실에서 연다. */
+  /* 출발용 자소판(sprite-example)은 고를 글꼴이 아니라 조합기에 두지 않는다 — 글꼴 견본 행과 작업실에서 연다.
+   * 무리는 재료로 나눈다. 원소 획 무리의 맨 앞이 기본 세벌식이다. */
   var FONT_GROUPS = [
-    { id: "system", name: "세벌·고딕 계열", note: "획을 CSS로 긋는다 — 한글 글꼴 없는 기기에서도 같은 모양" },
-    { id: "sprite", name: "그림 자소", note: "직접 그린 자소판(SVG)으로 긋는다" },
-    { id: "texture", name: "획 표현", note: "그림 자소 짜임에 획 재료만 바꿨다" }
+    { id: "system", name: "원소 획", note: "세벌·고딕 계열 — 획을 CSS로 긋는다, 한글 글꼴 없는 기기에서도 같은 모양" },
+    { id: "sprite", name: "그림 자소판", note: "직접 그린 자소판(SVG)으로 긋는다" },
+    { id: "texture", name: "획 표현", note: "같은 자소판 자리에 획 표현만 바꿨다" }
   ];
+  /* 글꼴 = 글꼴 모양 × 재료(용어집). 글꼴을 비운 글이 세벌식(sebul-cases-v1), jikgyeol이 직결식(sebul-fixed-v1)이고, 이름을
+   * 밝힌 나머지는 그 글꼴 CSS의 자기 모양인 네모꼴이다(FontKku.fontInfo(host).layout이 null). 그림 자소판 재료는 글꼴 모양을
+   * 따로 받지 않고 자소판에 맞춘 자기 자리로 그린다. 정본 fonts의 structure·desc는 옛 말(짜임·배치)을 써서 화면에는 이 이름을 쓴다. */
+  var DEFAULT_NAME = "세벌식";
+  var SHAPES = {
+    cases: { name: "세벌식", layout: "sebul-cases-v1" },
+    fixed: { name: "직결식", layout: "sebul-fixed-v1" },
+    square: { name: "네모꼴", layout: "square-context-v1" }
+  };
   var FILTERS = [
     { id: "all", label: "모두" },
     { id: "look", label: "꾸밈" },
@@ -75,15 +88,47 @@
     return window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
+  // ── 글꼴 모양과 재료 ───────────────────────────────────
+
+  function shapeOf(id) {
+    if (!id) return SHAPES.cases;
+    return id === "jikgyeol" ? SHAPES.fixed : SHAPES.square;
+  }
+
+  /* 재료 이름 — 정본에 없는 글꼴(옛 꾸러미 글꼴)은 부르는 쪽이 정한다. */
+  function materialOf(id) {
+    if (!id) return "원소 획";
+    var font = T.fonts[id];
+    if (!font) return "";
+    return font.group === "system" ? "원소 획" : "그림 자소판";
+  }
+
+  /* 그림 자소판의 획 이름(필기 획·곧은 획 · 도트) — 원소 획이면 빈 글 */
+  function strokeOf(id) {
+    var font = T.fonts[id];
+    if (!font || font.group === "system") return "";
+    var texture = font.texture && font.texture !== "plain" && T.textures[font.texture] ? " · " + T.textures[font.texture].name : "";
+    return String(font.stroke || "").split(" — ")[0] + texture;
+  }
+
+  /* 한 줄 풀이 — 조합기 고르개와 배지의 title. 그림 자소판은 글꼴 모양 대신 자소판의 자리로 적는다(견본 행과 같은 말) */
+  function describeFont(id) {
+    var material = materialOf(id);
+    var stroke = strokeOf(id);
+    var shape = material === "그림 자소판" ? "자소판에 맞춘 자리" : "글꼴 모양 " + shapeOf(id).name;
+    return shape + " · 재료 " + material + (stroke ? " · " + stroke : "");
+  }
+
   // ── 상태와 조합법 ──────────────────────────────────────
 
-  /* 글꼴이 권하는 바탕(정본 fonts[id].tone) — 꾸밈 없이 그 글꼴을 고르면 이 바탕이 기본이다. */
+  /* 글꼴이 권하는 바탕(정본 fonts[id].tone) — 꾸밈 없이 그 글꼴을 고르면 이 바탕이 기본이다. 기본 세벌식은 sebul의 바탕. */
   function fontTone(id) {
-    return (T.fonts[id] && T.fonts[id].tone) || "light";
+    var font = T.fonts[id || "sebul"];
+    return (font && font.tone) || "light";
   }
 
   function defaultState() {
-    return { font: "sebul", look: "", vary: [], seed: "off", seedValue: "kku", motion: "", fx: "", tone: "light", text: "" };
+    return { font: "", look: "", vary: [], seed: "off", seedValue: "kku", motion: "", fx: "", tone: "light", text: "" };
   }
 
   function themeState(id) {
@@ -190,9 +235,9 @@
 
   // ── 코드 ───────────────────────────────────────────────
 
-  /* 바탕 요소 속성. 견본과 코드가 같은 문자열을 쓴다. */
+  /* 바탕 요소 속성. 견본과 코드가 같은 문자열을 쓴다. 기본 세벌식이면 font를 적지 않는다. */
   function hostAttrs(recipe, size) {
-    var out = ' font="' + esc(recipe.font) + '"';
+    var out = recipe.font ? ' font="' + esc(recipe.font) + '"' : "";
     if (recipe.jamoSet) out += ' jamo-set="' + esc(recipe.jamoSet) + '"';
     if (recipe.classes.length) out += ' class="' + esc(recipe.classes.join(" ")) + '"';
     if (recipe.seed) out += ' seed="' + esc(recipe.seed) + '"';
@@ -208,7 +253,7 @@
   function snippet(recipe, text, shortcut) {
     var words = esc(text || DEFAULT_TEXT);
     var tone = T.tones[recipe.tone] || T.tones.light;
-    var fonts = shortcut || recipe.font;
+    var fonts = shortcut || recipe.font || "sebul";
     var lines = [
       "<!doctype html>",
       '<meta charset="utf-8">',
@@ -230,17 +275,14 @@
   // ── 축 이름 ────────────────────────────────────────────
 
   function fontLabel(id) {
+    if (!id) return DEFAULT_NAME + " (기본)";
     var font = T.fonts[id];
-    if (!font) return id;
-    if (font.group === "texture" && font.texture && T.textures[font.texture]) {
-      return font.name;
-    }
-    return font.name;
+    return font ? font.name : id;
   }
 
   function axisValues(recipe, s) {
     var out = [];
-    out.push({ axis: "font", value: fontLabel(recipe.font), title: T.fonts[recipe.font] ? T.fonts[recipe.font].structure + " · " + T.fonts[recipe.font].stroke : "" });
+    out.push({ axis: "font", value: fontLabel(recipe.font), title: !recipe.font || T.fonts[recipe.font] ? describeFont(recipe.font) : "" });
     if (s.look) out.push({ axis: "look", value: T.looks[s.look].name });
     if (s.vary.length || s.seed !== "off") {
       out.push({
@@ -270,13 +312,18 @@
 
   // ── 축 그림 ────────────────────────────────────────────
 
+  /* 꾸밈·움직임·상호작용 견본은 기본 세벌식에 건다 — 축 하나만 바꿔 보이려고 */
   var AXIS_SAMPLES = {
     font: '<font-kku font="pilgi" size="30">글꼴</font-kku>',
-    look: '<font-kku font="gothic" class="kku-look-saekdong" size="30">꾸밈</font-kku>',
+    look: '<font-kku class="kku-look-saekdong" size="30">꾸밈</font-kku>',
     vary: '<font-kku font="crayon" class="kku-vary-tilt kku-vary-bob kku-vary-hue" seed="auto" jamo-seeds size="30">변주</font-kku>',
-    motion: '<font-kku font="sebul" animate="wave" size="30">움직임</font-kku>',
-    interaction: '<font-kku font="sebul" class="kku-look-pastel" data-kku-fx="magnet" size="30">상호작용</font-kku>',
+    motion: '<font-kku animate="wave" size="30">움직임</font-kku>',
+    interaction: '<font-kku class="kku-look-pastel" data-kku-fx="magnet" size="30">상호작용</font-kku>',
     tone: ""
+  };
+  /* 정본 축 소개 가운데 글꼴 축은 옛 말(뼈대·짜임 × 획)이라 용어집의 말로 바꿔 보인다 */
+  var AXIS_TEXT = {
+    font: { summary: "글꼴 모양(자모를 어디에 얼마나 크게 놓나) × 재료(무엇으로 긋나)", how: 'font="pilgi"' }
   };
 
   function renderAxes() {
@@ -284,6 +331,7 @@
     if (!list) return;
     list.innerHTML = T.axes.map(function (axis, i) {
       var sample = AXIS_SAMPLES[axis.id];
+      var text = AXIS_TEXT[axis.id] || axis;
       if (axis.id === "tone") {
         sample = '<span class="ft-swatches" aria-hidden="true">' + Object.keys(T.tones).map(function (id) {
           return '<i style="background:' + T.tones[id].background + '"></i>';
@@ -293,8 +341,8 @@
         '<span class="ft-axis-no">' + (i + 1) + "</span>" +
         '<span class="ft-axis-sample"' + (axis.id === "interaction" ? ' title="커서를 올려 보세요"' : "") + ">" + sample + "</span>" +
         "<strong>" + axis.name + "</strong>" +
-        "<p>" + esc(axis.summary) + "</p>" +
-        "<code>" + esc(axis.how) + "</code>" +
+        "<p>" + esc(text.summary) + "</p>" +
+        "<code>" + esc(text.how) + "</code>" +
         "</li>";
     }).join("");
   }
@@ -319,14 +367,14 @@
     return tags;
   }
 
-  /* 한 줄 소개 — 테마에 없으면 꾸밈의 소개, 꾸밈도 없으면 글꼴의 획 표현·짜임으로. */
+  /* 한 줄 소개 — 테마에 없으면 꾸밈의 소개, 꾸밈도 없으면 글꼴의 획 표현이나 글꼴 모양·재료로. */
   function themeSummary(theme) {
     if (theme.summary) return theme.summary;
     if (theme.look && T.looks[theme.look]) return T.looks[theme.look].summary;
     var font = T.fonts[theme.font];
     if (!font) return "";
     if (font.texture && font.texture !== "plain" && T.textures[font.texture]) return T.textures[font.texture].summary;
-    return font.structure;
+    return describeFont(theme.font);
   }
 
   /* 축 하나만 고른 테마 — 기본 글꼴에 꾸밈 하나(꾸러미 글꼴과 같은 칠, shortcut)이거나 글꼴 하나(바탕만).
@@ -473,13 +521,13 @@
   function fontSample(id) {
     var tone = fontTone(id);
     return '<i class="ft-opt-sample"' + (tone !== "light" ? ' data-tone="' + tone + '"' : "") + ">" +
-      '<font-kku font="' + id + '" size="20">가</font-kku></i>';
+      "<font-kku" + (id ? ' font="' + id + '"' : "") + ' size="20">가</font-kku></i>';
   }
 
   function lookSample(id) {
     var tone = T.looks[id].tone || "light";
     return '<i class="ft-opt-sample"' + (tone !== "light" ? ' data-tone="' + tone + '"' : "") + ">" +
-      '<font-kku font="gothic" class="kku-look-' + id + '" size="20">가</font-kku></i>';
+      '<font-kku class="kku-look-' + id + '" size="20">가</font-kku></i>';
   }
 
   function legend(axis, i, note) {
@@ -489,16 +537,15 @@
   function renderControls() {
     var form = $("[data-compose]");
     var html = "";
-    html += '<fieldset data-axis="font">' + legend("font", 0, "뼈대 — 짜임 × 획");
+    html += '<fieldset data-axis="font">' + legend("font", 0, "글꼴 모양 × 재료");
     FONT_GROUPS.forEach(function (group) {
       var ids = Object.keys(T.fonts).filter(function (id) { return T.fonts[id].group === group.id; });
       if (!ids.length) return;
+      // 원소 획 무리의 맨 앞은 글꼴을 비운 기본 세벌식(값 "")
+      if (group.id === "system") ids.unshift("");
       html += '<div class="ft-group"><p class="ft-group-name">' + group.name + " <small>" + group.note + "</small></p><div class=\"ft-opts\">" +
         ids.map(function (id) {
-          var font = T.fonts[id];
-          // 세벌·고딕 계열의 획은 원소 재료가 기본이다(ADR-024)
-          var stroke = group.id === "system" ? "원소 (CSS 선·원)" : font.stroke;
-          return option("radio", "font", id, font.name, false, { sample: fontSample(id), title: font.structure + " · " + stroke });
+          return option("radio", "font", id, fontLabel(id), false, { sample: fontSample(id), title: describeFont(id) });
         }).join("") + "</div></div>";
     });
     html += "</fieldset>";
@@ -581,9 +628,10 @@
       var input = $('input[name="' + name + '"]:checked', form);
       return input ? input.value : "";
     }
+    var fontInput = $('input[name="font"]:checked', form);
     var next = {
-      // 조합기 목록에 없는 글꼴(옛 링크의 출발용 뼈대)이면 고른 칸이 없다 — 그 글꼴을 그대로 둔다
-      font: picked("font") || compose.font,
+      // 조합기 목록에 없는 글꼴(옛 링크의 출발용 자소판)이면 고른 칸이 없다 — 그 글꼴을 그대로 둔다. 기본 세벌식의 값은 ""
+      font: fontInput ? fontInput.value : compose.font,
       look: picked("look"),
       vary: $$('input[name="vary"]:checked', form).map(function (input) { return input.value; }),
       seed: picked("seed") || "off",
@@ -646,7 +694,7 @@
     var recipe = recipeOf(s);
     var text = s.text.trim() || DEFAULT_TEXT;
     stopController();
-    setAttr(composeHost, "font", recipe.font);
+    setAttr(composeHost, "font", recipe.font || null);
     setAttr(composeHost, "jamo-set", recipe.jamoSet || null);
     composeHost.className = recipe.classes.join(" ");
     if (!composeHost.className) composeHost.removeAttribute("class");
@@ -687,7 +735,8 @@
 
   function encodeState(s) {
     var params = new URLSearchParams();
-    params.set("font", s.font);
+    // 기본 세벌식은 적지 않는다 — font가 없는 링크는 기본으로 연다(전에는 늘 font를 적었다)
+    if (s.font) params.set("font", s.font);
     if (s.look) params.set("look", s.look);
     if (s.vary.length) params.set("vary", s.vary.join(","));
     if (s.seed !== "off") params.set("seed", s.seed === "auto" ? "auto" : s.seedValue);
@@ -744,7 +793,7 @@
   }
 
   function randomState() {
-    var fonts = Object.keys(T.fonts).filter(function (id) { return T.fonts[id].group !== "starter"; });
+    var fonts = [""].concat(Object.keys(T.fonts).filter(function (id) { return T.fonts[id].group !== "starter"; }));
     var s = defaultState();
     s.font = randomOf(fonts);
     var withLook = Math.random() < 0.72;
@@ -935,6 +984,11 @@
     decode: decodeState,
     random: function () { interacted = true; setCompose(randomState()); return JSON.parse(JSON.stringify(compose)); },
     fontTone: fontTone,
+    /* 글꼴 모양({ name, layout })·재료 이름·획 이름 — 글꼴 견본 행이 함께 쓴다. id ""는 기본 세벌식 */
+    shapeOf: shapeOf,
+    materialOf: materialOf,
+    strokeOf: strokeOf,
+    DEFAULT_NAME: DEFAULT_NAME,
     /* 글꼴 하나를 꾸밈 없이 바탕 tone에 둘 때 칠할 글자색(묻히지 않게) — 없으면 null. 글꼴 견본 시험대와 꾸미기가 함께 쓴다. */
     inkFor: function (fontId, tone) { return inkFor({ font: fontId, look: "", tone: tone || "light" }); },
     axisIds: AXIS_IDS.slice()

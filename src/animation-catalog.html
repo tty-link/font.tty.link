@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>font-kku 데모 — 움직임 훅</title>
     <link rel="stylesheet" href="lib/font-kku.css" />
+    <!-- 글꼴을 비운 글(기본 세벌식)도 sebul 글꼴 CSS 위에 짓는다(setup.md) -->
     <link rel="stylesheet" href="lib/profiles/sebul.css" />
     <link rel="stylesheet" href="lib/font-kku-motion.css" />
     <link rel="stylesheet" href="./demo.css" />
@@ -40,35 +41,35 @@
       <section class="anim-grid" data-anim-grid>
         <article class="anim-card" data-anim="rise">
           <h3>rise</h3>
-          <div class="anim-sample"><font-kku font="sebul" size="40" animate="rise">광화문</font-kku></div>
+          <div class="anim-sample"><font-kku size="40" animate="rise">광화문</font-kku></div>
           <p class="anim-desc">아래에서 위로 + 페이드-인. 글자 순차. 제목이나 등장 효과에 적합.</p>
           <button class="anim-replay" type="button" aria-label="rise 다시 재생">다시 재생</button>
         </article>
         <article class="anim-card" data-anim="fade">
           <h3>fade</h3>
-          <div class="anim-sample"><font-kku font="sebul" size="40" animate="fade">광화문</font-kku></div>
+          <div class="anim-sample"><font-kku size="40" animate="fade">광화문</font-kku></div>
           <p class="anim-desc">단순 페이드-인. 모든 글자 동시. 침착한 등장이 필요할 때.</p>
           <button class="anim-replay" type="button" aria-label="fade 다시 재생">다시 재생</button>
         </article>
         <article class="anim-card" data-anim="stagger">
           <h3>stagger</h3>
-          <div class="anim-sample"><font-kku font="sebul" size="40" animate="stagger">광화문</font-kku></div>
+          <div class="anim-sample"><font-kku size="40" animate="stagger">광화문</font-kku></div>
           <p class="anim-desc">페이드-인 + 40ms 순차 지연. 타이핑 느낌.</p>
           <button class="anim-replay" type="button" aria-label="stagger 다시 재생">다시 재생</button>
         </article>
         <article class="anim-card" data-anim="bounce">
           <h3>bounce</h3>
-          <div class="anim-sample"><font-kku font="sebul" size="40" animate="bounce">광화문</font-kku></div>
+          <div class="anim-sample"><font-kku size="40" animate="bounce">광화문</font-kku></div>
           <p class="anim-desc">상하 반복. 위치는 글자 단위. 주의를 끄는 CTA에.</p>
         </article>
         <article class="anim-card" data-anim="wiggle">
           <h3>wiggle</h3>
-          <div class="anim-sample"><font-kku font="sebul" size="40" animate="wiggle">광화문</font-kku></div>
+          <div class="anim-sample"><font-kku size="40" animate="wiggle">광화문</font-kku></div>
           <p class="anim-desc">좌우 회전 반복. 장난스러운 타이틀이나 토스트에.</p>
         </article>
         <article class="anim-card" data-anim="drift">
           <h3>drift</h3>
-          <div class="anim-sample"><font-kku font="sebul" size="40" animate="drift">광화문</font-kku></div>
+          <div class="anim-sample"><font-kku size="40" animate="drift">광화문</font-kku></div>
           <p class="anim-desc">4s 주기의 미세 이동 + 회전. 글자마다 위상이 어긋나 물결 효과.</p>
         </article>
       </section>
@@ -83,39 +84,39 @@
         <div class="anim-grid" data-addon-anim-grid>
           <article class="anim-card" data-anim="assemble" data-anim-scope="addon">
             <h3>assemble</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="assemble">자모조립</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="assemble">자모조립</font-kku></div>
             <p class="anim-desc">초성·중성·받침이 다른 쪽에서 날아와 맞물린다. 한 번 돈다.</p>
             <button class="anim-replay" type="button" aria-label="assemble 다시 재생">다시 재생</button>
           </article>
           <article class="anim-card" data-anim="drop" data-anim-scope="addon">
             <h3>drop</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="drop">받침톡톡</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="drop">받침톡톡</font-kku></div>
             <p class="anim-desc">받침만 위에서 떨어져 두 번 튀고 자리 잡는다. 한 번 돈다.</p>
             <button class="anim-replay" type="button" aria-label="drop 다시 재생">다시 재생</button>
           </article>
           <article class="anim-card" data-anim="wave" data-anim-scope="addon">
             <h3>wave</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="wave">물결타기</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="wave">물결타기</font-kku></div>
             <p class="anim-desc">글자마다, 같은 글자 안에서도 역할마다 다른 박자로 출렁인다.</p>
           </article>
           <article class="anim-card" data-anim="flicker" data-anim-scope="addon">
             <h3>flicker</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="flicker">고장난간판</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="flicker">고장난간판</font-kku></div>
             <p class="anim-desc">단어 둘째 글자의 받침 하나가 끊어질 듯 깜빡인다.</p>
           </article>
           <article class="anim-card" data-anim="cycle" data-anim-scope="addon">
             <h3>cycle</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="cycle">초중종성</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="cycle">초중종성</font-kku></div>
             <p class="anim-desc">오방색이 초성 → 중성 → 받침으로 시차를 두고 돈다.</p>
           </article>
           <article class="anim-card" data-anim="shine" data-anim-scope="addon">
             <h3>shine</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="shine">반짝반짝</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="shine">반짝반짝</font-kku></div>
             <p class="anim-desc">자모마다 빛줄기가 지나간다.</p>
           </article>
           <article class="anim-card" data-anim="scroll-assemble" data-anim-scope="addon">
             <h3>scroll-assemble</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="scroll-assemble">스크롤조립</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="scroll-assemble">스크롤조립</font-kku></div>
             <p class="anim-desc">화면을 내릴수록 흩어진 자모가 모인다. 스크롤이 진행도다.</p>
           </article>
         </div>
@@ -129,41 +130,41 @@
         <div class="anim-grid" data-jamo-anim-grid>
           <article class="anim-card" data-anim="jamo-rise" data-anim-scope="jamo">
             <h3>jamo-rise</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="jamo-rise">광화문</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="jamo-rise">광화문</font-kku></div>
             <p class="anim-desc">자소가 아래에서 올라오는 조립. 글자가 아니라 자소 단위 순차 등장.</p>
             <button class="anim-replay" type="button" aria-label="jamo-rise 다시 재생">다시 재생</button>
           </article>
           <article class="anim-card" data-anim="jamo-stagger" data-anim-scope="jamo">
             <h3>jamo-stagger</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="jamo-stagger">한글조립</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="jamo-stagger">한글조립</font-kku></div>
             <p class="anim-desc">자소별 페이드 + 짧은 흐림(blur). 획이 차례로 또렷해지는 효과.</p>
             <button class="anim-replay" type="button" aria-label="jamo-stagger 다시 재생">다시 재생</button>
           </article>
           <article class="anim-card" data-anim="jamo-wave" data-anim-scope="jamo">
             <h3>jamo-wave</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="jamo-wave">봄날산책</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="jamo-wave">봄날산책</font-kku></div>
             <p class="anim-desc">자소 순번마다 위상이 다른 작은 파동. 반복되는 장식 텍스트에 적합.</p>
           </article>
           <article class="anim-card" data-anim="jamo-spark" data-anim-scope="jamo">
             <h3>jamo-spark</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="jamo-spark">서울야경</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="jamo-spark">서울야경</font-kku></div>
             <p class="anim-desc">자소 단위 색·밝기 점멸. 스티커형 표현에 적합.</p>
           </article>
           <article class="anim-card" data-anim="jamo-assemble" data-anim-scope="jamo">
             <h3>jamo-assemble</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="jamo-assemble">자소조합</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="jamo-assemble">자소조합</font-kku></div>
             <p class="anim-desc">초성·중성·종성이 서로 다른 방향에서 원래 자리로 모이는 조립.</p>
             <button class="anim-replay" type="button" aria-label="jamo-assemble 다시 재생">다시 재생</button>
           </article>
           <article class="anim-card" data-anim="jamo-type" data-anim-scope="jamo">
             <h3>jamo-type</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="jamo-type">괜찮다</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="jamo-type">괜찮다</font-kku></div>
             <p class="anim-desc">초성→중성→종성 순서로 음절 완성 후 다음 음절로 진행. 타이핑 재현.</p>
             <button class="anim-replay" type="button" aria-label="jamo-type 다시 재생">다시 재생</button>
           </article>
           <article class="anim-card" data-anim="jamo-roles" data-anim-scope="jamo">
             <h3>jamo-roles</h3>
-            <div class="anim-sample"><font-kku font="sebul" size="40" animate="jamo-roles">초중종성</font-kku></div>
+            <div class="anim-sample"><font-kku size="40" animate="jamo-roles">초중종성</font-kku></div>
             <p class="anim-desc">초성·중성·종성을 서로 다른 타이밍과 색으로 순환. 구조 시각화.</p>
           </article>
         </div>
@@ -181,7 +182,7 @@
           <article class="anim-card">
             <h3>고정 씨앗값</h3>
             <div class="seed-stage">
-              <font-kku data-seed-fixed font="sebul" size="44" seed="poster-v1" animate="jamo-drift">봄날의 산책</font-kku>
+              <font-kku data-seed-fixed size="44" seed="poster-v1" animate="jamo-drift">봄날의 산책</font-kku>
               <button class="anim-replay" type="button" data-fixed-refresh>같은 씨앗값으로 다시 그리기</button>
             </div>
             <p class="anim-desc">
@@ -191,7 +192,7 @@
           <article class="anim-card">
             <h3>다시 섞기 / 무작위</h3>
             <div class="seed-stage">
-              <font-kku data-seed-auto font="sebul" size="44" seed="auto" animate="jamo-drift">봄날의 산책</font-kku>
+              <font-kku data-seed-auto size="44" seed="auto" animate="jamo-drift">봄날의 산책</font-kku>
               <button class="anim-replay" type="button" data-reseed>씨앗값 다시 뽑기</button>
             </div>
             <p class="anim-desc">

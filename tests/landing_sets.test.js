@@ -111,3 +111,13 @@ test("the copied prompt uses the default 세벌식 and the answered prompt diffe
     assert.ok(set.answer.includes('font="' + Sets.ANSWERED_FONT + '"'), set.id);
   }
 });
+
+test("the docs page copies the same 8칸 prompt as the landing", () => {
+  /* 문서 'AI와 쓰기'의 8칸 프롬프트(#c-prompt-draw)는 손으로 옮긴 사본이다 — 소개가 복사하는 글과 한 글자도 같아야 한다 */
+  const fs = require("node:fs");
+  const html = fs.readFileSync(path.join(__dirname, "../src/docs.html"), "utf8");
+  const block = /<pre id="c-prompt-draw"><code>([\s\S]*?)<\/code><\/pre>/.exec(html);
+  assert.ok(block, "docs.html #c-prompt-draw");
+  const text = block[1].replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
+  assert.equal(text, Sets.prompt(Sets.MARKER));
+});

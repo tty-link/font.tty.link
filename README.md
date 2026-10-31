@@ -37,7 +37,7 @@ npm run check
 FONT_KKU_JOBS=1 .venv/bin/python -m pytest tests/test_site_smoke.py -q -n 1
 ```
 
-먼저 패키지로 `dist/`를 빌드한다. Node 콘텐츠 시험도 기본적으로 `dist/lib/`의 런타임을 쓰며 `FONT_KKU_PACKAGE_DIR`로 설치·추출 패키지 위치를 지정할 수 있다. 빌드 보호 시험은 Python 표준 라이브러리만으로 `python3 -m unittest discover -s tests -p 'test_build.py'`를 실행할 수 있다. 특정 화면은 pytest `-k`로 좁혀 실행한다. `FONT_KKU_SITE_DIST`로 빌드 위치를 바꿀 수 있다.
+먼저 패키지로 `dist/`를 빌드한다. Node 콘텐츠 시험도 기본적으로 `dist/lib/`의 런타임을 쓰며 `FONT_KKU_PACKAGE_DIR`로 설치·추출 패키지 위치를 지정할 수 있다. 빌드 보호 시험은 Python 표준 라이브러리만으로 `python3 -m unittest discover -s tests -p 'test_build.py'`를 실행할 수 있다. 문구 시험(`test_copy.py`)은 용어집이 바꾼 옛 이름이 '예전 이름' 줄 밖에 다시 나오지 않는지, 머리 도장과 페이지 제목이 글꼴을 비워 기본 세벌식으로 그리는지 본다. 특정 화면은 pytest `-k`로 좁혀 실행한다. `FONT_KKU_SITE_DIST`로 빌드 위치를 바꿀 수 있다.
 
 전후 화면 검수는 `scripts/site_preview_check.py`가 맡는다. 공개 사이트에 접속하는 선택형 점검이므로 오프라인 시험과 별도로 실행한다. Chromium·WebKit·Firefox와 Pillow가 필요하다.
 

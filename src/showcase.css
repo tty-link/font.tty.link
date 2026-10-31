@@ -299,6 +299,15 @@
   gap: 0.5rem;
 }
 
+/* 고쳐 쓰기 '글씨'의 갈래 이름 — 한 줄을 차지해 그 뒤 고르기를 다음 줄로 */
+.sc-radios-head {
+  flex-basis: 100%;
+  margin-block-start: 0.25rem;
+  color: var(--k-muted);
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
 .sc-radios label,
 .sc-seed label {
   display: inline-flex;

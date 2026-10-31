@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>메모장 — 폰꾸 font-kku</title>
     <meta name="description" content="영문 자판으로 두벌식·세벌식 한글을 쓰는 메모장. 한글 입력기도 한글 글꼴도 없는 기기에서 폰꾸 그림 자소로 그려 편집하고, 브라우저에 저장하고, 유니코드 글로 복사·내려받습니다." />
+    <!-- 제목은 글꼴을 비운 기본 세벌식이라 sebul을 적는다(setup.md) -->
     <script src="lib/font-kku.js" data-fonts="sebul sprite-system pixel dojang chalk"></script>
     <script src="lib/font-kku-ime.js"></script>
     <link rel="stylesheet" href="./site.css" />
@@ -15,7 +16,7 @@
     <header class="k-header">
       <div class="k-wrap k-header-inner">
         <a class="k-brand" href="./index.html">
-          <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20" data-nofont-font="pixel">꾸</font-kku></span>
+          <span class="k-stamp" aria-hidden="true"><font-kku size="20" data-nofont-font="pixel">꾸</font-kku></span>
           <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
         </a>
         <nav class="k-nav" aria-label="사이트" data-demo-nav></nav>
@@ -25,7 +26,7 @@
     <main>
       <section class="k-wrap k-page-head app-head" aria-labelledby="memo-title">
         <span class="k-kicker" data-en="Web app · works without a Korean font or IME">웹 앱 · 한글 글꼴·입력기 없이</span>
-        <h1 id="memo-title" class="font-kku k-h1 k-mark" data-font="sebul" data-nofont-font="sprite-system" data-size="clamp(44px, 7vw, 88px)">메모장</h1>
+        <h1 id="memo-title" class="font-kku k-h1 k-mark" data-nofont-font="sprite-system" data-size="clamp(44px, 7vw, 88px)">메모장</h1>
         <p class="k-lead" data-en="Write Korean with an English keyboard in 2-set or 3-set. Every character on the page is drawn by font-kku from image jamo, so you can read and edit Korean on a device with no Korean font. Notes stay in this browser; copy or download them as ordinary Unicode text.">
           영문 자판으로 두벌식·세벌식 한글을 씁니다. 편집면의 글자는 모두 폰꾸가 자소판 그림으로 그려, 한글 글꼴이 없는
           기기에서도 읽고 고칩니다. 메모는 이 브라우저에 저장되고, 복사·내려받기는 보통 유니코드 글입니다.
@@ -85,7 +86,7 @@
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true" data-en="How">쓰는 법</span>
             <span class="k-kicker" data-en="How it works">쓰는 법</span>
-            <h2 id="memo-how" class="font-kku k-h2" data-font="sebul" data-nofont-font="sprite-system" data-size="clamp(30px, 4.4vw, 52px)">글꼴 없이 쓰고 고치기</h2>
+            <h2 id="memo-how" class="font-kku k-h2" data-nofont-font="sprite-system" data-size="clamp(30px, 4.4vw, 52px)">글꼴 없이 쓰고 고치기</h2>
           </header>
           <ul class="memo-help">
             <li><span data-en="Keys go to a hidden text field; the page composes Hangul itself (font-kku-ime) and font-kku draws the visible page, with the caret and the syllable being composed underlined.">키는 숨은 입력 칸이 받고, 한글 조합은 페이지가 직접 하며(font-kku-ime), 보이는 면은 폰꾸가 그립니다. 캐럿과 조합 중인 음절(밑줄)도 그 위에 그립니다.</span></li>

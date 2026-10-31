@@ -3,14 +3,17 @@
  *
  * - 사례 목록은 examples/index.json이다. 카드는 목록 차례대로 서고([data-case]), 쓰임 고르기는 카드에 hidden만 준다.
  *   file은 /^[a-z0-9-]+\.html$/만 받는다(주소·속성에 그대로 들어간다). fonts의 "fixed"는 글꼴 이름을 비운 바탕 요소
- *   (기본 배치 세벌식)다 — 카드 표와 고쳐 쓰기 칩에 '세벌식'으로 보인다.
+ *   (기본 글꼴 모양 세벌식)다 — 카드 표와 고쳐 쓰기 칩에 '세벌식'으로 보인다.
  *   항목의 made({ by, where, date, attempt, edited, prompt, note, builder? })는 그 페이지가 요청 글 하나로 AI에게 받은
- *   답이라는 기록이다 — 카드에 그 표지와 요청 원문을 보인다. builder는 그 요청 글을 낸 요청 글 만들기의 고르기다
+ *   답이라는 기록이다 — 카드에는 'AI 답' 표지만 두고, 내력(모델·날짜·몇 번째 답·손봤는지)과 요청 원문은 카드의 펼침
+ *   (made 펼침) 안에만 둔다. builder는 그 요청 글을 낸 요청 글 만들기의 고르기다
  *   (buildPrompt(builder)가 prompt와 같을 때만 '이 설정 불러오기'를 보인다). made가 없는 항목의 prompt는 페이지를 글로
  *   적은 요청일 뿐이라 '받은 답'이라고 부르지 않는다.
  * - 고쳐 쓰기는 사례 HTML을 받아 showcase-remix.js로 바꾼 글 하나에서 미리보기(srcdoc + <base>)와 복사·내려받기
- *   (FontKkuSite.toCdn)를 함께 만든다. 세트는 소개와 같은 landing-ai-sets.js의 답, 또는 소개에서 그려 이 브라우저에
- *   남긴 칸(localStorage 'font-kku:landing-draft')이다. 미리보기 틀은 구획이 화면에 가까워질 때 처음 만든다.
+ *   (FontKkuSite.toCdn)를 함께 만든다. 세트는 소개와 같은 landing-ai-sets.js의 답, 소개에서 그려 이 브라우저에
+ *   남긴 칸(localStorage 'font-kku:landing-draft'), 또는 패키지에 든 그림 세트(BUILTIN_SETS — 등록 코드 없이 이름만
+ *   걸면 런타임이 필요할 때 받는다)다. 세트를 쓴 모델과 날짜는 소개의 답 원문(#ai-answers)에만 있다.
+ *   미리보기 틀은 구획이 화면에 가까워질 때 처음 만든다.
  * - 요청 글은 FontKkuShowcase.buildPrompt(opts)가 만든다. 줄마다 설명서(SKILL.md 목차의 파일)를 가리키고, 설명서에 없는
  *   API 이름은 넣지 않는다 — 통합 쪽이 이 글을 그대로 AI에게 주고 받은 답을 사례로 싣는다. */
 (function () {
@@ -174,13 +177,14 @@
   if (starterCode && S && R) {
     var starter = S.read(S.byId(STARTER_SET));
     var register = R.registerCode({ cells: starter.cells, options: starter.options, label: "원형 8칸만 그린다 — 나머지 자모와 11,172자는 폰꾸가 조립한다" });
+    /* 글꼴을 비워 기본 세벌식에 건다. 세벌식도 sebul 글꼴 CSS 위에 지어 data-fonts에는 sebul을 적는다(setup.md) */
     starterCode.textContent = '<script src="' + site.RUNTIME + '" data-fonts="sebul"></' + "script>\n" + register + "\n\n" +
-      '<h1><font-kku font="sebul" jamo-set="my-font" size="56"\n  style="--fy-element-width: ' + (starter.width || "0.13em") + '">오늘의 기록</font-kku></h1>\n' +
+      '<h1><font-kku jamo-set="my-font" size="56"\n  style="--fy-element-width: ' + (starter.width || "0.13em") + '">오늘의 기록</font-kku></h1>\n' +
       "<p>본문은 폰꾸 없이 페이지 글꼴로 씁니다.</p>";
     var starterSet = S.byId(STARTER_SET);
     $("[data-start-about]").innerHTML = "이 코드를 이 페이지에서 그대로 그린 결과입니다. 8칸은 소개에 실은 " +
-      '<a href="./index.html#ai">마커 답</a>(' + escapeHtml(starterSet.date + " " + starterSet.by + ", " + starterSet.attempt) +
-      ", 고치지 않음)입니다. 내 글씨로 바꾸려면 등록 코드의 여덟 칸만 바꿉니다.";
+      '<a href="./index.html#ai-answers">AI 마커 답</a>' + (starterSet.edited ? "을 손본 것" : "을 고치지 않고 옮긴 것") +
+      "이고, 글꼴을 비워 기본 세벌식에 걸었습니다. 내 글씨로 바꾸려면 등록 코드의 여덟 칸만 바꿉니다.";
   }
 
   // ── 고쳐 쓰기: 세트 ─────────────────────────────────────────────
@@ -212,13 +216,18 @@
     };
   }
 
+  /* 등록 코드 머리 주석 — 답을 쓴 모델과 날짜는 적지 않고 답 원문이 있는 곳을 가리킨다 */
   function setLabel(set) {
-    return "8칸 그림 세트 「" + set.feel + "」 — " + set.date + " " + set.by + "의 " + set.attempt + (set.edited ? "" : "(고치지 않음)") +
-      ". 원형 8칸만 그렸고 나머지 자모와 11,172자는 폰꾸가 조립한다";
+    return "8칸 그림 세트 「" + set.feel + "」 — AI 답" + (set.edited ? "을 손본 것" : "(고치지 않음)") + ", 답 원문은 " +
+      site.SITE_URL + "#ai-answers. 원형 8칸만 그렸고 나머지 자모와 11,172자는 폰꾸가 조립한다";
   }
+
+  /* 패키지에 든 그림 세트 — 자모를 모두 그려 둔 세트라 등록 코드 없이 jamo-set 이름만 건다(draw-jamo.md) */
+  var BUILTIN_SETS = { "pilgi-box": "필기", "dunggeun-box": "둥근", "butgeul-box": "붓" };
 
   function remixSet(id) {
     if (!id || !S) return null;
+    if (BUILTIN_SETS[id]) return { name: id };
     if (id === "draft") {
       var draft = readDraft();
       return draft ? { cells: draft.cells, options: { frame: "box", cap: "round", join: "round" }, width: draft.width,
@@ -237,13 +246,17 @@
       return "소개의 8칸 만들기에서 그려 이 브라우저에 남긴 칸입니다" +
         (draft.edited.length ? " — 고친 칸: " + escapeHtml(draft.edited.join(" ")) : "") + ". 굵기 " + escapeHtml(draft.width) + ".";
     }
+    if (BUILTIN_SETS[id]) {
+      return "폰꾸에 든 그림 세트 " + BUILTIN_SETS[id] + "(<code>" + id + "</code>)입니다. 자모를 모두 그려 둔 세트라 등록 코드 없이 이름만 걸면 런타임이 " +
+        "<code>profiles/" + id + ".jamo.js</code>를 필요할 때 받습니다.";
+    }
     var set = S.byId(id);
     if (!set) return "";
-    var meta = [set.date, set.by, set.where, set.attempt, set.edited ? "손본 답" : "고치지 않음"].join(" · ");
-    var text = escapeHtml(meta) + ". 느낌: " + escapeHtml(set.feel) + ".";
-    if (set.followup) text += " 부탁: “" + escapeHtml(set.followup) + "”";
+    var text = "AI가 그린 8칸입니다 — " + escapeHtml((/^1번째/.test(set.attempt) ? "첫 답" : set.attempt) + " · " + (set.edited ? "손본 답" : "고치지 않음")) +
+      ". 느낌: " + escapeHtml(set.feel) + ".";
+    if (set.followup) text += " 이어서 한 부탁: “" + escapeHtml(set.followup) + "”";
     if (id === "claude-balloon-2") text += " 큰 제목에 어울리고, 작은 글씨에서는 획이 뭉칩니다.";
-    return text + ' <a href="./index.html#ai">답 원문 → 소개</a>';
+    return text + ' <a href="./index.html#ai-answers">답 원문과 쓴 모델·날짜 → 소개</a>';
   }
 
   // ── 사례 목록 ─────────────────────────────────────────────────
@@ -259,20 +272,15 @@
     return /^1번째/.test(made.attempt || "") || !made.attempt ? "첫 답" : made.attempt;
   }
 
-  /* 표지에 쓰는 짧은 말 — 고쳤는지만. 무엇을 고쳤는지(edited가 글이면)는 기록 줄(madeMeta)에 적는다 */
-  function madeEdited(made) {
-    return made.edited ? "손봄" : "고치지 않음";
-  }
-
+  /* 받은 내력 한 줄 — 몇 번째 답·손봤는지(edited가 글이면 무엇을)·모델·어디서·날짜. 카드의 made 펼침과 '이 사례처럼'
+   * 펼침 안에만 쓴다(카드 몸과 다른 구획에는 모델·날짜를 보이지 않는다) */
   function madeMeta(made) {
     var edited = !made.edited ? "고치지 않음" : typeof made.edited === "string" ? "손봄: " + made.edited : "손봄";
-    return [made.date, made.by, made.where, made.attempt, edited].filter(Boolean).join(" · ");
+    return [attemptLabel(made), edited, made.by, made.where, made.date].filter(Boolean).join(" · ");
   }
 
-  /* 카드의 펼침 제목 — 펼치면 요청 원문이 보인다(답은 카드 그 자체다). 증거 줄도 이 말을 그대로 옮긴다 */
-  function madeSummary(made) {
-    return "이 페이지를 받은 요청 글 (" + attemptLabel(made) + ", " + madeEdited(made) + ")";
-  }
+  /* 카드의 펼침 제목 — 펼치면 받은 내력과 요청 원문이 보인다(답은 카드 그 자체다). 증거 줄도 이 말을 그대로 옮긴다 */
+  var MADE_SUMMARY = "이 페이지를 받은 요청 글";
 
   function madeOf(item) {
     return item && item.made && typeof item.made === "object" ? item.made : null;
@@ -303,7 +311,7 @@
     var name = baseName(item.file);
     var made = madeOf(item);
     var tags = (item.fonts || []).map(function (font) {
-      if (font === FIXED) return '<li class="sc-fixed"><a href="./fonts.html#layout" title="글꼴 이름을 비워 기본 배치로 그린 글자">세벌식</a></li>';
+      if (font === FIXED) return '<li class="sc-fixed"><a href="./fonts.html#layout" title="글꼴 이름을 비워 기본 글꼴 모양(세벌식)으로 그린 글자">세벌식</a></li>';
       return '<li><a href="./fonts.html#' + escapeHtml(font) + '"><code>' + escapeHtml(font) + "</code></a></li>";
     }).concat((item.features || []).map(function (feature) {
       return '<li class="sc-feature">' + escapeHtml(feature) + "</li>";
@@ -311,7 +319,7 @@
     var madeBlock = "";
     if (made) {
       madeBlock = '<details class="sc-made" data-made>' +
-        "<summary>" + escapeHtml(madeSummary(made)) + "</summary>" +
+        "<summary>" + MADE_SUMMARY + "</summary>" +
         '<p class="k-note">' + escapeHtml(madeMeta(made)) + (made.note ? ". " + escapeHtml(made.note) : "") +
         ". 아래 글을 그대로 주고 받은 답을 실었습니다. 같은 글을 다시 줘도 답은 AI마다, 할 때마다 다릅니다.</p>" +
         '<pre class="sc-made-prompt">' + escapeHtml(made.prompt || "") + "</pre>" +
@@ -326,7 +334,8 @@
       '<div class="k-showcase-body">' +
       (item.kind ? '<p class="sc-kind">' + escapeHtml(item.kind) + "</p>" : "") +
       "<h3>" + escapeHtml(item.title) + "</h3>" +
-      (made ? '<p class="sc-badge" title="' + escapeHtml(madeMeta(made)) + '">AI 답 · ' + escapeHtml(madeEdited(made)) + "</p>" : "") +
+      /* 표지는 'AI 답'만 — 받은 내력은 아래 made 펼침 안에 있다 */
+      (made ? '<p class="sc-badge">AI 답</p>' : "") +
       "<p>" + escapeHtml(item.summary) + "</p>" +
       '<ul class="k-fontrow-tags sc-tags">' + tags + "</ul>" +
       '<div class="k-showcase-actions sc-actions">' +
@@ -396,16 +405,9 @@
     if (!listed) {
       text = text.trim();
     } else if (made.length) {
-      var labels = [];
-      made.forEach(function (item) {
-        var label = madeSummary(item.made);
-        if (labels.indexOf(label) < 0) labels.push(label);
-      });
       text += "요청 글 하나로 AI에게 페이지를 통째로 받은 답도 이 사례에 있습니다 — " + made.map(function (item) {
-        return '<a href="#case-' + escapeHtml(baseName(item.file)) + '">' + escapeHtml(item.title) + "</a>(" +
-          escapeHtml(attemptLabel(item.made) + ", " + madeEdited(item.made)) + ")";
-      }).join(" · ") + ". 카드의 " + labels.map(function (label) { return "'" + escapeHtml(label) + "'"; }).join("·") +
-        "을 펼치면 요청 원문을 봅니다.";
+        return '<a href="#case-' + escapeHtml(baseName(item.file)) + '">' + escapeHtml(item.title) + "</a>";
+      }).join(" · ") + ". 카드의 '" + MADE_SUMMARY + "'을 펼치면 받은 내력과 요청 원문을 봅니다.";
     } else {
       text += "페이지를 통째로 맡겨 받은 답은 아직 싣지 않았습니다.";
     }
@@ -421,16 +423,14 @@
       return made && made.builder && typeof made.builder === "object" && made.prompt && buildPrompt(made.builder) === made.prompt;
     });
     if (!list.length) return;
-    var first = list.every(function (item) { return attemptLabel(item.made) === "첫 답"; });
-    var clean = list.every(function (item) { return !item.made.edited; });
+    /* 받은 내력(모델·날짜·몇 번째 답·손봤는지)은 카드의 made 펼침에만 둔다 — 여기서는 그 카드로 잇는다 */
     $("[data-builder-made-lead]", box).innerHTML = "<strong>이 만들기로 받은 답</strong> — " +
       escapeHtml(josa(list.map(function (item) { return item.title; }).join("·"), "은는")) +
-      " 여기서 만든 요청 글을 한 글자도 고치지 않고 AI에게 줘 받은 " + (first ? "첫 답" : "답") + "입니다. " +
-      "AI는 이 저장소의 설명서만 읽고 썼고, " +
-      (clean ? "받은 HTML에서는 런타임 주소만 사례 폴더에 맞게 바꿨습니다." : "받은 HTML을 손본 곳은 아래 기록에 적었습니다.");
+      " 여기서 만든 요청 글을 한 글자도 고치지 않고 AI에게 줘 받은 답입니다. AI는 이 저장소의 설명서만 읽고 썼습니다. " +
+      "받은 내력은 카드의 '" + MADE_SUMMARY + "'을 펼치면 나옵니다.";
     $("[data-builder-made-list]", box).innerHTML = list.map(function (item) {
       return '<li><span class="sc-proof-name"><a href="#case-' + escapeHtml(baseName(item.file)) + '">' + escapeHtml(item.title) + "</a>" +
-        '<span class="sc-proof-meta">' + escapeHtml(madeMeta(item.made)) + "</span></span>" +
+        '<span class="sc-proof-meta">무엇을: ' + escapeHtml(item.made.builder.what || "") + "</span></span>" +
         '<button type="button" class="k-btn k-btn--small" data-builder-load="' + escapeHtml(item.file) + '">이 설정 불러오기</button></li>';
     }).join("");
     var status = $("[data-builder-made-status]", box);
@@ -454,7 +454,7 @@
     var item = byFile[likeSelect.value];
     if (!item) return;
     var made = madeOf(item);
-    $("[data-like-title]").textContent = made ? madeSummary(made) : "이 페이지를 글로 적은 요청";
+    $("[data-like-title]").textContent = made ? MADE_SUMMARY : "이 페이지를 글로 적은 요청";
     $("[data-like-about]").textContent = made ?
       "이 사례는 아래 글을 그대로 AI에게 주고 받은 답입니다(" + madeMeta(made) + "). 같은 글을 다시 줘도 답은 AI마다, 할 때마다 다릅니다." :
       "이 페이지의 모습을 글로 적은 요청입니다. 이 글로 받은 답을 싣지는 않았고, 같은 페이지가 나온다는 보장은 없습니다. 답은 AI마다 다릅니다.";
@@ -525,7 +525,7 @@
     var text = keep.length ?
       "색 바탕 위 스티커처럼 글꼴이 제 색으로 읽히는 곳(" + keep.map(fontName).join("·") + ")은 처음에 그대로 둡니다. 눌러서 켜고 끕니다." :
       "누르면 그 글꼴로 그린 곳만 켜고 끕니다.";
-    if ((item.fonts || []).indexOf(FIXED) >= 0) text += " 세벌식(글꼴 이름을 비운 곳)에는 그림 세트만 걸어 배치를 그대로 둡니다.";
+    if ((item.fonts || []).indexOf(FIXED) >= 0) text += " 세벌식(글꼴 이름을 비운 곳)에는 그림 세트만 걸어 글꼴 모양을 그대로 둡니다.";
     var html = (remix.empty ? "<strong>바꿀 글꼴을 하나 이상 켜세요.</strong> " : "") + escapeHtml(text);
     /* 읽어 주는 영역(aria-live)이라 글이 바뀔 때만 고쳐 쓴다 */
     if (html === fontsNoteHtml) return;
@@ -791,7 +791,8 @@
     });
     downloadButton.addEventListener("click", function () {
       if (!remix.ready || remix.empty) return;
-      var name = baseName(remix.file) + (remix.set ? "-my-font" : "") + ".html";
+      var set = remixSet(remix.set);
+      var name = baseName(remix.file) + (set ? "-" + R.setName(set) : "") + ".html";
       site.download(name, site.toCdn(remix.out), downloadButton);
     });
     window.addEventListener("storage", function (event) {

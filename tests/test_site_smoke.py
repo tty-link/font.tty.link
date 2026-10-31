@@ -178,7 +178,7 @@ check("single quotes", r.hosts === 1 && r.html.includes('<h1 class=\'font-kku\' 
 src = RT + '<font-kku font="neon" seed>가</font-kku>';
 r = R.remix(src, { set: null, seed: true });
 check("bare seed", r.hosts === 1 && !r.html.includes('seed="auto"'), r);
-// 글꼴 이름이 없는 바탕 요소는 "fixed" — jamo-set만 더해 세벌 고정 그대로, 칩으로 켜고 끈다
+// 글꼴 이름이 없는 바탕 요소는 "fixed" — jamo-set만 더해 세벌식 그대로, 칩으로 켜고 끈다
 src = RT + '<font-kku size="40">가</font-kku><font-kku font="neon">나</font-kku>';
 r = R.remix(src, { set, fonts: ["fixed"] });
 check("fixed host gets jamo-set only", r.hosts === 1 && r.html.includes('<font-kku jamo-set="my-font" size="40">') &&
@@ -188,6 +188,12 @@ check("fixed chip off", r.hosts === 1 && r.html.includes('<font-kku size="40">')
 // 바꿀 곳이 없으면(씨앗을 켜도) 원문 그대로
 r = R.remix(src, { set, seed: true, fonts: [] });
 check("no host → source unchanged", r.hosts === 0 && r.html === src, r);
+// 기본 제공 세트는 이름만 건다 — 등록 코드도 획 굵기 규칙도 없고, 이름 있는 글꼴은 네모꼴 sebul로. 이름 꼴이 아니면 바꾸지 않는다
+r = R.remix(src, { set: { name: "pilgi-box" }, fonts: ["fixed", "neon"] });
+check("built-in set by name", r.hosts === 2 && r.html.includes('<font-kku jamo-set="pilgi-box" size="40">') &&
+  r.html.includes('<font-kku font="sebul" jamo-set="pilgi-box">') && !r.html.includes("registerJamo") && !r.html.includes("<style>") &&
+  r.html.includes('data-fonts="sebul"></script>'), r.html);
+check("built-in name must be a plain id", R.remix(src, { set: { name: "../x" }, fonts: ["neon"] }).hosts === 0, src);
 // 쓰지 않게 된 템플릿 자신의 세트 등록은 빠지고(그것만 든 <script>는 통째로), 아직 쓰거나 식 속이면 남는다
 src = "<head>" + RT + '\n  <script>\n    /* mine */\n    if (window.FontKku) {\n      FontKku.registerJamo("pen", { "ㄱ": { box: [0,0,1,1], shapes: ["M0 0)"] } }, { frame: "box" });\n    }\n  </script>\n</head><h1 class="font-kku" data-jamo-set="pen">가</h1>';
 r = R.remix(src, { set, fonts: ["fixed"] });
@@ -215,7 +221,7 @@ if (failures.length) { console.log(failures.join("\n")); process.exit(1); }
 
 def test_showcase_remix_transform() -> None:
     """사례 '고쳐 쓰기' 변환(site/showcase-remix.js)의 가장자리: 주석 속 런타임 태그, 속성 값 속 '>', 홑따옴표 속성, 값 없는
-    seed, 글꼴 이름이 없는 바탕 요소(세벌 고정 — jamo-set만, 칩 "fixed"), 바꿀 곳이 없으면 원문 그대로, 쓰지 않게 된 세트 등록
+    seed, 글꼴 이름이 없는 바탕 요소(세벌식 — jamo-set만, 칩 "fixed"), 바꿀 곳이 없으면 원문 그대로, 기본 제공 세트(이름만), 쓰지 않게 된 세트 등록
     빼기. 그리고 사례 목록(index.json)의 fonts가 템플릿 바탕 요소의 글꼴과 같다. 브라우저 없이 node로 돈다."""
     import shutil
     import subprocess

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>font-kku 데모 — 그림 자소 보기</title>
     <link rel="stylesheet" href="lib/font-kku.css" />
+    <!-- 글꼴을 비운 글(기본 세벌식)도 sebul 글꼴 CSS 위에 짓는다(setup.md) -->
     <link rel="stylesheet" href="lib/profiles/sebul.css" />
     <link rel="stylesheet" href="lib/profiles/sprite-example.css" />
     <link rel="stylesheet" href="lib/profiles/sprite-system.css" />
@@ -68,7 +69,7 @@
 	        <span class="demo-kicker">그림 자소 보기</span>
 	        <h1 class="demo-title">자모 40칸만 그리면 한글 11,172자</h1>
 	        <p class="demo-copy">
-	          font-kku의 <strong>기본 경로는 자모를 CSS 획(원소)으로 긋는 것</strong>이고(<code>sebul</code>·<code>gothic</code> — 글꼴 파일도 기기 한글 글꼴도 필요 없다),
+	          font-kku의 <strong>기본 경로는 자모를 원소 획(CSS)으로 긋는 것</strong>이고(글꼴을 비운 세벌식과 <code>sebul</code>·<code>gothic</code> — 글꼴 파일도 기기 한글 글꼴도 필요 없다),
 	          이 페이지가 다루는 그림 자소(<code>sprite</code>)는 손으로 그린 그림을 쓰는 <strong>확장 경로</strong>다. 자음 19 + 모음 21, 40칸만 그리면
 	          한글 전체가 만들어지므로 글꼴 제작 도구 없이 웹·앱에서 바로 자기 손글씨를 글꼴처럼 쓸 수 있고,
 	          한글 글꼴이 깔려 있지 않은 기기에서도 웹 글꼴 없이 같은 모양으로 그려진다.
@@ -84,6 +85,7 @@
 	        <p class="demo-copy">
 	          자모를 벡터로 직접 그려 디자인으로 쓰려면 <a href="./font-studio.html">작업실</a>의 ‘직접 그려 만들기’에서 원형 8자(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)부터
 	          그린다 — 그리지 않은 자모는 조립식이 만들고, 기본 24·확장 40으로 늘린다. 이 페이지의 자소판(PNG·SVG 한 장)과는 다른 재료다.
+	          자소판을 브라우저에서 칸마다 그리려면 작업실의 <a href="./font-studio.html?font=sprite-example&amp;page=sheet">자소판</a> 페이지를 연다.
 	        </p>
 	      </section>
 
@@ -150,15 +152,15 @@
 
       <section class="demo-columns">
         <article class="demo-panel">
-          <h2>sebul (CSS 획 기반)</h2>
+          <h2>세벌식 (기본 · 원소 획)</h2>
           <div class="demo-stack">
             <div class="demo-sample">
               <span class="demo-label">제목</span>
-              <font-kku font="sebul" size="42">광화문 광장</font-kku>
+              <font-kku size="42">광화문 광장</font-kku>
             </div>
             <div class="demo-sample">
               <span class="demo-label">본문</span>
-              <font-kku font="sebul" size="26">닭을 밟고 흙을 긁다</font-kku>
+              <font-kku size="26">닭을 밟고 흙을 긁다</font-kku>
             </div>
           </div>
         </article>
@@ -183,14 +185,14 @@
         <div class="sprite-small-grid">
           <div></div>
           <div class="sprite-small-head">sprite-example</div>
-          <div class="sprite-small-head">sebul 기준</div>
+          <div class="sprite-small-head">세벌식 기준</div>
 
           <div class="sprite-small-size">16px</div>
           <div class="sprite-small-sample">
             <font-kku font="sprite-example" size="16">광화문 광장 읽 밟 흙</font-kku>
           </div>
           <div class="sprite-small-sample reference">
-            <font-kku font="sebul" size="16">광화문 광장 읽 밟 흙</font-kku>
+            <font-kku size="16">광화문 광장 읽 밟 흙</font-kku>
           </div>
 
           <div class="sprite-small-size">20px</div>
@@ -198,7 +200,7 @@
             <font-kku font="sprite-example" size="20">광화문 광장 읽 밟 흙</font-kku>
           </div>
           <div class="sprite-small-sample reference">
-            <font-kku font="sebul" size="20">광화문 광장 읽 밟 흙</font-kku>
+            <font-kku size="20">광화문 광장 읽 밟 흙</font-kku>
           </div>
 
           <div class="sprite-small-size">24px</div>
@@ -206,7 +208,7 @@
             <font-kku font="sprite-example" size="24">광화문 광장 읽 밟 흙</font-kku>
           </div>
           <div class="sprite-small-sample reference">
-            <font-kku font="sebul" size="24">광화문 광장 읽 밟 흙</font-kku>
+            <font-kku size="24">광화문 광장 읽 밟 흙</font-kku>
           </div>
 
           <div class="sprite-small-size">32px</div>
@@ -214,7 +216,7 @@
             <font-kku font="sprite-example" size="32">광화문 광장 읽 밟 흙</font-kku>
           </div>
           <div class="sprite-small-sample reference">
-            <font-kku font="sebul" size="32">광화문 광장 읽 밟 흙</font-kku>
+            <font-kku size="32">광화문 광장 읽 밟 흙</font-kku>
           </div>
         </div>
       </section>
@@ -222,7 +224,7 @@
       <section class="demo-panel" id="vector-jamo">
         <h2>벡터 자소 — 자모마다 SVG 하나</h2>
         <p class="demo-copy">
-          같은 배치 글꼴을 <code>jamo-set</code>으로 그리면 자소판 칸 대신 자모마다 인라인 SVG가 들어간다(ADR-013).
+          같은 그림 자소 글꼴에 <code>jamo-set</code>을 주면 자소판 칸 대신 자모마다 인라인 SVG가 들어간다(ADR-013).
           획은 글자 색(<code>color</code>)을 따르고, 자리가 눌려도 굵기가 그대로이며, 페이지 CSS로 자모마다 색·굵기·끝 모양을 바꾼다.
           자모 세트는 코드로 등록한다 — 기본 글꼴은 <code>profiles/&lt;글꼴&gt;.jamo.js</code> 모듈이 있고, 새 세트는 <code>FontKku.registerJamo</code>로 바로 넣는다.
         </p>

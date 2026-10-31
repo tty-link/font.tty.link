@@ -37,6 +37,9 @@
  * 고른다 — 같은 뽑기 씨앗은 언제나 같은 결과다. 바탕과 글자색이 겹치지 않게 어두운 바탕
  * 글꼴에는 밝은 색, 밝은 바탕 글꼴에는 짙은 색을 고른다.
  *
+ * 기반 글꼴 가운데 id ""는 글꼴을 비운 기본 세벌식이다 — 태그에 font를 적지 않고, 한 줄 설치에는 sebul을 적는다
+ * (기본 세벌식도 sebul 글꼴 CSS 위에 짓는다). 견본 행의 단추는 [data-customize-default]다.
+ *
  * 쓰는 법: FontKkuCustomizer.init({ fonts, text, cdn, skillUrl, copyText }); 행 버튼이 open(id),
  * draw(seed?)가 글꼴 뽑기. 상태는 주소 해시(#kku=…)에 담겨 링크로 나누고, 열 때 해시가 있으면
  * 복원한다(변주 묶음 이전의 링크도 열린다). */
@@ -97,6 +100,16 @@
     return config.fonts.filter(function (item) { return item.id === id; })[0] || null;
   }
 
+  /* 클래스 이름에 쓰는 글꼴 열쇠 — 기본 세벌식(id "")은 sebeolsik */
+  function keyOf(item) {
+    return item.id || "sebeolsik";
+  }
+
+  /* 태그의 font 속성 — 기본 세벌식이면 적지 않는다 */
+  function fontAttr(id) {
+    return id ? ' font="' + id + '"' : "";
+  }
+
   function isSprite(item) {
     return item.paint === "sprite" || item.paint === "sprite-mask";
   }
@@ -155,7 +168,7 @@
   function defaults(item, text) {
     return {
       f: item.id,
-      n: "kku-my-" + item.id,
+      n: "kku-my-" + keyOf(item),
       p: "font",
       c: { cho: null, jung: null, jong: null },
       g: ["#ffd166", "#ef476f"],
@@ -238,7 +251,7 @@
   }
 
   function usageTag(s) {
-    var attrs = ' font="' + s.f + '" class="' + s.n + '"';
+    var attrs = fontAttr(s.f) + ' class="' + s.n + '"';
     if (s.vo) attrs += ' seed="' + seedAttr(s) + '" jamo-seeds';
     if (s.an) attrs += ' animate="' + s.an + '"';
     return "<font-kku" + attrs + ">" + escapeHtml(s.t || (fontById(s.f) || {}).name || "") + "</font-kku>";
@@ -337,7 +350,7 @@
       rules.push("@supports (color: oklch(from red l c h)) {\n" + hue.join("\n").split("\n").map(function (line) { return "  " + line; }).join("\n") + "\n}");
     }
 
-    var head = "/* 나만의 꾸밈 글꼴: " + s.n + " — 기반 " + item.id + ". 쓰는 법: " +
+    var head = "/* 나만의 꾸밈 글꼴: " + s.n + " — 기반 " + (item.id || "세벌식(font 없음)") + ". 쓰는 법: " +
       usageTag(s).replace(/\*\//g, "* /") + " */";
     if (!rules.length) {
       rules.push(s.vo
@@ -370,20 +383,22 @@
     return "<!doctype html>\n<html lang=\"ko\">\n<head>\n  <meta charset=\"utf-8\" />\n" +
       "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
       "  <title>" + escapeHtml(s.n) + " — 폰꾸 꾸밈</title>\n" +
-      "  <script src=\"" + config.runtime + "\" data-fonts=\"" + s.f + "\"></" + "script>\n" +
+      "  <script src=\"" + config.runtime + "\" data-fonts=\"" + (s.f || "sebul") + "\"></" + "script>\n" +
       "  <style>\n    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: " + bg + ";" + bodyInk + " }\n" +
       css.trim().split("\n").map(function (line) { return "    " + line; }).join("\n") +
       "\n  </style>\n</head>\n<body>\n  " + usageTag(s).replace("<font-kku", "<font-kku size=\"" + size + "\"" + paint) + "\n</body>\n</html>\n";
   }
 
   function aiPrompt(s, css) {
+    var base = font.id ? "'" + font.name + "'(" + font.id + ")" : "기본 '" + font.name + "'(font를 비운 글)";
     return "이 설명서를 읽고 따라 해 줘: " + config.skillUrl + "\n\n" +
-      "폰꾸 '" + font.name + "'(" + font.id + ") 글꼴을 기반으로 한 나만의 꾸밈 글꼴 " + s.n + "를 CSS 파일 하나로 다듬어 줘.\n" +
+      "폰꾸 " + base + " 글꼴을 기반으로 한 나만의 꾸밈 글꼴 " + s.n + "를 CSS 파일 하나로 다듬어 줘.\n" +
       "지금까지 꾸민 CSS는 아래와 같아. 이 느낌을 살리면서 (여기에 원하는 분위기를 적기) 느낌을 더해 줘.\n" +
       "자모 위치와 크기는 바꾸지 말고, 같은 문장('" + s.t + "')을 기반 글꼴 그대로와 나란히 그린 미리보기 HTML도 함께 줘.\n\n" + css;
   }
 
   function studioHref(item) {
+    if (!item.id) return "./font-studio.html";
     if (STUDIO_FONTS.indexOf(item.id) !== -1) return "./font-studio.html?font=" + item.id;
     return "./font-studio.html?src=" + encodeURIComponent("lib/profiles/" + item.id + ".css");
   }
@@ -423,7 +438,7 @@
     var item = fontById(raw.f);
     if (!item) return null;
     var s = defaults(item, typeof raw.t === "string" ? raw.t.slice(0, 24) : item.name);
-    s.n = slug(raw.n, item.id);
+    s.n = slug(raw.n, keyOf(item));
     s.p = pick(raw.p, PAINTS.map(function (p) { return p[0]; }), "font");
     ROLES.forEach(function (role) {
       var color = raw.c && raw.c[role.key];
@@ -478,7 +493,7 @@
   function markup() {
     return '<div class="kku-sheet">' +
       '<header class="kku-head">' +
-      '<div><p class="kku-kicker">꾸밈 만들기 · 기반 <code data-kku-base-id></code><span class="kku-draw-no" data-kku-draw-no hidden> · 뽑기 <code></code></span></p>' +
+      '<div><p class="kku-kicker">꾸밈 만들기 · 기반 <span data-kku-base-id></span><span class="kku-draw-no" data-kku-draw-no hidden> · 뽑기 <code></code></span></p>' +
       '<h2 id="kku-title" data-kku-title>꾸미기</h2></div>' +
       '<button type="button" class="kku-close" data-kku-close aria-label="꾸미기 닫기">닫기 <span aria-hidden="true">✕</span></button>' +
       "</header>" +
@@ -563,7 +578,7 @@
       '<button type="button" class="k-btn k-btn--small" data-kku-action="draw">또 뽑기</button>' +
       '<button type="button" class="k-btn k-btn--small" data-kku-action="reset">처음으로</button>' +
       "</div>" +
-      '<p class="k-note">페이지 CSS는 글꼴 CSS보다 언제나 이깁니다. 이 CSS를 페이지에 넣고 태그에 클래스를 붙이면 됩니다 — 자모 배치는 기반 글꼴 그대로입니다. 배치·굵기 보정처럼 글꼴 자체를 고치려면 작업실에서 엽니다.</p>' +
+      '<p class="k-note">페이지 CSS는 글꼴 CSS보다 언제나 이깁니다. 이 CSS를 페이지에 넣고 태그에 클래스를 붙이면 됩니다 — 자모의 자리와 크기는 기반 글꼴 그대로입니다. 자리·굵기를 고쳐 글꼴 자체를 바꾸려면 작업실에서 엽니다.</p>' +
       "</section>" +
       "</div></div></div>";
   }
@@ -596,7 +611,7 @@
 
   function syncControls() {
     var sprite = isSprite(font);
-    $("[data-kku-base-id]").textContent = font.id;
+    $("[data-kku-base-id]").innerHTML = font.id ? "<code>" + escapeHtml(font.id) + "</code>" : "기본 " + escapeHtml(font.name) + " (<code>font</code> 없음)";
     $("[data-kku-title]").textContent = font.name + " 꾸미기";
     $("[data-kku-text]").value = state.t;
     $('[data-kku="n"]').value = state.n.replace(/^kku-/, "");
@@ -727,12 +742,12 @@
     var original = $("[data-kku-original]");
     var text = state.t || font.name;
     live.className = state.n;
-    setAttr(live, "font", font.id);
+    setAttr(live, "font", font.id || null);
     setAttr(live, "size", sizeFor(text, false));
     setAttr(live, "seed", seedAttr(state));
     setAttr(live, "jamo-seeds", state.vo ? "" : null);
     setAttr(live, "animate", state.an || null);
-    setAttr(original, "font", font.id);
+    setAttr(original, "font", font.id || null);
     setAttr(original, "size", sizeFor(text, true));
     [live, original].forEach(function (host) {
       if (window.FontKku && host.getAttribute("data-fy-upgraded") === "true") {
@@ -943,8 +958,9 @@
     function one(list) { return list[Math.floor(rand() * list.length) % list.length]; }
     var pool = [];
     config.fonts.forEach(function (item) {
-      // 출발용 뼈대와, 옛 #kku= 링크를 열려고만 둔 꾸러미 글꼴(legacy)은 뽑지 않는다
-      if (item.id === "sprite-example" || item.legacy) return;
+      // 출발용 자소판과, 옛 #kku= 링크를 열려고만 둔 꾸러미 글꼴(legacy)은 뽑지 않는다. 뽑기는 글꼴 축 정본(FontKkuThemes.fonts)의
+      // 글꼴에서만 고르므로 정본에 없는 기본 세벌식(id "")도 뽑지 않는다 — 기본 세벌식은 견본 행·꾸미기 카드에서 연다
+      if (!item.id || item.id === "sprite-example" || item.legacy) return;
       var weight = item.group === "derived" ? 3 : 2;
       for (var i = 0; i < weight; i += 1) pool.push(item);
     });
@@ -1037,10 +1053,11 @@
       skillUrl: options.skillUrl,
       copyText: options.copyText
     };
+    // 견본 행의 꾸미기 — [data-customize-font]는 정본 글꼴마다 하나, 기본 세벌식 행은 [data-customize-default]
     document.addEventListener("click", function (event) {
-      var button = event.target.closest("[data-customize-font]");
+      var button = event.target.closest("[data-customize-font], [data-customize-default]");
       if (!button) return;
-      open(button.getAttribute("data-customize-font"), null, button);
+      open(button.getAttribute("data-customize-font") || "", null, button);
     });
     restoreFromHash();
     // 같은 페이지 안에서 #kku= 링크를 눌러도 연다(해시 쓰기는 replaceState라 이 이벤트를 내지 않는다)
@@ -1052,7 +1069,7 @@
     if (!match) return;
     var restored = sanitize(decodeState(match[1]));
     if (restored) {
-      var row = document.querySelector('[data-customize-font="' + restored.f + '"]');
+      var row = document.querySelector(restored.f ? '[data-customize-font="' + restored.f + '"]' : "[data-customize-default]");
       open(restored.f, restored, row);
     }
   }

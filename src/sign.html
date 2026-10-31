@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>전광판 — 폰꾸 font-kku</title>
     <meta name="description" content="영문 자판으로 두벌식·세벌식 한글을 쳐서 도트 전광판에 띄웁니다. 한글 입력기도 한글 글꼴도 없는 기기에서 폰꾸 그림 자소로 그립니다. 주소로 전광판을 나눕니다." />
+    <!-- 제목은 글꼴을 비운 기본 세벌식이라 sebul을 적는다(setup.md) -->
     <script src="lib/font-kku.js" data-fonts="sebul pixel sprite-system dojang chalk"></script>
     <script src="lib/font-kku-ime.js"></script>
     <link rel="stylesheet" href="./site.css" />
@@ -15,7 +16,7 @@
     <header class="k-header">
       <div class="k-wrap k-header-inner">
         <a class="k-brand" href="./index.html">
-          <span class="k-stamp" aria-hidden="true"><font-kku font="sebul" size="20" data-nofont-font="pixel">꾸</font-kku></span>
+          <span class="k-stamp" aria-hidden="true"><font-kku size="20" data-nofont-font="pixel">꾸</font-kku></span>
           <span class="k-brand-name"><strong>폰꾸</strong><span>font-kku</span></span>
         </a>
         <nav class="k-nav" aria-label="사이트" data-demo-nav></nav>
@@ -25,7 +26,7 @@
     <main>
       <section class="k-wrap k-page-head app-head" aria-labelledby="sign-title">
         <span class="k-kicker" data-en="Web app · works without a Korean font or IME">웹 앱 · 한글 글꼴·입력기 없이</span>
-        <h1 id="sign-title" class="font-kku k-h1 k-mark" data-font="sebul" data-nofont-font="pixel" data-size="clamp(44px, 7vw, 88px)">전광판</h1>
+        <h1 id="sign-title" class="font-kku k-h1 k-mark" data-nofont-font="pixel" data-size="clamp(44px, 7vw, 88px)">전광판</h1>
         <p class="k-lead" data-en="Type Korean on an English keyboard (2-set or 3-set) and show it on a dot-matrix sign. The page composes Hangul itself and font-kku draws it from image jamo, so it works on a device with no Korean input method and no Korean font. The address keeps the sign, so you can share it.">
           영문 자판으로 두벌식·세벌식 한글을 쳐서 도트 전광판에 띄웁니다. 한글 조합은 페이지가 하고 글자는 폰꾸가 자소판
           그림으로 그리므로, 한글 입력기도 한글 글꼴도 없는 기기에서 그대로 동작합니다. 주소에 전광판이 담겨 링크로 나눕니다.
@@ -123,11 +124,11 @@
           <header class="k-section-head">
             <span class="k-num" aria-hidden="true" data-en="How">쓰는 법</span>
             <span class="k-kicker" data-en="How it works">쓰는 법</span>
-            <h2 id="sign-how" class="font-kku k-h2" data-font="sebul" data-nofont-font="sprite-system" data-size="clamp(30px, 4.4vw, 52px)">영문 자판으로 한글을</h2>
+            <h2 id="sign-how" class="font-kku k-h2" data-nofont-font="sprite-system" data-size="clamp(30px, 4.4vw, 52px)">영문 자판으로 한글을</h2>
           </header>
           <ul class="memo-help">
-            <li><span data-en="2-set (Dubeolsik): the keys of a Korean keyboard, Shift for tense consonants —">두벌식: 한글 자판 자리 그대로, 된소리는 Shift —</span> <code>dkssud</code> → <font-kku font="sebul" size="22">안녕</font-kku></li>
-            <li><span data-en="3-set (390 / Final): initials on the right hand, vowels in the middle, finals on the left —">세벌식 390·최종: 초성은 오른손, 중성은 가운데, 종성은 왼손 —</span> <code>jfs</code> → <font-kku font="sebul" size="22">안</font-kku></li>
+            <li><span data-en="2-set (Dubeolsik): the keys of a Korean keyboard, Shift for tense consonants —">두벌식: 한글 자판 자리 그대로, 된소리는 Shift —</span> <code>dkssud</code> → <font-kku size="22">안녕</font-kku></li>
+            <li><span data-en="3-set (390 / Final): initials on the right hand, vowels in the middle, finals on the left —">세벌식 390·최종: 초성은 오른손, 중성은 가운데, 종성은 왼손 —</span> <code>jfs</code> → <font-kku size="22">안</font-kku></li>
             <li><span data-en="Shift+Space or the KO/EN button switches Korean and English. While a syllable is being composed, Backspace removes one jamo.">Shift+Space나 한/영 단추로 한글·영문을 바꿉니다. 조합 중에는 Backspace가 자모 하나씩 지웁니다.</span></li>
             <li><span data-en="The address (#…) holds the text, font, motion, speed, size and colour — copy the link to show the same sign on another device.">주소(#…)에 글·글꼴·움직임·속도·크기·색이 담깁니다. 링크를 복사하면 다른 기기에서 같은 전광판이 뜹니다.</span></li>
           </ul>
