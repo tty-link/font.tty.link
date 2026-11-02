@@ -202,6 +202,14 @@ class PreviewConsumers(unittest.TestCase):
         self.assertEqual(P.host_info(page), {
             "hosts": 3, "notReady": 1, "sample": ["unfinished child glyph"], "version": "candidate"})
 
+    def test_unopened_frames_fail_only_the_candidate_side(self):
+        base = {"site": "font", "page": "showcase.html", "engine": "webkit", "vp": "mobile"}
+        stuck = ["./examples/cafe-menu.html"]
+        problems = P.verdict([dict(base, side="before", unopened=stuck), dict(base, side="after", unopened=stuck)])
+        self.assertEqual(len(problems), 1)
+        self.assertIn("열리지 않은 iframe 1", problems[0])
+        self.assertEqual(P.verdict([dict(base, side="after", revisited=4, unopened=[])]), [])
+
 
 class PackageUpgrade(unittest.TestCase):
     def setUp(self):

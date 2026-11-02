@@ -9,9 +9,11 @@
   font.tty.link 모든 쪽(`*.html`, `examples/*.html`)을 Chromium 데스크톱·휴대폰, WebKit 데스크톱·휴대폰, Firefox 데스크톱으로 연다.
   tty.link 홈과 lol.tty.link(홈·`pages/index.json`의 모든 쪽)는 공개 사이트를 그대로 열되 `https://font.tty.link/lib/**`만 이 사본으로 돌린다.
 - 전(before): 공개 font.tty.link·tty.link·lol.tty.link를 Chromium 데스크톱·휴대폰으로 연다.
-- 쪽마다 끝까지 훑어 내린 뒤 바탕 요소가 다 그려졌는지(`notReady`, 원문이 빈 바탕 요소는 세지 않는다), 콘솔 오류·페이지 오류,
-  실패한 요청(4xx·5xx·끊김), 런타임 판을 적고 찍는다. 전후 짝을 나란히 둔 시트와 표(index.html)를 만든다 — 승인 요청 ②에서 사용자가 본다.
-- 판정(끝 코드 1): 지금 쪽에 오류·실패 요청·예외가 있거나, 덜 그려진 바탕 요소가 공개판의 같은 쪽보다 많다. 모양은 판정하지 않는다.
+- 쪽마다 끝까지 훑어 내리고 그사이 열리지 않은 지연 iframe을 하나씩 연 뒤, 바탕 요소가 다 그려졌는지(`notReady`, 원문이 빈
+  바탕 요소는 세지 않는다), 콘솔 오류·페이지 오류, 실패한 요청(4xx·5xx·끊김), 런타임 판을 적고 찍는다.
+  전후 짝을 나란히 둔 시트와 표(index.html)를 만든다 — 승인 요청 ②에서 사용자가 본다.
+- 판정(끝 코드 1): 지금 쪽에 오류·실패 요청·예외·끝내 열리지 않은 iframe이 있거나, 덜 그려진 바탕 요소가 공개판의 같은 쪽보다
+  많다. 모양은 판정하지 않는다.
 
 공개 사이트에 닿아야 한다(네트워크). 일꾼 수는 --jobs(기본 FONT_KKU_JOBS 또는 3).
 """
@@ -46,6 +48,23 @@ SCROLL_JS = """async () => {
   const max = Math.min(document.documentElement.scrollHeight, 40000);
   for (let y = 0; y < max; y += step) { scrollTo(0, y); await new Promise(r => setTimeout(r, 110)); }
   scrollTo(0, 0); await new Promise(r => setTimeout(r, 200));
+}"""
+# 빨리 훑어 내리는 동안 같은 출처 iframe이 그리느라 페이지를 붙잡으면 브라우저가 지연(lazy) iframe을 열 때를 놓친다
+# (사례 쪽 휴대폰 화면에서 16개 중 4개). 보이는 자리에 있는데 아직 빈 문서인 지연 iframe을 하나씩 화면 가운데로
+# 데려와 열릴 때까지 기다린다. 그래도 안 열린 것은 unopened로 돌려준다.
+LAZY_FRAMES_JS = """async (timeout) => {
+  const blank = (f) => { try { return f.contentDocument?.URL === 'about:blank'; } catch (e) { return false; } };
+  const due = [...document.querySelectorAll('iframe[loading="lazy"]')].filter((f) => {
+    const src = f.getAttribute('src');
+    return src && src !== 'about:blank' && f.getClientRects().length > 0 && blank(f);
+  });
+  for (const f of due) {
+    f.scrollIntoView({ block: 'center' });
+    const end = Date.now() + timeout;
+    while (blank(f) && Date.now() < end) await new Promise((r) => setTimeout(r, 100));
+  }
+  scrollTo(0, 0); await new Promise((r) => setTimeout(r, 200));
+  return { revisited: due.length, unopened: due.filter(blank).map((f) => f.getAttribute('src')) };
 }"""
 # 다 그려진 바탕 요소: 업그레이드가 끝났고 글꼴을 기다리지 않으며, 음절이 그려졌거나 원문(data-source)이 비어 있다.
 # 원고지 빈칸처럼 일부러 비운 바탕 요소는 그릴 글자가 없으니 덜 그려짐으로 세지 않는다.
@@ -162,6 +181,8 @@ def run_chunk(chunk: list[dict], shots: Path, lib: Path) -> list[dict]:
                 page.goto(job["url"], wait_until="load", timeout=45000)
                 page.wait_for_timeout(800)
                 page.evaluate(SCROLL_JS)
+                lazy = page.evaluate(LAZY_FRAMES_JS, 8000)
+                row.update(revisited=lazy["revisited"], unopened=lazy["unopened"])
                 for frame in loaded_frames(page):
                     frame.evaluate(SPRITES_JS, 6000)
                 page.wait_for_timeout(700)
@@ -186,7 +207,9 @@ def run_chunk(chunk: list[dict], shots: Path, lib: Path) -> list[dict]:
             rows.append(row)
             print(f"{job['side']:<6} {job['site']:<4} {engine:<8} {job['vp']:<7} {job['page'][:34]:<34} v{row.get('version')} "
                   f"hosts {row.get('hosts')} notReady {row.get('notReady')} err {len(errors)} fail {len(failed)} "
-                  f"{row['seconds']}s{' EXC' if 'exception' in row else ''}", flush=True)
+                  f"{row['seconds']}s{' EXC' if 'exception' in row else ''}"
+                  f"{' reopened ' + str(row['revisited']) if row.get('revisited') else ''}"
+                  f"{' UNOPENED ' + str(len(row['unopened'])) if row.get('unopened') else ''}", flush=True)
             ctx.close()
         for browser in browsers.values():
             browser.close()
@@ -268,7 +291,7 @@ def sheets(out: Path, rows: list[dict]) -> int:
 
 
 def verdict(rows: list[dict]) -> list[str]:
-    """지금 쪽의 오류·실패 요청·예외, 공개판의 같은 쪽보다 많은 덜 그려짐."""
+    """지금 쪽의 오류·실패 요청·예외·열리지 않은 iframe, 공개판의 같은 쪽보다 많은 덜 그려짐."""
     before = {}
     for row in rows:
         if row["side"] == "before":
@@ -285,6 +308,8 @@ def verdict(rows: list[dict]) -> list[str]:
             problems.append(f"{where}: 오류 {len(row['errors'])} — {row['errors'][0][:120]}")
         if row.get("failed"):
             problems.append(f"{where}: 실패 요청 {len(row['failed'])} — {row['failed'][0][:120]}")
+        if row.get("unopened"):
+            problems.append(f"{where}: 열리지 않은 iframe {len(row['unopened'])} — {row['unopened'][:3]}")
         if (row.get("notReady") or 0) > before.get((row["site"], row["page"]), 0):
             problems.append(f"{where}: 덜 그려짐 {row['notReady']} (공개 {before.get((row['site'], row['page']), 0)}) — {row.get('sample')}")
     return problems

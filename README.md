@@ -39,7 +39,7 @@ FONT_KKU_JOBS=1 .venv/bin/python -m pytest tests/test_site_smoke.py -q -n 1
 
 먼저 패키지로 `dist/`를 빌드한다. Node 콘텐츠 시험도 기본적으로 `dist/lib/`의 런타임을 쓰며 `FONT_KKU_PACKAGE_DIR`로 설치·추출 패키지 위치를 지정할 수 있다. 빌드 보호 시험은 Python 표준 라이브러리만으로 `python3 -m unittest discover -s tests -p 'test_build.py'`를 실행할 수 있다. 문구 시험(`test_copy.py`)은 용어집이 바꾼 옛 이름이 '예전 이름' 줄 밖에 다시 나오지 않는지, 머리 도장과 페이지 제목이 글꼴을 비워 기본 세벌식으로 그리는지 본다. 특정 화면은 pytest `-k`로 좁혀 실행한다. `FONT_KKU_SITE_DIST`로 빌드 위치를 바꿀 수 있다.
 
-전후 화면 검수는 `scripts/site_preview_check.py`가 맡는다. 공개 사이트에 접속하는 선택형 점검이므로 오프라인 시험과 별도로 실행한다. Chromium·WebKit·Firefox와 Pillow가 필요하다. 덜 그려진 바탕 요소를 셀 때 원문(`data-source`)이 빈 것(원고지 빈칸 등)은 그릴 글자가 없으므로 세지 않는다. 이 판정식은 `tests/preview_hosts.test.js`가 지킨다.
+전후 화면 검수는 `scripts/site_preview_check.py`가 맡는다. 공개 사이트에 접속하는 선택형 점검이므로 오프라인 시험과 별도로 실행한다. Chromium·WebKit·Firefox와 Pillow가 필요하다. 덜 그려진 바탕 요소를 셀 때 원문(`data-source`)이 빈 것(원고지 빈칸 등)은 그릴 글자가 없으므로 세지 않는다. 훑어 내리는 동안 열리지 않은 지연 iframe(사례·소개의 미리보기)은 하나씩 화면에 데려와 열고, 끝내 열리지 않으면 실패로 본다. 이 두 판정식은 `tests/preview_check.test.js`가 지킨다.
 
 기본 범위는 폰꾸의 모든 페이지, `tty.link` 홈, `lol.tty.link` 홈과 공개 카탈로그의 전체 페이지다. 외부 사이트는 `/lib/` 요청만 후보 패키지로 바꿔 비교한다. `--only tty`는 tty.link 홈과 이전된 LOL 페이지를 모두 고른다. 공개 카탈로그도 실제 브라우저로 읽는다.
 
