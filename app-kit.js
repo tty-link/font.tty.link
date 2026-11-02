@@ -1,9 +1,9 @@
 /* 웹 앱(전광판·메모장) 공용 부품 — 한글 입력기도 한글 글꼴도 없는 기기에서 쓰는 화면.
  *
  * - 글꼴 없는 모드   기기 글꼴이 한글을 못 그리면(FontKku.hasHangulFont() === false, 또는
- *                    주소에 ?hangul-font=none) 화면 글을 영어로 바꾸고, 기기 글꼴 재료로
- *                    그리던 폰꾸 제목을 그림 자소 글꼴로 바꾼다. 한글은 폰꾸가 자소판
- *                    그림으로만 그린다. ?hangul-font=device는 판단을 끈다
+ *                    주소에 ?hangul-font=none) 화면 글을 영어로 바꾸고, 원소 획·기기 글꼴
+ *                    재료로 그리던 폰꾸 제목(글꼴을 비운 세벌식 포함)을 그림 자소 글꼴로
+ *                    바꾼다. 한글은 폰꾸가 자소판 그림으로만 그린다. ?hangul-font=device는 판단을 끈다
  *                      [data-en]             글을 이 영어로 바꾼다
  *                      [data-en-placeholder] placeholder를 바꾼다
  *                      [data-nofont-font]    폰꾸 바탕 요소의 글꼴을 이 그림 자소 글꼴로
@@ -21,7 +21,7 @@
   var Ime = window.FontKkuIme;
   var SVG_NS = "http://www.w3.org/2000/svg";
 
-  /* 기기 글꼴 재료 글꼴 — 글꼴 없는 모드에서 그림 자소 글꼴로 바꾼다 */
+  /* 원소 획·기기 글꼴 재료 글꼴(글꼴을 비운 글은 currentFont가 sebul로 읽는다) — 글꼴 없는 모드에서 그림 자소 글꼴로 바꾼다 */
   var SYSTEM_FONTS = ["sebul", "gothic", "neon", "sticker", "malang", "retro", "saekdong", "geumbak", "glitch", "riso", "blueprint", "default", "classic", "gothic2"];
   var NAV_EN = { index: "Intro", showcase: "Cases", fonts: "Fonts", effects: "Motion", docs: "Docs", "font-studio": "Studio", skill: "AI guide" };
   var LAYOUT_LABELS = {

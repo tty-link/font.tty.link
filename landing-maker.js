@@ -256,6 +256,8 @@
     var hasCells = state.mode !== "draw" || Object.keys(currentCells()).length > 0;
     followers().forEach(function (node) {
       var attr = setAttrOf(node);
+      /* 모양 × 재료 표의 '그린 8칸' 칸은 그린 칸이 하나도 없으면 앞 세트를 그대로 둔다 — 비우면 원소 획 칸과 같아진다 */
+      if (!hasCells && node.closest(".k-shape")) return;
       node.style.setProperty("--fy-element-width", widthFor(node));
       if (hasCells) {
         if (node.getAttribute(attr) !== setName) node.setAttribute(attr, setName);
@@ -309,8 +311,9 @@
         (state.edited.length ? ". 고친 칸: " + escapeHtml(state.edited.join(" ")) : ". 칸을 누르고 그어 보세요") +
         ". 아래 <a href=\"#web\">내 페이지에 쓰기</a> 코드에도 그대로 들어갑니다.";
     } else {
-      var from = set.by + " · " + set.where + " · " + set.date + " · " + set.attempt + (set.edited ? " · 고침" : " · 고치지 않음");
-      metaOut.innerHTML = "AI 답 그대로 — " + escapeHtml(from) + " · 느낌 '" + escapeHtml(set.feel) + "' · <a href=\"#ai-answers\">프롬프트와 답 원문</a>";
+      /* 받은 모델·날짜는 답 원문(#ai-answers)을 펼친 곳에만 적는다 */
+      var from = (set.attempt === "1번째 답" ? "첫 답" : set.attempt) + (set.edited ? " · 고침" : " · 고치지 않음");
+      metaOut.innerHTML = "AI 답 그대로 — 느낌 '" + escapeHtml(set.feel) + "' · " + escapeHtml(from) + " · <a href=\"#ai-answers\">프롬프트와 답 원문</a>";
     }
   }
 
@@ -647,7 +650,7 @@
   }
 
   function headingCode(info, text, size) {
-    return '<h1><font-kku font="sebul" jamo-set="my-font" size="' + size + '"\n' +
+    return '<h1><font-kku jamo-set="my-font" size="' + size + '"\n' +
       '  style="--fy-element-width: ' + info.width + '">' + escapeHtml(text) + "</font-kku></h1>";
   }
 
@@ -825,7 +828,7 @@
     return list.map(function (j) {
       var terms = recipeTerms(j, info.set, drawn);
       return '<li data-jamo="' + j + '" data-drawn="' + Boolean(drawn[j]) + '" title="' + j + " = " + escapeHtml(terms.join(" + ")) + '">' +
-        '<font-kku font="sebul" jamo-set="' + info.set + '" size="40" style="--fy-element-width:' + info.width + '">' + j + "</font-kku>" +
+        '<font-kku jamo-set="' + info.set + '" size="40" style="--fy-element-width:' + info.width + '">' + j + "</font-kku>" +
         "<small>" + terms.map(function (term) { return "<span>" + escapeHtml(term) + "</span>"; }).join("+<wbr>") + "</small></li>";
     }).join("");
   }
@@ -873,7 +876,6 @@
       fullSample.innerHTML = "";
       var probe = document.createElement("font-kku");
       probe.className = "k-fullcheck-probe";
-      probe.setAttribute("font", "sebul");
       probe.setAttribute("jamo-set", current.set);
       probe.setAttribute("size", "14");
       probe.setAttribute("wrap-unit", "glyph");
@@ -911,7 +913,7 @@
         var cells = [];
         for (var k = 0; k < 48; k += 1) cells.push(String.fromCharCode(0xac00 + Math.floor(k * 11172 / 48) + (k * 37) % 200));
         fullSample.innerHTML = cells.map(function (ch) {
-          return '<span><font-kku font="sebul" jamo-set="' + current.set + '" size="34" style="--fy-element-width:' + current.width + '">' + ch + "</font-kku></span>";
+          return '<span><font-kku jamo-set="' + current.set + '" size="34" style="--fy-element-width:' + current.width + '">' + ch + "</font-kku></span>";
         }).join("");
         fullSample.hidden = false;
         fullButton.disabled = false;

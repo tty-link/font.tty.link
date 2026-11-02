@@ -81,7 +81,8 @@
         '<div class="k-answer-head"><strong>' + escapeHtml(set.feel) + "</strong>" +
         "<span>" + escapeHtml(set.attempt) + " · " + (set.edited ? "고침" : "고치지 않음") + " · 굵기 " + escapeHtml(read.width) + "</span>" +
         (set.followup ? '<span class="k-answer-followup">이어서 한 부탁: “' + escapeHtml(set.followup) + "”</span>" : "") + "</div>" +
-        '<div class="k-stage"><font-kku font="sebul" jamo-set="' + set.id + '" size="clamp(26px, 3.6vw, 44px)" style="--fy-element-width: ' + read.width + '">다람쥐 헌 쳇바퀴에 타고파</font-kku></div>' +
+        /* 답이 적은 글꼴(S.ANSWERED_FONT — 답을 받은 프롬프트가 적게 한 sebul) 그대로 그린다 */
+        '<div class="k-stage"><font-kku font="' + S.ANSWERED_FONT + '" jamo-set="' + set.id + '" size="clamp(26px, 3.6vw, 44px)" style="--fy-element-width: ' + read.width + '">다람쥐 헌 쳇바퀴에 타고파</font-kku></div>' +
         '<details><summary>답 원문(HTML) · ' + kb(bytes) + " — 칸 " + Object.keys(read.cells).length + "개, 경로 " + shapes + "개, 칸 자료 " + kb(cells) + "</summary>" +
         '<p class="k-answer-meta">' + escapeHtml(set.by) + " · " + escapeHtml(set.where) + " · " + escapeHtml(set.date) + "</p>" +
         "<pre>" + escapeHtml(set.answer) + "</pre>" +
@@ -177,7 +178,7 @@
     $("[data-vary-fix]").addEventListener("click", function (event) {
       var seed = varyHost.getAttribute("seed");
       if (!seed) return;
-      code.textContent = '<font-kku font="sebul" jamo-set="my-font" class="k-hand" seed="' + seed +
+      code.textContent = '<font-kku jamo-set="my-font" class="k-hand" seed="' + seed +
         '" jamo-seeds>' + (varyHost.dataset.source || "") + "</font-kku>\n" +
         "<!-- my-font는 '내 페이지에 쓰기'의 registerJamo로 등록한 8칸, .k-hand는 위 변주 CSS -->";
       codeBox.hidden = false;

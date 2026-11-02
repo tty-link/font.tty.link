@@ -505,6 +505,153 @@
   white-space: nowrap;
 }
 
+/* ── 새 판 띠: 히어로와 '하나' 사이 — 0.1.3에서 바뀐 넷 ─────────── */
+.k-new {
+  display: grid;
+  gap: 0.7rem;
+  margin-block: 2.5rem;
+  padding: 1.1rem 1.25rem 1.2rem;
+  border: 1.5px solid var(--k-ink);
+  border-radius: var(--k-radius-sm);
+  background: var(--k-paper);
+  box-shadow: 5px 5px 0 var(--k-yellow);
+}
+
+.k-new-title {
+  margin: 0;
+  font-weight: 800;
+}
+
+.k-new-title strong {
+  margin-inline-end: 0.35rem;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  background: var(--k-red);
+  color: #fff;
+  font-size: 0.82rem;
+}
+
+.k-new-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--k-ink-2);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.k-new-list strong {
+  display: block;
+  color: var(--k-ink);
+}
+
+.k-new-list a,
+.k-new-more a {
+  color: var(--k-blue);
+  font-weight: 700;
+}
+
+.k-new-more {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* ── 하나: 글꼴 모양 × 재료 · 짓는 방식 ────────────────────── */
+.k-shape {
+  display: grid;
+  gap: 0.6rem;
+  margin-block: 2.5rem 1rem;
+  scroll-margin-top: 90px;
+}
+
+.k-shape #make-compose {
+  scroll-margin-top: 90px;
+}
+
+.k-shape .k-sub + .k-note {
+  margin-block-start: 0;
+}
+
+.k-shape .k-table-wrap {
+  margin-block: 0.4rem 0;
+}
+
+.k-shape-table thead th small,
+.k-shape-table tbody th small {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.k-shape-table thead th small code {
+  background: rgb(255 255 255 / 16%);
+  color: inherit;
+}
+
+.k-shape-table tbody th {
+  inline-size: 13rem;
+  white-space: normal;
+}
+
+.k-shape-table tbody th small {
+  margin-block-start: 0.2rem;
+  color: var(--k-muted);
+  line-height: 1.45;
+}
+
+.k-shape-table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* 같은 ㄱ이 어디에 서나 — 초성(과·곽의 머리 음절도)만 빨갛게 */
+.k-cho-paint :is([part~="choseong"], [part~="head"]) {
+  color: var(--k-red);
+}
+
+/* 네모꼴의 머리 음절(과 = 고 + ㅏ)은 안의 모음 획을 되돌린다 — 획으로 긋는 재료만 나뉘고, 기기 글꼴은 '고'가 한 글자다 */
+.k-cho-paint [data-fy-head-part="medial"] {
+  color: var(--k-ink);
+}
+
+.k-compose {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.k-compose figure {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.k-compose .k-stage {
+  min-block-size: 6rem;
+  padding: 0.9rem;
+}
+
+.k-compose figcaption {
+  color: var(--k-ink-2);
+  font-size: 0.86rem;
+  text-align: center;
+}
+
+.k-compose figcaption strong {
+  margin-inline-end: 0.3rem;
+  color: var(--k-ink);
+}
+
+/* 짓는 방식 견본 — 덩이마다 다른 색(첫소리·머리 음절, 모음 앞·뒤 조각, 받침 왼·오른 조각) */
+.k-pieces-paint :is([part~="choseong"], [part~="head"]) { color: var(--k-red); }
+.k-pieces-paint [part~="jungseong"] { color: var(--k-blue); }
+.k-pieces-paint [part~="jungseong-tail"] { color: #8a3ffc; }
+.k-pieces-paint [part~="jongseong"] { color: var(--k-green); }
+.k-pieces-paint [part~="jongseong-right"] { color: #c77700; }
+
 .k-amount-us {
   background: #fffaeb;
 }
@@ -1135,6 +1282,10 @@
   .k-fxgrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .k-new-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
@@ -1156,8 +1307,27 @@
   }
 
   .k-make,
-  .k-fxgrid {
+  .k-fxgrid,
+  .k-new-list,
+  .k-compose {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 카드로 접힌 모양 × 재료 표 — 줄 이름 아래로 세 재료가 한 줄씩 */
+  .k-shape-table tbody th {
+    inline-size: auto;
+  }
+
+  .k-shape-table td {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    text-align: start;
+  }
+
+  .k-shape-table td::before {
+    flex: 0 0 4.5rem;
   }
 
   /* 좁은 화면은 움직임 타일 셋만 — 나머지는 '움직임·상호작용 모두 보기'에 */

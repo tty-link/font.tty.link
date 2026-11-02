@@ -1,21 +1,32 @@
-/* 사례 '고쳐 쓰기' — 템플릿 HTML의 폰꾸 글씨를 8칸 그림 세트로 갈아 끼우는 변환과, 바뀐 줄을 보이는 줄 비교.
+/* 사례 '고쳐 쓰기' — 템플릿 HTML의 폰꾸 글씨를 그림 세트로 갈아 끼우는 변환과, 바뀐 줄을 보이는 줄 비교.
+ * 갈아 끼우는 것은 재료(그림 세트)이고 글꼴 모양은 그대로 둔다 — 그린 8칸은 재료라 글꼴 모양과 따로 고른다.
  *
  * 미리보기와 복사하는 HTML이 같은 글에서 나오도록 변환은 글(문자열)만 다룬다. 바꾸는 것은 넷이다.
  * - 바탕 요소의 글꼴: <font-kku …>의 font="x" → font="sebul" jamo-set="my-font",
  *   class에 font-kku가 든 꾸미개의 data-font="x" → data-font="sebul" data-jamo-set="my-font".
- *   글꼴을 밝히지 않은 바탕 요소(기본 배치 세벌식)에는 jamo-set만 더해 세벌식 그대로 그린다(draw-jamo.md).
+ *   글꼴을 밝히지 않은 바탕 요소(세벌식)에는 jamo-set만 더해 세벌식 그대로 그린다(draw-jamo.md).
+ *   기본 제공 세트(pilgi-box 등)는 my-font 대신 그 이름을 건다.
  * - 런타임 <script>의 data-fonts → "sebul"과 바꾸지 않은 글꼴, 그 바로 뒤에 registerJamo 등록 코드 한 덩이.
+ *   기본 제공 세트는 등록 코드 없이 런타임이 profiles/<이름>.jamo.js를 필요할 때 받는다(draw-jamo.md).
  *   바꾼 뒤 아무 데서도 쓰지 않게 된 템플릿 자신의 registerJamo("이름", …) 호출은 뺀다(그 호출만 든 <script>면 통째로).
  * - </head> 앞에 세트의 획 굵기(--fy-element-width) 규칙. 씨앗을 켜면 바탕 요소마다 seed="auto"·jamo-seeds
  *   (꾸미개는 data-seed·data-jamo-seeds)를 붙이고, 소개 '씨앗 변주'와 같은 기울기 ±6°·자리 ±0.03em 규칙을 더한다.
  * 바꿀 바탕 요소가 하나도 없으면 템플릿을 그대로 돌려준다. 주석(<!-- … -->) 속 글은 건드리지 않는다.
- * 페이지 CSS가 자모 역할([part~="jongseong"] 등)로 준 색과 움직임은 건드리지 않는다. 템플릿의 스크립트가 나중에
- * 만드는 바탕 요소는 글에 없어서 바뀌지 않는다 — 그런 템플릿은 사례 페이지가 고르기 목록에서 뺀다. */
+ * 페이지 CSS가 자모 자리([part~="jongseong"] 등)로 준 색과 움직임은 건드리지 않는다. 템플릿의 스크립트가 나중에
+ * 만드는 바탕 요소는 글에 없어서 바뀌지 않는다 — 그런 템플릿은 사례 페이지가 고르기 목록에서 뺀다.
+ *
+ * 이름 있는 글꼴을 font="sebul"(글꼴 모양 네모꼴)로 바꾸는 까닭: 사례의 이름 있는 글꼴은 모두 제 글꼴 CSS가 정한
+ * 네모 칸 모양으로 그리고(세벌식·직결식이 아니다), 사례 페이지는 그 글자 폭에 맞춰 줄과 칸을 짰다. 글꼴을 비워 기본 세벌식에 걸면 같은 글이 1할쯤 넓어져
+ * 청첩장 문구·행사 포스터 제목·휴대폰 폭의 블로그 제목이 한 줄씩 더 내려간다(2026-10-31, 마커 세트로 사례마다 1280·390px에서
+ * 견줌). sebul은 기기 글꼴로 그리던 글꼴(꾸러미 글꼴·gothic·malang)과 폭이 같아 사례의 짜임이 그대로 남는다. 세벌식으로
+ * 보려면 받은 HTML에서 font="sebul"을 지우면 된다. */
 (function () {
   "use strict";
 
   var SET_NAME = "my-font";
-  /* 글꼴 이름이 없는 바탕 요소(기본 배치 세벌식)를 가리키는 열쇠 — 사례 목록 index.json의 fonts에도 같은 말을 쓴다 */
+  /* 기본 제공 그림 세트 이름 꼴 — 주소(profiles/<이름>.jamo.js)와 속성에 그대로 들어간다 */
+  var BUILTIN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  /* 글꼴 이름이 없는 바탕 요소(세벌식)를 가리키는 열쇠 — 사례 목록 index.json의 fonts에도 같은 말을 쓴다 */
   var FIXED = "fixed";
   var ORDER = ["ㄱ", "ㄴ", "ㅁ", "ㅅ", "ㅇ", "ㆍ", "ㅡ", "ㅣ"];
   /* 여는 태그 — 따옴표 안의 '>'·'<'를 태그 끝으로 읽지 않게 속성 하나씩(이름, = 값) 읽는다. 1: 이름, 2: 속성들, 3: 끝(공백·/) */
@@ -79,6 +90,9 @@
     return "{ " + keys.map(function (key) { return key + ": " + JSON.stringify(options[key]); }).join(", ") + " }";
   }
 
+  /* 바탕 요소에 걸 세트 이름 — 칸을 받은 세트는 my-font로 등록하고, 기본 제공 세트는 제 이름 그대로 */
+  function setName(set) { return set.cells ? SET_NAME : set.name; }
+
   /* set: { cells, options, width, label } — label은 등록 코드 머리 주석(세트의 내력) */
   function registerCode(set) {
     return "<script>\n" +
@@ -91,8 +105,9 @@
   function styleCode(set, seed) {
     var rules = [];
     if (set && set.width) {
-      rules.push("  /* 그림 세트 " + SET_NAME + "의 획 굵기 — 세트가 정한 값 */\n" +
-        '  :is(font-kku[jamo-set="' + SET_NAME + '"], [data-jamo-set="' + SET_NAME + '"]) { --fy-element-width: ' + set.width + "; }");
+      var name = setName(set);
+      rules.push("  /* 그림 세트 " + name + "의 획 굵기 — 세트가 정한 값 */\n" +
+        '  :is(font-kku[jamo-set="' + name + '"], [data-jamo-set="' + name + '"]) { --fy-element-width: ' + set.width + "; }");
     }
     if (seed) {
       rules.push(HAND_RULE);
@@ -106,9 +121,9 @@
     var out = attrs || "";
     if (set) {
       var font = findAttr(list, [prefix + "font", prefix + "profile"]);
-      var setAttr = " " + prefix + "jamo-set=\"" + SET_NAME + "\"";
-      /* 글꼴을 밝히지 않은 바탕 요소는 그림 세트만 건다 — 기본 배치(세벌식)가 그대로다. 새 속성은 옛 글꼴(없으면 옛
-       * 그림 세트) 자리에 둔다 */
+      var setAttr = " " + prefix + "jamo-set=\"" + setName(set) + "\"";
+      /* 글꼴을 밝히지 않은 바탕 요소는 그림 세트만 건다 — 글꼴 모양(세벌식)이 그대로다. 이름 있는 글꼴은 네모꼴 sebul로
+       * 바꾼다(머리 주석의 까닭). 새 속성은 옛 글꼴(없으면 옛 그림 세트) 자리에 둔다 */
       var at = font || findAttr(list, [prefix + "jamo-set"]);
       out = list.map(function (attr) {
         if (attr === at) return (font ? " " + prefix + "font=\"sebul\"" : "") + setAttr;
@@ -183,8 +198,9 @@
   function count(text, word) { return text.split(word).length - 1; }
 
   /* 쓰지 않게 된 템플릿 자신의 registerJamo("이름", …); 호출을 part에서 뺀다. 이름이 그 호출 밖 문서 어디에든(whole,
-   * 주석 포함) 남아 있으면, 또는 호출이 문장 하나로 서 있지 않으면 그대로 둔다. 그 호출만 든 인라인 <script>는 통째로 뺀다. */
-  function dropUnusedSets(part, whole) {
+   * 주석 포함) 남아 있으면, 또는 호출이 문장 하나로 서 있지 않으면 그대로 둔다. 그 호출만 든 인라인 <script>는 통째로 뺀다.
+   * keep: 지금 거는 세트 이름(빼지 않는다) */
+  function dropUnusedSets(part, whole, keep) {
     var CALL = /FontKku\.registerJamo\(\s*(["'])([^"'\\]+)\1/g;
     var match;
     while ((match = CALL.exec(part))) {
@@ -192,7 +208,7 @@
       var start = match.index;
       var open = part.indexOf("(", start);
       var close = closeParen(part, open);
-      if (name === SET_NAME || close < 0 || !statementStart(part, start)) continue;
+      if (name === keep || close < 0 || !statementStart(part, start)) continue;
       var end = close + 1;
       var after = /^[ \t]*;?/.exec(part.slice(end))[0];
       end += after.length;
@@ -235,12 +251,13 @@
     return part.slice(0, start) + part.slice(end);
   }
 
-  /* src: 템플릿 HTML. opts: { set: { cells, options, width, label } | null, seed: boolean, fonts: ["neon", "fixed", …] | null }
+  /* src: 템플릿 HTML. opts: { set, seed: boolean, fonts: ["neon", "fixed", …] | null }
+   * set: { cells, options, width, label }(칸을 받아 my-font로 등록) | { name, width? }(기본 제공 세트 — 등록 코드 없이 이름만) | null
    * fonts를 주면 그 글꼴 열쇠로 그린 바탕 요소만 바꾼다("fixed"는 글꼴을 밝히지 않은 바탕 요소). 나머지는 원래 글꼴 그대로다.
    * 돌려주는 것: { html, hosts } — hosts는 바꾼 바탕 요소 수. 0이면 html은 src 그대로다 */
   function remix(src, opts) {
     opts = opts || {};
-    var set = opts.set && opts.set.cells ? opts.set : null;
+    var set = opts.set && (opts.set.cells || BUILTIN.test(String(opts.set.name || ""))) ? opts.set : null;
     var seed = Boolean(opts.seed);
     var only = set && Array.isArray(opts.fonts) ? opts.fonts : null;
     var html = String(src);
@@ -276,7 +293,7 @@
         return part;
       }
       if (set) {
-        part = dropUnusedSets(part, whole);
+        part = dropUnusedSets(part, whole, setName(set));
       }
       var runtime = placed ? null : RUNTIME_TAG.exec(part);
       if (!runtime) {
@@ -292,13 +309,13 @@
         }));
         var attr = ' data-fonts="' + fonts.join(" ") + '"';
         tag = listed ? tag.replace(listed[0], attr) : tag.replace(/^<script/i, "<script" + attr);
-        tag += "\n  " + registerCode(set).replace(/\n/g, "\n  ");
+        if (set.cells) tag += "\n  " + registerCode(set).replace(/\n/g, "\n  ");
       }
       return part.slice(0, runtime.index) + tag + part.slice(runtime.index + runtime[0].length);
     });
     html = parts.join("");
     var extra = [];
-    if (!placed && set) {
+    if (!placed && set && set.cells) {
       extra.push(registerCode(set));
     }
     var style = styleCode(set, seed);
@@ -377,7 +394,7 @@
     return { rows: sorted, added: added, removed: removed };
   }
 
-  var api = { SET_NAME: SET_NAME, FIXED: FIXED, ORDER: ORDER, remix: remix, diff: diff, hostFonts: hostFonts,
+  var api = { SET_NAME: SET_NAME, FIXED: FIXED, ORDER: ORDER, remix: remix, diff: diff, hostFonts: hostFonts, setName: setName,
     registerCode: registerCode, HAND_RULE: HAND_RULE };
   if (typeof module === "object" && module.exports) {
     module.exports = api;

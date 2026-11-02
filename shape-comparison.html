@@ -26,14 +26,16 @@
         <span class="demo-kicker">짜임 비교</span>
         <h1 class="demo-title">네모꼴과 탈네모꼴, <em>짜임</em>별로 본다</h1>
         <p class="demo-copy">
-          기준 글자는 외부 웹 글꼴 없이 기기 한글 글꼴 그대로이고, 두 조합은 자모를 CSS 획(원소)으로 긋는다.
-          엔진은 같은 짜임 메타데이터를 쓰고 <code>sebul</code>은 탈네모꼴 조합으로, <code>gothic</code>은 본고딕식 네모꼴로 정렬한다.
+          기준 글자는 외부 웹 글꼴 없이 기기 한글 글꼴 그대로이고, 두 글꼴은 자모를 원소 획(CSS)으로 긋는다.
+          엔진은 같은 짜임 메타데이터를 쓰고 <code>sebul</code>은 둥근 탈네모꼴로, <code>gothic</code>은 본고딕식 네모꼴로 정렬한다.
+          여기서 네모꼴·탈네모꼴은 글자의 바깥 모양이다 — 두 글꼴의 글꼴 모양은 모두 네모꼴(<code>square-context-v1</code>)이라 그 글꼴 CSS가 짜임마다 자리를 정한다.
           아래 단일 글자 샘플은 <code>size=120</code>, 마지막 문장 비교는 <code>size=60</code>으로, 기준 상자와 자리 정렬 차이를 직접 비교하기 위한 것이다.
         </p>
         <p class="demo-copy">
-          짜임별 자리는 글꼴을 밝힌 바탕 요소(<code>font="sebul"</code>·<code>font="gothic"</code>)의 문맥 배치에서 쓰인다. 글꼴을 밝히지 않은
-          기본 <code>&lt;font-kku&gt;</code>는 세벌식이라 짜임(모음 모양 셋 × 받침 셋)마다 정해진 도장으로 찍고, 직결식(<code>font="jikgyeol"</code>)은 짜임과 상관없이 같은 역할의 같은 자모를 같은 자리·크기로 찍는다 — 짜임 분류(<code>layout bucket</code>·<code>layout</code>)는
-          그대로 붙지만 자리는 글꼴 CSS가 아니라 도장이 정한다. 두 배치 비교는 <a href="./faces.html">재료와 깊이</a> 페이지의 ‘배치’에 있다.
+          글꼴 CSS가 정한 짜임별 자리는 글꼴을 밝힌 바탕 요소(<code>font="sebul"</code>·<code>font="gothic"</code>)에서만 쓰인다. 글꼴을 밝히지 않은
+          기본 <code>&lt;font-kku&gt;</code>는 세벌식이라 짜임(모음 모양 셋 × 받침 셋)마다 정해진 모양 값으로 찍고, 직결식(<code>font="jikgyeol"</code>)은 짜임과 상관없이 같은 역할의 같은 자모를 같은 자리·크기로 찍는다 — 짜임 분류(<code>layout bucket</code>·<code>layout</code>)는
+          그대로 붙지만 자리는 글꼴 CSS가 아니라 모양 값(<code>--fy-shape-*</code>)이 정한다. 맨 아래 문장 비교에 세벌식 줄을 함께 두었고, 세 글꼴 모양 비교는
+          <a href="./faces.html#layout">재료와 그릴 범위</a> 페이지의 ‘글꼴 모양’에 있다.
         </p>
       </section>
 
@@ -43,7 +45,7 @@
           <span class="demo-reference-text demo-reference-text--square">가 한 오 왕 읽 밟</span>
         </div>
         <div class="demo-sample demo-sample-tone-default">
-          <span class="demo-label">기기 글꼴 기준 · 탈네모 배치 비교</span>
+          <span class="demo-label">기기 글꼴 기준 · 탈네모 비교</span>
           <span class="demo-reference-text demo-reference-text--desquare">가 한 오 왕 읽 밟</span>
         </div>
       </section>
@@ -201,7 +203,7 @@
 
       <section class="demo-specimen-section">
         <h2>합자 모음 짜임</h2>
-        <p class="demo-specimen-note">복합모음(ㅘ·ㅝ·ㅢ 등) + 종성 0~2개.</p>
+        <p class="demo-specimen-note">합자 모음(ㅘ·ㅝ·ㅢ 등) + 종성 0~2개.</p>
 
         <div class="demo-specimen-topology">
           <h3>민글자 <span class="demo-specimen-tag demo-specimen-tag--split">split-right:none</span></h3>
@@ -290,7 +292,7 @@
       <section class="demo-specimen-section">
         <h2>문제 글자 살펴보기</h2>
         <p class="demo-specimen-note">
-          <code>외 / 읽 / 없 / 닭 / 밟 / 흙 / 긁</code>을 엔진이 배치 묶음(<code>layout bucket</code>), 짜임(<code>layout</code>), 의미 틀(<code>semantic frame</code>)로 어떻게 분류하는지 읽은 값과 함께 본다.
+          <code>외 / 읽 / 없 / 닭 / 밟 / 흙 / 긁</code>을 엔진이 짜임 묶음(<code>layout bucket</code>), 짜임(<code>layout</code>), 의미 틀(<code>semantic frame</code>)로 어떻게 분류하는지 읽은 값과 함께 본다.
         </p>
         <div class="demo-specimen-problem">
           <div class="demo-specimen-problem-card">
@@ -349,7 +351,7 @@
         <h2>짜임 목록</h2>
         <p class="demo-specimen-note">
           단일 글자 샘플을 <code>layout bucket + layout</code> 기준으로 묶어 본다.
-          주요 자리는 <code>gothic</code> 샘플에서 읽은 자리 이름이다 — <code>sebul</code>은 합자 모음을 완성형 머리(<code>hs</code>·<code>hts</code>)로,
+          주요 자리는 <code>gothic</code> 샘플에서 읽은 자리 이름이다 — <code>sebul</code>은 합자 모음을 머리 음절(<code>hs</code>·<code>hts</code>)로,
           겹받침을 통짜(<code>brw</code>·<code>bw</code>·<code>bbw</code>)로 그려 그 줄의 이름이 다르다.
           현재 기본 제공 일반 글꼴은 선택자 표 대신 한 블록의 자리 변수를 쓰지만, 구조를 읽는 기준 자체는 이 분류를 그대로 따른다.
         </p>
@@ -372,7 +374,10 @@
 
       <section class="demo-specimen-section">
         <h2>문장 비교 (size=60)</h2>
-        <p class="demo-specimen-note">네모 기준 / 탈네모 기준 / sebul / gothic 4개 행을 같은 문장 위에 쌓아 비교한다.</p>
+        <p class="demo-specimen-note">
+          네모 기준 / 탈네모 기준 / 세벌식(기본) / sebul / gothic 다섯 줄을 같은 문장으로 쌓아 비교한다. 세벌식은 글꼴을 비운 기본 글꼴 모양이다 —
+          <code>sebul</code> 글꼴 CSS 위에 짓지만 자리는 짜임마다 정한 모양 값이 정해, <code>font="sebul"</code>과 모양이 다르다.
+        </p>
         <div class="demo-specimen-sentence-group">
           <div class="demo-specimen-sentence">
             <span class="demo-specimen-label">네모 기준</span>
@@ -381,6 +386,10 @@
           <div class="demo-specimen-sentence">
             <span class="demo-specimen-label">탈네모 기준</span>
             <span class="demo-specimen-ref-glyph--desquare" style="font-size:60px;line-height:1.4;">오늘의 서울은 따뜻하다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">세벌식 · 기본</span>
+            <font-kku size="60">오늘의 서울은 따뜻하다</font-kku>
           </div>
           <div class="demo-specimen-sentence">
             <span class="demo-specimen-label">sebul</span>
@@ -402,6 +411,10 @@
             <span class="demo-specimen-ref-glyph--desquare" style="font-size:60px;line-height:1.4;">왕과 권위를 획득하다</span>
           </div>
           <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">세벌식 · 기본</span>
+            <font-kku size="60">왕과 권위를 획득하다</font-kku>
+          </div>
+          <div class="demo-specimen-sentence">
             <span class="demo-specimen-label">sebul</span>
             <font-kku font="sebul" size="60">왕과 권위를 획득하다</font-kku>
           </div>
@@ -421,6 +434,10 @@
             <span class="demo-specimen-ref-glyph--desquare" style="font-size:60px;line-height:1.4;">닭을 밟고 흙을 긁다</span>
           </div>
           <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">세벌식 · 기본</span>
+            <font-kku size="60">닭을 밟고 흙을 긁다</font-kku>
+          </div>
+          <div class="demo-specimen-sentence">
             <span class="demo-specimen-label">sebul</span>
             <font-kku font="sebul" size="60">닭을 밟고 흙을 긁다</font-kku>
           </div>
@@ -438,6 +455,10 @@
           <div class="demo-specimen-sentence">
             <span class="demo-specimen-label">탈네모 기준</span>
             <span class="demo-specimen-ref-glyph--desquare" style="font-size:60px;line-height:1.4;">외국어를 읽을 수 없다</span>
+          </div>
+          <div class="demo-specimen-sentence">
+            <span class="demo-specimen-label">세벌식 · 기본</span>
+            <font-kku size="60">외국어를 읽을 수 없다</font-kku>
           </div>
           <div class="demo-specimen-sentence">
             <span class="demo-specimen-label">sebul</span>
@@ -537,14 +558,14 @@
           var groups = new Map();
           var notesByKey = {
             "right-open|right:none": "가/저/비처럼 세로 중성 + 종성 없음. 초성 자리는 tlo, 중성 자리는 tro.",
-            "right-closed|right:single": "한/길/장처럼 세로 중성 + 단일 종성. 종성 자리는 brs.",
+            "right-closed|right:single": "한/길/장처럼 세로 중성 + 홑받침. 종성 자리는 brs.",
             "right-closed|right:double": "닭/밟/읽/없처럼 세로 중성 + 겹받침. 받침 두 조각과 종성 묶음(jong-cluster).",
             "bottom-open|bottom:none": "오/우/그처럼 가로 중성 + 종성 없음.",
-            "bottom-closed|bottom:single": "늘/은/글처럼 가로 중성 + 단일 종성.",
+            "bottom-closed|bottom:single": "늘/은/글처럼 가로 중성 + 홑받침.",
             "bottom-closed|bottom:double": "흙/긁처럼 가로 중성 + 겹받침.",
-            "split-open|split-right:none": "과/왜/외/의처럼 복합모음 + 종성 없음.",
-            "split-closed|split-right:single": "왕/권/획처럼 복합모음 + 단일 종성.",
-            "split-closed|split-right:double": "괅/괆처럼 복합모음 + 겹받침."
+            "split-open|split-right:none": "과/왜/외/의처럼 합자 모음 + 종성 없음.",
+            "split-closed|split-right:single": "왕/권/획처럼 합자 모음 + 홑받침.",
+            "split-closed|split-right:double": "괅/괆처럼 합자 모음 + 겹받침."
           };
           var slotsByKey = {
             "right-open|right:none": "tlo + tro",
@@ -564,9 +585,9 @@
             "bottom-open|bottom:none": "가로 열림형",
             "bottom-closed|bottom:single": "가로 닫힘형",
             "bottom-closed|bottom:double": "가로 겹받침형",
-            "split-open|split-right:none": "복합모음 열림형",
-            "split-closed|split-right:single": "복합모음 닫힘형",
-            "split-closed|split-right:double": "복합모음 겹받침형"
+            "split-open|split-right:none": "합자 모음 열림형",
+            "split-closed|split-right:single": "합자 모음 닫힘형",
+            "split-closed|split-right:double": "합자 모음 겹받침형"
           };
           var order = [
             "right-open|right:none",

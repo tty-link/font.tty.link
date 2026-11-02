@@ -171,7 +171,8 @@
 
   // ── 카드 단추 ─────────────────────────────────────────
 
-  /* 소개의 'AI에게 맡길 문장 복사'와 같은 글 — 8칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 칸 계약 세트로 그려 달라는 부탁. */
+  /* 소개의 'AI에게 맡길 문장 복사'와 같은 글 — 8칸(ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ)을 칸 계약 세트로 그려 달라는 부탁. 글꼴을 적지 않아
+   * 받은 8칸이 기본 세벌식에 걸린다(카드 글도 그렇게 적는다). */
   function skillPrompt() {
     var sets = window.FontKkuLandingSets;
     if (sets && typeof sets.prompt === "function") return sets.prompt(sets.MARKER);

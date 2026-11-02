@@ -1,32 +1,69 @@
 # 폰꾸 (font-kku)
 
-> 한글 글꼴을 직접(또는 AI로) 만드는 브라우저 런타임이다. ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ 원형 8칸만 SVG 경로로 그리면 — 사람이 작업실에서 그리든 AI가 대화창 답 하나로 그리든 — 나머지 자모와 한글 11,172자를 한글 원리대로 조립하고, 스크립트 한 줄과 `jamo-set`으로 웹에서 바로 쓴다. 초성·중성·종성이 각자 노드라 자모마다 칠하고 움직이며, 씨앗값으로 같은 글자도 자모마다 다르게 그린다. 글꼴을 밝히지 않으면 기본 세벌식으로 그리고, 획을 CSS로 그어 글꼴 파일도 기기의 한글 글꼴도 필요 없다. 봇·터미널에서는 한글을 2줄 평문으로 풀어 쓰고, Python·Go·Rust·Ruby 렌더러가 같은 결과를 정적 HTML과 평문으로 낸다.
+> 한글 글꼴을 직접(또는 AI로) 만드는 브라우저 런타임이다. ㄱ ㄴ ㅁ ㅅ ㅇ ㆍ ㅡ ㅣ 원형 8칸만 그리면 나머지 자모와 한글 11,172자를 한글 원리대로 조립하고, 스크립트 한 줄로 웹에서 바로 쓴다. 초성·중성·종성이 각자 노드라 자모마다 칠하고 움직이며, 씨앗값으로 같은 글자도 자모마다 다르게 그린다.
 
-AI agents: before building anything with font-kku, read the usage guide [SKILL.md](https://font.tty.link/lib/skill/SKILL.md). It is a table of contents — open only the topic files your task needs.
+AI agents: before building anything with font-kku, read the usage guide [SKILL.md](https://font.tty.link/lib/skill/SKILL.md). It is a table of contents — open only the topic files your task needs. Always install the exact version pinned below.
 
 AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)를 먼저 읽는다. SKILL.md는 목차다 — 할 일에 맞는 주제 파일만 더 연다. 런타임은 `<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="sebul neon sticker"></script>` 한 줄로 붙인다(`sebul`은 글꼴을 밝히지 않은 글도 쓴다).
 
-## 지금 판에서 알아 둘 것
+## 판
 
-- 기본 배치: 글꼴을 밝히지 않은 `<font-kku>`·`class="font-kku"`는 세벌식이다(`data-fy-layout="sebul-cases-v1"`) — 초성·중성·받침을 짜임(모음 모양·받침)마다 정해진 자리와 크기로 찍고, 받침 없는 글자는 아래를 비운다. `font="jikgyeol"`은 직결식(`sebul-fixed-v1`, 같은 자모를 어느 글자에서나 같은 자리에 — 0.1.1–0.1.3의 기본)이다. `font="sebul"`처럼 그 밖의 글꼴을 밝히면 그 글꼴의 문맥 배치(모음·받침에 따라 자리가 바뀐다)이고, 0.1.0의 기본 배치가 이것이다.
-- 재료: 세벌·고딕·말랑은 기본으로 획을 CSS로 긋는다(기기와 무관 — 기기 한글 글꼴로 그리려면 페이지 CSS `--fy-face: device`). 네온·스티커처럼 칠만 다른 꾸러미 글꼴은 기기 한글 글꼴을 재료로 쓴다. 그림 자소 글꼴과 그림 세트(`jamo-set`)는 SVG 그림으로 그린다.
-- 접근성: 런타임과 정적 렌더러는 바탕 요소에 `aria-label`·`role`을 붙이지 않는다. 읽히는 글은 숨은 원문 `[part="sr-source"]` 하나이고 원문은 `data-source`에도 남는다. 작성자가 단 `aria-label`은 건드리지 않는다.
-- 정적 렌더러: 글꼴을 밝히지 않은 `render_html(text)`(Python·Go·Rust·Ruby)는 브라우저처럼 세벌식과 CSS 획을 그린다. 기기 글꼴 글자는 `face="device"`(Ruby `face:`, Go `WithFace`, Rust `HtmlOptions.face`).
-- 디자인(실험): `FontKku.validateDesign`·`registerDesign(name, json, { replace: true })`·`unregisterDesign`·`designs()`로 그림 세트·조립식·배치를 정하고 CSS `--fy-design: <이름>`으로 고르며, `FontKku.layoutStability(host)`로 고정 배치(세벌식·직결식)가 지켜지는지 본다. 디자인을 받지 않는 글꼴에는 `data-fy-design-status="DESIGN_UNSUPPORTED_FONT"`가 붙는다.
+- 이 사이트·설명서·예제는 `@tty.link/font-kku@0.1.4-rc.4`로 그린다. 판을 적지 않으면 npm이 다른 판(`latest`)을 줄 수 있고, 그러면 기본 모양과 작업실이 이 설명서와 다를 수 있다.
+- 판을 적지 않은 `npm install @tty.link/font-kku`나 범위 주소(`@0.1`)를 쓰지 않는다. 늘 위 CDN 주소의 판과 `npm install --save-exact @tty.link/font-kku@0.1.4-rc.4`를 그대로 쓴다.
+
+## 핵심
+
+- 원형 8칸(기본자 ㄱ ㄴ ㅁ ㅅ ㅇ + 천지인 ㆍ ㅡ ㅣ)을 그리면 나머지 자모와 현대 한글 11,172자를 짓는다. 더 다듬고 싶으면 기본 24칸·확장 40칸까지 그린다(그릴 범위).
+- 사람은 [글꼴 작업실](https://font.tty.link/font-studio.html)에서 긋고, AI는 대화창 답 하나로 그린다 — 칸마다 중심선 SVG 경로를 `FontKku.registerJamo("my-font", { … }, { frame: "box" })`로 등록하고 `jamo-set="my-font"`로 고른다([draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md)「세벌·고딕에 그림 세트 걸기」).
+
+## 글꼴 = 글꼴 모양 × 재료
+
+둘은 따로 고른다. 고르지 않으면 세벌식 · 원소 획이다. 그린 8칸도 세 글꼴 모양 어디에나 걸린다.
+
+- 글꼴 모양 — 자모를 어디에 얼마나 크게 놓나. 페이지 CSS `--fy-layout`으로도 고른다.
+  - 세벌식(기본, `sebul-cases-v1`): 글꼴을 비운 `<font-kku>`·`class="font-kku"`. 짜임(모음 모양 × 받침)마다 정한 자리에 놓고, 받침 없는 글자는 아래를 비운다. 한 줄 설치의 `data-fonts`에는 `sebul`로 적는다.
+  - 직결식(`sebul-fixed-v1`, `font="jikgyeol"`): 같은 자모를 어느 글자에서나 같은 자리에 놓는다(세벌 타자기형). 0.1.1–0.1.3의 기본이다.
+  - 네모꼴(`square-context-v1`): `font="sebul"`·`font="gothic"`처럼 글꼴을 밝히면 그 글꼴 CSS의 자리로, 모음·받침에 따라 자리와 크기가 바뀐다. 그래서 `font="sebul"`은 기본 세벌식과 다른 모양이다(0.1.0의 기본).
+- 재료 — 자모를 무엇으로 긋나.
+  - 원소 획(기본): CSS로 긋는 획. 받을 파일이 없고, 한글 글꼴이 없는 기기에서도 같은 모양이다. 굵기는 `--fy-element-width`.
+  - 그림 세트(`jamo-set`): 직접 그리거나 AI가 그린 칸, 또는 기본 제공 `pilgi-box`(필기)·`dunggeun-box`(둥근)·`butgeul-box`(붓).
+  - 기기 글꼴(`--fy-face: device`): 방문자 기기의 한글 글꼴을 같은 자리에 맞춘다. 칠만 다른 꾸러미 글꼴(`neon`·`sticker` …)이 이 재료라 한글 글꼴이 없는 기기에서는 네모(두부)로 깨진다 — 같은 칠을 원소 획에 걸려면 글꼴을 비우고 `class="kku-look-neon"`(`data-addons="looks"`)을 쓴다.
+- 그림 자소 글꼴(`pixel`·`dojang`·`chalk`·`sprite-system` …)은 자소판 그림을 자기 자리에 그리고, 글꼴 모양을 받지 않는다.
+
+## 고르고 싶을 때만
+
+- 짓는 방식(`--fy-composition`): 글자를 몇 덩이로 지을지. 모양대로(`auto`, 기본) · 음절로(`syllable`, 화 = 호 + ㅏ) · 겹모음 통째로(`whole`, ㅎ + ㅘ) · 자모로(`jamo`, ㅎ + ㅗ + ㅏ) · 조각으로(`pieces`, (ㅗ+ㅇ) + ㅗ + ㅏ) · 원형으로(`origins`, 원형 획까지). 고르지 않아도 된다 — [fonts.md](https://font.tty.link/lib/skill/fonts.md)「짓는 방식」.
+- 문자 매핑(실험): 한글 원문은 그대로 두고 그릴 글자만 ㅇ → O처럼 다른 글자로 정한다. 작업실 '기존 글꼴로 만들기'의 '글자로 만들기' 칸에서 고른다.
+- 디자인(실험): `FontKku.validateDesign`·`registerDesign(name, json, { replace: true })`·`unregisterDesign`·`designs()`로 재료·조립식·글꼴 모양·짓는 방식을 JSON으로 정하고 CSS `--fy-design: <이름>`으로 고른다. 결과를 낼 때 실험 기능이라고 밝힌다. `FontKku.layoutStability(host)`는 세벌식·직결식의 고정 자리가 지켜지는지 본다. 디자인을 받지 않는 글꼴에는 `data-fy-design-status="DESIGN_UNSUPPORTED_FONT"`가 붙는다.
+
+## 글꼴 작업실
+
+- [작업실](https://font.tty.link/font-studio.html)은 네 페이지다 — 디자인(재료·글꼴 모양·짓는 방식·그리기) · 고치기(미리보기의 자모를 끌어 고치기) · 자소판(그림 자소 글꼴의 칸) · 검수(크기별 실제 글자로 판정·메모). 주소 `?page=design|edit|sheet|review`로 바로 연다.
+- 쉬운 / 정밀 두 보기가 있고, 쉬운 모드만으로 그리기부터 저장까지 끝난다. 저장은 글꼴 묶음 파일 하나(`<이름>.font-kku.json`)다. 내 페이지에 붙일 태그(런타임·글꼴 CSS를 잇는 줄, 있으면 그린 그림 세트·디자인 등록)는 '내보내기 ▾ → 내 페이지에 쓰기 — 코드 복사'로 받고, 글꼴 CSS 파일은 '내보내기 ▾ → CSS만 내려받기'로 받아 페이지 옆에 둔다.
+- 남은 칸은 그리기의 '남은 n칸 한 번에 부탁하는 글 복사'로 AI에게 맡긴다. 그 답(칸마다 `<svg data-jamo=…>`)은 'SVG 가져오기 — AI·다른 도구에서'에 통째로 붙이고 '칸마다 나눠 가져오기'를 누르면 칸 이름대로 들어간다. 8칸 프롬프트의 답(`registerJamo` 코드)은 `<svg>`가 없어 나눠 가져오기가 받지 않는다 — 칸마다 경로를 붙여 '이 칸에 가져오기'로 넣는다.
+- 작업실을 내 페이지에 끼우려면 `FontKkuStudio.mount(요소, { font, page, mode })`(ESM은 `import { mount } from "@tty.link/font-kku/studio"`).
+
+## 경계
+
+- 제목·짧은 강조 문구(1~20자)에만 쓴다. 본문 문단·표·버튼 라벨·입력창에는 쓰지 않는다.
+- 브라우저에서는 자바스크립트 런타임이 그린다. 스크립트가 막힌 곳에서는 글꼴 파일이나 명령줄 `font-kku-text`의 2줄 평문을 쓴다.
+- 글꼴 파일(TTF·WOFF)은 그림 자소 글꼴에서만 나온다 — 자소판 그대로이거나, 그 위에 `registerJamo`로 건 벡터 자소 세트(`FontKkuExport.exportFont({ font, jamoSet })`). 원소 획·기기 글꼴·칸 계약 그림 세트(`frame: "box"`, 8칸 세트 포함)는 `EXPORT_UNSUPPORTED_FACE`로 거절한다.
+- Python·Go·Rust·Ruby 정적 렌더러(`render_html`)는 공개 전이다. PyPI·Go 모듈·crates.io·RubyGems에 없으니 설치를 안내하지 않는다 — 서버는 원문만 내보내고 브라우저 런타임으로 그린다. 레지스트리에는 npm 패키지 `@tty.link/font-kku`만 있다.
+- 읽기·복사: 런타임은 바탕 요소에 `aria-label`·`role`을 붙이지 않는다. 낭독기는 숨은 원문 `[part="sr-source"]` 하나를 읽고, 원문은 `data-source`에도 남는다. 작성자가 단 `aria-label`은 건드리지 않는다.
 
 ## 사용 설명서
 
 - [SKILL.md](https://font.tty.link/lib/skill/SKILL.md): 목차, 가장 짧은 사용법, 꼭 지킬 것, 주소
 - [setup.md](https://font.tty.link/lib/skill/setup.md): 스크립트 한 줄 설치, 속성 표, 읽기·복사(접근성), 동적 변경·재시도
-- [fonts.md](https://font.tty.link/lib/skill/fonts.md): 기본 배치 세벌식·직결식과 `font="sebul"`의 문맥 배치, 재료(CSS 획·기기 글꼴·그림 세트), 기본 제공 글꼴과 필요한 바탕
+- [fonts.md](https://font.tty.link/lib/skill/fonts.md): 글꼴 모양(세벌식·직결식·`font="sebul"`의 네모꼴), 짓는 방식, 재료(원소 획·기기 글꼴·그림 세트), 기본 제공 글꼴과 필요한 바탕
 - [compose.md](https://font.tty.link/lib/skill/compose.md): 꾸밈·변주·움직임·상호작용·테마
 - [styling.md](https://font.tty.link/lib/skill/styling.md): 페이지 CSS로 자소 색 바꾸기, 씨앗
 - [custom-font.md](https://font.tty.link/lib/skill/custom-font.md): 나만의 꾸밈 글꼴
-- [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md): 자모를 SVG로 그려 그림 자소 글꼴 만들기, 원형 8자부터 그리는 그림 세트, 디자인 API(실험), 글꼴 작업실에서 디자인 만들기, 글꼴 파일 내보내기
-- [examples.md](https://font.tty.link/lib/skill/examples.md): 완성 HTML과 사례 템플릿 14종
-- [terminal.md](https://font.tty.link/lib/skill/terminal.md): 봇·터미널에서 한글을 2줄 평문으로 풀어 쓰기, 서버에서 JS 없는 정적 HTML(`render_html`)
+- [draw-jamo.md](https://font.tty.link/lib/skill/draw-jamo.md): 자모를 SVG로 그려 그림 자소 글꼴 만들기, 원형 8칸부터 그리는 그림 세트, 디자인 API(실험), 글꼴 작업실, 글꼴 파일 내보내기
+- [examples.md](https://font.tty.link/lib/skill/examples.md): 완성 HTML과 사례 템플릿
+- [terminal.md](https://font.tty.link/lib/skill/terminal.md): 봇·터미널에서 한글을 2줄 평문으로 풀어 쓰기, 서버에서 JS 없는 정적 HTML(`render_html`, 공개 전)
 - [no-hangul-device.md](https://font.tty.link/lib/skill/no-hangul-device.md): 한글 글꼴·입력기 없는 기기
-- [troubleshooting.md](https://font.tty.link/lib/skill/troubleshooting.md): 확인과 문제 해결, 디자인 진단, 0.1.0에서 올린 뒤 모양이 바뀌었을 때
+- [troubleshooting.md](https://font.tty.link/lib/skill/troubleshooting.md): 확인과 문제 해결, 디자인 진단, 예전 판에서 올린 뒤 모양이 바뀌었을 때
 
 ## 라이브러리
 
@@ -35,16 +72,16 @@ AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.
 - [spec/themes.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/spec/themes.json): 이름 있는 조합(테마) 목록
 - [spec/fonts.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/spec/fonts.json): 글꼴 목록
 - [spec/design.schema.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/spec/design.schema.json): 디자인 JSON 형식(실험)
-- [npm @tty.link/font-kku](https://www.npmjs.com/package/@tty.link/font-kku): `npm install @tty.link/font-kku` — 번들러 프로젝트, Node·명령줄(`font-kku-text`)
+- [npm @tty.link/font-kku](https://www.npmjs.com/package/@tty.link/font-kku): `npm install --save-exact @tty.link/font-kku@0.1.4-rc.4`(위 주소와 같은 판) — 번들러 프로젝트, Node·명령줄(`font-kku-text`), 작업실 `@tty.link/font-kku/studio`
 
 ## 데모
 
-- [소개](https://font.tty.link/): 8칸으로 만드는 한글 글꼴(직접 그리기 데모), AI에게 8칸을 맡기는 프롬프트와 실제 답, 씨앗 변주, 자모 단위 칠과 움직임, 내 페이지에 쓰는 코드, 한계와 무게
-- [사례](https://font.tty.link/showcase.html): 완성 템플릿 14종(소스를 본보기로 읽는다)
+- [소개](https://font.tty.link/): 8칸으로 만드는 한글 글꼴(직접 그리기 데모), 글꼴 모양 × 재료와 짓는 방식, AI에게 8칸을 맡기는 프롬프트와 실제 답, 씨앗 변주, 자모 단위 칠과 움직임, 내 페이지에 쓰는 코드, 맞지 않는 곳
+- [사례](https://font.tty.link/showcase.html): 완성 템플릿(소스를 본보기로 읽는다)
 - [글꼴](https://font.tty.link/fonts.html): 테마 갤러리, 조합기, 글꼴 견본
 - [움직임](https://font.tty.link/effects.html): 자모 움직임과 상호작용
 - [문서](https://font.tty.link/docs.html): 설치·속성·꾸미기·API
-- [작업실](https://font.tty.link/font-studio.html): 세벌식 디자인, 그림 세트 그리기(원형 8자 → 24 → 40), 글꼴 CSS 편집, 자소판 그리기
+- [작업실](https://font.tty.link/font-studio.html): 디자인·고치기·자소판·검수 네 페이지
 
 ## Optional
 

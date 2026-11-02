@@ -137,7 +137,7 @@
 }
 
 /* Custom demo hook: per-jamo drift using --fy-jamo-seed */
-:where(font-kku[font="sebul"][data-fy-animate="jamo-drift"]) [part~="jamo"] {
+:where(font-kku[data-fy-animate="jamo-drift"]) [part~="jamo"] {
   transform-origin: center;
   animation: fy-seed-drift 3.2s ease-in-out infinite;
   animation-delay: calc((var(--fy-jamo-seed, 0.5) - 0.5) * 2s);
