@@ -9,8 +9,8 @@
   font.tty.link 모든 쪽(`*.html`, `examples/*.html`)을 Chromium 데스크톱·휴대폰, WebKit 데스크톱·휴대폰, Firefox 데스크톱으로 연다.
   tty.link 홈과 lol.tty.link(홈·`pages/index.json`의 모든 쪽)는 공개 사이트를 그대로 열되 `https://font.tty.link/lib/**`만 이 사본으로 돌린다.
 - 전(before): 공개 font.tty.link·tty.link·lol.tty.link를 Chromium 데스크톱·휴대폰으로 연다.
-- 쪽마다 끝까지 훑어 내린 뒤 바탕 요소가 다 그려졌는지(`notReady`), 콘솔 오류·페이지 오류, 실패한 요청(4xx·5xx·끊김), 런타임 판을 적고
-  찍는다. 전후 짝을 나란히 둔 시트와 표(index.html)를 만든다 — 승인 요청 ②에서 사용자가 본다.
+- 쪽마다 끝까지 훑어 내린 뒤 바탕 요소가 다 그려졌는지(`notReady`, 원문이 빈 바탕 요소는 세지 않는다), 콘솔 오류·페이지 오류,
+  실패한 요청(4xx·5xx·끊김), 런타임 판을 적고 찍는다. 전후 짝을 나란히 둔 시트와 표(index.html)를 만든다 — 승인 요청 ②에서 사용자가 본다.
 - 판정(끝 코드 1): 지금 쪽에 오류·실패 요청·예외가 있거나, 덜 그려진 바탕 요소가 공개판의 같은 쪽보다 많다. 모양은 판정하지 않는다.
 
 공개 사이트에 닿아야 한다(네트워크). 일꾼 수는 --jobs(기본 FONT_KKU_JOBS 또는 3).
@@ -47,9 +47,12 @@ SCROLL_JS = """async () => {
   for (let y = 0; y < max; y += step) { scrollTo(0, y); await new Promise(r => setTimeout(r, 110)); }
   scrollTo(0, 0); await new Promise(r => setTimeout(r, 200));
 }"""
+# 다 그려진 바탕 요소: 업그레이드가 끝났고 글꼴을 기다리지 않으며, 음절이 그려졌거나 원문(data-source)이 비어 있다.
+# 원고지 빈칸처럼 일부러 비운 바탕 요소는 그릴 글자가 없으니 덜 그려짐으로 세지 않는다.
 HOSTS_JS = """() => { const hs = [...document.querySelectorAll('font-kku, .font-kku')];
+  const empty = h => h.hasAttribute('data-source') && !h.getAttribute('data-source').trim();
   const bad = hs.filter(h => !(h.dataset.fyUpgraded === 'true' && !h.hasAttribute('data-fy-font-pending')
-      && h.querySelector('[part~="glyph"]')));
+      && (h.querySelector('[part~="glyph"]') || empty(h))));
   return { hosts: hs.length, notReady: bad.length,
            sample: bad.slice(0, 3).map(h => (h.getAttribute('font') || h.dataset.fyFont || '') + ':' + (h.textContent || '').trim().slice(0, 12)),
            version: (window.FontKku && window.FontKku.version) || null }; }"""
