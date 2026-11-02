@@ -75,6 +75,8 @@ HOSTS_JS = """() => { const hs = [...document.querySelectorAll('font-kku, .font-
   return { hosts: hs.length, notReady: bad.length,
            sample: bad.slice(0, 3).map(h => (h.getAttribute('font') || h.dataset.fyFont || '') + ':' + (h.textContent || '').trim().slice(0, 12)),
            version: (window.FontKku && window.FontKku.version) || null }; }"""
+# 자소판 그림을 미리 풀어 두고 한 번 그릴 차례를 기다린다. WebKit은 화면 밖 iframe의 rAF를 10초에 한 번만 돌려
+# 사례 쪽에서 iframe마다 10초씩 걸렸다. 화면 밖 iframe은 이때 그려 봐야 보이지 않고 찍을 때 다시 그려지므로 0.5초까지만 기다린다.
 SPRITES_JS = """async (timeout) => {
   const urls = new Set();
   document.querySelectorAll('font-kku [part~="jamo"], font-kku [part~="jamo"] *, .font-kku [part~="jamo"]').forEach((n) => {
@@ -85,7 +87,8 @@ SPRITES_JS = """async (timeout) => {
   });
   const all = Promise.all([...urls].map((u) => { const img = new Image(); img.src = u; return img.decode().catch(() => null); }));
   await Promise.race([all, new Promise((r) => setTimeout(r, timeout))]);
-  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  const painted = new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  await Promise.race([painted, new Promise((r) => setTimeout(r, 500))]);
   return urls.size;
 }"""
 

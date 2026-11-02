@@ -3,7 +3,8 @@
 /* 미리보기 점검(scripts/site_preview_check.py)이 브라우저에서 돌리는 JS를 파일에서 그대로 꺼내 가짜 DOM에 돌린다.
  * - HOSTS_JS('덜 그려짐'): 원고지 빈칸처럼 원문(data-source)이 빈 바탕 요소는 세지 않고, 원문이 있는데 음절이 없거나,
  *   글꼴을 기다리거나, 업그레이드 전이거나, 원문 기록이 아예 없으면 센다.
- * - LAZY_FRAMES_JS: 훑어 내리는 동안 열리지 않은 지연 iframe을 하나씩 화면에 데려와 열고, 끝내 안 열린 것을 돌려준다. */
+ * - LAZY_FRAMES_JS: 훑어 내리는 동안 열리지 않은 지연 iframe을 하나씩 화면에 데려와 열고, 끝내 안 열린 것을 돌려준다.
+ * - SPRITES_JS: 그릴 차례(rAF)가 오지 않는 화면 밖 iframe(WebKit은 10초에 한 번)에서도 오래 붙잡히지 않는다. */
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
@@ -14,6 +15,7 @@ const script = fs.readFileSync(path.join(__dirname, "../scripts/site_preview_che
 const pick = (name) => new RegExp(`^${name} = """([\\s\\S]*?)"""`, "m").exec(script)[1];
 const HOSTS_JS = pick("HOSTS_JS");
 const LAZY_FRAMES_JS = pick("LAZY_FRAMES_JS");
+const SPRITES_JS = pick("SPRITES_JS");
 
 function host({ upgraded = true, pending = false, glyph = false, source, font = "crayon", text = "" } = {}) {
   const attrs = new Map();
@@ -92,4 +94,14 @@ test("an iframe that never opens is returned as unopened", async () => {
   const stuck = frame({ src: "./examples/certificate.html", opensOnView: false });
   const result = await openLazy([stuck], 250);
   assert.deepEqual(result, { revisited: 1, unopened: ["./examples/certificate.html"] });
+});
+
+test("the sprite wait does not hang on a frame whose animation frames are throttled", { timeout: 3000 }, async () => {
+  const document = { querySelectorAll: () => [] };
+  const neverPaints = () => {};
+  const run = new Function("document", "getComputedStyle", "Image", "requestAnimationFrame", `return (${SPRITES_JS})`)(
+    document, () => ({}), function Image() {}, neverPaints);
+  const started = Date.now();
+  assert.equal(await run(6000), 0);
+  assert.ok(Date.now() - started < 2000, `waited ${Date.now() - started} ms`);
 });
