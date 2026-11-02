@@ -10,7 +10,8 @@
   tty.link 홈과 lol.tty.link(홈·`pages/index.json`의 모든 쪽)는 공개 사이트를 그대로 열되 `https://font.tty.link/lib/**`만 이 사본으로 돌린다.
 - 전(before): 공개 font.tty.link·tty.link·lol.tty.link를 Chromium 데스크톱·휴대폰으로 연다.
 - 쪽마다 끝까지 훑어 내리고 그사이 열리지 않은 지연 iframe을 하나씩 연 뒤, 바탕 요소가 다 그려졌는지(`notReady`, 원문이 빈
-  바탕 요소는 세지 않는다), 콘솔 오류·페이지 오류, 실패한 요청(4xx·5xx·끊김), 런타임 판을 적고 찍는다.
+  바탕 요소는 세지 않는다), 콘솔 오류·페이지 오류, 실패한 요청(4xx·5xx·끊김. 페이지가 취소했어도 같은 주소가 끝내 받아졌으면
+  `ignoredAborts`에만 적는다), 런타임 판을 적고 찍는다.
   전후 짝을 나란히 둔 시트와 표(index.html)를 만든다 — 승인 요청 ②에서 사용자가 본다.
 - 판정(끝 코드 1): 지금 쪽에 오류·실패 요청·예외·끝내 열리지 않은 iframe이 있거나, 덜 그려진 바탕 요소가 공개판의 같은 쪽보다
   많다. 모양은 판정하지 않는다.
@@ -26,6 +27,7 @@ import http.server
 import json
 import mimetypes
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -173,11 +175,11 @@ def run_chunk(chunk: list[dict], shots: Path, lib: Path) -> list[dict]:
             if job["site"] in ("tty", "lol") and job["side"] == "after":
                 ctx.route("https://font.tty.link/lib/**", lib_route(lib))
             page = ctx.new_page()
-            errors, failed = [], []
+            errors, dropped, bad_status, loaded = [], [], [], set()
             page.on("console", lambda m: errors.append(m.text[:200]) if m.type == "error" else None)
             page.on("pageerror", lambda e: errors.append("pageerror: " + str(e)[:200]))
-            page.on("requestfailed", lambda r: failed.append(f"{r.url[:150]} ({r.failure})"))
-            page.on("response", lambda r: failed.append(f"{r.url[:150]} [{r.status}]") if r.status >= 400 else None)
+            page.on("requestfailed", lambda r: dropped.append((r.url, r.failure or "")))
+            page.on("response", lambda r: bad_status.append(f"{r.url[:150]} [{r.status}]") if r.status >= 400 else loaded.add(r.url))
             started = time.time()
             row = dict(job)
             try:
@@ -206,17 +208,32 @@ def run_chunk(chunk: list[dict], shots: Path, lib: Path) -> list[dict]:
                 row.update(info, shot=str(shot.relative_to(shots.parent)))
             except Exception as exc:  # noqa: BLE001 — 한 쪽이 깨져도 나머지를 잰다
                 row["exception"] = str(exc)[:300]
-            row.update(errors=errors, failed=failed, seconds=round(time.time() - started, 1))
+            failed, ignored = split_failures(dropped, loaded)
+            failed += bad_status
+            row.update(errors=errors, failed=failed, ignoredAborts=ignored, seconds=round(time.time() - started, 1))
             rows.append(row)
             print(f"{job['side']:<6} {job['site']:<4} {engine:<8} {job['vp']:<7} {job['page'][:34]:<34} v{row.get('version')} "
                   f"hosts {row.get('hosts')} notReady {row.get('notReady')} err {len(errors)} fail {len(failed)} "
                   f"{row['seconds']}s{' EXC' if 'exception' in row else ''}"
                   f"{' reopened ' + str(row['revisited']) if row.get('revisited') else ''}"
-                  f"{' UNOPENED ' + str(len(row['unopened'])) if row.get('unopened') else ''}", flush=True)
+                  f"{' UNOPENED ' + str(len(row['unopened'])) if row.get('unopened') else ''}"
+                  f"{' ignored-aborts ' + str(len(ignored)) if ignored else ''}", flush=True)
             ctx.close()
         for browser in browsers.values():
             browser.close()
     return rows
+
+
+# 페이지가 스스로 취소한 요청(글자를 다시 그리며 같은 그림을 새로 부를 때 등). 엔진마다 이름이 다르다.
+ABORTED = re.compile(r"ERR_ABORTED|NS_BINDING_ABORTED|cancel", re.IGNORECASE)
+
+
+def split_failures(dropped: list[tuple[str, str]], loaded: set[str]) -> tuple[list[str], list[str]]:
+    """실패 요청을 (실패, 무시한 취소)로 나눈다. 같은 쪽에서 같은 주소가 정상으로 받아진 취소만 무시한다."""
+    failed, ignored = [], []
+    for url, why in dropped:
+        (ignored if ABORTED.search(why) and url in loaded else failed).append(f"{url[:150]} ({why})")
+    return failed, ignored
 
 
 def loaded_frames(page):

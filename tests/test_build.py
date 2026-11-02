@@ -210,6 +210,18 @@ class PreviewConsumers(unittest.TestCase):
         self.assertIn("열리지 않은 iframe 1", problems[0])
         self.assertEqual(P.verdict([dict(base, side="after", revisited=4, unopened=[])]), [])
 
+    def test_aborts_count_only_when_the_same_url_never_loaded(self):
+        pixel = "http://127.0.0.1:8494/lib/profiles/pixel.svg"
+        crayon = "http://127.0.0.1:8494/lib/profiles/crayon.svg"
+        failed, ignored = P.split_failures([
+            (pixel, "NS_BINDING_ABORTED"),           # Firefox, loaded again → ignored
+            (pixel, "Load request cancelled"),       # WebKit, loaded again → ignored
+            (crayon, "net::ERR_ABORTED"),            # never loaded → still a failure
+            (pixel, "net::ERR_CONNECTION_REFUSED"),  # not an abort → still a failure
+        ], {pixel})
+        self.assertEqual(failed, [f"{crayon} (net::ERR_ABORTED)", f"{pixel} (net::ERR_CONNECTION_REFUSED)"])
+        self.assertEqual(ignored, [f"{pixel} (NS_BINDING_ABORTED)", f"{pixel} (Load request cancelled)"])
+
 
 class PackageUpgrade(unittest.TestCase):
     def setUp(self):
