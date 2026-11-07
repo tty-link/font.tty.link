@@ -29,6 +29,7 @@
  * - 그림 자소(sprite) 재료: 칸은 자소판 그림으로 칠해져 color가 닿지 않는다. 색을 바꾸는
  *   cycle·shine은 이 바탕 요소에 마스크 칠(--fy-sprite-paint: mask, ADR-014)을 켜서
  *   자소판 모양에 글자 색을 칠한다 — 자소판 고유의 색(인주·실 빛)은 그동안 글자 색이 된다.
+ *   움직임 줄이기에서는 켜지 않아 정지 렌더와 같다.
  *   이동·투명도 움직임은 재료와 무관하다.
  * - 조절 손잡이(페이지 CSS에서 바탕 요소에): --kku-motion-duration(한 바퀴 길이),
  *   --kku-motion-stagger(글자 사이 시차), --kku-cycle-1~4(cycle 색),
@@ -214,12 +215,17 @@
   }
 
   /* 그림 자소에서 색을 바꾸는 움직임은 마스크 칠로 — 런타임은 처음 그릴 때 바탕 요소의
-   * --fy-sprite-paint를 읽으므로, 그때 이미 있는 작성 속성(animate·data-animate)으로도 고른다 */
-  :where(font-kku[animate="cycle"], font-kku[animate="shine"],
-    .font-kku[data-animate="cycle"], .font-kku[data-animate="shine"],
-    font-kku[data-fy-animate="cycle"], font-kku[data-fy-animate="shine"],
-    .font-kku[data-fy-animate="cycle"], .font-kku[data-fy-animate="shine"]) {
-    --fy-sprite-paint: mask;
+   * --fy-sprite-paint를 읽으므로, 그때 이미 있는 작성 속성(animate·data-animate)으로도 고른다(JS 옵션 animate는 런타임이
+   * 읽기 전에 찍는 data-fy-animate로).
+   * 움직임을 허락할 때만 — 움직임 줄이기에서는 색이 돌지 않으니 자소판을 정지 렌더처럼 그림으로 칠한다(자소판 고유의
+   * 색·투명도 그대로, 원소 재료의 shine 칠과 같은 까닭). 설정이 바뀌면 런타임이 칠과 칸만 그 자리에서 고친다(watchSpriteMotion). */
+  @media (prefers-reduced-motion: no-preference) {
+    :where(font-kku[animate="cycle"], font-kku[animate="shine"],
+      .font-kku[data-animate="cycle"], .font-kku[data-animate="shine"],
+      font-kku[data-fy-animate="cycle"], font-kku[data-fy-animate="shine"],
+      .font-kku[data-fy-animate="cycle"], .font-kku[data-fy-animate="shine"]) {
+      --fy-sprite-paint: mask;
+    }
   }
 
   /* ── draw: 획순 그리기 ──────────────────────────────── */

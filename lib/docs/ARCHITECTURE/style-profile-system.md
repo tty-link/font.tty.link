@@ -1,7 +1,7 @@
 # 스타일 글꼴 체계
 
-> Status: Implemented
-> Scope: CSS로 저작하는 글꼴형 스타일 모델
+> 상태: 현행 · 마지막 갱신 2026-10-31 · 관련 결정: [ADR-008](../ADR/ADR-008-font-contract-v2.md), [ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md), [ADR-035](../ADR/ADR-035-scope-ladder.md)
+> Scope: CSS로 저작하는 글꼴형 스타일 모델 — 글꼴 CSS의 DOM 계약·변수·레이어·레벨. 글꼴 모양·재료·디자인을 한 장으로 본 모델은 [글꼴 모양·재료·디자인](./shape-material-design.md)
 
 ## 목표
 
@@ -25,12 +25,12 @@
 
 스타일 글꼴은 두 가지 저작 경로로 나뉜다.
 
-- **CSS 글꼴**: 기기에 설치된 한글 글꼴의 자소를 그대로 쓰고 `--fy-*` 변수로 변형만 준다. 이 문서의 기본 대상이다.
+- **CSS 글꼴**(`--fy-material: system`): 자리·크기·굵기를 `--fy-*` 변수로 주고, 자모는 재료(`--fy-font-face`)로 그린다. 기본 제공 `sebul`·`gothic`·`malang`·`jikgyeol`은 원소 재료(`element`, 획을 CSS 상자로)가 기본이다. 페이지 `--fy-face: device`면 기기 한글 글꼴의 낱자를 표준 잉크 상자에 맞춰 그린다([ADR-023](../ADR/ADR-023-device-face-fit.md)·[ADR-024](../ADR/ADR-024-hangul-principle-rendering.md)). 표준 잉크 상자를 밝히지 않은 글꼴은 기기 글꼴의 조합용 자모를 그대로 그린다. 이 문서의 기본 대상이다.
 - **그림 자소 글꼴**: 자소 그림을 자소판(SVG·PNG)에 올리고, 코어 CSS가 자소 칸을 배경으로 그린다. 글꼴은 `--fy-sprite-*` 변수로 자소판과 행 선택만 선언한다. 상세는 [그림 자소 글꼴](./image-sprite-fonts.md).
 
 두 경로는 같은 DOM 계약을 공유하므로 섞어서 구성할 수 있다.
 
-스타일 글꼴은 [조합 체계](./composition-axes.md)(ADR-017)의 **글꼴 축**(뼈대 = 짜임 × 획)이다. 칠(색·외곽선·그림자)은 꾸밈 축 `kku-look-*`, 씨앗 변주는 변주 축 `kku-vary-*`, 움직임·상호작용은 각자의 확장이 맡는다. 그래서 칠만 다른 새 표현은 새 글꼴이 아니라 `spec/themes.json` `looks`에 더한다. 칠만 다른 기존 파생 글꼴 여덟(`neon` 등)은 꾸러미 글꼴로 남고, 그 꾸밈 구간이 클래스 방식의 원천이다.
+스타일 글꼴은 [조합 체계](./composition-axes.md)(ADR-017)의 **글꼴 축**(글꼴 모양 + 재료)이다. 칠(색·외곽선·그림자)은 꾸밈 축 `kku-look-*`, 씨앗 변주는 변주 축 `kku-vary-*`, 움직임·상호작용은 각자의 확장이 맡는다. 그래서 칠만 다른 새 표현은 새 글꼴이 아니라 `spec/themes.json` `looks`에 더한다. 칠만 다른 기존 파생 글꼴 여덟(`neon` 등)은 꾸러미 글꼴로 남고, 그 꾸밈 구간이 클래스 방식의 원천이다.
 
 사용자 경험은 일반 글꼴을 쓰는 경험과 비슷해야 한다.
 
@@ -164,7 +164,7 @@
 
 ### Cascade layer
 
-모든 글꼴 CSS는 첫 규칙으로 같은 순서 선언을 두고, 나머지 규칙을 전부 세 레이어 안에 둔다. 순서 선언은 멱등이라 글꼴마다 반복해도 불러오는 순서와 무관하게 순서가 고정된다.
+모든 글꼴 CSS는 첫 규칙으로 같은 순서 선언을 두고, 나머지 규칙을 전부 세 레이어 안에 둔다. 고정 글꼴 모양(세벌식·직결식)의 손 보정을 쓰는 글꼴만 `font-kku.tune` 블록을 더하고, 그때 첫 문장은 다섯 계층이다. 순서 선언은 멱등이라 글꼴마다 반복해도 불러오는 순서와 무관하게 순서가 고정된다.
 
 ```css
 @layer font-kku.font, font-kku.jamo, font-kku.context;
@@ -175,12 +175,13 @@
 | `font-kku.font` | 바탕 요소 규칙(글꼴 변수, 역할·부모 자리·자리 변수, `[data-fy-vowel-depth="syllable"]` 같은 바탕 요소 조건)과 자리 단위 노드 규칙(`[data-fy-pos]`만 쓰는 규칙, 그림 자소 종류별 행 선택) | `:where([data-fy-font="X"])`, `… [data-fy-pos="t"]` |
 | `font-kku.jamo` | 자모 정체성으로 고르는 규칙 | `[data-jamo]`, `[data-jamo-base]`, 선택적으로 `[data-fy-pos][data-jamo]` |
 | `font-kku.context` | 이웃 조건으로 고르는 규칙 | 글자 칸의 자리 자모(`[data-fy-at-<자리>]`)·자모 목록(`[data-fy-jamos~=]`), 짜임 조건 |
+| `font-kku.shape` | 코어 `font-kku.css`의 생성 구간만 쓴다 — 고른 고정 글꼴 모양의 모양 값(`--fy-shape-*`)을 내고 바탕 글꼴의 자모·짜임·문맥·음절 보정을 비운다(ADR-030 §2). 글꼴 CSS는 쓰지 않는다 | `:where(font-kku, .font-kku)[data-fy-layout="sebul-cases-v1"] …` |
 | `font-kku.tune` | 고정 글꼴 모양(세벌식·직결식)의 손 보정 — 코어가 생성한 모양 값(`font-kku.shape`) 위 위치·크기(`--fy-shape-left·top·size·scale-x·scale-y`). 이 블록을 쓰면 첫 문장을 다섯 계층 `@layer font-kku.font, font-kku.jamo, font-kku.context, font-kku.shape, font-kku.tune;`으로 쓴다(ADR-030) | `:where([data-fy-font="X"][data-fy-layout="sebul-cases-v1"]) [data-jung-layout][data-jong-layout] [part~="choseong"][data-jamo]` |
 
 - 뒤 레이어는 특이도와 무관하게 앞 레이어를 이긴다. 같은 레이어 안에서는 특이도가 정한다(`[data-fy-pos][data-jamo]`가 `[data-jamo]`를 이긴다).
 - 레이어 밖에 있는 페이지 CSS는 모든 글꼴을 이긴다. 페이지는 `@layer reset, font-kku, app;`처럼 font-kku 전체를 자기 레이어 체계 안에 배치할 수도 있다.
-- `font-kku.css`의 코어 규칙은 레이어 밖에 둔다. 코어를 레이어에 넣으면 페이지의 요소 리셋에 자모 배치가 깨지기 때문이다.
-- 조합 확장은 글꼴 레이어 뒤에 붙는다: `font-kku.look`(꾸밈·변주, `font-kku-looks.css`) → `font-kku.motion`(자모 움직임, `font-kku-motion.css`). 두 파일도 전체 순서 문(`@layer font-kku.font, font-kku.jamo, font-kku.context, font-kku.look[, font-kku.motion];`)을 되풀이하므로 불러온 순서와 무관하다. 순서는 글꼴 < 꾸밈 < 움직임 < 레이어 밖 페이지다.
+- `font-kku.css`가 변수를 실제 속성(`inset`·`transform`·`font-size`·`clip-path` …)으로 바꾸는 소비 규칙은 레이어 밖에 둔다. 코어를 레이어에 넣으면 페이지의 요소 리셋에 자모 배치가 깨지기 때문이다. 코어가 생성한 모양 값만 `@layer font-kku.shape`에 있다(코어의 둘째 순서 문 `@layer font-kku.shape, font-kku.tune;`).
+- 조합 확장은 글꼴 레이어 뒤에 붙는다: `font-kku.look`(꾸밈·변주, `font-kku-looks.css`) → `font-kku.motion`(자모 움직임, `font-kku-motion.css`). 두 파일도 전체 순서 문(`@layer font-kku.font, font-kku.jamo, font-kku.context, font-kku.look[, font-kku.motion];`)을 되풀이하므로 불러온 순서와 무관하다. 코어를 먼저 불러오는 보통의 차례에서 순서는 글꼴 세 계층 < `shape` < `tune` < 꾸밈 < 움직임 < 레이어 밖 페이지다.
 - 꾸밈은 글꼴 린트를 받는 글꼴 CSS가 아니라 확장이다. 그래도 칠 속성과 `--fy-font-stroke`(폰트 레벨 획 폭이 없는 글꼴의 외곽선 — 스스로 선언한 글꼴은 제 값을 되찾는다)만 쓴다. 예외는 그림 자소의 마스크 칠 스위치(`--fy-sprite-paint: mask`)와 글자(`[part="glyph"]`)의 `drop-shadow`다. 자모 자리는 건드리지 않는다.
 
 ### 레벨 변수와 합성 규칙
@@ -192,13 +193,17 @@
 | 글꼴(`font`) | 바탕 요소 | `--fy-glyph-*`, `--fy-font-family`, `--fy-font-weight`, `--fy-font-stroke` … | 기본값 |
 | 자리(`slot`) | 바탕 요소, 바탕 요소 조건 | 자리 → 부모 자리 → 역할: `--fy-<slot>-top/left/size/scale-x/scale-y/rotate/weight/stroke/clip/dilate` | 상위(구체)가 대체 |
 | 자모(`jamo`) | 자모 노드(`font-kku.jamo`) | 자리 변수의 노드 재선언 + `--fy-jamo-dx/dy/scale-x/scale-y/rotate/size/weight/stroke/clip` | 대체 또는 누적(굵기·자르기는 대체) |
+| 같은 짜임(`case`) | 자모 노드(`font-kku.context`) | `--fy-case-*`(자모와 같은 접미사) | 누적(굵기·자르기는 대체) |
 | 문맥(`context`) | 자모 노드(`font-kku.context`) | 자리 변수의 노드 재선언 + `--fy-ctx-*`(자모와 같은 접미사) | 대체 또는 누적(굵기·자르기는 대체) |
+| 이 글자만(`syl`) | 자모 노드(`font-kku.context`) | `--fy-syl-*`(자모와 같은 접미사) | 누적(굵기·자르기는 대체) |
+| 손 보정(`tune`) | 고정 글꼴 모양 노드(`font-kku.tune`) | `--fy-shape-left/top/size/scale-x/scale-y`, 자모 보정 `--fy-jamo-*` | 모양 값을 대체(위치·크기), 자모 보정은 누적 |
 | 페이지(`page`) | 페이지 CSS·인라인 스타일 | `--fy-top/left/font-size/weight/stroke/clip`(대체), `--fy-scale-x/scale-y/rotate`(누적 보정), `--fy-sprite-filter`, `--fy-optical-sprite-*` | 최종 |
 
 - 규칙은 하나다. **같은 변수는 대체되고, 누적이 필요한 보정은 레벨 전용 오프셋 변수로 쓴다.** 자모 규칙이 노드에 `--fy-t-left`를 다시 선언하면 자리 값을 대체한다. 바탕 요소 값은 상속으로 내려오므로 노드에 선언한 값을 이길 수 없다.
-- 위치는 `(page 값 ?? slot 값) + jamo 오프셋 + context 오프셋`이다. 오프셋의 `%`는 자리 top/left와 같은 글자 상자 기준이고 `em`은 노드 글꼴 크기 기준이다. `calc()`로 합산하므로 위치 계열에 단위 없는 `0`은 쓸 수 없다(`0%`로 쓴다).
+- 보정 수준(자모·같은 짜임·문맥·이 글자만)은 선택자 특이도와 상관없이 서로 다투지 않고 합쳐진다. 좁은 범위가 늘 이긴다는 [편집 범위 사다리](../ADR/ADR-035-scope-ladder.md)의 뜻이다. 예전 작업실이 같은 짜임·이 글자만 틀에 쓴 `--fy-ctx-*`는 그대로 문맥 보정으로 읽는다.
+- 위치는 `(page 값 ?? slot 값) + jamo + case + ctx + syl 오프셋`이다. 오프셋의 `%`는 자리 top/left와 같은 글자 상자 기준이고 `em`은 노드 글꼴 크기 기준이다. `calc()`로 합산하므로 위치 계열에 단위 없는 `0`은 쓸 수 없다(`0%`로 쓴다).
 - 모든 속성이 같은 규칙을 따른다: **절대값 = 페이지 ?? 자리 ?? 부모 자리 ?? 역할 ?? 글꼴 ?? 내장값, 보정 = 자모·문맥·페이지 레벨 변수의 누적.** 역할은 어느 속성에서도 곱해지지 않는 대체값이다(2026-09 이전 코어는 역할 배율만 자리 배율에 곱했다).
-- 배율 = 자리 체인 배율 × 자모 × 문맥 × 페이지(`--fy-scale-*`). 회전 = 자리 체인 회전 + 자모 + 문맥 + 페이지(`--fy-rotate`). 굵기는 `--fy-weight`(페이지) → 자리 체인 weight → `--fy-font-weight`, 획 보상은 `--fy-stroke`(페이지) → 자리 체인 stroke → `--fy-font-stroke`, 잘라내기는 `--fy-clip`(페이지) → 자리 체인 clip → `none` 순으로 해소된다. `--fy-font-weight`는 노드별 덮어쓰기가 아니라 글꼴 레벨 기본값이다.
+- 배율 = 자리 체인 배율 × 자모 × 같은 짜임 × 문맥 × 이 글자만 × 페이지(`--fy-scale-*`). 크기 = (페이지 `--fy-font-size` ?? 자리 체인 크기) × 자모 × 같은 짜임 × 문맥 × 이 글자만. 회전 = 자리 체인 회전 + 자모 + 같은 짜임 + 문맥 + 이 글자만 + 페이지(`--fy-rotate`). 굵기는 `--fy-weight`(페이지) → syl → ctx → case → jamo → 자리 체인 weight → `--fy-font-weight`, 잘라내기는 `--fy-clip`(페이지) → syl → ctx → case → jamo → 자리 체인 clip → `none` 순으로 좁은 것이 대체한다. 획 보상은 (`--fy-stroke`(페이지) ?? 자리 체인 stroke ?? `--fy-font-stroke`) + jamo + case + ctx + syl이다. `--fy-font-weight`는 노드별 덮어쓰기가 아니라 글꼴 레벨 기본값이다.
 - 자모별 잘라내기는 자모 레이어에서 자리 clip(`--fy-mt-clip: inset(0 0 31% 0)` 등)을 재선언한다.
 - `--fy-top`, `--fy-left`, `--fy-font-size`, `--fy-weight`, `--fy-stroke`, `--fy-clip`, `--fy-scale-x`, `--fy-scale-y`, `--fy-rotate`, `--fy-sprite-filter`, `--fy-optical-sprite-*`, 깊이 변수 `--fy-jamo-depth`/`--fy-vowel-depth`/`--fy-coda-depth`, 짓는 방식 `--fy-composition`은 페이지 작성자 전용이다(글꼴의 깊이는 `--fy-font-*-depth`, 짓는 방식은 `--fy-font-composition` — [ADR-034](../ADR/ADR-034-composition-modes.md), 고르지 않아도 된다)(레지스트리 `declaredBy: page`). 글꼴이 쓰지 않으므로 글꼴을 가져다 쓴 페이지가 항상 마지막 말을 한다.
 - 같은 레이어 안에서는 특이도가, 같으면 파일 순서가 정한다. 한 노드에 같은 특이도의 두 규칙이 겹쳐 속성별로 값을 나눠 갖지 않게 조건을 서로 배타적으로 쓴다(gothic의 ㅇ/ㅎ 초성 × mtl ㅗ 규칙이 예).
@@ -210,6 +215,8 @@
 - `--fy-font-id: <name>` — 파일 이름과 같다. 런타임은 이 값으로 요청한 글꼴의 CSS가 바탕 요소에 도착했는지 판정한다.
 - `--fy-contract: 2` — 글꼴이 따르는 계약 버전. 런타임이 지원하는 값보다 크면 글꼴별로 한 번 경고하고 그리기는 계속한다.
 - `--fy-material: system | sprite | bundled` — 재료. 기본 제공 글꼴은 `system`(`sebul`, `gothic`과 그 파생 글꼴)과 `sprite`(`sprite-example`, `sprite-system`과 그 파생 글꼴)만 쓴다. `system`이 아니면 런타임이 바탕 요소에 `data-fy-material`을 찍고, `sprite`이면 `--fy-sprite-kinds`를 `data-fy-sprite-kinds`로 찍어 코어 그림 자소 재료 규칙의 조건으로 쓴다.
+
+계열 `system` 글꼴이 무엇으로 자모를 그릴지(재료 축 `--fy-font-face`: `element`·`device`·`svg`)와 표준 잉크 상자(`--fy-font-ink-boxes: standard`), 글꼴 모양(`--fy-font-layout`)은 메타데이터와 따로 밝히는 글꼴 변수다. 고르는 차례와 결과는 [글꼴 모양·재료·디자인](./shape-material-design.md)에 있다.
 
 런타임은 그릴 때 깊이·표현 모드와 함께 이 값을 읽고, `FontKku.fontInfo(host)`로 돌려준다. 스타일시트 `load`나 `FontKku.refreshAll()`, `FontKku.loadFont(href)` 뒤에 다시 해석한다. 자세한 동작은 [브라우저 런타임 설계](./browser-runtime-design.md)를 본다.
 
@@ -296,16 +303,20 @@
 [part~="jamo"] {
   inset-block-start: calc(
     var(--fy-top, var(--fy-slot-top, var(--fy-role-top, 0%)))
-    + var(--fy-jamo-dy, 0%) + var(--fy-ctx-dy, 0%)
+    + var(--fy-jamo-dy, 0%) + var(--fy-case-dy, 0%) + var(--fy-ctx-dy, 0%) + var(--fy-syl-dy, 0%)
   );
   inset-inline-start: calc(
     var(--fy-left, var(--fy-slot-left, var(--fy-role-left, 0%)))
-    + var(--fy-jamo-dx, 0%) + var(--fy-ctx-dx, 0%)
+    + var(--fy-jamo-dx, 0%) + var(--fy-case-dx, 0%) + var(--fy-ctx-dx, 0%) + var(--fy-syl-dx, 0%)
   );
-  font-weight: var(--fy-weight, var(--fy-slot-weight, var(--fy-role-weight, var(--fy-font-weight, inherit))));
-  font-size: var(--fy-font-size, var(--fy-slot-font-size, var(--fy-role-font-size, 1em)));
-  -webkit-text-stroke-width: var(--fy-stroke, var(--fy-slot-stroke, var(--fy-role-stroke, var(--fy-font-stroke, 0px))));
-  clip-path: var(--fy-clip, var(--fy-slot-clip, var(--fy-role-clip, none)));
+  font-weight: var(--fy-weight, var(--fy-syl-weight, var(--fy-ctx-weight, var(--fy-case-weight,
+    var(--fy-jamo-weight, var(--fy-slot-weight, var(--fy-role-weight, var(--fy-font-weight, inherit))))))));
+  font-size: calc(var(--fy-font-size, var(--fy-slot-font-size, var(--fy-role-font-size, 1em)))
+    * var(--fy-jamo-size, 1) * var(--fy-case-size, 1) * var(--fy-ctx-size, 1) * var(--fy-syl-size, 1));
+  -webkit-text-stroke-width: calc(var(--fy-stroke, var(--fy-slot-stroke, var(--fy-role-stroke, var(--fy-font-stroke, 0px))))
+    + var(--fy-jamo-stroke, 0px) + var(--fy-case-stroke, 0px) + var(--fy-ctx-stroke, 0px) + var(--fy-syl-stroke, 0px));
+  clip-path: var(--fy-clip, var(--fy-syl-clip, var(--fy-ctx-clip, var(--fy-case-clip,
+    var(--fy-jamo-clip, var(--fy-slot-clip, var(--fy-role-clip, none)))))));
 }
 
 /* BEGIN GENERATED CSS CONTRACT: dispatch — emit되는 slot마다 한 줄, 부모 slot·role로 fallback */
@@ -321,11 +332,15 @@
   transform:
     scale(var(--fy-slot-scale-x, var(--fy-role-scale-x, 1)), var(--fy-slot-scale-y, var(--fy-role-scale-y, 1)))
     scale(var(--fy-jamo-scale-x, 1), var(--fy-jamo-scale-y, 1))
+    scale(var(--fy-case-scale-x, 1), var(--fy-case-scale-y, 1))
     scale(var(--fy-ctx-scale-x, 1), var(--fy-ctx-scale-y, 1))
+    scale(var(--fy-syl-scale-x, 1), var(--fy-syl-scale-y, 1))
     scale(var(--fy-scale-x, 1), var(--fy-scale-y, 1))
     rotate(var(--fy-slot-rotate, var(--fy-role-rotate, 0deg)))
     rotate(var(--fy-jamo-rotate, 0deg))
+    rotate(var(--fy-case-rotate, 0deg))
     rotate(var(--fy-ctx-rotate, 0deg))
+    rotate(var(--fy-syl-rotate, 0deg))
     rotate(var(--fy-rotate, 0deg));
 }
 ```
@@ -367,10 +382,10 @@
 
 | 레거시 | 레거시 의미 | 새 선택자 모양 | 비고 |
 | --- | --- | --- | --- |
-| `tl`, `tlo`, `tlc`, `tls` | 세로모음/섞임모음 짜임의 초성 | `[part~="choseong"]` | `tlo=right-open`, `tlc=right-closed`, `tls=split-open` |
-| `tr`, `tro`, `trc`, `trs` | 세로모음 중성 또는 섞임모음 중성의 오른쪽 부분 | `[part~="jungseong"]` 또는 `[part~="jungseong-tail"]` | `tro=right-open`, `trc=right-closed`, `trs=split-open tail` |
-| `ml` | 섞임모음 중성의 기본 부분 | `[data-jung-layout="split-right"] [part~="jungseong-base"]` | `ㅘ`, `ㅢ` 같은 경우 |
-| `mtl` | 받침이 있을 때 위로 당겨진 섞임모음 중성의 기본 부분 | `[data-fy-pos="mtl"]` 또는 `[data-jung-layout="split-right"][data-jong-layout="single"] [part~="jungseong-base"]` | 위치 이동은 `--fy-mtl-top`(자리) 또는 자모 레이어의 `--fy-jamo-dy`로 조정 |
+| `tl`, `tlo`, `tlc`, `tls` | 세로모음/합자모음 짜임의 초성 | `[part~="choseong"]` | `tlo=right-open`, `tlc=right-closed`, `tls=split-open` |
+| `tr`, `tro`, `trc`, `trs` | 세로모음 중성 또는 합자모음 중성의 오른쪽 부분 | `[part~="jungseong"]` 또는 `[part~="jungseong-tail"]` | `tro=right-open`, `trc=right-closed`, `trs=split-open tail` |
+| `ml` | 합자모음 중성의 기본 부분 | `[data-jung-layout="split-right"] [part~="jungseong-base"]` | `ㅘ`, `ㅢ` 같은 경우 |
+| `mtl` | 받침이 있을 때 위로 당겨진 합자모음 중성의 기본 부분 | `[data-fy-pos="mtl"]` 또는 `[data-jung-layout="split-right"][data-jong-layout="single"] [part~="jungseong-base"]` | 위치 이동은 `--fy-mtl-top`(자리) 또는 자모 레이어의 `--fy-jamo-dy`로 조정 |
 | `tt/ttl` | 받침 때문에 위로 이동한 초성 | `[data-fy-pos="tt"]`, `[data-fy-pos="ttl"]` 또는 `[data-jong-layout="single"] [part~="choseong"]` | 왼쪽 미세 이동은 `--fy-tt-left` / `--fy-ttl-left`(자리) 또는 `--fy-jamo-dx`로 조정 |
 | `blr/brs/brd`, `bl/br`, `bbl/bbrs/bbrd` | 받침 노드 | `[part~="jongseong"]`, 겹받침이면 `[part~="jongseong-left"]`·`[part~="jongseong-right"]` | `brs=right:single`, `blr/brd=right:double`, `bl/br=bottom:double`, `bbrs=split-right:single`, `bbl/bbrd=split-right:double`. 옛 `bbr`은 은퇴한 자리라 노드에 찍히지 않고 검사기가 거부한다 |
 
@@ -398,10 +413,10 @@
 
 - 세로모음 짜임인지(중성이 오른쪽)
 - 가로모음 짜임인지(중성이 아래)
-- 섞임모음 짜임인지(복합 모음)
+- 합자모음 짜임인지(복합 모음)
 - 민글자인지, 홑받침인지, 겹받침인지
 
-짜임 구분의 대부분은 이미 배치 토큰에 들어 있다. 예를 들어 세로모음 중성은 `tro`/`trc`, 섞임모음 중성은 `ml`+`trs`/`mtl`+`ttr`, 겹받침은 `blr`+`brd`/`bl`+`br`/`bbl`+`bbrd`로 내보내지므로 먼저 해당 자리 변수를 바탕 요소에 선언한다. 자리로 표현되지 않는 이웃 조건만 문맥 레이어에서 노드 변수로 준다.
+짜임 구분의 대부분은 이미 배치 토큰에 들어 있다. 예를 들어 세로모음 중성은 `tro`/`trc`, 합자모음 중성은 `ml`+`trs`/`mtl`+`ttr`, 겹받침은 `blr`+`brd`/`bl`+`br`/`bbl`+`bbrd`로 내보내지므로 먼저 해당 자리 변수를 바탕 요소에 선언한다. 자리로 표현되지 않는 이웃 조건만 문맥 레이어에서 노드 변수로 준다.
 
 예시:
 
@@ -424,7 +439,7 @@
 }
 ```
 
-## 복합 모음 그리기 (섞임모음 짜임)
+## 복합 모음 그리기 (합자모음 짜임)
 
 복합 모음(ㅘ,ㅙ,ㅚ,ㅢ 등)은 가로 부분(ㅗ/ㅜ/ㅡ)과 세로 부분(ㅏ/ㅐ/ㅣ)으로 나뉘어 그려진다. 실제 글꼴은 이를 하나로 이어진 글자로 디자인하지만, font-kku는 두 개의 독립 자모를 절대 위치로 배치하므로 시각적 연결이 과제이다.
 
@@ -438,7 +453,7 @@
 
 세 기법을 조합하면 분리된 자모가 하나의 복합 모음처럼 인식된다.
 
-### 예시: 과 (ㄱ + ㅗ + ㅏ, 섞임모음 짜임·민글자)
+### 예시: 과 (ㄱ + ㅗ + ㅏ, 합자모음 짜임·민글자)
 
 ```
 ┌─────────────────┐ 1em × 1.2em glyph box
@@ -458,7 +473,7 @@
 
 - scaleX/scaleY는 1.2 이하가 적절. 1.5 이상은 눈에 띄는 왜곡 발생.
 - 겹침 배치만으로도 효과적. 배율 조정은 보조 수단.
-- 섞임모음 짜임의 홑받침·겹받침은 종성 공간 때문에 전체적으로 축소되므로 겹침 여백을 더 빠듯하게 설정.
+- 합자모음 짜임의 홑받침·겹받침은 종성 공간 때문에 전체적으로 축소되므로 겹침 여백을 더 빠듯하게 설정.
 - 음수 `left` 값도 CSS에서 유효하나, 글자 상자 밖으로 나가므로 주의.
 
 ## 비한글 스타일 계약
@@ -527,7 +542,7 @@
 
 문서 용어는 아래처럼 정리한다.
 
-- `theme`: 색감이나 간단한 분위기 수준
+- `theme`(테마): 여섯 축을 고른 조합에 붙인 이름이다(`spec/themes.json`, [ADR-017](../ADR/ADR-017-composition-axes-and-themes.md)). 색감만 뜻하지 않는다. 칠만 다른 표현은 꾸밈(`kku-look-*`)이다
 - `style font`: 자소 기하와 배치를 정의하는 글꼴 유사 단위
 - `font pack`: 여러 글꼴 CSS 모음
 
@@ -536,3 +551,6 @@
 ## 결론
 
 이 프레임워크는 단순한 그리기 엔진이 아니라 "구조는 JS가, 형태는 CSS가 담당하는 자소 글꼴 엔진"으로 가는 편이 맞다. 그래야 사용자가 CSS 파일을 만들면서 새로운 글자 스타일을 제작할 수 있다.
+
+## Change Log
+- 2026-10-31: 머리말을 공통 형식으로. CSS 글꼴의 재료를 원소 기본(ADR-024)으로 고침, 레이어 표에 `font-kku.shape` 추가와 코어 소비 규칙만 레이어 밖이라고 바로잡음, 레벨 표·합성 규칙·코어 발췌에 같은 짜임(`--fy-case-*`)·이 글자만(`--fy-syl-*`) 보정(ADR-035)과 손 보정(`tune`) 추가, 용어 `theme`을 ADR-017 테마로 맞춤(PLAN-DOCS-001)

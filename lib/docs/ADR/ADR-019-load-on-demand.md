@@ -90,7 +90,6 @@ Accepted
 - `font-kku.js` Autoload 절, `font-kku.css` `[data-fy-font-pending]`, `tests/asset_sync.test.js` 크기 측정
 
 ## Change Log
-- 2026-10-18: 사용자 지시에 따라 gzip 강제 한도를 제거하고 측정 보고만 유지. 목표 크기는 추후 최적화 작업에서 정한다.
 - 2026-10-12: 문서·사이트·AI 설명서의 복사 주소 기본값을 `font-kku.min.js`로 바꿨다(사용자 승인 "모두 진행"). 0.1.1을 jsDelivr와 같은 판(Terser 5.48.0·clean-css 5.3.3)으로 흉내 낸 실측(`scripts/check_cdn_min.py --simulate`): 런타임 gzip 78,329 → 40,812 B, `profiles/sebul.css` 11,804 → 2,825 B, 첫 화면 `data-fonts="sebul neon"`(런타임·바탕 CSS·두 글꼴) 107,496 → 60,152 B(−44%). 바탕 `font-kku.css`와 `font-kku-motion.css`는 clean-css 5.3.3이 `@property` 서술자(`syntax`·`inherits`·`initial-value`)를 몰라 경고하므로 jsDelivr가 원본을 보낸다(안전, 0.1.0도 같다). 원소·기기 글꼴·그림 자소·필요할 때 받기·자소 모듈·확장의 DOM과 화소가 원본과 같다. 공개 뒤에는 같은 스크립트를 네트워크로 돌린다(ADR-022 §6). unpkg는 압축본을 만들지 않고, 즉석 압축본에는 SRI를 걸지 않는다.
 - 2026-10-13: 한 줄 설치 시작 조건에 `data-jamo-sets`를 더했다 — 셋(`data-fonts`·`data-addons`·`data-jamo-sets`) 가운데 하나만 있어도 바탕 CSS·세트
   모듈을 붙이고 필요할 때 받기를 켠다(`<link>`로 CSS를 붙인 페이지도). 받을 곳이 없는데 등록되지 않은 `jamo-set`을 쓴 바탕 요소는 `load` 뒤 세트 이름마다
@@ -100,3 +99,5 @@ Accepted
   `position: absolute`) 보고, 없으면 그 트리 맨 앞에 코어 CSS 링크를 한 번 넣는다(한 줄 설치 주소 → 문서의 font-kku.css 링크 → `fontBase`).
   iframe 문서에는 넣지 않고 경고만 한다(문서마다 제 스크립트 태그). `fontInfo(host).loaded`는 코어 CSS가 닿지 않으면 false다
 - 2026-10-14: 0.1.3 공개 전 탐색(api-3·api-4)으로 두 가지를 고쳤다. 첫 한 줄 설치 태그가 `data-autoload="false"`로 끈 필요할 때 받기를 뒤 태그가 다시 켜지 않는다. 받을 곳이 없는 등록되지 않은 `jamo-set` 경고는 `load` 직후가 아니라 가리개를 걷는 시간(3초) 뒤에 본다 — 타이머·fetch 뒤 `registerJamo`로 곧 등록할 세트에 틀린 경고를 냈다(우리 사이트 `sprite-demo`에서도).
+- 2026-10-18: 사용자 지시에 따라 gzip 강제 한도를 제거하고 측정 보고만 유지. 목표 크기는 추후 최적화 작업에서 정한다.
+- 2026-10-31: Change Log를 날짜 차례로 정렬(PLAN-DOCS-001 문서 정비)

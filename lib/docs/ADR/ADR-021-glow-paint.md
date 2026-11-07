@@ -62,3 +62,9 @@ Accepted
   `--fy-ink-visibility`를 함께 바꾸며, 칠을 검정으로 되돌릴 때 빛 `filter`도 끈다 — 빛 칠 상태 그대로의 기하를 잰다.
 - 자소판·벡터 재료는 빛 칠 대상이 아니다(그림 자소의 네온 꾸밈은 글자 묶음 `drop-shadow` 그대로).
 - 예전에 자모 `text-shadow`로 네온 빛을 바꾸던 페이지(사례 neon-sign, tty.link neon-bugs)는 `color`로 옮겼다.
+
+## Change Log
+- 2026-10-11: Accepted — 자른 획의 빛 끊김을 빛 칠(`--fy-font-glow`/`--fy-glow` → `data-fy-glow`, 글자는 `::before`, 자모 노드는 `filter`로 빛만)로 고쳤다
+- 2026-10-13: 결과 보강 — 빛 칠 글꼴에서 기기 글꼴 띠(`background-clip: text`)와 흰 심, `--fy-glow: none`이면 띠로 돌아감
+- 2026-10-21: 기기 글꼴 맞춤(`data-fy-face="device"`) 노드는 숨기지 않는다 — WebKit 그림자 트리의 선택 범위와 숨김을 물려받던 잎 고침. `visibility: hidden`은 잉크 상자 없는 빛 칠에만 남는다
+- 2026-10-31: Change Log 절을 더했다(PLAN-DOCS-001 문서 정비)

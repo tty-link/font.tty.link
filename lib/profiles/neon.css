@@ -282,11 +282,26 @@
 
 @layer font-kku.context {
 
-  :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄋ"], [data-fy-jamos~="ᄒ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
-    --fy-m-top: -14.12%;
-    --fy-m-clip: inset(46.9% -1em -1em -1em);
+  :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄋ"], [data-fy-jamos~="ᄒ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-top: -21.53%;
     --fy-mt-clip: inset(47.7% -1em -1em -1em);
+  }
+
+  :where([data-fy-font="neon"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄋ"] {
+    --fy-t-top: -20.2%;
+    --fy-t-scale-y: 1.229;
+  }
+  :where([data-fy-font="neon"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄒ"] {
+    --fy-t-top: -21.27%;
+    --fy-t-scale-y: 0.724;
+  }
+  :where([data-fy-font="neon"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄅ"] {
+    --fy-t-top: -23.94%;
+    --fy-t-scale-y: 0.797;
+  }
+  :where([data-fy-font="neon"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄐ"] {
+    --fy-t-top: -24.89%;
+    --fy-t-scale-y: 0.824;
   }
 
   :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄁ"], [data-fy-jamos~="ᄏ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
@@ -299,9 +314,8 @@
     --fy-mt-clip: inset(26.6% -1em -1em -1em);
   }
 
-  :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄁ"], [data-fy-jamos~="ᄏ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅭ"],
-  :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"] :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅩ"] {
-    --fy-m-clip: inset(47.4% -1em -1em -1em);
+  :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄁ"], [data-fy-jamos~="ᄏ"]) [data-fy-pos="mt"][data-jamo="ᅭ"],
+  :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"] [data-fy-pos="mt"][data-jamo="ᅩ"] {
     --fy-mt-clip: inset(47.5% -1em -1em -1em);
   }
 
@@ -312,8 +326,11 @@
     --fy-m-clip: inset(42.5% -1em -1em -1em);
   }
 
-  :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄅ"], [data-fy-jamos~="ᄐ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
-    --fy-m-clip: inset(46.8% -1em -1em -1em);
+  :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄏ"])[data-fy-at-m][data-fy-at-m="ᅭ"] [data-fy-pos="t"]:is([data-jamo="ᄀ"], [data-jamo="ᄏ"]) {
+    --fy-t-clip: inset(-1em -1em 48.6% -1em);
+  }
+  :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄏ"]) [data-fy-pos="m"][data-jamo="ᅭ"] {
+    --fy-m-clip: inset(42.5% -1em -1em -1em);
   }
 
   :where([data-fy-font="neon"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄁ"], [data-fy-jamos~="ᄏ"]) :is([data-fy-pos="tro"], [data-fy-pos="trc"])[data-jamo="ᅨ"] {

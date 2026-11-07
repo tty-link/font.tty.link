@@ -1432,7 +1432,8 @@
       "surfaces": ["base-css"],
       "level": "dispatch",
       "scope": "node",
-      "declaredBy": "core"
+      "declaredBy": "core",
+      "registered": { "syntax": "<length>", "inherits": false, "initialValue": "0px" }
     },
     {
       "name": "--fy-el-dpx",

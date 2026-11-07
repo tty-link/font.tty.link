@@ -31,11 +31,152 @@
     "sourceKind": "font",
     "designVersion": "2.0",
     "browser": "runtime measurement and existing font leaf path; inspect fontInfo().glyphMapping diagnostics",
-    "cssAuthoring": "page > tune > context > jamo > slot > parent slot > role > font; core content does not consume authored text",
+    "compoundPartMapping": {
+      "layouts": [
+        "sebul-fixed-v1",
+        "sebul-cases-v1"
+      ],
+      "requires": {
+        "designVersion": "2.0",
+        "designMode": "font",
+        "sourceKind": "font",
+        "structuredGlyphs": true,
+        "fixedMemberRegionsAndSkeleton": true
+      },
+      "targets": [
+        "head",
+        "whole-compound-vowel"
+      ],
+      "directWholeVowel": "one candidate drawing; no implicit member split",
+      "cssLiteralHead": "GLYPH_HEAD_UNSUPPORTED with original Hangul",
+      "cssLiteralWholeCompoundVowel": "see fixedCSSWholeVowelMapping and fixedCSSWholeVowelCandidateMapping; missing fixed member regions keeps GLYPH_LAYOUT_UNSUPPORTED with original Hangul",
+      "squareHead": "see measuredStructuredHeadMapping; CSS literal or unavailable measured regions keep GLYPH_HEAD_UNSUPPORTED with original Hangul",
+      "arbitraryAxisOrFeatureMismatch": "GLYPH_FONT_SETTINGS_UNSUPPORTED",
+      "staticAndFontExport": "unchanged original-Hangul fallback or explicit unsupported-output diagnostics"
+    },
+    "measuredStructuredHeadMapping": {
+      "layouts": [
+        "square-context-v1"
+      ],
+      "legacyUnprofiledSquare": true,
+      "target": "head",
+      "requires": {
+        "designVersion": "2.0",
+        "designMode": "font",
+        "sourceKind": "font",
+        "structuredGlyphs": true,
+        "existingHeadPartProbeAndSkeleton": true,
+        "validMeasuredMemberRegions": true
+      },
+      "hiddenHost": "defer until visible; no successful mapping claimed before measurement",
+      "pendingFont": "GLYPH_FONT_PENDING; remap with current fitted geometry after load",
+      "cssLiteralOrMissingMeasuredRegions": "GLYPH_HEAD_UNSUPPORTED with original Hangul",
+      "semantics": "original text, semantic jamo, seed indices, recipe/binding/path unchanged"
+    },
+    "explicitMaterialCSS": {
+      "api": "refreshAll(root, {materialCSS: true}) captures; false clears; omitted keeps the last capture",
+      "requires": [
+        "connected managed host",
+        "structured font design",
+        "existing material plan and valid measurement before drawing"
+      ],
+      "capturedProperties": [
+        "glyph-text",
+        "glyph-candidate"
+      ],
+      "paint": "normal CSS cascade; not frozen in the choice snapshot",
+      "selectors": [
+        "data-fy-material-jamo",
+        "data-fy-material-root",
+        "data-fy-material-role",
+        "data-fy-material-path",
+        "data-fy-material-source"
+      ],
+      "internalProbe": "data-fy-material-probe is temporary and is not a public selector contract",
+      "priority": "semantic direct value or none precedes captured visual-leaf choices; candidate locks and source rules remain",
+      "invalidatedBy": [
+        "source text",
+        "design/revision",
+        "font",
+        "layout/revision",
+        "depth",
+        "composition"
+      ],
+      "invalidationDiagnostic": "GLYPH_MATERIAL_CSS_INVALIDATED until explicit recapture or clear",
+      "disabledLeaf": "GLYPH_MATERIAL_CSS_DISABLED; original-Hangul fallback for the whole semantic jamo",
+      "hiddenConnectedHead": "CSS choice may be captured; GLYPH_HEAD_UNSUPPORTED remains until valid visible geometry exists",
+      "detachedHost": "connect and explicitly capture again; no deferred capture extension",
+      "pendingFont": "remeasure the last captured choice; old completion cannot restore a cleared or invalidated capture",
+      "semantics": "no new semantic jamo, seed index, saved design field or automatic DOM observation",
+      "unchangedUnsupported": [
+        "semantic CSS head literals; fixed whole candidate-only selection or missing regions",
+        "arbitrary axis/feature measurement mismatch",
+        "real stroke draw",
+        "static or font-file mapping output"
+      ]
+    },
+    "cssAuthoring": "page > tune > syllable > context > case > jamo > slot > parent slot > role > font; core content does not consume authored text (ADR-035)",
     "staticCss": "original Hangul without JavaScript; arbitrary external CSS cannot be diagnosed by static renderers",
     "structuredOutput": "authoring Glyphs.capability refuses unsupported targets; FontKkuExport refuses glyph mapping designs before output",
     "semantics": "original text, semantic jamo nodes and seed indices preserved",
-    "oldHangul": "existing symbol fallback unchanged; no historical rendering support added"
+    "oldHangul": "existing symbol fallback unchanged; no historical rendering support added",
+    "fixedCSSWholeVowelMapping": {
+      "layouts": [
+        "sebul-fixed-v1",
+        "sebul-cases-v1"
+      ],
+      "target": "whole-compound-vowel",
+      "requires": {
+        "effectiveSemanticCSSSelection": "single quoted text",
+        "validFixedMemberRegionsAndSkeleton": true
+      },
+      "requiresDesign": false,
+      "source": "computed CSS font without a design; existing whole direct request source when a design applies",
+      "renderUnit": "one whole direct material request and measurement; existing glyphFit may use multiple clipped paint cells, not one DOM leaf",
+      "priority": "existing semantic CSS precedence and candidate-first parser; semantic choice precedes D16 visual capture",
+      "candidateOnly": "see fixedCSSWholeVowelCandidateMapping for effective whole candidate IDs; candidate:none disables both candidate and text with original Hangul and no mapping error",
+      "none": "unquoted none disables with original Hangul and no mapping error; quoted none is literal text",
+      "invalidOrEmptyInk": "existing GLYPH_TEXT_INVALID or GLYPH_MEASUREMENT_UNAVAILABLE",
+      "missingRegions": "GLYPH_LAYOUT_UNSUPPORTED with original Hangul",
+      "pendingOrFailedFont": "existing current-request GLYPH_FONT_PENDING/GLYPH_FONT_LOAD_FAILED and replacement retry; old completion cannot restore removed choices",
+      "unchangedUnsupported": [
+        "semantic CSS head literals",
+        "arbitrary axis/feature measurement mismatch",
+        "static or font-file mapping output"
+      ],
+      "semantics": "original source, semantic jamo, seed indices, direct path and saved design unchanged"
+    },
+    "fixedCSSWholeVowelCandidateMapping": {
+      "layouts": [
+        "sebul-fixed-v1",
+        "sebul-cases-v1"
+      ],
+      "target": "whole-compound-vowel",
+      "requires": {
+        "effectiveSemanticCSSSelection": "candidate ID",
+        "validFixedMemberRegionsAndSkeleton": true,
+        "designVersion": "2.0",
+        "designMode": "font",
+        "sourceKind": "font",
+        "matchingWholeGlyphMapping": true
+      },
+      "candidateId": "existing readIdent and ^[A-Za-z0-9][A-Za-z0-9._-]*$ ID syntax; a numeric token is an ID, never an array index",
+      "lookup": "existing whole direct request source, compatibility root jamo, rootRole medial and path []; role-specific entry precedes generic; no member recipe inference or cross-source borrowing",
+      "priority": "existing locked mapping before explicit candidate ID, then existing seed/selected/default; effective candidate precedes text and D16 capture",
+      "none": "candidate:none disables both candidate and text with original Hangul and no mapping error",
+      "missing": "GLYPH_CANDIDATE_MISSING and whole semantic-jamo fallback for missing design, whole glyph mapping, source/role match or candidate ID; locked selection can override the explicit ID",
+      "invalidRegistration": "mapping candidates[] and other invalid glyph mappings remain DESIGN_GLYPHS_INVALID registration failures",
+      "renderUnit": "one whole direct material request and measurement; existing glyphFit may use multiple clipped paint cells, not one DOM leaf",
+      "missingRegions": "GLYPH_LAYOUT_UNSUPPORTED with original Hangul",
+      "emptyInk": "GLYPH_MEASUREMENT_UNAVAILABLE",
+      "pendingOrFailedFont": "existing current-request GLYPH_FONT_PENDING/GLYPH_FONT_LOAD_FAILED and replacement retry; old completion cannot restore removed choices",
+      "unchangedUnsupported": [
+        "semantic CSS head selections",
+        "arbitrary axis/feature measurement mismatch",
+        "static or font-file mapping output"
+      ],
+      "semantics": "original source, semantic jamo, seed indices, direct path and saved design unchanged"
+    }
   },
   "implementations": {
     "browser": {

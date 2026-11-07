@@ -930,21 +930,6 @@
   gap: 4px 12px;
 }
 
-/* 글꼴 모양을 통째로 바꾸기 전에 묻는 칸(2026-10-18 검토 D5) */
-.studio-target-confirm {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 8px;
-  padding: 6px 8px;
-  border: 1px solid var(--studio-seal);
-  border-radius: 8px;
-  background: var(--studio-seal-soft);
-}
-
-.studio-target-confirm p {
-  flex-basis: 100%;
-}
-
 /* 바뀔 곳 수(2026-10-18 검토 D4) */
 .studio-affected-count {
   color: var(--studio-accent);

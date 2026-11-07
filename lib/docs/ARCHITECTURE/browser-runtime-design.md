@@ -1,7 +1,8 @@
 # 브라우저 런타임 설계
 
-> Status: Implemented
-> Scope: 유니코드 클라이언트 재작성의 런타임 계약
+> 상태: 현행 · 마지막 갱신 2026-10-31 · 관련 결정: [ADR-002](../ADR/ADR-002-option-priority-contract.md)·[ADR-003](../ADR/ADR-003-accessibility-contract.md)·[ADR-005](../ADR/ADR-005-font-alias-normalization-and-gating.md)·[ADR-008](../ADR/ADR-008-font-contract-v2.md)·[ADR-019](../ADR/ADR-019-load-on-demand.md)·[ADR-020](../ADR/ADR-020-rendering-boundaries-and-recovery.md)·[ADR-024](../ADR/ADR-024-hangul-principle-rendering.md)·[ADR-025](../ADR/ADR-025-hangul-composition-design.md)·[ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md)·[ADR-034](../ADR/ADR-034-composition-modes.md)
+>
+> 요약: 브라우저 런타임(`font-kku.js`·`font-kku.css`)의 공개 계약 — 설치와 자동 시작, 옵션 정규화, 명령형 API, 그리기 이벤트, 갱신 경계, 로딩 실패 복구, 글꼴 모양·재료·디자인 고르기, 짓는 방식. 타입 정본은 `font-kku.d.ts`, 확정 DOM 정본은 `spec/html-cases.json`이다.
 
 ## 목표
 
@@ -9,15 +10,13 @@
 
 ## 기본 사용 형태
 
-가장 단순한 사용 형태는 아래다.
+가장 단순한 사용 형태는 한 줄 설치다. 런타임이 스크립트 주소를 기준으로 `font-kku.css`와 `data-fonts`에 적은 글꼴 CSS를 붙이고, 적지 않은 글꼴은 필요할 때 받는다(아래 '자동 시작'과 [ADR-019](../ADR/ADR-019-load-on-demand.md)). `<link>`로 CSS를 직접 실어도 된다.
 
 ```html
-<link rel="stylesheet" href="./font-kku.css" />
-<link rel="stylesheet" href="./profiles/sebul.css" />
-<script src="./font-kku.js"></script>
+<script src="./font-kku.js" data-fonts="sebul"></script>
 
-<font-kku>안녕하세요</font-kku>
-<font-kku font="sebul" size="24">광화문</font-kku>
+<font-kku>안녕하세요</font-kku>                       <!-- 글꼴을 비움: sebul을 세벌식 모양으로 -->
+<font-kku font="sebul" size="24">광화문</font-kku>    <!-- sebul을 밝힘: 네모꼴(문맥) 배치 -->
 
 <span class="font-kku" data-font="sebul">안녕하세요</span>
 <div class="font-kku" data-font="sebul" data-wrap-unit="word">광화문 광장</div>
@@ -68,6 +67,8 @@
 - `data-fy-expression="sebeol|general"`
 - `data-fy-material`, `data-fy-sprite-kinds` (글꼴의 `--fy-material`이 `system`이 아닐 때만)
 - `data-fy-jamo-seeds="true"` (`jamo-seeds`를 켰을 때만 — 기본 DOM 계약 `spec/html-cases.json`에는 나타나지 않는다)
+- `data-fy-vowel-depth`, `data-fy-coda-depth` (고른 음절 나누기)
+- `data-fy-layout`, `data-fy-face`, `data-fy-design`, `data-fy-composition`과 각 `-status`, `data-fy-jamo-set`·`data-fy-jamo-set-status`, `data-fy-stroke-depth` (고른 것이 있을 때만 — 아래 '글꼴 모양·재료·디자인'과 '짓는 방식')
 
 `data-fy-expression`은 입력 옵션이 아니라 글꼴 CSS의 `--fy-expression-mode`를 런타임이 정규화해 노출하는 출력 속성이다. 전용 태그는 입력이 일반 속성이라 충돌하지 않으므로, 정규화한 값을 되비추는 기존 `data-font`/`data-profile`/`data-size`/`data-wrap-unit`/`data-animate`/`data-seed` 사본도 호환용으로 유지한다. CSS 적용 조건(게이팅)과 진단의 정본은 `data-fy-*`다.
 
@@ -78,6 +79,7 @@
 - 우선순위: **속성(또는 `data-*`)이 지속되는 옵션의 출처다.** `refresh()`와 모든 자동 다시 그리기(속성 변경, 원문 변경, 늦게 도착한 글꼴 CSS의 재해석)는 매번 속성을 다시 읽고, JS 옵션(`render`/`refresh`의 `options`)은 해당 호출 1회에만 적용된다. 같은 호출 안에서는 JS 옵션 > 속성 > 기본값. JS 옵션의 `undefined`·`null`·빈 문자열은 "지정 안 함"이라 속성 값으로 돌아간다. ([ADR-002](../ADR/ADR-002-option-priority-contract.md))
 - 예외 하나: 바탕 요소가 분리(detached)된 상태에서 한 그리기는 글꼴 스타일을 해석하지 못한 채 끝난다. 연결될 때 그 해석을 마치는 다시 그리기는 **같은 호출의 완료**라 그 호출의 JS 옵션을 그대로 쓴다(아래 요소 생애 주기).
 - `font`: 별칭을 정규화한 뒤(`default`/`classic`→`sebul`, `gothic2`→`gothic`) 바탕 요소의 `data-fy-font`/`data-fy-profile`에 기록하고, 정본 `data-fy-font`로 CSS 적용 범위를 건다. 사용자가 쓴 원본 속성/`data-*`는 건드리지 않는다. ([ADR-005](../ADR/ADR-005-font-alias-normalization-and-gating.md))
+  - 글꼴을 밝히지 않으면(속성·JS 옵션 모두 없거나 빈 문자열) 기본 글꼴 `sebul`을 쓰고 글꼴 모양은 세벌식 `sebul-cases-v1`이다. 이름을 밝히면(별칭 포함) 그 글꼴 CSS가 정한 모양이다 — `sebul`은 네모꼴(문맥) 배치다. 판정은 `fontExplicit = Boolean(authoredFont)`다([ADR-028](../ADR/ADR-028-sebeol-cases-and-jikgyeol.md), 아래 '글꼴 모양·재료·디자인').
 - `profile`: `font`의 하위 호환 별칭. 입력으로 읽지만 바탕 요소 계약은 `font` 기준으로 정규화한다.
 - `expression mode`: 글꼴 CSS가 `--fy-expression-mode`로 선언하며, 런타임은 이를 `data-fy-expression="sebeol|general"`으로 정규화한다.
 - `size` / `data-size`:
@@ -105,7 +107,7 @@ window.FontKku.refresh(target, options?)
 window.FontKku.refreshAll(root?)
 window.FontKku.loadFont(href, { root }?)  // Promise<HTMLElement[]>
 window.FontKku.retryFont(host)     // HTMLElement | null, 현재 주소의 자동 로딩 재시도
-window.FontKku.fontInfo(host)      // { font, id, contract, material, face, design, designStatus, layout, loaded } | null
+window.FontKku.fontInfo(host)      // FontInfo | null — 아래 '글꼴 모델'
 window.FontKku.upgrade(target)
 window.FontKku.upgradeAll(root?)
 window.FontKku.decomposeGlyph(char)
@@ -114,20 +116,43 @@ window.FontKku.isHangulSyllable(char)
 window.FontKku.renderText(text)
 window.FontKku.hashSeed(value)
 window.FontKku.applyJamoSeeds(target, options?)
+window.FontKku.sourceRange(host, range)  // { start, end, text } | null — 고른 범위의 원문(ADR-003)
+window.FontKku.hasHangulFont(options?)   // boolean | null — 기기 글꼴로 한글을 그릴 수 있는지(ADR-012)
+
+// 그림 세트(ADR-013)
 window.FontKku.registerJamo(name, cells, options?)
 window.FontKku.jamoSets()
-window.FontKku.registerDesign(name, design, { replace }?)  // 실험(ADR-025) — 첫 검사 오류를 code·path와 함께 던진다
+
+// 디자인(ADR-025, 실험)
+window.FontKku.registerDesign(name, design, { replace }?)  // 첫 검사 오류를 code·path와 함께 던진다
 window.FontKku.validateDesign(design)                      // { ok, errors: [{ code, path, message }] } — 던지지 않고 등록하지 않는다
 window.FontKku.unregisterDesign(name)                      // boolean — 그 이름을 고른 바탕 요소는 DESIGN_NOT_REGISTERED로 다시 그린다
-window.FontKku.placementTable
+window.FontKku.designs()                                   // 등록된 디자인 이름
+window.FontKku.planJamo(jamo, options?)                    // 자모 하나의 조립 계획과 출처 기록(그리지 않음)
+window.FontKku.traceOf(host)                               // 그린 자모 노드마다 조립 기록 | null
+window.FontKku.stagePreview(set, stage)                    // 원형 8·기본 24·확장 40 단계 미리보기 디자인 JSON(등록하지 않음)
+window.FontKku.authoringProgress(target)                   // 그림 세트의 단계별 그린 자모·남은 자모
+
+// 글꼴 모양과 짓는 방식(ADR-026·028·030·034·035)
+window.FontKku.layoutProfiles          // 글꼴 모양 표(spec/layout-profiles.json에서 생성, 얼린 사본)
+window.FontKku.layoutStability(host)   // 고정 글꼴 모양이 그린 결과에서도 지켜지는지 { stable, drifted, … }
+window.FontKku.compositionPresets      // 짓는 방식 프리셋 표와 조각 깊이별 조립식(얼린 사본)
+window.FontKku.resolveComposition(input)  // 짓는 방식 차례 풀기(순수 함수)
+window.FontKku.splitFit(node)          // 네모꼴 나누기 맞춤이 옮긴 노드의 두 잉크 상자 | null
+
+// 배치 표
+window.FontKku.placementTable          // atomic 표(기존 이름 호환)
+window.FontKku.placementTables         // 깊이별 표
 window.FontKku.version
 ```
+
+목록의 정본은 `font-kku.d.ts`의 `API`다. 확장 모듈은 따로다 — 상호작용 `font-kku-fx.js`([움직임과 런타임 변주](./animation-and-variation.md)), 입력기 `font-kku-ime.js`(아래 '확장 모듈'), 글꼴 파일 내보내기 `font-kku-export.js`([ADR-015](../ADR/ADR-015-font-file-export.md)).
 
 `hashSeed`/`applyJamoSeeds`의 옵션 상세(`{ property, salt, hash }`)와 세그먼트 순번 인라인 변수 계약은 [움직임과 런타임 변주](./animation-and-variation.md)가 정본이다.
 
 ### 3. 그리기 이벤트
 
-모든 그리기(명시적 호출과 자동 다시 그리기) 뒤에 바탕 요소에서 `font-kku:render` `CustomEvent`가 발생한다(`bubbles: true`, `composed: true`). 원문·구조 변경과 명시적 `render`/`refresh`는 관리 DOM을 다시 만든다. 크기·간격·움직임 등 비구조 속성만 바뀌는 자동 갱신은 기존 노드를 유지한다. 벡터 행 변경의 재료 갱신은 SVG만 바꾼다. 후처리는 이 이벤트에서 멱등하게 적용하며, 모든 이벤트가 전체 노드 교체라는 가정은 하지 않는다.
+모든 그리기(명시적 호출과 자동 다시 그리기) 뒤에 바탕 요소에서 `font-kku:render` `CustomEvent`가 발생한다(`bubbles: true`, `composed: true`). 예외는 웹 글꼴을 받은 뒤의 다시 맞추기(refit, [ADR-023](../ADR/ADR-023-device-face-fit.md) §5)와 떼었다 붙인 바탕 요소의 따라잡기다 — 기기 글꼴 맞춤 값·나누기 맞춤 잎·글자 후보와 진단 속성만 바꾸고 사건은 내지 않는다(결정 D22, 2026-11-06: 글꼴이 정착할 때마다 바탕 요소 수만큼 사건이 느는 비용을 받지 않는다. 그 변화가 필요한 페이지는 글꼴이 정착한 뒤 `refreshAll`을 부른다). 원문·구조 변경과 명시적 `render`/`refresh`는 관리 DOM을 다시 만든다. 크기·간격·움직임 등 비구조 속성만 바뀌는 자동 갱신은 기존 노드를 유지한다. 벡터 행 변경의 재료 갱신은 SVG만 바꾼다. 후처리는 이 이벤트에서 멱등하게 적용하며, 모든 이벤트가 전체 노드 교체라는 가정은 하지 않는다.
 
 ```js
 document.addEventListener("font-kku:render", (event) => {
@@ -136,10 +161,10 @@ document.addEventListener("font-kku:render", (event) => {
 });
 ```
 
-- `reason`: `render`(`FontKku.render`) · `refresh`(`FontKku.refresh`) · `upgrade`(`upgrade`/`upgradeAll`/`bootstrap`의 첫 그리기) · `connect`(전용 태그 연결, 분리 상태 그리기의 연결 시 해석, 이동 뒤 재확인) · `attribute`(옵션 속성 변경) · `mutation`(원문 변경) · `restyle`(늦게 도착한 글꼴 CSS, `refreshAll`, `loadFont`, display: none 안에서 그려진 원소·SVG 바탕 요소가 보여 굵기·머리 음절을 다시 맞춤)
+- `reason`: `render`(`FontKku.render`) · `refresh`(`FontKku.refresh`) · `upgrade`(`upgrade`/`upgradeAll`/`bootstrap`의 첫 그리기) · `connect`(전용 태그 연결, 분리 상태 그리기의 연결 시 해석, 이동 뒤 재확인) · `attribute`(옵션 속성 변경) · `mutation`(원문 변경) · `restyle`(늦게 도착한 글꼴 CSS, `refreshAll`, `loadFont`, display: none 안에서 그려진 원소·SVG 바탕 요소가 보여 굵기·머리 음절을 다시 맞춤, OS 움직임 줄이기 설정이 바뀌어 그림 자소 바탕 요소의 칠·칸을 다시 맞춤)
 - `font`: 그리기에 쓰인 정규화된 글꼴 이름, `source`: 원문
 - `resolved`: `false`면 바탕 요소가 분리된 상태에서 그려져 글꼴 스타일을 아직 해석하지 못했다(연결 시 해석되고, 결과가 다르면 `connect` 그리기가 한 번 더 온다).
-- 글꼴 id/contract처럼 DOM을 바꾸지 않는 메타데이터만 바뀐 재해석은 그리기가 아니므로 이벤트가 없다(`fontInfo()`만 갱신).
+- 글꼴 id/contract처럼 DOM을 바꾸지 않는 메타데이터만 바뀐 재해석은 그리기가 아니므로 이벤트가 없다(`fontInfo()`만 갱신). 그림 자소 칠(`--fy-sprite-paint`)만 바뀐 재해석은 관리 DOM을 그대로 두고 표시(`data-fy-sprite-paint`)와 칸만 고치지만 그림이 바뀌므로 `restyle`을 낸다.
 - 여러 바탕 요소를 한 번에 그리면 일괄 처리(batch)의 모든 쓰기가 끝난 뒤 바탕 요소 순서대로 발생한다. 리스너에서 바탕 요소 속성을 바꾸면 그 변경은 다음 자동 다시 그리기가 된다.
 - 일괄 처리의 차례: 관리 트리를 모두 넣은 뒤(`commitRenderJob`) 머리 음절 2층 재귀(`fitHeadSyllables` — 원소·SVG 재료의 음절 깊이 머리를 그 글꼴의 받침 없는 음절을 재서 옮긴다, ADR-024 §2) → 원소 굵기 보정(`balanceElementStrokes` — slot 배율 되돌림과 밀도 굵기 계수 `--fy-el-density`, ㅎ·ㅊ 꼭지 틈 열기, ADR-024 §3) → 벡터 칠(`paintVectorJamo`) → 이벤트. 앞의 둘은 일괄 처리마다 배치 계산(layout)을 한 번 강제한다. 머리 재귀는 재는 동안 관리 root 안에 숨은 시험 음절(`data-fy-probe`)을 넣었다 같은 동기 구간에 빼고, 그 삽입·삭제 기록은 바탕 요소의 `MutationObserver`에서 걷어 낸다(그 앞에 쌓인 기록은 마이크로태스크로 그대로 넘긴다). 스타일만 바뀐 재해석(`refreshAll`·클래스 변경)도 다시 그리지 않은 바탕 요소에 이 둘을 다시 한다 — 글꼴 CSS를 고치면 같은 노드가 따라온다.
 - 그려지지 않은 바탕 요소(첫 음절 상자에 화면 상자가 없다 — display: none 안)는 변환을 읽을 수 없어 굵기 보정·머리 재귀를 미루고 첫 음절 상자를 `ResizeObserver`로 지켜본다. 상자가 생기면 둘을 다시 하고 `restyle`을 낸다. `ResizeObserver`가 없으면 예전처럼 기준 굵기·뼈대 쌓기 머리로 남는다.
@@ -151,7 +176,7 @@ document.addEventListener("font-kku:render", (event) => {
 - 동적 콘텐츠 삽입 후 수동 업그레이드 지원
 - 테스트와 디버깅 단순화
 - 평문 모드 / 씨앗값 도우미 함수 / 분해 결과를 살펴보는 경로 제공
-- 런타임이 실제 쓰는 9개 배치 항목을 동결된 방어적 복사본으로 살펴보고 `spec/tables.json`과 대조할 수 있는 경로 제공
+- 런타임이 실제 쓰는 배치 항목을 동결된 방어적 복사본으로 살펴보고 `spec/tables.json`과 대조할 수 있는 경로 제공
 
 ## 런타임 계약
 
@@ -163,7 +188,8 @@ document.addEventListener("font-kku:render", (event) => {
 - DOM 준비 후 기본 선택자 `.font-kku`를 대상으로 자동 업그레이드를 수행한다.
 - 이미 등록된 경우 중복 정의를 피한다.
 
-- **한 줄 설치**: `data-fonts` 속성이 있는 일반 `<script>`로 로드되면 스크립트 주소 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 `loadFont`로 붙인다. 이름은 `font` 속성과 같은 규칙으로 정규화하고, 파일 이름 없는 CDN 짧은 주소는 패키지 폴더로 본다. CSS가 도착(또는 실패)할 때까지 `style[data-font-kku-loader]`가 관리 root를 가리고 늦어도 3초 뒤 걷는다. `document.currentScript`가 없는 ESM에서는 동작하지 않는다([ADR-010](../ADR/ADR-010-derived-fonts-and-script-loader.md)).
+- **한 줄 설치**: `data-fonts` 속성이 있는 일반 `<script>`로 로드되면 스크립트 주소 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 `loadFont`로 붙인다. 이름은 `font` 속성과 같은 규칙으로 정규화하고, 파일 이름 없는 CDN 짧은 주소는 패키지 폴더로 본다. CSS가 도착(또는 실패)할 때까지 `style[data-font-kku-loader]`가 관리 root를 가리고 늦어도 3초 뒤 걷는다. `document.currentScript`가 없는 ESM에서는 동작하지 않는다([ADR-010](../ADR/ADR-010-derived-fonts-and-script-loader.md)). `data-addons="looks motion fx"`는 같은 자리의 확장을, `data-jamo-sets`는 그림 세트 모듈을 함께 붙인다.
+- **필요할 때 받기**([ADR-019](../ADR/ADR-019-load-on-demand.md)): 한 줄 설치(`data-fonts`·`data-addons`·`data-jamo-sets` 중 하나가 있는 태그)로 실렸거나 `FontKkuConfig.fontBase`가 있으면, 아직 받지 않은 글꼴을 쓰는 바탕 요소가 화면 가까이(위아래 800px) 올 때 `profiles/<글꼴>.css`를, 등록되지 않은 그림 세트는 `profiles/<세트>.jamo.js`를 받는다. 받는 동안 바탕 요소에 `data-fy-font-pending`을 단다. 끄려면 `data-autoload="false"` 또는 `FontKkuConfig.autoload = false`다. 실패와 다시 받기는 아래 '로딩 실패의 격리와 복구'. `data-fonts` 없는 일반 `<script>`는 받을 자리를 모르므로 받지 않는다.
 
 자동 등록/문서 스캔이 필요 없는 사용처는 런타임을 불러오기 전에
 `globalThis.FontKkuConfig = { bootstrap: false }`를 설정한다. 이 끄기 설정은
@@ -180,14 +206,14 @@ document.addEventListener("font-kku:render", (event) => {
 | 첫 업그레이드·첫 연결·첫 `render()` | 원문을 읽고 글자·자모 트리를 생성 | 새로 생성 |
 | 원문 텍스트 변경 | 변경된 원문 전체를 모델로 만들고 관리 트리를 교체 | 다시 생성 |
 | 정규화된 `font`·`jamo-set`·획 깊이 변경 | 새 옵션과 CSS로 트리를 구성 | 다시 생성 |
-| CSS 표현 모드·자모 깊이·재료·지원 자모 종류·마스크 칠·획 깊이 변경 | 스타일을 다시 해석하고 구조 갱신 | 다시 생성 |
+| CSS 표현 모드·음절 나누기·재료·지원 자모 종류·마스크 칠·획 깊이 변경 | 스타일을 다시 해석하고 구조 갱신 | 다시 생성 |
 | `size`·`spacing`·`wrap-unit`·`animate`의 자동 속성 갱신 | 아래 보존 조건이 맞으면 바탕 요소의 확정 속성·CSS 변수 갱신 | 유지 |
 | `refreshAll()`에서 `--fy-sprite-row` 변경 발견 | 선택된 벡터 칸이 달라진 자모의 SVG만 교체·추가·제거 | 자모까지 유지, 해당 SVG는 바뀔 수 있음 |
 | `refreshAll()`에서 글꼴 id/contract만 변경 | `fontInfo()`에 쓰는 상태 갱신 | 유지, 렌더 이벤트 없음 |
 | 색·위치 등 CSS가 직접 처리하는 값만 변경 | 브라우저가 기존 노드의 스타일을 적용 | 런타임 트리 재생성 없음 |
 | 명시적 `render(host, options)`·`refresh(host, options)` | 크기만 전달해도 전체 그리기 파이프라인 실행 | 다시 생성 |
 
-속성 갱신의 보존 조건은 원문·정규화 글꼴·자모 세트·명시/계산된 획 깊이·표현 모드·자모 깊이·재료 메타데이터·씨앗값·자모 씨앗 옵션이 직전과 같고 관리 root가 남아 있는 것이다. 단순히 속성 이름이 `size`라는 이유만으로 항상 재사용하지는 않는다. `seed="auto"`/`"random"`이 다시 해석되거나, 직전 호출의 일회성 JS 옵션에서 속성 값으로 돌아가거나, 움직임에 따른 CSS가 획 구조를 바꾸면 전체 갱신이 필요할 수 있다.
+속성 갱신의 보존 조건은 원문·정규화 글꼴·자모 세트·명시/계산된 획 깊이·표현 모드·음절 나누기·재료 메타데이터·씨앗값·자모 씨앗 옵션이 직전과 같고 관리 root가 남아 있는 것이다. 단순히 속성 이름이 `size`라는 이유만으로 항상 재사용하지는 않는다. `seed="auto"`/`"random"`이 다시 해석되거나, 직전 호출의 일회성 JS 옵션에서 속성 값으로 돌아가거나, 움직임에 따른 CSS가 획 구조를 바꾸면 전체 갱신이 필요할 수 있다.
 
 전용 태그의 속성 변경은 기존처럼 동기로 반영한다. 클래스 방식의 `data-*` 변경은 `MutationObserver`가 전달할 때 반영한다. 여러 `setAttribute`를 하나의 새 비동기 배치로 합치는 기능은 추가하지 않았다. 기존 `render(host, { size, spacing, animate })`는 세 옵션을 한 호출에 적용하지만 **전체 그리기 한 번**이며, 값은 그 호출에만 적용된다. 지속 설정은 속성에 쓴다.
 
@@ -242,11 +268,14 @@ document.addEventListener("font-kku:render", (event) => {
 - 문서가 아직 파싱 중(`document.readyState === "loading"`)이고 자식이 없는 전용 태그 — `<head>`에서 `FontKku.define()`을 부른 뒤 파서가 만든 바탕 요소 — 는 자식 텍스트가 오기 전이라 그리기를 `DOMContentLoaded`까지 미룬다.
 - 원문 텍스트나 트리를 결정하는 옵션이 바뀌면 관리 DOM 전체를 다시 생성한다. 비구조 옵션만 바뀌고 위 보존 조건이 맞으면 기존 관리 DOM에 바탕 요소 설정만 반영한다. 관리 root·`sr-source` 옆에 새로 들어온 텍스트/요소 자식(`host.append("추가")`, 파서가 늦게 넣은 텍스트)은 새 입력이라 문서 순서대로 원문에 합쳐진다. 관리 root 안쪽(생성된 자모 노드)의 변경은 원문 변경이 아니다.
 - 연결이 끊긴 전용 태그는 observer를 끄고, 다시 연결될 때 그동안 바뀐 속성·원문을 비교해 반영한다. 바뀐 게 없으면(단순 이동) 새 위치의 스타일을 다음 프레임에 다른 바탕 요소와 함께 한 번에 확인하고, 구조가 달라졌을 때만 다시 그린다.
-- **분리 상태 그리기.** 분리된(detached) 요소는 computed style이 비어 깊이(depth)·expression mode·재료를 읽을 수 없다. 이런 그리기는 "미해석"으로 표시되고, 같은 글꼴로 이미 해석한 적이 있으면 그 구조를 그대로 쓴다(가상 리스트가 분리한 행의 텍스트를 바꿔 재사용해도 모양이 유지된다). 바탕 요소가 연결되면 해석을 마치고, 결과가 다르면 같은 호출의 옵션으로 한 번 더 그린다(`font-kku:render` reason `connect`). 전용 태그는 `connectedCallback`에서 동기로 처리한다. 클래스 방식은 생애 주기 콜백이 없어, 미해석 바탕 요소가 있는 동안만 문서(와 바탕 요소가 그려진 적 있는 shadow root)의 삽입을 보는 `MutationObserver` 하나와 다음 화면 프레임 확인으로 처리한다. 미해석 바탕 요소는 약하게(WeakRef) 잡고, 남은 게 없으면 observer를 끊는다. `refreshAll()`도 연결된 미해석 바탕 요소를 해석한다.
+- **분리 상태 그리기.** 분리된(detached) 요소는 computed style이 비어 깊이(depth)·expression mode·재료를 읽을 수 없다. 이런 그리기는 "미해석"으로 표시되고, 같은 글꼴로 이미 해석한 적이 있으면 그 구조를 그대로 쓴다(가상 리스트가 분리한 행의 텍스트를 바꿔 재사용해도 모양이 유지된다). 바탕 요소가 연결되면 해석을 마치고, 결과가 다르면 같은 호출의 옵션으로 한 번 더 그린다(`font-kku:render` reason `connect`). 전용 태그는 `connectedCallback`에서 동기로 처리한다. 클래스 방식은 생애 주기 콜백이 없어, 미해석 바탕 요소(와 아래의 따라잡을 바탕 요소)가 있는 동안만 문서(와 바탕 요소가 그려진 적 있는 shadow root)의 삽입을 보는 `MutationObserver` 하나와 다음 화면 프레임 확인으로 처리한다. 미해석 바탕 요소는 약하게(WeakRef) 잡고, 남은 게 없으면 observer를 끊는다. `refreshAll()`도 연결된 미해석 바탕 요소를 해석한다.
+- **떼어 둔 채 받은 웹 글꼴.** 웹 글꼴을 받아 다시 잴 때([ADR-023](../ADR/ADR-023-device-face-fit.md) §5) 떨어져 있던 바탕 요소는 기기 글꼴 나누기 맞춤과 글자 후보를 다시 하지 못한다(computed style이 비어 있다). 전용 태그는 연결 확인이 고친다. 클래스 방식은 그런 일이 남은 것(기기 글꼴 나누기 맞춤·미룬 맞춤, 글자 후보 결과가 있는 것)만 약하게 잡아 같은 observer로 다시 붙기를 기다린다. 이때 observer 콜백은 다음 화면 프레임 확인만 걸고, 그 프레임(그리기 앞)에 건너뛴 두 맞춤만 다시 한다. 붙어 있던 바탕 요소가 다시 잴 때 받는 일과 같아서, 스타일 다시 해석·다시 그리기·`font-kku:render`는 없다. 떼어 둔 채 살아 있는 동안 DOM이 바뀌면 프레임마다 목록을 한 번 훑는다.
+- **떨어진 채 옮겨 가는 꾸밈.** 위 observer는 그림자 경계를 넘지 못한다. 그래서 기다리는 꾸밈(미해석·따라잡을 바탕 요소)이 떨어져 있는 동안만 창마다 하나인 `IntersectionObserver`로 함께 지켜본다. 처음 보는 shadow root에 붙어 상자가 생기면 부르고, 콜백은 그린 뒤에 오므로 한 프레임은 고치기 전 모습일 수 있다. display: none 안에서 맞춤을 미룬 꾸밈이 떨어지면 미룬 상자를 놓지 않고 상자마다 제 `ResizeObserver`로 옮겨, 돌아와 보이면 맞춘다(`restyle`). 이미 붙어서 그린 꾸밈을 처음 보는 root로 옮기는 경우는 지켜보지 않으므로 `refreshAll`이 필요하다.
 - 명시적 갱신이 필요하면 `refresh()`로 같은 전체 그리기 파이프라인 실행
-- **글꼴 CSS 재해석(restyle).** 글꼴 CSS가 첫 그리기 뒤에 도착하면 stylesheet `load` 이벤트(capture 단계)에서 깊이·expression mode·글꼴 메타데이터(`--fy-font-id`, `--fy-contract`, `--fy-material`, `--fy-sprite-kinds`)를 직전 그리기의 글꼴로 다시 해석한다. DOM 구조를 바꾸는 값(expression mode, 깊이, 재료)이 달라진 바탕 요소만 다시 그리고, 이 다시 그리기는 다른 자동 경로와 같이 속성을 다시 읽는다 — 직전 호출의 JS 옵션은 승계되지 않고(ADR-002), 속성 원문이 그대로인 씨앗값만 해석값을 유지한다. 글꼴 id/contract만 달라졌으면 DOM을 다시 만들지 않고 `fontInfo()` 상태만 갱신한다. 상관없는 stylesheet가 로드돼도 구조가 그대로인 바탕 요소는 건드리지 않는다.
+- **글꼴 CSS 재해석(restyle).** 글꼴 CSS가 첫 그리기 뒤에 도착하면 stylesheet `load` 이벤트(capture 단계)에서 깊이·expression mode·글꼴 메타데이터(`--fy-font-id`, `--fy-contract`, `--fy-material`, `--fy-sprite-kinds`)를 직전 그리기의 글꼴로 다시 해석한다. DOM 구조를 바꾸는 값(expression mode, 깊이, 재료)이 달라진 바탕 요소만 다시 그리고, 이 다시 그리기는 다른 자동 경로와 같이 속성을 다시 읽는다 — 직전 호출의 JS 옵션은 승계되지 않고(ADR-002), 속성 원문이 그대로인 씨앗값만 해석값을 유지한다. 글꼴 id/contract만 달라졌으면 DOM을 다시 만들지 않고 `fontInfo()` 상태만 갱신한다. 그림 자소 칠(`--fy-sprite-paint` — 꾸밈 `kku-look-*` 클래스, 페이지 값, 움직임 확장의 cycle·shine 마스크 칠)만 달라졌으면 다시 그리지 않고 그 자리에서 `data-fy-sprite-paint`와 칸을 고친 뒤 `restyle`을 낸다 — 관리 DOM과 직전 호출의 JS 옵션이 그대로다. 상관없는 stylesheet가 로드돼도 구조가 그대로인 바탕 요소는 건드리지 않는다.
+- **움직임 줄이기 설정 바꿈.** 움직임 확장의 cycle·shine 마스크 칠은 `prefers-reduced-motion: no-preference`에서만 걸린다. 창마다 하나인 `matchMedia` 수신기가 설정이 바뀌면 그림 자소 바탕 요소의 칠을 다시 읽어, 칠이 바뀐 것만 위 재해석에 넘기고(칠만 고친다) 나머지는 칸만 다시 칠한다. 칠을 읽을 때 쓰는 움직임 표시 `data-fy-animate`는 스타일을 읽기 전에 찍는다(글꼴 표면 `data-fy-font`와 같은 까닭) — JS 옵션으로만 준 움직임도 첫 그리기부터 마스크 칠이다.
 - load 리스너는 자동 시작 때와 첫 그리기 때 문서마다 한 번, 그리고 바탕 요소가 그려진 shadow root마다 한 번 설치된다(`load`는 composed가 아니라 문서 리스너가 shadow root 안 link를 보지 못한다). 그래서 `FontKkuConfig = { bootstrap: false }` 페이지의 `render()`도 늦은 CSS를 받는다. load 이벤트가 없는 스타일 변경(`adoptedStyleSheets`, `<style>` 텍스트 교체)은 `refreshAll(root?)`로 같은 경로를 수동 실행한다. ([ADR-008](../ADR/ADR-008-font-contract-v2.md) §4)
-- `refreshAll(root?)`는 querySelectorAll 대신 그려진 바탕 요소 레지스트리(WeakRef)를 돌므로 shadow root 안 바탕 요소도 포함한다. `root`를 주면 그 아래(shadow-including)로 범위를 좁힌다. 반환값은 해석 결과가 바뀐 바탕 요소(전체를 다시 그리거나 벡터 그림을 바꾸거나 `fontInfo()`만 갱신한 바탕 요소)다.
+- `refreshAll(root?)`는 querySelectorAll 대신 그려진 바탕 요소 레지스트리(WeakRef)를 돌므로 shadow root 안 바탕 요소도 포함한다. `root`를 주면 그 아래(shadow-including)로 범위를 좁힌다. 반환값은 해석 결과가 바뀐 바탕 요소(전체를 다시 그리거나 벡터 그림을 바꾸거나 그림 자소 칠만 고치거나 `fontInfo()`만 갱신한 바탕 요소)다.
 - JS로만 준 글꼴은 1회성이다: `render(el, { font: "x" })` 뒤 `x`의 CSS가 늦게 도착해 구조가 다시 해석되면 속성 기준으로 돌아간다. 늦게 로드할 글꼴은 속성으로 지정하거나 `await FontKku.loadFont(href)` 뒤에 그린다.
 
 클래스 방식에서는 구현된 `MutationObserver`가 작성자가 쓴 `data-*`와 외부 텍스트 변경을 감지한다. 동적으로 삽입된 바탕 요소는 `upgrade()`/`upgradeAll()`로 최초 업그레이드한다.
@@ -299,7 +328,7 @@ document.addEventListener("font-kku:render", (event) => {
 
 - 글꼴 CSS는 바탕 요소 범위에 메타데이터 `--fy-font-id: <name>`, `--fy-contract: 2`, `--fy-material: system | sprite | bundled`를 선언한다([ADR-008](../ADR/ADR-008-font-contract-v2.md) §4). 런타임은 그릴 때 `getComputedStyle(host)`로 깊이·expression mode와 함께 이 값을 읽는다.
 - `FontKku.fontInfo(host)`는 직전 그리기 시점의 메타데이터를 돌려준다. `font`는 요청(정규화)된 이름, `id`/`contract`/`material`은 CSS가 선언한 값(아직 없으면 `id`·`contract`는 `null`, `material`은 `"system"`), `loaded`는 `id === font`, 즉 요청한 글꼴의 CSS가 바탕 요소에 도달했는지다. 그려지지 않은 바탕 요소면 `null`이다. 로딩 상태를 DOM 속성으로 찍지 않는 것은 다른 언어 구현의 DOM 계약(html-cases)을 바꾸지 않기 위해서다.
-- 재료 노출: 글꼴의 `--fy-material`이 `system`이 아니면 바탕 요소에 `data-fy-material="<material>"`을 찍는다. `sprite`이면 `--fy-sprite-kinds`에서 `consonant`/`vowel`/`coda-cluster`만 골라 `data-fy-sprite-kinds`로 찍는다. 코어의 그림 자소(`sprite`) 재료 규칙이 이 두 속성과 노드의 `data-sprite-jamo-kind`로 칠할 노드를 고른다([그림 자소 글꼴](./image-sprite-fonts.md)). 기기 글꼴(`system`) 재료의 글꼴(sebul, gothic)에서는 두 속성을 지우므로 다른 언어 구현의 DOM 계약(html-cases)은 그대로다. 두 값도 재해석 비교 대상이라 늦게 도착한 그림 자소 글꼴 CSS가 바탕 요소를 다시 그린다.
+- 재료 노출: 글꼴의 `--fy-material`이 `system`이 아니면 바탕 요소에 `data-fy-material="<material>"`을 찍는다. `sprite`이면 `--fy-sprite-kinds`에서 `consonant`/`vowel`/`coda-cluster`만 골라 `data-fy-sprite-kinds`로 찍는다. 코어의 그림 자소(`sprite`) 재료 규칙이 이 두 속성과 노드의 `data-sprite-jamo-kind`로 칠할 노드를 고른다([그림 자소 글꼴](./image-sprite-fonts.md)). `system` 재료의 글꼴(sebul, gothic 등)에서는 두 속성을 지우므로 다른 언어 구현의 DOM 계약(html-cases)은 그대로다. `system` 글꼴이 자모를 무엇으로 그리는지(원소·기기 글꼴·그림 세트)는 따로 고른다 — 아래 '글꼴 모양·재료·디자인'의 재료(`face`). 두 값도 재해석 비교 대상이라 늦게 도착한 그림 자소 글꼴 CSS가 바탕 요소를 다시 그린다.
 - `FontKku.loadFont(href, { root }?)`는 정적 stylesheet 로더다. 서버 동작은 없다.
   - `root`는 Document(기본: 현재 document, link는 `<head>`) 또는 ShadowRoot(link는 shadow root 안 — document stylesheet는 shadow tree를 스타일하지 않는다)다.
   - 같은 URL의 `<link rel="stylesheet">`가 `root`에 있고 규칙을 읽을 수 있는 sheet로 이미 로드돼 있으면 재사용하고 곧바로 `refreshAll(root)` 결과로 resolve한다. 아직 로드 중이면 그 load를 기다린다. 로드가 끝났는데 규칙을 읽을 수 없는 링크(실패했거나 — Chromium은 실패한 링크에도 빈 sheet를 준다 — 비어 있거나 cross-origin)는 믿지 않고 새 link로 다시 요청한다.
@@ -308,16 +337,32 @@ document.addEventListener("font-kku:render", (event) => {
   - 실패하면 이 호출이 삽입한 link를 지우고 reject하며, 다음 호출은 다시 요청한다. 문서가 없는 환경(Node)에서는 reject된 Promise를 돌려준다.
 - `--fy-contract`가 런타임이 지원하는 값(2)보다 크면 글꼴별로 한 번 console 경고만 하고 그리기는 계속한다.
 - 기본 시각 설정은 CSS 글꼴(`font`)로 제공한다.
-- `font`는 글꼴 이름이고, 세벌식/일반 구분은 글꼴 CSS가 선언하는 `--fy-expression-mode`가 맡는다.
+- `font`는 글꼴 이름이다. 노드 갈래(`sebeol|general`)는 글꼴 CSS가 선언하는 `--fy-expression-mode`가, 글꼴 모양(세벌식·직결식·네모꼴)과 재료는 아래 '글꼴 모양·재료·디자인'이 맡는다.
 - 글꼴은 초성/중성/종성 위치, 크기, 각도, 줄/단어/공백/글자 간격을 정의한다.
 - size는 글꼴 이름 선택이 아니라 바탕 요소 배율 입력값이다. 기본은 `font-size`와 `em` 기반 변수로 흡수한다.
-- 현재 저장소는 CSS 글꼴 `sebul`/`gothic`, 그림 자소 글꼴 `sprite-example`/`sprite-system`, 폐기 예정 별칭 `default`/`classic`/`gothic2`를 포함한다. 활성 글꼴과 기본 깊이(depth)의 기계 정본은 `spec/fonts.json`이다.
+- 기본 제공 글꼴(바탕 글꼴, 직결식, 꾸러미 글꼴, 그림 자소 글꼴)과 별칭 `default`/`classic`/`gothic2`, 기본 깊이(depth)의 기계 정본은 `spec/fonts.json`이다.
+- `fontInfo(host)`의 필드: `font`·`id`·`contract`·`material`·`loaded`(위), 재료 `face`·`faceStatus`, 디자인 `design`·`designStatus`, 그림 세트 진단 `jamoSetStatus`, 글꼴 모양 `layout`(`{ profile, revision, model, requested? }` 또는 네모꼴이면 `null`)·`layoutStatus`, 고른 짓는 방식 `composition`(고른 것이 있을 때만), 문자 매핑 진단 `glyphMapping`(요청했을 때만). 정본은 `font-kku.d.ts`의 `FontInfo`다.
 - 정규화된 글꼴이 바뀌는 전환은 관리 DOM 전체를 다시 생성하고 정본 바탕 요소 속성과 CSS 적용을 갱신한다. 크기·간격 같은 표시 옵션만 바뀌는 경로와 구분한다.
 - 메타데이터 키워드(`--fy-material`, `--fy-sprite-kinds`)는 깊이·expression mode 키워드처럼 대소문자를 구분하지 않는다(`Sprite` → `sprite`).
 
+### 글꼴 모양·재료·디자인 (ADR-024·025·030)
+
+한 바탕 요소의 모양은 서로 따로 고르는 셋으로 정해진다. 개념과 고르는 법은 [글꼴 모양·재료·디자인](./shape-material-design.md)이 정본이고, 여기는 런타임이 읽고 찍는 계약이다.
+
+| 축 | 고르는 CSS(이기는 차례) | 바탕 요소 출력 | `fontInfo` |
+|---|---|---|---|
+| 글꼴 모양 — 세벌식 `sebul-cases-v1`·직결식 `sebul-fixed-v1`·네모꼴 | 페이지 디자인의 `layout` > 페이지 `--fy-layout` > 글꼴 디자인의 `layout` > 글꼴 `--fy-font-layout` > 기본(글꼴을 밝히지 않았으면 세벌식, 밝혔으면 네모꼴) | `data-fy-layout`(고정 모양일 때만), `data-fy-layout-status` | `layout`, `layoutStatus` |
+| 재료 — 원소 `element`·기기 글꼴 `device`·그림 세트 `svg` | 페이지 디자인의 재료 > 페이지 `--fy-face` > 글꼴 디자인의 재료 > 글꼴 `--fy-font-face` > `device`. 표준 잉크 상자(`--fy-ink-boxes` > `--fy-font-ink-boxes`)를 밝힌 글꼴만 받는다 | `data-fy-face`, `data-fy-face-status` | `face`, `faceStatus` |
+| 디자인 — `registerDesign`으로 등록한 JSON | 페이지 `--fy-design` > 글꼴 `--fy-font-design`. `legacy`는 디자인만 끊는다 | `data-fy-design`, `data-fy-design-status` | `design`, `designStatus` |
+
+- **모양 값.** 고정 글꼴 모양(세벌식·직결식)의 자리·크기·굵기·밀도는 코어 CSS의 모양 값 규칙(`@layer font-kku.shape`, `--fy-shape-*`)이 `data-fy-layout`과 짜임·역할·자모로 고른다. 런타임은 자모 노드에 값을 적지 않는다([ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md) — 2026-10-17까지는 노드마다 `data-fy-stamp`와 인라인 `--fy-stamp-*`를 적었다). 손 보정은 글꼴 CSS의 `@layer font-kku.tune`에 쓴다. 코어의 레이어 차례는 `font-kku.font, font-kku.jamo, font-kku.context` 다음 `font-kku.shape, font-kku.tune`이다.
+- **재료.** 바탕 글꼴(sebul·gothic·malang)과 직결식은 `--fy-font-face: element`(원소 — 획을 CSS 상자로, 기기 한글 글꼴과 무관)를, 칠만 다른 꾸러미 글꼴 8종(neon·sticker·retro·saekdong·geumbak·glitch·riso·blueprint)은 `device`를 밝힌다. 표준 잉크 상자를 밝힌 글꼴이 `--fy-font-face`를 비우면 런타임은 `device`로 본다. `device`는 기기 글꼴 글자를 표준 잉크 상자(`spec/jamo-ink-boxes.json`)로 옮겨 그린다([ADR-023](../ADR/ADR-023-device-face-fit.md)). `svg`는 칸 계약 그림 세트(`jamo-set`, `frame: "box"`)로 그리고, 세트가 없으면 `element`로 그리며 `SVG_REQUIRES_BOX_SET`을 남긴다.
+- **디자인.** 디자인을 받지 않는 바탕 요소(그림 자소 재료, 잉크 상자를 끈 글꼴)에 디자인을 고르면 지금 설정으로 그리고 `DESIGN_UNSUPPORTED_FONT`를 남긴다. 페이지가 `--fy-face`나 `jamo-set`을 직접 고르면 글꼴 수준 디자인은 끊긴다(`DESIGN_OVERRIDDEN_BY_PAGE`).
+- **진단.** 모르는 이름은 아래 수준의 유효한 선택으로 그리고 진단만 남긴다(`LAYOUT_NOT_REGISTERED`·`FACE_TOKEN_INVALID`·`DESIGN_NOT_REGISTERED` 등) — 몰래 다른 방식으로 바꾸지 않는다. 고정 모양이 그린 결과에서도 지켜지는지는 `layoutStability(host)`로 본다.
+
 ### 짓는 방식 (ADR-034)
 
-글자를 어떤 덩어리로 지을지 고르는 선택이다. 고르지 않아도 된다. 고르지 않거나 `auto`면 지금 출력 그대로다(DOM·그림·도장 같음 — [ADR-034](../ADR/ADR-034-composition-modes.md) §0). '화'를 예로 든다.
+글자를 어떤 덩어리로 지을지 고르는 선택이다. 고르지 않아도 된다. 고르지 않거나 `auto`면 지금 출력 그대로다(DOM·그림·모양 값 같음 — [ADR-034](../ADR/ADR-034-composition-modes.md) §0). '화'를 예로 든다.
 
 | 프리셋 | 모음 나누기 | 받침 나누기 | 조각 깊이 | 화 |
 |---|---|---|---|---|
@@ -332,7 +377,7 @@ document.addEventListener("font-kku:render", (event) => {
 - 고르는 곳과 이기는 차례(높은 것부터): 자모마다 고른 디자인 규칙(`rules`·조각 binding) > 페이지 CSS(낱 깊이 변수 > `--fy-composition` > 줄임 `--fy-jamo-depth`) > 디자인 `composition` > 글꼴 CSS(낱 깊이 변수 > `--fy-font-composition` > 줄임 `--fy-font-jamo-depth`) > 모양의 기본. 순수 함수 `FontKku.resolveComposition({ page, design, font, shape })`가 차례를 풀고 `{ vowel, coda, pieces, preset, source }`를 돌려준다. 프리셋을 골랐는데 깊이 변수가 일부를 바꾸면 `preset`은 `"custom"`이다. 깊이 변수만 쓰고 프리셋을 고르지 않으면 짓는 방식을 고른 것이 아니다(`preset: null`, 지금 동작).
 - CSS: `--fy-composition`(페이지 전용, 레지스트리 `level: page`)과 `--fy-font-composition`(글꼴 레벨, 모양 레이어가 `initial`로 지우고 tune이 다시 선언) 둘이다. 값은 프리셋 이름 하나다. 대소문자를 구분하지 않는다. 모르는 낱말이면 고르지 않은 것으로 그리고 진단만 남긴다.
 - 디자인: 최상위 `composition`에 프리셋 이름 하나나 `{ preset?, vowel?, coda?, pieces? }`를 쓴다(빠진 축은 프리셋 값). 어느 판의 디자인에도 더할 수 있다. 모르는 값은 `DESIGN_COMPOSITION_INVALID`(경로 `composition`·`composition.<축>`)로 등록을 막는다.
-- 바탕 요소 도장: 고른 것이 있을 때만 `data-fy-composition="<프리셋>|custom"`을 찍는다. 진단이 있으면 `data-fy-composition-status`에 공백으로 나눈 코드를 찍는다. 고르지 않으면 두 속성 모두 없다. 그래서 다른 언어 구현의 DOM 계약(html-cases)은 그대로다. `FontKku.fontInfo(host).composition`은 고른 것이 있을 때만 `{ preset, vowel, coda, pieces, status }`를 돌려준다.
+- 바탕 요소 표시: 고른 것이 있을 때만 `data-fy-composition="<프리셋>|custom"`을 찍는다. 진단이 있으면 `data-fy-composition-status`에 공백으로 나눈 코드를 찍는다. 고르지 않으면 두 속성 모두 없다. 그래서 다른 언어 구현의 DOM 계약(html-cases)은 그대로다. `FontKku.fontInfo(host).composition`은 고른 것이 있을 때만 `{ preset, vowel, coda, pieces, status }`를 돌려준다.
 - 진단(몰래 다른 방식으로 바꾸지 않는다 — ADR-032 §6.1):
   - `COMPOSITION_INVALID`: 모르는 낱말이다. 고르지 않은 것으로 그린다.
   - `COMPOSITION_UNSUPPORTED`: 조각 깊이를 이 재료로 지을 수 없다. 기기 글꼴은 낱자를 통째로 그리고, 자소판도 같다. 나누기 두 축은 따르고 조각은 자모 그대로 둔다. 조각 계획이 재료 없이 실패하면 그 자모의 trace에도 같은 코드를 남긴다. 조각으로 지으려면 글꼴 디자인이나 원소·그림 재료를 쓴다.
@@ -342,7 +387,7 @@ document.addEventListener("font-kku:render", (event) => {
   - 원소 재료도 고른 조립식을 따른다(ADR-025 §5 '재료 없이도 따른다'). 조각 자모의 제 뼈대 획을 놓을 자리의 중심선 범위에 맞춰 긋는다. pieces의 ㅎ은 ㅗ의 꼭지·가로획과 ㅇ이다. `data-hoek-letter`가 조각 자모를 밝힌다. 제 뼈대가 없는 조각(ㆍ)과 모음 대상(겹모음·천지인)은 대상 획 그대로라 꼴이 같다.
   - 자모마다 디자인 규칙이 고른 place 조립식도 원소 재료에서 이렇게 긋는다. 프리셋을 고르지 않아도 그렇다. 이전에는 대상 획을 그대로 나눠 썼다.
 - 조립 계획: `FontKku.planJamo(jamo, { pieces?, composition? })`가 조각 깊이로 계획을 낸다. 모르는 값이면 TypeError다. 조각 깊이로 고른 조립식은 trace 항목의 `composition`에 그 깊이를 적는다. `FontKku.compositionPresets`는 `{ presets, levels }`(얼린 사본)다. 작업실·검사기가 같은 표를 읽는다.
-- 네모꼴에서 기본이 아닌 나누기 자리(통짜 모음·머리 음절·통짜 받침)는 C2(PLAN-COMPOSE-001)가 맡는다. C1은 구조(노드·조각)까지다.
+- **네모꼴 나누기 맞춤**(ADR-034 §5): 네모꼴 글꼴에서 그 글꼴 기본이 아닌 나누기(통짜 모음·머리 음절·통짜 받침)를 고르면, 글꼴이 그 자리를 밝히지 않은 자모를 같은 음절을 기본 나누기로 그렸을 때의 잉크 자리에 옮겨 그린다. 노드 구조와 선택자는 그대로이고 그리는 것만 옮긴다. 자리를 밝힌 노드는 CSS 자리 그대로다. 끄려면 페이지 `--fy-split-fit: none`(글꼴 `--fy-font-split-fit`)이다. 옮긴 상자는 `FontKku.splitFit(node)`로 읽는다(작업실이 처음 자리를 적을 때, ADR-035). 고정 글꼴 모양(세벌식·직결식)은 모양 값 표가 모든 나누기의 자리를 갖고 있어 맞춤이 필요 없다.
 
 ## 성능 전략
 
@@ -382,27 +427,20 @@ document.addEventListener("font-kku:render", (event) => {
 
 ## 배포 방향
 
-- 1차 배포물 (저장소 루트에 그대로 호스팅):
-  - `font-kku.js`
-  - `font-kku.css`
-  - `profiles/sebul.css`
-  - `profiles/default.css` (별칭)
-  - `profiles/classic.css` (별칭)
-  - `profiles/gothic.css`
-  - `profiles/gothic2.css` (폐기 예정 별칭)
-  - `profiles/sprite-example.css`
-  - `profiles/sprite-example.svg`
-  - `profiles/sprite-system.css`
-  - `profiles/sprite-system.svg`
+- 배포물(저장소 루트에 그대로 호스팅하고 npm 패키지에도 싣는다 — 목록 정본은 `package.json`의 `files`·`exports`):
+  - 코어: `font-kku.js`·`font-kku.mjs`, `font-kku.css`, 타입 `font-kku.d.ts`·`.d.mts`
+  - 확장: `font-kku-looks.css`(꾸밈·변주), `font-kku-motion.css`(자모 움직임), `font-kku-fx.js`(상호작용), `font-kku-ime.js`(입력기), `font-kku-export.js`(글꼴 파일 내보내기) — 각 `.mjs`·타입 포함
+  - 글꼴: `profiles/<글꼴>.css`, 그림 자소판 `profiles/*.svg`, 그림 세트 모듈 `profiles/*.jamo.js`, 별칭 파일(`default`·`classic`·`gothic2`)
+  - 저작 도구(선택): `authoring/`, `studio/`([글꼴 작업실](./font-studio.md))
+  - 기계가 읽는 명세 일부(`spec/`), 평문 명령 `bin/font-kku-text.js`
 - 루트 `package.json`(`@tty.link/font-kku`, 버전 규칙은 ADR-022, `bin/font-kku-text.js`, 조건부
   package export, TypeScript 선언, CSS/글꼴(profiles)/spec subpath 등록)과
   `LICENSE`(MIT)가 있다. CommonJS `require()`와 빌드 없는 ESM 진입점
   `font-kku.mjs`(default + named export)를 실제 tarball 사용처에서 검증한다. 저장소 파일을 직접 로드하는 빌드 없는 배포도 계속
   유지한다. npm에는 `@tty.link/font-kku`로 게시한다(ADR-022).
-- 기계가 읽는 계약인 `spec/css-variables.json`, `tables.json`,
-  `test-cases.json`, `html-cases.json`은 npm package subpath로 공개한다. 내부 자산
+- 기계가 읽는 계약 가운데 패키지에 싣는 것은 `package.json` `files`의 `spec/` 항목이고, subpath로 여는 것은 `exports`의 `./spec/*` 항목이다. 내부 자산
   복제용 `spec/asset-mappings.json`은 배포 계약이 아니다.
-- 배포 CSS는 원격 글꼴을 참조하지 않는다. `sebul`과 `gothic`은 플랫폼 한글 글꼴
+- 배포 CSS는 원격 글꼴을 참조하지 않는다. 기기 글꼴 재료는 플랫폼 한글 글꼴
   목록(font stack)을 쓰고 그림 자소 글꼴의 SVG 자소판(직접 그린 그림, ADR-011)은 패키지에 포함한다. 역사적 J해바라기
   비교 스크립트와 라이선스 경계는 `THIRD_PARTY_NOTICES.md`를 따른다.
 - 기기 글꼴 재료의 배치는 자모마다 정해진 표준 잉크 상자(`spec/jamo-ink-boxes.json`)를 전제로 한다. 자모는 그
@@ -417,3 +455,15 @@ document.addEventListener("font-kku:render", (event) => {
 - Canvas/WebGL 그리기 엔진
 - 런타임 내부 편집기 API. 브라우저 저작 도구인 글꼴 작업실(`studio/index.html`)은 공개 API만 쓰는 선택 진입점(`@tty.link/font-kku/studio`의 `mount()`)으로 따로 제공하고, 런타임은 이것을 불러오지 않는다([ADR-029](../ADR/ADR-029-library-authoring-and-site.md)).
 - 별도 변주 규칙 엔진/DSL
+
+## 확장 모듈
+
+코어가 불러오지 않는 선택 모듈이다. 한 줄 설치의 `data-addons`나 따로 된 `<script>`·import로 싣는다.
+
+- **입력기** `font-kku-ime.js`(npm `@tty.link/font-kku/ime`, 전역 `FontKkuIme`, [ADR-012](../ADR/ADR-012-hangul-ime-and-fontless-devices.md)): 영문 자판 키를 두벌식 표준·세벌식 390·세벌식 최종 배열대로 받아 유니코드 한글을 조합한다. `attach(field, options?)`로 `<input>`·`<textarea>`에 붙이고(선택이 없는 칸은 `TypeError`), `convert(keys, layout?)`로 키 문자열을 한 번에 바꾼다. 조합기 `createComposer`, 화면 자판 행 `keyMap`, `keyFromEvent`·`lookup`·`normalizeLayout`·`layouts`도 공개한다. 타입 정본은 `font-kku-ime.d.ts`, 사용법은 README '한글 글꼴·입력기 없는 기기'다.
+- **상호작용** `font-kku-fx.js`(`data-kku-fx`): [움직임과 런타임 변주](./animation-and-variation.md).
+- **꾸밈·자모 움직임** `font-kku-looks.css`·`font-kku-motion.css`: [조합 체계](./composition-axes.md), [움직임과 런타임 변주](./animation-and-variation.md).
+- **글꼴 파일 내보내기** `font-kku-export.js`: 조립 결과를 TTF·WOFF로([ADR-015](../ADR/ADR-015-font-file-export.md)).
+
+## Change Log
+- 2026-10-31: 머리말을 문서 표준으로. 기본 사용 형태를 한 줄 설치로, 글꼴을 비우면 세벌식·밝히면 네모꼴(ADR-028). 필요할 때 받기(ADR-019) 절, 명령형 API 목록을 `font-kku.d.ts`에 맞춤(`sourceRange`·`hasHangulFont`·`designs`·`planJamo`·`traceOf`·`stagePreview`·`authoringProgress`·`layoutProfiles`·`layoutStability`·`compositionPresets`·`resolveComposition`·`splitFit`·`placementTables`), `fontInfo` 필드, '글꼴 모양·재료·디자인'(ADR-024·025·030) 절, 네모꼴 나누기 맞춤(낡은 'C2가 맡는다' 대신), 글꼴 목록을 `spec/fonts.json` 안내로, 배포물 목록을 `package.json` 기준으로, 확장 모듈(입력기 등) 절 추가

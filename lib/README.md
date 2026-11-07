@@ -9,7 +9,7 @@
 포스터, 제목, 배너, 짧은 강조 문구처럼 조형성과 상호작용이 중요한 글에 잘 맞습니다. 글자마다 관리 DOM을 만들기 때문에 일반 웹 글꼴이나 장문 본문 렌더러를 대신하지는 않습니다.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/font-kku.min.js" data-fonts="sebul neon"></script>
 <font-kku font="neon" size="64">을지로 네온</font-kku>
 ```
 
@@ -18,7 +18,7 @@
 글꼴 하나에 꾸밈·변주·움직임·상호작용을 클래스와 속성으로 얹어 **조합**할 수도 있습니다. 네온 칠은 세벌에도, 고딕에도, 도트 그림 자소에도 같은 클래스로 걸립니다([조합 — 여섯 축과 테마](#조합--여섯-축과-테마)).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/font-kku.min.js" data-fonts="gothic" data-addons="looks motion"></script>
 <font-kku font="gothic" class="kku-look-neon" animate="flicker" size="64">을지로 네온</font-kku>
 ```
 
@@ -34,7 +34,7 @@
 | 손글씨 느낌인데 '하하하하'가 도장 찍은 듯 똑같다 | 자모마다 씨앗값으로 기울기·잉크·색이 따로 흔들립니다. `seed="auto"`면 매번 새로, `seed="민지"`면 그 이름만의 모양을 언제나 똑같이([씨앗 반응 글꼴](docs/ADR/ADR-016-seed-aware-fonts.md)) |
 | 사용자가 입력한 문장의 받침만 떨어뜨리고 싶은데 고정 문구 애니메이션밖에 안 된다 | 어떤 문장이든 초성·중성·받침이 각자 노드라 따로 칠하고 따로 움직입니다(`animate="drop"`, `part` 선택자). 화면 읽기와 복사에는 원문이 남습니다 |
 
-맞지 않는 곳도 있습니다. 고정된 제목 하나만 꾸미려면 웹폰트(부분 집합)가 더 가볍고, 제목·강조용이라 본문에는 쓰지 않으며, 브라우저에서는 JS가 필요합니다. 글꼴 파일(TTF·WOFF)은 지금 40칸 자소판과 벡터 세트에서만 나옵니다. 문제·증명·경계와 뺀 주장은 [해결하는 문제와 쓰임](docs/PRD/problems-and-use-cases.md)과 [소개 페이지](https://font.tty.link/)에 있습니다.
+맞지 않는 곳도 있습니다. 고정된 제목 하나만 꾸미려면 웹폰트(부분 집합)가 더 가볍고, 제목·강조용이라 본문에는 쓰지 않으며, 브라우저에서는 JS가 필요합니다. 글꼴 파일(TTF·WOFF)은 자소판·벡터 세트·원소 획 글꼴과 `jamo-set`으로 건 그림 세트에서 나옵니다(원소 획·그림 세트는 0.1.4-rc.4 다음 공개판부터). 디자인으로 그린 글자와 기기 글꼴 재료에서는 나오지 않습니다. 문제·증명·경계와 뺀 주장은 [해결하는 문제와 쓰임](docs/PRD/problems-and-use-cases.md)과 [소개 페이지](https://font.tty.link/)에 있습니다.
 
 ### 자소를 무엇으로 그리는가 — 재료
 
@@ -70,7 +70,7 @@
 
 ### 한 줄 설치
 
-`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/" }`로 자리를 알려 줍니다.
+`data-fonts` 속성을 단 classic `<script>`로 런타임을 불러오면, 스크립트 주소를 기준으로 `font-kku.css`와 나열한 글꼴의 `profiles/<이름>.css`를 처음부터 붙입니다(미리 받기). 나열하지 않은 글꼴은 **필요할 때 받습니다** — 그 글꼴을 쓰는 요소가 화면 가까이 오면 런타임이 CSS 한 장(그림 자소면 자소판도)을 그때 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md)). 그래서 `data-fonts`에는 첫 화면에 보이는 글꼴만 적으면 됩니다. 이름은 공백이나 쉼표로 나누고, 비워 두면 base CSS만 붙입니다. CSS가 도착할 때까지(최대 3초) 조립 전 자소가 보이지 않게 가려 둡니다. 필요할 때 받기를 끄려면 `data-autoload="false"`, 번들러·ESM에서는 `globalThis.FontKkuConfig = { fontBase: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/" }`로 자리를 알려 줍니다.
 
 공개 페이지에는 jsDelivr의 `font-kku.min.js`를 씁니다. jsDelivr는 `.min`을 붙인 주소에 원본에서 즉석으로 만든 압축본(소스 맵 포함)을 보내고, 런타임은 그 이름을 보고 CSS·글꼴·확장·자소 모듈도 `.min` 압축본으로 받습니다([ADR-019](docs/ADR/ADR-019-load-on-demand.md) §2). 소스를 읽거나 오류를 따라갈 때는 `.min`을 뺀 `font-kku.js`를 씁니다(CSS·확장도 원본으로 받습니다). unpkg는 압축본을 만들지 않으므로 unpkg에서는 `font-kku.js`를 씁니다. 즉석 압축본에는 SRI(`integrity`)를 걸지 않습니다.
 
@@ -79,7 +79,7 @@
 <script src="./font-kku.js" data-fonts="sebul neon"></script>
 
 <!-- jsDelivr의 npm 패키지 주소 — .min이면 CSS·글꼴·확장도 .min으로 (unpkg는 .min 없이 font-kku.js) -->
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="sebul neon"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/font-kku.min.js" data-fonts="sebul neon"></script>
 ```
 
 `data-addons`를 더하면 같은 자리의 확장도 함께 붙습니다([조합](#조합--여섯-축과-테마)). `data-fonts` 없이 `data-addons`만 써도 됩니다.
@@ -100,7 +100,7 @@ ES module(`font-kku.mjs`)과 번들러 경로에는 스크립트 태그가 없�
 
 ### 0.1.0에서 올릴 때
 
-0.1.1은 기존 페이지의 출력이 바뀌는 패치입니다. npm `^0.1.0`으로 받는 곳은 저절로 받고, CDN 주소에 판을 박은 페이지(`@0.1.0`)는 주소를 바꿀 때만 바뀝니다. 전체 목록은 [CHANGELOG.md](CHANGELOG.md)의 0.1.1입니다.
+0.1.1은 기존 페이지의 출력이 바뀌는 패치입니다. npm `^0.1.0`으로 받는 곳은 저절로 받고, CDN 주소에 판을 박은 페이지(`@0.1.0`)는 주소를 바꿀 때만 바뀝니다. 전체 목록은 [CHANGELOG.md의 0.1.1](CHANGELOG.md#011)입니다.
 
 - **기본 배치:** 글꼴을 밝히지 않은 `<font-kku>`·`class="font-kku"`가 세벌 고정(0.1.4부터 직결식 `jikgyeol`)으로 그립니다([아래](#기본-제공-글꼴과-꾸러미-글꼴)). 예전 배치는 `font="sebul"`을 적습니다.
 - **재료:** `sebul`·`gothic`·`malang`과 글꼴을 밝히지 않은 글이 자모를 기기 한글 글꼴 대신 CSS 획(원소 획)으로 긋습니다([재료](#자소를-무엇으로-그리는가--재료)). 원소 획에는 `text-shadow`·`-webkit-text-stroke`·`--fy-weight`가 듣지 않으므로 그림자·테두리는 `[part="glyph"]`의 `filter: drop-shadow(…)`, 굵기는 `--fy-element-width`로 옮깁니다. 0.1.0과 같은 모양은 `font="sebul"`에 페이지 CSS `--fy-face: device`를 더합니다. 꾸러미 글꼴(`neon`·`sticker` …)은 전처럼 기기 글꼴로 그립니다.
@@ -110,7 +110,7 @@ ES module(`font-kku.mjs`)과 번들러 경로에는 스크립트 태그가 없�
 
 ### 0.1.1에서 올릴 때
 
-0.1.2도 기존 페이지의 출력이 바뀌는 패치입니다. 전체 목록은 [CHANGELOG.md](CHANGELOG.md)의 0.1.2입니다.
+0.1.2도 기존 페이지의 출력이 바뀌는 패치입니다. 전체 목록은 [CHANGELOG.md의 0.1.2](CHANGELOG.md#012)입니다.
 
 - **기본 배치:** 세벌 고정(지금 직결식) 배치를 다시 지었습니다(revision 2). 받침이 초성·모음 바로 밑에 붙고 세로 모음이 길어지며, 잉크가 글자 칸 안에 들어 줄끼리 겹치지 않습니다. 되돌리는 옵션은 없고, 0.1.1 모양이 꼭 필요하면 CDN 주소를 `@0.1.1`에 둡니다. 저장한 디자인의 `layout.revision: "1"`은 그대로 받아 새 도장으로 그리고 경고 `DESIGN_LAYOUT_REVISION_ACCEPTED`를 남깁니다.
 - **꾸밈:** 원소 획 위의 네온·외곽선·도면·스티커가 획마다 상자 대신 글자 윤곽 하나로 그려집니다. 기기 글꼴 글자 위의 꾸밈은 페이지 CSS `--fy-face: device`.
@@ -118,7 +118,7 @@ ES module(`font-kku.mjs`)과 번들러 경로에는 스크립트 태그가 없�
 
 ### 0.1.3에서 올릴 때
 
-0.1.4도 기존 페이지의 출력이 바뀌는 패치입니다. 전체 목록은 [CHANGELOG.md](CHANGELOG.md)의 0.1.4입니다.
+0.1.4도 기존 페이지의 출력이 바뀌는 패치입니다. 전체 목록은 [CHANGELOG.md의 0.1.4](CHANGELOG.md#014)입니다.
 
 - **기본 배치:** 글꼴을 밝히지 않은 `<font-kku>`·`class="font-kku"`가 세벌식으로 그립니다([ADR-028](docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md)). 짜임(모음 모양·받침)마다 다듬은 자리라, 가로 모음 글자의 초성이 막대 가운데에 서고 받침 없는 글자는 아래를 비웁니다. 0.1.3까지의 모양(같은 자모가 어느 글자에서나 같은 자리)은 새 글꼴 `font="jikgyeol"`(직결식)입니다. 저장한 디자인의 `layout.profile: "sebul-fixed-v1"`은 그대로 직결식으로 그립니다.
 - **정적 렌더러:** 글꼴을 밝히지 않은 `render_html(text)`도 세벌식입니다. 직결식은 정적 렌더러에 없으니 그 출력이 꼭 필요하면 0.1.3 렌더러를 씁니다.
@@ -130,7 +130,7 @@ named export), TypeScript 선언, CSS·글꼴·spec 서브패스 export를 제�
 
 ```bash
 npm install @tty.link/font-kku
-# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.4-rc.4.tgz
+# 저장소 checkout에서 시험할 때: npm pack 뒤 npm install /path/to/tty.link-font-kku-0.1.4.tgz
 ```
 
 ```js
@@ -161,7 +161,7 @@ CDN 없이 파일을 직접 제공하려면 npm 패키지의 파일을 프로젝
 
 ```bash
 npm pack @tty.link/font-kku
-tar -xzf tty.link-font-kku-0.1.4-rc.4.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
+tar -xzf tty.link-font-kku-0.1.4.tgz   # package/ 아래 font-kku.js, font-kku.css, profiles/ …
 ```
 
 한 줄 설치 대신 CSS를 직접 연결하려면 `font-kku.js`, base CSS, 사용할 글꼴 CSS를 같은 폴더 구조로 둡니다.
@@ -213,12 +213,15 @@ python3 -m http.server 8000
 
 | 옵션 | 전용 태그 | 클래스 방식 | 기본값 |
 | --- | --- | --- | --- |
-| 글꼴 | `font` | `data-font` | 없음 — `sebul`을 세벌식 배치로 |
+| 글꼴 | `font` | `data-font` | 없음 — `sebul`을 세벌식 모양으로 |
 | 크기 | `size` | `data-size` | `24px` |
 | 간격 | `spacing` | `data-spacing` | 없음 |
 | 줄바꿈 단위 | `wrap-unit` | `data-wrap-unit` | `word` |
 | 움직임 | `animate` | `data-animate` | 없음 |
 | 변주 씨앗값 | `seed` | `data-seed` | 없음 |
+| 자모별 씨앗값 (켜야 동작) | `jamo-seeds` | `data-jamo-seeds` | 꺼짐 |
+| 그림 세트 | `jamo-set` | `data-jamo-set` | 없음 |
+| 획 깊이 | `stroke-depth` | `data-stroke-depth` | 없음(`jamo`) |
 
 attribute와 `data-*`는 지속 옵션입니다. `FontKku.render()`나 `refresh()`에 넘긴 옵션은 그 호출에만 적용되므로 계속 유지할 값은 바탕 요소의 attribute로 기록합니다. `profile`/`data-profile`은 하위 호환 별칭이며 새 코드는 `font`를 씁니다.
 
@@ -258,13 +261,13 @@ attribute와 `data-*`는 지속 옵션입니다. `FontKku.render()`나 `refresh(
 
 ## 기본 제공 글꼴과 꾸러미 글꼴
 
-**기본 배치는 세벌식입니다**([ADR-028](docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md)). 글꼴을 밝히지 않은 `<font-kku>`는 초성·중성·종성을
+**기본 글꼴 모양은 세벌식입니다**([ADR-028](docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md)). 글꼴을 밝히지 않은 `<font-kku>`는 초성·중성·종성을
 짜임(세로·가로·합자 모음 × 받침 없음·홑·겹)마다 정해진 자리와 크기로 찍습니다. 받침 없는 글자는 아래를 비워 두고 받침 있는 글자는 칸 높이를 다 씁니다.
 가로 모음 글자는 초성을 막대 가운데에, 받침을 초성과 한 축에 둡니다. ㅘ는 ㅗ 조각과 ㅏ 조각으로 찍습니다.
 **직결식**(`font="jikgyeol"`, [ADR-026](docs/ADR/ADR-026-sebul-fixed-layout.md))은 세벌 타자기처럼 같은 초성 ㄱ을 가·고·과·각·곽 어디서나 같은 도장으로
-찍고 받침 자리를 늘 비워 둡니다(0.1.1–0.1.3의 기본 배치). `font="sebul"`처럼 그 밖의 글꼴을 밝히면 그 글꼴의 문맥 배치(모음·받침에 따라 자리가 바뀌는 탈네모꼴)로 그립니다.
-배치는 디자인으로도 고릅니다. `registerDesign`에 `version: "1.2"`와 `layout: { profile: "sebul-cases-v1", revision: "1" }`(세벌식),
-`{ profile: "sebul-fixed-v1", revision: "3" }`(직결식) 또는 `{ profile: "square-context-v1", revision: "1" }`(네모 문맥)를 줍니다. 직결식 revision `"1"`(0.1.1까지)과 `"2"`(0.1.2)를 적은 디자인도 받아 지금 도장으로 그리고 진단을 남깁니다.
+찍고 받침 자리를 늘 비워 둡니다(0.1.1–0.1.3의 기본 모양). `font="sebul"`처럼 그 밖의 글꼴을 밝히면 그 글꼴의 네모꼴(글꼴 CSS가 가진 자기 자리 — 모음·받침에 따라 자리가 바뀝니다)로 그립니다.
+글꼴 모양은 디자인으로도 고릅니다. `registerDesign`에 `version: "1.2"`와 `layout: { profile: "sebul-cases-v1", revision: "1" }`(세벌식),
+`{ profile: "sebul-fixed-v1", revision: "3" }`(직결식) 또는 `{ profile: "square-context-v1", revision: "1" }`(네모꼴)을 줍니다. 직결식 revision `"1"`(0.1.1까지)과 `"2"`(0.1.2)를 적은 디자인도 받아 지금 revision으로 그리고 진단을 남깁니다.
 
 | 이름 | 재료 | 용도 |
 | --- | --- | --- |
@@ -300,7 +303,7 @@ attribute와 `data-*`는 지속 옵션입니다. `FontKku.render()`나 `refresh(
 
 그림 자소 글꼴은 자소판 대신 **자모마다 SVG**로도 그립니다(벡터 자소, [ADR-013](docs/ADR/ADR-013-vector-jamo.md)). `jamo-set="sprite-system"`처럼 자모 세트를 고르면 자모 노드마다 인라인 SVG가 들어가, 획이 글자 색(`color`)을 따르고 자리가 눌려도 굵기가 그대로이며 자모마다 색·굵기·끝 모양을 CSS로 바꿉니다. 자모 세트는 코드로 등록합니다 — 기본 세트 `profiles/sprite-system.jamo.js`·`sprite-example.jamo.js`·`pixel.jamo.js`, 또는 `FontKku.registerJamo("brush", { "r0-ㄱ": "M5 12 H45 V28 Q45 54 11 65", … })`.
 
-그림 자소·벡터 자소 글꼴은 **보통 글꼴 파일(TTF·WOFF)로 내보낼 수** 있습니다(`font-kku-export.js`, [ADR-015](docs/ADR/ADR-015-font-file-export.md)) — 런타임이 조립한 자리 변환과 칸 외곽선으로 한글 11,172자를 브라우저에서 몇 초 만에 만들고(WOFF2 약 20KB), 손으로 그린 PNG 자소판도 외곽선을 따서 같은 길로 갑니다. 글꼴 작업실 재료 탭, 글꼴 시험대의 "글꼴 파일 받기", `python scripts/export_font_file.py`에서 씁니다. 넣을 글자가 하나도 없으면(원소 획·8칸 그림 세트·기기 글꼴, 실리지 않은 글꼴, 한글 없는 `text`, 빈 자소판) 빈 글꼴 파일 대신 `error.code`(`EXPORT_UNSUPPORTED_FACE` 등)가 달린 오류로 거절합니다.
+그림 자소·벡터 자소 글꼴은 **보통 글꼴 파일(TTF·WOFF)로 내보낼 수** 있습니다(`font-kku-export.js`, [ADR-015](docs/ADR/ADR-015-font-file-export.md)) — 런타임이 조립한 자리 변환과 칸 외곽선으로 한글 11,172자를 브라우저에서 몇 초 만에 만들고(WOFF2 약 20KB), 손으로 그린 PNG 자소판도 외곽선을 따서 같은 길로 갑니다. 원소 획 글꼴(`sebul`·`gothic`·`jikgyeol`·`malang`)과 세벌·고딕에 `jamo-set`으로 건 칸 계약 그림 세트(`pilgi-box`·`dunggeun-box`·`butgeul-box`와 등록한 `frame: "box"` 세트)도 같은 길로 글꼴 파일이 됩니다 — 0.1.4-rc.4 다음 공개판부터이고, 원소 획 글꼴 전체는 50초쯤 걸리며, 문맥 잘림(`report.unclipped`가 셉니다)과 속 빈 획은 담지 못합니다. 글꼴 작업실의 내보내기 ▾, 글꼴 시험대의 "글꼴 파일 받기", `python scripts/export_font_file.py`에서 씁니다. 넣을 글자가 하나도 없으면(기기 글꼴 재료, 실리지 않은 글꼴, 한글 없는 `text`, 빈 자소판) 빈 글꼴 파일 대신 `error.code`(`EXPORT_UNSUPPORTED_FACE` 등)가 달린 오류로 거절합니다. 디자인으로 그린 글꼴은 규칙·소스를 담지 못해 `EXPORT_DESIGN_UNSUPPORTED`로 거절합니다.
 
 기본 제공 자소판은 `scripts/build_jamo_svg.js`가 같은 획 정의를 `spec/sprite-layout.json`의 자리 상자에 놓고 그린 SVG입니다([ADR-011](docs/ADR/ADR-011-svg-jamo-sheets.md)). 자소판 하나는 **획 뼈대**(곧은 `plain`·필기 `pilgi`·둥근 `dunggeun`·붓 `butgeul` — 획을 어떻게 긋는가)와 **획 표현**(민획 `plain`·도트 `dot`·인주 `stamp`·분필 `chalk`·크레용 `crayon`·실땀 `stitch` — 그은 획에 입히는 재료)의 조합이며, 어느 뼈대에나 어느 표현이든 `STYLES` 한 줄로 붙습니다. 벡터라 크게 띄워도 계단이 지지 않습니다. 획 정의를 고친 뒤 `node scripts/build_jamo_svg.js --write`로 다시 그리지 않으면 `npm test`가 실패합니다. 같은 자리 상자 안에 그리면 사람이든 AI 에이전트든 새 자소판이 sprite-system의 보정된 배치를 그대로 씁니다.
 
@@ -323,11 +326,11 @@ FontKku.render(host, {
 FontKku.refresh(host, { text: "새 문장" });
 ```
 
-주요 API는 `render`, `refresh`, `refreshAll`, `loadFont`, `retryFont`, `fontInfo`, `upgrade`, `upgradeAll`, `decomposeGlyph`, `createTextModel`, `renderText`, `hashSeed`, `applyJamoSeeds`, `hasHangulFont`, `registerJamo`·`jamoSets`(그림 세트), `layoutProfiles`·`layoutStability`(배치)입니다. `upgradeAll(root)`는 root의 자손만 처리하므로 root 자신이 바탕 요소라면 `upgrade(root)`를 씁니다. `refreshAll(root?)`는 현재 스타일로 글꼴 메타데이터(depth 등)를 다시 해석해 구조가 바뀐 바탕 요소는 attribute를 다시 읽어 다시 그리고, 벡터 칸의 행만 바뀌면 SVG만 갱신합니다(shadow root 안 포함). `adoptedStyleSheets`나 `<style>` 텍스트 교체처럼 load 이벤트가 없는 스타일 변경 뒤에 호출합니다. `loadFont(href, { root })`는 글꼴 CSS를 `<link>`로 불러온 뒤 바탕 요소를 다시 해석하는 정적 헬퍼로, 같은 URL이면 같은 Promise를 돌려주고 실패하면 reject 후 재시도할 수 있으며, `fontInfo(host)`는 글꼴 CSS가 선언한 `--fy-font-id`·`--fy-contract`·`--fy-material`과 도착 여부(`loaded`), 재료(`face` — `element`·`device`·`svg`), 배치(`layout` — 세벌식·직결식이면 `{ profile, revision, model }`, 문맥 배치면 `null`), 디자인(`design`·`designStatus`)을 돌려줍니다. `layoutStability(host)`는 고정 배치가 그려진 결과에서도 지켜지는지(같은 역할·자모 — 세벌식은 같은 짜임까지 — 가 모두 같은 자리인지) `{ stable, drifted, … }`로 알려 줍니다 — 페이지 CSS가 이웃 자모를 보고 자모를 옮기면 `stable: false`입니다. 런타임이 바탕 요소를 그릴 때마다(자동 다시 그리기 포함) `font-kku:render` 이벤트(`detail.reason`)가 발생하므로, 그린 뒤 DOM 후처리는 이 이벤트에 걸면 됩니다. `jamo-seeds` 속성(클래스 방식은 `data-jamo-seeds`)을 주면 그릴 때마다 바탕 요소의 씨앗값을 반영한 `--fy-jamo-seed`를 자모 노드에 자동으로 다시 겁니다(브라우저 전용). 전체 표면과 옵션 계약은 [Framework Guide](docs/ARCHITECTURE/framework-guide.md)와 [Browser Runtime Design](docs/ARCHITECTURE/browser-runtime-design.md)을 참고하세요.
+주요 API는 `render`, `refresh`, `refreshAll`, `loadFont`, `retryFont`, `fontInfo`, `upgrade`, `upgradeAll`, `decomposeGlyph`, `createTextModel`, `renderText`, `hashSeed`, `applyJamoSeeds`, `hasHangulFont`, `registerJamo`·`jamoSets`(그림 세트), `layoutProfiles`·`layoutStability`(글꼴 모양)입니다. `upgradeAll(root)`는 root의 자손만 처리하므로 root 자신이 바탕 요소라면 `upgrade(root)`를 씁니다. `refreshAll(root?)`는 현재 스타일로 글꼴 메타데이터(depth 등)를 다시 해석해 구조가 바뀐 바탕 요소는 attribute를 다시 읽어 다시 그리고, 벡터 칸의 행만 바뀌면 SVG만 갱신합니다(shadow root 안 포함). `adoptedStyleSheets`나 `<style>` 텍스트 교체처럼 load 이벤트가 없는 스타일 변경 뒤에 호출합니다. 둘째 인자 `{ materialCSS: true }`는 문자 재료(ADR-032)를 쓰는 글꼴에서 페이지 CSS의 글자 재료 선택을 다시 읽고, `false`는 그 선택을 풉니다(2026-10-26 채택, 생략하면 마지막 선택 유지). `loadFont(href, { root })`는 글꼴 CSS를 `<link>`로 불러온 뒤 바탕 요소를 다시 해석하는 정적 헬퍼로, 같은 URL이면 같은 Promise를 돌려주고 실패하면 reject 후 재시도할 수 있으며, `fontInfo(host)`는 글꼴 CSS가 선언한 `--fy-font-id`·`--fy-contract`·`--fy-material`과 도착 여부(`loaded`), 재료(`face` — `element`·`device`·`svg`), 글꼴 모양(`layout` — 세벌식·직결식이면 `{ profile, revision, model }`, 네모꼴이면 `null`), 디자인(`design`·`designStatus`)을 돌려줍니다. `layoutStability(host)`는 고정 글꼴 모양이 그려진 결과에서도 지켜지는지(같은 역할·자모 — 세벌식은 같은 짜임까지 — 가 모두 같은 자리인지) `{ stable, drifted, … }`로 알려 줍니다 — 페이지 CSS가 이웃 자모를 보고 자모를 옮기면 `stable: false`입니다. 런타임이 바탕 요소를 그릴 때마다(자동 다시 그리기 포함) `font-kku:render` 이벤트(`detail.reason`)가 발생하므로, 그린 뒤 DOM 후처리는 이 이벤트에 걸면 됩니다. `jamo-seeds` 속성(클래스 방식은 `data-jamo-seeds`)을 주면 그릴 때마다 바탕 요소의 씨앗값을 반영한 `--fy-jamo-seed`를 자모 노드에 자동으로 다시 겁니다(브라우저 전용). 전체 표면과 옵션 계약은 [Framework Guide](docs/ARCHITECTURE/framework-guide.md)와 [Browser Runtime Design](docs/ARCHITECTURE/browser-runtime-design.md)을 참고하세요.
 
 자동 로딩 실패는 CSS의 root·URL별로 격리됩니다. `FontKku.retryFont(host)`로 현재 글꼴·자모 세트를 다시 요청할 수 있고, 명시적인 `FontKkuConfig.fontBase` 변경은 새 주소를 사용합니다. 실패 시 호스트의 `font-kku:loaderror` 이벤트에서 `{ kind, name, url, error }`를 받을 수 있습니다. 자동 속성 갱신 중 크기·간격·움직임만 바뀌면 기존 자모 DOM을 유지하며, 명시적인 `render()`·`refresh()`는 전체 다시 그리기를 유지합니다.
 
-크기 조절 같은 반복 갱신은 `host.setAttribute("size", "48")`처럼 지속 속성을 바꾸면 됩니다. 원문·글꼴·깊이·해석된 씨앗값 등이 그대로일 때 기존 노드를 재사용합니다. 이어서 `refresh()`를 부르면 전체를 다시 만들므로 보통 추가 호출은 필요 없습니다. `font-kku:render` 이벤트는 DOM을 유지한 갱신에서도 발생하므로 후처리는 같은 노드에 여러 번 적용해도 안전하게 작성합니다.
+크기 조절 같은 반복 갱신은 `host.setAttribute("size", "48")`처럼 지속 속성을 바꾸면 됩니다. 원문·글꼴·깊이·해석된 씨앗값 등이 그대로일 때 기존 노드를 재사용합니다. 이어서 `refresh()`를 부르면 전체를 다시 만들므로 보통 추가 호출은 필요 없습니다. `font-kku:render` 이벤트는 DOM을 유지한 갱신에서도 발생하므로 후처리는 같은 노드에 여러 번 적용해도 안전하게 작성합니다. 예외는 웹 글꼴을 받은 뒤의 다시 맞추기(refit)와 떼었다 붙인 바탕 요소의 따라잡기로, 기기 글꼴 맞춤 값·글자 후보·진단 속성만 바꾸고 이벤트는 내지 않습니다. 그 변화까지 받아야 하면 글꼴이 정착한 뒤 `FontKku.refreshAll(root)`을 부릅니다.
 
 | 바꾸는 것 | 갱신 방식 |
 |---|---|
@@ -354,13 +357,13 @@ FontKku.bootstrap(document.querySelector("#poster"));
 
 ### 디자인 API (실험)
 
-자모마다 무엇으로 그리고(원소 획·그림 세트·글꼴), 그림이 있어도 조립할지, 어떤 배치로 찍을지를 **디자인** JSON으로 정합니다([ADR-025](docs/ADR/ADR-025-hangul-composition-design.md), 형식 `spec/design.schema.json`). 0.1.1부터 있는 실험 API라 이름과 형식이 바뀔 수 있습니다. 구조는 JSON으로 등록하고 CSS는 이름만 고릅니다.
+자모마다 무엇으로 그리고(원소 획·그림 세트·글꼴), 그림이 있어도 조립할지, 어떤 글꼴 모양으로 찍을지를 **디자인** JSON으로 정합니다([ADR-025](docs/ADR/ADR-025-hangul-composition-design.md), 형식 `spec/design.schema.json`). 0.1.1부터 있는 실험 API라 이름과 형식이 바뀔 수 있습니다. 구조는 JSON으로 등록하고 CSS는 이름만 고릅니다.
 
 ```html
 <script>
   FontKku.registerDesign("mix", {
     version: "1.2",
-    layout: { profile: "sebul-cases-v1", revision: "1" },  // 세벌식 — 직결식은 sebul-fixed-v1, 네모 문맥은 square-context-v1
+    layout: { profile: "sebul-cases-v1", revision: "1" },  // 세벌식 — 직결식은 sebul-fixed-v1, 네모꼴은 square-context-v1
     mode: "svg",
     sources: { hand: { kind: "svg", assetSet: "pilgi-box" }, round: { kind: "svg", assetSet: "dunggeun-box" } },
     defaults: { source: "hand", method: "auto" },
@@ -381,7 +384,7 @@ FontKku.bootstrap(document.querySelector("#poster"));
 | `stagePreview(set, stage)` · `authoringProgress(set)` | 그림 세트를 원형 8·기본 24·확장 40까지만 그린 셈 치는 미리보기 디자인 · 단계마다 그린 자모 |
 
 - `mode`는 `primitive`(원소 획)·`svg`(그림 세트)·`font`(글꼴 팔레트 — 페이지가 실어 둔 글꼴을 역할·자모·조각마다)입니다. 조립식(`double-bieup`, ㅎ = ㆍ + ㅡ + ㅇ의 `hieut-added-lines` …)은 `spec/jamo-recipes.json`에 있습니다.
-- 고정 배치(세벌식·직결식)는 같은 역할·자모를 한 가지로 그린다는 원칙을 밝힙니다(`FontKku.layoutProfiles[프로파일].match`·`occurrence`). 짜임별 규칙(`DESIGN_FIXED_CONTEXT`)과 자리마다 변주(`DESIGN_FIXED_VARIATION`)는 받아서 그대로 지키되 원칙을 깬다고 알립니다(`warnings`, 등록 때 콘솔 경고). 그릴 수 없는 합자 모음 통째 그리기(`DESIGN_FIXED_COMPOUND`)만 거부합니다. `layout`을 적지 않은 디자인은 문맥 배치로 그립니다.
+- 고정 글꼴 모양(세벌식·직결식)은 같은 역할·자모를 한 가지로 그린다는 원칙을 밝힙니다(`FontKku.layoutProfiles[프로파일].match`·`occurrence`). 짜임별 규칙(`DESIGN_FIXED_CONTEXT`)과 자리마다 변주(`DESIGN_FIXED_VARIATION`)는 받아서 그대로 지키되 원칙을 깬다고 알립니다(`warnings`, 등록 때 콘솔 경고). 그릴 수 없는 합자 모음 통째 그리기(`DESIGN_FIXED_COMPOUND`)만 거부합니다. `layout`을 적지 않은 디자인은 네모꼴로 그립니다.
 - 고르지 못하면 지금 설정으로 그리고 바탕 요소의 `data-fy-design-status`로 알립니다: `DESIGN_NOT_REGISTERED`(미등록 이름 — 등록하면 다시 그림), `DESIGN_TOKEN_INVALID`(이름 문법), `DESIGN_UNSUPPORTED_FONT`(그림 자소 글꼴처럼 디자인을 받지 않는 글꼴).
 - 브라우저에서 만들려면 [글꼴 작업실](https://font.tty.link/font-studio.html)의 디자인 칸을 씁니다 — 선·원/직접 그린 그림/기존 글꼴 세 가지로 시작하고, 원형 8 → 24 → 40 그리기, 조립식 비교, 출처, 글꼴 팔레트를 거쳐 디자인 JSON·페이지용 코드·묶음 파일로 가져갑니다([글꼴 작업실 설계](docs/ARCHITECTURE/font-studio.md)).
 
@@ -441,7 +444,7 @@ font-kku-text --version
 
 Python, Go, Rust, Ruby 구현은 JavaScript 코어를 감싼 것이 아니라 `spec/` 계약을 독립적으로 구현한 보조 렌더러입니다. 모두 2줄 평문과 정적 HTML 출력을 제공합니다. 기본 번들에는 `sebul`·`gothic`이 들어 있고, 호출별 `FontDefinition`으로 사용자 system 글꼴 CSS와 기본 깊이를 전달할 수 있습니다. sprite/vector 재료와 그림 세트, 디자인(`registerDesign`), 자동 URL 로딩, 상호작용은 정적 렌더러에서 지원하지 않습니다.
 
-글꼴을 밝히지 않은 호출(`render_html(text)`, 빈 이름)은 브라우저의 `<font-kku>`처럼 기본 배치 세벌식(`sebul-cases-v1`, [ADR-028](docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md))으로 그리고, 자모 노드에 런타임과 같은 역할 도장을 씁니다. 자모는 런타임 기본처럼 원소 획으로 그려([ADR-027](docs/ADR/ADR-027-static-element-face.md)) 브라우저·JS 없이도, 읽는 기기에 어떤 한글 글꼴이 있든 같은 모양입니다. 세벌식 배치는 두고 기기 글꼴 글자로 그리려면 `face="device"`(Ruby `face: "device"`, Go `WithFace("device")`, Rust `face: "device"`), 0.1.0의 기본값처럼 글꼴의 문맥 배치로 그리려면 `font="sebul"`을 넘기세요. 짓는 방식([ADR-034](docs/ADR/ADR-034-composition-modes.md))은 고르지 않아도 되고, 고르려면 `composition="syllable"`(Ruby `composition:`, Go `WithComposition`, Rust `HtmlOptions.composition`)을 넘깁니다 — 나누기 부분을 그리고, 조각 깊이(`pieces`·`origins`)는 `COMPOSITION_UNSUPPORTED` 진단만 남깁니다.
+글꼴을 밝히지 않은 호출(`render_html(text)`, 빈 이름)은 브라우저의 `<font-kku>`처럼 기본 글꼴 모양 세벌식(`sebul-cases-v1`, [ADR-028](docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md))으로 그립니다. 자모 자리는 런타임처럼 함께 싣는 코어 CSS의 모양 값 규칙이 고릅니다([ADR-030](docs/ADR/ADR-030-one-engine-glyph-shapes.md)). 자모는 런타임 기본처럼 원소 획으로 그려([ADR-027](docs/ADR/ADR-027-static-element-face.md)) 브라우저·JS 없이도, 읽는 기기에 어떤 한글 글꼴이 있든 같은 모양입니다. 세벌식 모양은 두고 기기 글꼴 글자로 그리려면 `face="device"`(Ruby `face: "device"`, Go `WithFace("device")`, Rust `face: "device"`), 0.1.0의 기본값처럼 글꼴의 네모꼴로 그리려면 `font="sebul"`을 넘기세요. 짓는 방식([ADR-034](docs/ADR/ADR-034-composition-modes.md))은 고르지 않아도 되고, 고르려면 `composition="syllable"`(Ruby `composition:`, Go `WithComposition`, Rust `HtmlOptions.composition`)을 넘깁니다 — 나누기 부분을 그리고, 조각 깊이(`pieces`·`origins`)는 `COMPOSITION_UNSUPPORTED` 진단만 남깁니다.
 
 네 언어 모두 호출별 `FontDefinition`으로 사용자 system 글꼴 CSS와 기본 깊이를 전달할 수 있습니다. Unicode 정책·지원 범위는 [capabilities.json](spec/capabilities.json), API 예제와 생성 절차는 [언어 공통 렌더 계약](docs/ARCHITECTURE/renderer-contracts.md)을 참고하세요.
 
@@ -496,7 +499,8 @@ studio.destroy();
 | 그림 자소 글꼴 제작 | [Image Sprite Fonts](docs/ARCHITECTURE/image-sprite-fonts.md), [글꼴 작업실 재료 탭](docs/ARCHITECTURE/font-studio.md) |
 | 파생 글꼴과 한 줄 설치 | [ADR-010](docs/ADR/ADR-010-derived-fonts-and-script-loader.md) |
 | 글꼴·꾸밈·변주·움직임·상호작용 조합과 테마 | [조합 체계](docs/ARCHITECTURE/composition-axes.md), [ADR-017](docs/ADR/ADR-017-composition-axes-and-themes.md) |
-| 기본 배치 세벌식·직결식, 원소 획, 디자인(실험) | [ADR-028](docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md), [ADR-026](docs/ADR/ADR-026-sebul-fixed-layout.md), [ADR-024](docs/ADR/ADR-024-hangul-principle-rendering.md), [ADR-025](docs/ADR/ADR-025-hangul-composition-design.md), [글꼴 작업실](docs/ARCHITECTURE/font-studio.md) |
+| 글꼴 모양·재료·디자인·짓는 방식을 한 그림으로 | [모양·재료·디자인](docs/ARCHITECTURE/shape-material-design.md) |
+| 기본 글꼴 모양 세벌식·직결식, 원소 획, 디자인(실험) | [ADR-028](docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md), [ADR-026](docs/ADR/ADR-026-sebul-fixed-layout.md), [ADR-024](docs/ADR/ADR-024-hangul-principle-rendering.md), [ADR-025](docs/ADR/ADR-025-hangul-composition-design.md), [글꼴 작업실](docs/ARCHITECTURE/font-studio.md) |
 | 접근성(낭독·복사) | [ADR-003](docs/ADR/ADR-003-accessibility-contract.md) |
 | 한글 글꼴·입력기 없는 기기, 영문 자판 한글 입력 | [ADR-012](docs/ADR/ADR-012-hangul-ime-and-fontless-devices.md), [문서 · 글꼴·입력기 없는 기기](https://font.tty.link/docs.html#nofont) |
 | 움직임과 씨앗값 변주 | [Animation and Variation](docs/ARCHITECTURE/animation-and-variation.md) |
@@ -506,6 +510,23 @@ studio.destroy();
 | 개발·릴리스 검증 | [TESTING.md](TESTING.md) |
 | 구현 상태와 다음 작업 | [IMPL_STATUS.md](IMPL_STATUS.md), [TODO_LIST.md](TODO_LIST.md), [CHANGELOG.md](CHANGELOG.md) |
 | AI 에이전트의 font-kku 작업 | [font-kku skill](skills/font-kku/SKILL.md) |
+
+### 저장소 지도
+
+| 자리 | 무엇인가 | 시험 |
+| --- | --- | --- |
+| `font-kku.js`·`font-kku.css` | 브라우저 런타임 정본(빌드 없음) | `npm test`, 브라우저 스모크 |
+| `font-kku-fx.js`·`font-kku-ime.js`·`font-kku-export.js`, `font-kku-looks.css`·`font-kku-motion.css` | 선택 확장 — 상호작용·입력기·글꼴 파일 내보내기, 꾸밈·움직임 | `npm test`, 브라우저 스모크 |
+| `profiles/` | 글꼴 CSS·자소판·그림 세트 | 글꼴 린트(`npm test`), 감사(`npm run verify`) |
+| `spec/` | 언어 공통 명세 정본(표·사례·변수·글꼴 목록) | `npm test`(어긋남 검사), 생성물 검사 |
+| `authoring/` | 제작·검사 모듈(`@tty.link/font-kku/authoring`, [ADR-029](docs/ADR/ADR-029-library-authoring-and-site.md)) — DOM 없이 쓰는 글꼴 CSS·디자인·그림·검수 모델. [안내](authoring/README.md) | `npm test` |
+| `studio/` | 선택형 글꼴 작업실 UI(`@tty.link/font-kku/studio`, `studio/index.html`) — [안내](studio/README.md), [작업실 구조](docs/ARCHITECTURE/font-studio.md) | `tests/test_studio_*.py`(브라우저 스모크 단계) |
+| `renderers/python`·`go`·`rust`·`ruby` | 정적 HTML·평문 보조 렌더러 — 폴더마다 README, [언어 공통 렌더 계약](docs/ARCHITECTURE/renderer-contracts.md) | 언어별 시험, 패키지 스모크([TESTING.md](TESTING.md)) |
+| `bin/` | 터미널 명령 `font-kku-text` | `npm test`, npm 패키지 스모크 |
+| `scripts/` | 생성기·감사 도구·`verify.py`·공개 도구 | 생성물 검사(`verify:fast`), 도구 단위 시험(`npm run verify`) |
+| `tests/` | 시험·기준선·탐침 | — |
+| `skills/` | AI 에이전트 안내서(`font-kku-use`는 npm 패키지에 실린다) | 문서 계약(`npm run test:docs`) |
+| `docs/` | ADR·ARCHITECTURE·PLAN·PRD·용어집 | `npm run test:docs` |
 
 ## 개발과 검증
 

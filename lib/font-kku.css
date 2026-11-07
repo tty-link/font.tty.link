@@ -48,6 +48,11 @@
  * 원소·그림 재료의 획 굵기에 더한다. 런타임 굵기 맞춤도 이 값을 읽는다 */
 @property --fy-el-plus { syntax: "<length>"; inherits: true; initial-value: 0px; }
 @property --fy-el-o { syntax: "<length>"; inherits: true; initial-value: 0px; }
+/* 고리 올림 막기(--fy-el-up, 아래 고리 반올림 규칙)를 고리 노드에서 길이로 한 번 굳힌다. 등록하지 않으면 그 규칙의 여섯 속성이 저마다
+ * var()를 펼쳐 --fy-el-nx·--fy-el-ny·--fy-el-tx 식을 다시 토큰화·파싱한다(고리 하나에 펼친 --fy-el-tx 66번, Chromium 홈 en→ko 약 +3ms —
+ * docs/NOTES/style-invalidation.md §4). 결과에 닿는 값은 사실상 0 또는 기기 화소 반 이상이라 길이로 굳혀도 상자가 같다.
+ * --fy-el-nx·--fy-el-ny는 등록하지 않는다 — 6자리로 직렬화되어 분수 배율에서 상자가 1/64px 뒤집힌다 */
+@property --fy-el-up { syntax: "<length>"; inherits: false; initial-value: 0px; }
 /* Firefox 칸 칠 규칙(런타임이 만든 스타일시트)이 이 트리에 있는가 — 원문 거울에서 그 스타일시트가 1로 둔다. 빠지면 거울
  * transition(아래 Gecko 블록)이 런타임을 불러 다시 붙인다. 등록해 두어 값이 늘 정수다(바뀌면 transition이 돈다) */
 @property --fy-sprite-cells { syntax: "<integer>"; inherits: false; initial-value: 0; }
@@ -71,6 +76,17 @@
 
 :where(font-kku, .font-kku)[data-fy-wrap-unit="line"] {
   display: block;
+}
+
+/* 인쇄 — 원소 획(background·box-shadow)과 그림 자소판 자모(background-image·mask)는 글자 잉크를 배경으로 칠한다. 브라우저 인쇄의
+ * 기본 '배경 그래픽 끔'이 그 칠을 지워 원소 획 글꼴은 테두리로 그린 ㅇ·ㅎ 고리만, 그림 자소판 글꼴은 아무것도 남지 않았다(matrix-20,
+ * 0.1.1–). 잉크를 배경으로 칠하는 노드에만 exact를 준다(상속되어 그 아래 마디·칸에 닿는다). 그림 트리 전체에 주면 기기 글꼴 자모·
+ * Latin 같은 진짜 글자가 브라우저의 인쇄 색 조정(어두운 바탕의 밝은 글자를 어둡게)을 잃어 흰 종이에 흰색으로 찍혔다(api-39).
+ * 바탕 요소 자신과 그 밖 노드에 페이지가 깐 배경은 인쇄 설정을 따른다. 선택 띠는 아래 '선택' 끝에서 인쇄하지 않는다(api-40) */
+:where(font-kku, .font-kku) [part="root"] [part="element"],
+:where(font-kku, .font-kku):not([data-fy-face="device"]) [part="root"] [part~="jamo"] {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 :where(font-kku, .font-kku)[data-fy-upgraded="true"] [part="root"] {
@@ -177,6 +193,20 @@
   z-index: -1;
   visibility: var(--fy-ink-visibility, visible);
   background-color: var(--fy-selection, rgb(from Highlight r g b / min(alpha, 0.6)));
+}
+
+/* 런타임이 그린 선택 띠는 인쇄하지 않는다 — 브라우저 선택 강조처럼. 위 띠 규칙과 같은 선택자·같은 세기라 뒤에 둔다(api-40: 띠를
+ * 칠한 자모 ::after가 잉크 노드의 인쇄 exact를 물려받아 '배경 그래픽 끔'에도 찍혔다) */
+@media print {
+  :where(font-kku, .font-kku) [part="root"][data-fy-selected="all"] [part="glyph"]::before,
+  :where(font-kku, .font-kku) [part="glyph"][data-fy-selected="all"]::before,
+  :where(font-kku, .font-kku) [part="root"][data-fy-selected="all"] [part="space"]:is(:first-child, :last-child),
+  :where(font-kku, .font-kku) [part="space"]:is(:first-child, :last-child)[data-fy-selected],
+  :where(font-kku, .font-kku) [part="root"][data-fy-selected="all"] [part="space"]:not(:first-child, :last-child)::before,
+  :where(font-kku, .font-kku) [part="space"]:not(:first-child, :last-child)[data-fy-selected]::before,
+  :where(font-kku, .font-kku) [part="glyph"][data-fy-selected="part"] :is([part~="jamo"], [part="content"])[data-fy-selected]::after {
+    background-color: transparent;
+  }
 }
 
 :where(font-kku, .font-kku) [part="root"][data-fy-select="copy"] {

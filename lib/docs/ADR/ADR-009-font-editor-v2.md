@@ -1,7 +1,7 @@
 # ADR-009: 폰트 에디터 v2 — 계약 v2 위의 정적 단일 스튜디오
 
 ## Status
-Accepted (계획한 항목 모두 구현: CSS 편집, 재료 탭, 전역·cluster 변수, PoC 두 페이지 제거, 2단계 잉크 겹침 검증, File System Access 저장)
+Accepted — 일부 대체: ADR-036 (계획한 항목 모두 구현: CSS 편집, 재료 탭, 전역·cluster 변수, PoC 두 페이지 제거, 2단계 잉크 겹침 검증, File System Access 저장)
 
 ## Date
 2026-09-24
@@ -20,6 +20,7 @@ ADR-008이 모든 보정을 레벨별 `--fy-*` 변수와 고정된 cascade layer
 
 ### 1. 범위와 원칙
 - 하나의 정적 스튜디오 페이지로 CSS 폰트 편집과 sprite 재료 편집을 통합한다. 서버, 빌드, 계정이 없다.
+  (→ 2026-10-17 [ADR-036](ADR-036-studio-page-split.md)이 대체: 작업실은 디자인·고치기·자소판·검수 네 페이지로 나뉘고 초안·프로젝트로 넘긴다. 검수 페이지는 [ADR-031](ADR-031-explicit-options-and-review-evidence.md), 서버 저장(개발·검수 사이트의 저장 창구)은 [ADR-033](ADR-033-dev-review-site.md)이 더했다. 빌드·계정 없이 정적으로 여는 작업실은 그대로다.)
 - `file://`로 열어도 동작하도록 classic script로 작성한다(ES module은 `file://`에서 CORS로 막힌다).
 - 라이브러리의 공개 API와 공개 폰트 계약만 사용한다(직접 써보는 첫 사용자). 에디터 전용 private hook을 런타임에 추가하지 않는다.
 - 산출물은 ADR-008 폰트 패키지(`<name>.css` + 상대 경로 자산)다. 손으로 쓴 CSS와 에디터 산출물은 같은 형식이다.
@@ -104,6 +105,7 @@ ADR-008이 모든 보정을 레벨별 `--fy-*` 변수와 고정된 cascade layer
 - Architecture: [Font Studio](../ARCHITECTURE/font-studio.md), [Sprite Authoring Studio (superseded)](../ARCHITECTURE/sprite-authoring-studio.md), [Font Authoring and Calibration Guide](../ARCHITECTURE/font-authoring-and-calibration-guide.md)
 
 ## Change Log
+- 2026-10-31: §1 "하나의 정적 스튜디오 페이지"에 ADR-036(페이지 나누기)·ADR-031(검수 페이지)·ADR-033(서버 저장) 표시, Status에 일부 대체(PLAN-DOCS-001 문서 정비)
 - 2026-10-16: ADR-029에 따라 작업실 배포 범위를 선택형 라이브러리 UI로 확장하고 사이트 페이지 구성과 분리
 - 2026-10-09: 재료 탭에 이전 Sprite Editor 기능 복원(§3·§6) — 사각형 도구와 도형 미리보기, 동작 단위 되돌리기·다시(시트 작업 포함), 안내선 토글, 잉크 coverage, 시트 전체 비우기·전체 다시 채우기, 래스터 품질(ADR-008 `--fy-sprite-rendering`), 미리보기 PNG 칸, PNG 칸 크기·1x·2x·3x 배율 세트 내보내기와 `image-set` CSS 연결, 작은 글씨 프리셋(폰트 레벨)·광학 보정 미리보기와 페이지 CSS 복사(페이지 전용), 툴바 CSS 복사(보안 컨텍스트가 아니면 textarea 폴백). 입구: sprite가 아닌 폰트의 시작 안내, nav "Sprite 그리기". `hidden` 요소가 컴포넌트 `display` 규칙에 가려 화면에 남던 결함(빈 시트 패널·가짜 초안 막대) 수정
 - 2026-09-27: 편집·해석 결함 수정 — 범위 편집이 값을 실제로 공급하는 규칙(공유 `:is()` 규칙 포함)을 고치고, 공유 경고와 분리 선택지, 이길 수 없는 편집의 거부와 "대신 고치기", 편집 뒤 반영 확인 경고를 추가(§3). 파서를 CSS Syntax 오류 복구·조건·`!important`·중첩·익명/중첩 레이어·CRLF·압축 블록·값 뒤 주석까지 다루도록 다시 쓰고 해석 모델이 조건·중요도·조상 요소 상속을 계산(§2·§3). 초안은 편집 뒤에만 쓰고 복원·버리기 전까지 보관, 시트 포함, 저장 실패 표시(§4). 이름을 바꾸면 파일 핸들을 잊음. PNG 가져오기는 이미지 크기에서 행·칸을 얻고 불가능한 격자를 거부, 행 수가 다르면 `--fy-sprite-rows/kinds`를 맞출지 묻고 늘이지 않음. 미리보기를 shadow root로 격리하고 상대 URL을 절대화. 2단계 겹침의 기준선·잉크 임계 보정과 잴 수 없음 표시, Playwright 대조를 같은 세션의 스크린숏 기준으로 교체. 계약 변경 반영: 생성된 slot 계약의 새 접미사(rotate·clip·dilate)와 방출되지 않는 부모 slot을 쓰는 "slot 가족" 범위, 전역 패널의 `--fy-sprite-dilate`·`--fy-font-*-depth`

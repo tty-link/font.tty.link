@@ -4,12 +4,12 @@
 
 AI agents: before building anything with font-kku, read the usage guide [SKILL.md](https://font.tty.link/lib/skill/SKILL.md). It is a table of contents — open only the topic files your task needs. Always install the exact version pinned below.
 
-AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)를 먼저 읽는다. SKILL.md는 목차다 — 할 일에 맞는 주제 파일만 더 연다. 런타임은 `<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="sebul neon sticker"></script>` 한 줄로 붙인다(`sebul`은 글꼴을 밝히지 않은 글도 쓴다).
+AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.md](https://font.tty.link/lib/skill/SKILL.md)를 먼저 읽는다. SKILL.md는 목차다 — 할 일에 맞는 주제 파일만 더 연다. 런타임은 `<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/font-kku.min.js" data-fonts="sebul neon sticker"></script>` 한 줄로 붙인다(`sebul`은 글꼴을 밝히지 않은 글도 쓴다).
 
 ## 판
 
-- 이 사이트·설명서·예제는 `@tty.link/font-kku@0.1.4-rc.4`로 그린다. 판을 적지 않으면 npm이 다른 판(`latest`)을 줄 수 있고, 그러면 기본 모양과 작업실이 이 설명서와 다를 수 있다.
-- 판을 적지 않은 `npm install @tty.link/font-kku`나 범위 주소(`@0.1`)를 쓰지 않는다. 늘 위 CDN 주소의 판과 `npm install --save-exact @tty.link/font-kku@0.1.4-rc.4`를 그대로 쓴다.
+- 이 사이트·설명서·예제는 `@tty.link/font-kku@0.1.4`로 그린다. 판을 적지 않으면 npm이 다른 판(`latest`)을 줄 수 있고, 그러면 기본 모양과 작업실이 이 설명서와 다를 수 있다.
+- 판을 적지 않은 `npm install @tty.link/font-kku`나 범위 주소(`@0.1`)를 쓰지 않는다. 늘 위 CDN 주소의 판과 `npm install --save-exact @tty.link/font-kku@0.1.4`를 그대로 쓴다.
 
 ## 핵심
 
@@ -67,12 +67,12 @@ AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.
 
 ## 라이브러리
 
-- [font-kku.min.js](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js): 런타임(jsDelivr 즉석 압축본, 소스는 `.min`을 뺀 `font-kku.js`). 글꼴 CSS(`profiles/<글꼴>.css`)와 확장·그림 세트는 같은 폴더에서 런타임이 `.min` 압축본으로 받는다
-- [font-kku.d.ts](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.d.ts): 공개 API 타입(실험 API 포함)
-- [spec/themes.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/spec/themes.json): 이름 있는 조합(테마) 목록
-- [spec/fonts.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/spec/fonts.json): 글꼴 목록
-- [spec/design.schema.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/spec/design.schema.json): 디자인 JSON 형식(실험)
-- [npm @tty.link/font-kku](https://www.npmjs.com/package/@tty.link/font-kku): `npm install --save-exact @tty.link/font-kku@0.1.4-rc.4`(위 주소와 같은 판) — 번들러 프로젝트, Node·명령줄(`font-kku-text`), 작업실 `@tty.link/font-kku/studio`
+- [font-kku.min.js](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/font-kku.min.js): 런타임(jsDelivr 즉석 압축본, 소스는 `.min`을 뺀 `font-kku.js`). 글꼴 CSS(`profiles/<글꼴>.css`)와 확장·그림 세트는 같은 폴더에서 런타임이 `.min` 압축본으로 받는다
+- [font-kku.d.ts](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/font-kku.d.ts): 공개 API 타입(실험 API 포함)
+- [spec/themes.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/spec/themes.json): 이름 있는 조합(테마) 목록
+- [spec/fonts.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/spec/fonts.json): 글꼴 목록
+- [spec/design.schema.json](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/spec/design.schema.json): 디자인 JSON 형식(실험)
+- [npm @tty.link/font-kku](https://www.npmjs.com/package/@tty.link/font-kku): `npm install --save-exact @tty.link/font-kku@0.1.4`(위 주소와 같은 판) — 번들러 프로젝트, Node·명령줄(`font-kku-text`), 작업실 `@tty.link/font-kku/studio`
 
 ## 데모
 
@@ -85,4 +85,4 @@ AI 에이전트는 이 사이트로 작업하기 전에 사용 설명서 [SKILL.
 
 ## Optional
 
-- [README](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/README.md): 전체 설명과 계약
+- [README](https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/README.md): 전체 설명과 계약

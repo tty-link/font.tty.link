@@ -1,16 +1,16 @@
 # 그림 자소 글꼴
 
-> Status: Implemented
+> 상태: 현행 · 마지막 갱신 2026-10-31 · 관련 결정: [ADR-011](../ADR/ADR-011-svg-jamo-sheets.md), [ADR-013](../ADR/ADR-013-vector-jamo.md), [ADR-014](../ADR/ADR-014-sprite-mask-paint.md), [ADR-015](../ADR/ADR-015-font-file-export.md)
 > Scope: 그림 자소를 활용한 글꼴 저작 경로
 
 ## 목표
 
 `font-kku`의 글꼴 저작 경로는 두 갈래다.
 
-1. **CSS 글꼴** — 기기에 설치된 한글 글꼴의 자소를 그대로 쓰고 `--fy-*` 변수로 위치·크기·변형을 조정한다. 현재 브라우저 기본 제공 글꼴은 `sebul`, `gothic`이다.
+1. **CSS 글꼴**(`--fy-material: system`) — 위치·크기·변형을 `--fy-*` 변수로 주고, 자모는 재료로 그린다. 기본 제공 `sebul`·`gothic`·`malang`·`jikgyeol`은 원소 재료(획을 CSS 상자로)가 기본이고, 기기 한글 글꼴의 낱자(`device`)나 칸 계약 그림 세트(`svg`)로도 그린다([ADR-024](../ADR/ADR-024-hangul-principle-rendering.md), [글꼴 모양·재료·디자인](./shape-material-design.md#재료)).
 2. **그림 자소 글꼴** — 자음·모음 그림을 한 장(자소판, SVG 또는 PNG)에 늘어놓고, 코어 CSS가 런타임이 만든 각 자소 노드에 해당 자소 칸만 배경으로 칠한다. 글꼴은 자소판과 행 선택을 `--fy-sprite-*` 변수로만 선언한다.
 
-이 문서는 두 번째 경로의 설계 계약을 정의한다.
+이 문서는 두 번째 경로의 설계 계약을 정의한다. 그림 자소판 재료는 표준 잉크 상자·글꼴 모양·디자인을 받지 않는다 — 자소판 칸은 음절 1em 상자라 좌표 틀이 다르다([ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md) §1). 칸 계약 그림 세트(`svg` 재료)는 CSS 글꼴 쪽 재료이고, 아래 '벡터 자소' 절이 둘의 관계를 다룬다.
 
 ## Related Documents
 - Architecture: [브라우저 런타임 설계](./browser-runtime-design.md)
@@ -214,6 +214,7 @@ python3 scripts/build_sprite.py \
 - 런타임보다 먼저 실린 모듈은 `globalThis.FontKkuJamo`에 `[name, cells, options]`를 push한다. 늦게 등록된 세트는 그 세트를 쓰는 바탕 요소를 다시 그린다.
 - 기본 제공 세트는 `profiles/sprite-system.jamo.js`, `sprite-example.jamo.js`, `pixel.jamo.js`(`scripts/build_jamo_svg.js`가 자소판과 같은 획으로 낸다). 도장·분필은 질감 필터 때문에 자소판으로만 쓴다.
 - 자모마다 SVG가 생기므로 제목·짧은 글에 쓴다. 긴 본문은 자소판이 가볍다.
+- 칸 계약이 둘이다. 이 절의 세트는 자소판 칸 좌표(`frame: "sprite"`, 기본)이고 그림 자소 재료 바탕 요소에만 걸린다. 표준 잉크 상자를 밝힌 CSS 글꼴은 칸 계약 세트(`frame: "box"`)만 그림 재료(`--fy-face: svg`)로 쓴다(ADR-024). 맞지 않는 세트는 `JAMO_SET_FRAME_MISMATCH`로 알린다.
 
 ## 마스크 칠 — 자소판에 CSS 색 입히기
 
@@ -233,7 +234,7 @@ python3 scripts/build_sprite.py \
 
 ## 글꼴 파일로 내보내기
 
-그림 자소 글꼴과 벡터 자소는 보통 글꼴 파일(TTF·WOFF)로 내보낼 수 있다([ADR-015](../ADR/ADR-015-font-file-export.md)). 런타임 없이 워드·디자인 도구·다른 사이트에서 쓴다.
+그림 자소 글꼴과 벡터 자소는 보통 글꼴 파일(TTF·WOFF)로 내보낼 수 있다([ADR-015](../ADR/ADR-015-font-file-export.md)). 런타임 없이 워드·디자인 도구·다른 사이트에서 쓴다. 2026-11-06부터(0.1.4-rc.4 다음 공개판) 원소 획 글꼴(sebul·gothic·jikgyeol·malang)과 칸 계약 그림 세트(`jamoSet`, `frame: "box"`)를 건 글꼴도 된다([ADR-015 §7](../ADR/ADR-015-font-file-export.md)). 안 되는 것은 기기 글꼴 재료와 디자인으로 그린 바탕 요소다.
 
 ```html
 <script src=".../font-kku.js" data-fonts="sprite-system"></script>
@@ -244,24 +245,24 @@ python3 scripts/build_sprite.py \
 </script>
 ```
 
-- **자리 변환**: 런타임이 조립한 결과에서 읽는다(숨긴 바탕 요소, 자모 노드마다 칸 모서리 표식 셋). 문맥 잘림 노드는 따로 글리프가 된다.
-- **칸 외곽선**: 칸을 256px로 그려 알파에서 딴다(보간 마칭 스퀘어 + RDP). 자소판 PNG·SVG, 벡터 칸 모두 같은 길이다. 자소판은 같은 출처여야 한다(`file://` 불가).
+- **자리 변환**: 런타임이 조립한 결과에서 읽는다(숨긴 바탕 요소, 자모 노드마다 칸 모서리 표식 셋). 문맥 잘림 노드는 따로 글리프가 된다. 원소·그림 세트 재료는 마디(`[part="element"]`)마다 표식 셋을 넣고, 원점은 글자 칸이 아니라 바탕 요소 상자다(그 재료의 글자 칸은 바탕 요소 안에서 0.15em 내려앉아 있다).
+- **칸 외곽선**: 칸을 256px로 그려 알파에서 딴다(보간 마칭 스퀘어 + RDP). 자소판 PNG·SVG, 벡터 칸 모두 같은 길이다. 자소판은 같은 출처여야 한다(`file://` 불가). 원소 재료의 CSS 선·고리는 캔버스에 그리고, 그림 세트의 그림(`<svg part="vector">`)은 viewBox를 내용 상자와 획 굵기만큼 넓혀 화면 비례로 그린다(`overflow: visible`로 나간 획이 잘리지 않게).
 - **음절**: 칸 부품 + 아핀 복합 글리프다. WOFF2는 약 20KB(`scripts/export_font_file.py --woff2`).
-- **입구**: 글꼴 작업실 재료 탭 "글꼴 파일(TTF)로 내보내기"(편집 중인 자소판), 글꼴 시험대의 "글꼴 파일 받기", 저장소 CLI `python scripts/export_font_file.py --font pixel --out tmp/pixel.ttf --woff2 tmp/pixel.woff2 --compare`.
-- **한계**: 글꼴 파일은 단색이다. 획 보정과 벡터 자소의 `non-scaling-stroke`는 들어가지 않고, 영문·숫자는 넣지 않는다.
+- **입구**: 글꼴 작업실 재료 탭 "글꼴 파일(TTF)로 내보내기"(편집 중인 자소판)와 머리 막대 내보내기 ▾의 '글꼴 파일(TTF)'(원소 획·그림 세트 글꼴은 미리보기의 글꼴 CSS로 — 디자인이 걸린 미리보기는 막힌다), 글꼴 시험대의 "글꼴 파일 받기"(그림 자소 글꼴), 저장소 CLI `python scripts/export_font_file.py --font pixel --out tmp/pixel.ttf --woff2 tmp/pixel.woff2 --compare`(원소 획은 `--font sebul`, 그림 세트는 `--font sebul --jamo-set pilgi-box`).
+- **한계**: 글꼴 파일은 단색이다. 획 보정과 벡터 자소의 `non-scaling-stroke`는 들어가지 않고, 영문·숫자는 넣지 않는다. 원소·그림 세트 재료는 획 묶음의 문맥 잘림(`clip-path`)을 적용하지 않고(`report.unclipped`가 센다), 속 빈 획(꾸밈의 outline)은 속이 찬 획으로 나간다. 원소 획 글꼴 전체는 50초쯤 걸린다(자소판 글꼴은 6–8초).
 - **거절**: 내보낼 글자가 없으면 빈 TTF를 돌려주지 않고 `error.code`가 달린 오류(`error.name` `"FontKkuExportError"`, `error.font`·`error.jamoSet`)를 던진다. 화면에는 코드를 보고 까닭을 쓴다(작업실·글꼴 시험대가 그렇다). CLI `scripts/export_font_file.py`는 거절이면 종료 코드 2다.
 
   | 코드 | 까닭 | 더 실린 값 |
   |---|---|---|
-  | `EXPORT_UNSUPPORTED_FACE` | 재료가 그림 자소·벡터 자소가 아니다 — 원소 획(`element`), 세벌·고딕에 건 8칸 그림 세트(`svg`, `frame: "box"`), 기기 글꼴(`device`·`system`) | `error.face` |
+  | `EXPORT_UNSUPPORTED_FACE` | 재료가 글꼴 파일이 되지 않는다 — 기기 글꼴(`device`·`system`). 0.1.4-rc.4까지는 원소 획(`element`)과 세벌·고딕에 건 8칸 그림 세트(`svg`, `frame: "box"`)도 이 코드였다 | `error.face` |
   | `EXPORT_FONT_NOT_LOADED` | 그 글꼴 CSS가 문서(`root`)에 없다 — 필요할 때 받기가 실패했거나 꺼졌거나 글꼴 id 오타 | |
   | `EXPORT_JAMO_SET_NOT_LOADED` | `jamoSet`이 등록되지 않았다(`profiles/<세트>.jamo.js`·`FontKku.registerJamo`) | |
   | `EXPORT_NO_HANGUL` | `text`에 한글 음절(U+AC00–D7A3)·호환 자모가 없다(NFC로 맞춘 뒤, 빈 문자열 포함) | `error.skipped` |
   | `EXPORT_NO_GLYPHS` | 쓰는 칸 그림에 잉크가 없다(빈 자소판, 읽지 못한 자소판) | `error.missing` |
-  | `EXPORT_DESIGN_UNSUPPORTED` | `design`을 넘겼다 — 규칙·소스를 버리고 내보내지 않는다 | |
+  | `EXPORT_DESIGN_UNSUPPORTED` | `design`을 넘겼거나, 원소·그림 세트 바탕 요소가 디자인으로 그려졌다 — 규칙·소스를 버리고 내보내지 않는다 | `error.design`(그린 바탕 요소의 디자인 이름) |
   | `EXPORT_GLYPH_MAPPING_UNSUPPORTED` | 문자 매핑(구조화 후보·잠금)이 있는 디자인이거나, 그린 바탕 요소에 문자 매핑이 보인다 | |
 
-  성공해도 `report.skipped`(`text`에서 한글이 아니라 넣지 않은 글자, 공백 빼고)와 `report.missing`(칸이 없거나 비어 넣지 못한 글자 — 다른 글꼴로 대체된다)을 본다. 타입은 `font-kku-export.d.ts`의 `ExportErrorCode`·`ExportReport`.
+  성공해도 `report.skipped`(`text`에서 한글이 아니라 넣지 않은 글자, 공백 빼고)와 `report.missing`(칸이 없거나 비어 넣지 못한 글자 — 다른 글꼴로 대체된다)을 본다. 원소·그림 세트 재료는 `report.unclipped`(문맥 잘림을 적용하지 않은 획 묶음 수)도 본다. 타입은 `font-kku-export.d.ts`의 `ExportErrorCode`·`ExportReport`.
 
 ## 재료만 바꾼 자소판 — 파생 그림 자소 글꼴
 
@@ -317,6 +318,8 @@ python3 scripts/build_sprite.py \
 - **로컬 글꼴 자동 탐색.** 실행 환경에서 쓸 수 있는 한글 글꼴을 자동으로 찾아 `--from-font` 기본값으로 쓴다.
 
 ## Change Log
+- 2026-11-06: 글꼴 파일로 내보내기 — 원소 획·칸 계약 그림 세트 재료(ADR-015 §7)의 입구·원점·한계, `EXPORT_UNSUPPORTED_FACE`는 기기 글꼴 재료만, `EXPORT_DESIGN_UNSUPPORTED`의 `error.design`, `report.unclipped`
+- 2026-10-31: 머리말을 공통 형식으로. CSS 글꼴의 재료를 원소 기본(ADR-024)으로 고치고, 자소판 재료가 모양·디자인을 받지 않는다는 경계(ADR-030 §1)를 적음(PLAN-DOCS-001)
 - 2026-10-17: 그림 자소 보기 페이지 경로를 사이트 저장소 `src/`로(ADR-029)
 - 2026-10-10: 획 뼈대 × 획 표현(`SKELETONS` × `TEXTURES`) 생성기 절, 새 그림 자소 글꼴 `pilgi`·`dunggeun`·`butgeul`, 그림 자소에 거는 꾸밈 `kku-look-*`(ADR-017) 추가
 - 2026-10-10: 글꼴 파일로 내보내기(ADR-015) 절 추가

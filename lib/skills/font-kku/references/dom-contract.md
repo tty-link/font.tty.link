@@ -54,7 +54,7 @@
 - `data-fy-font-pending` (필요할 때 받기로 글꼴 CSS·자소 모듈을 받는 동안만, ADR-019)
 - `data-fy-host="custom-element|decorator"`
 - `data-fy-expression="sebeol|general"`
-- `data-fy-vowel-depth="split|whole|syllable"`, `data-fy-coda-depth="split|whole"` (해석된 자모 깊이 두 축)
+- `data-fy-vowel-depth="split|whole|syllable"`, `data-fy-coda-depth="split|whole"` (해석된 음절 나누기 두 축)
 - `data-fy-font`, `data-fy-profile`
 - `data-fy-size`
 - `data-fy-spacing` (설정한 경우)
@@ -77,7 +77,10 @@
   - 낱자(ADR-025 §6): `element`·`svg`에서 음절이 아닌 호환 자모 글자(`part="content"`, ㄱ–ㅣ)에도 런타임이 `data-fy-standalone="<자모>"`를 찍고 자모 노드처럼 획 묶음을 넣는다(표준 상자 `spec/jamo-ink-boxes.json`의 낱자 51, 뼈대는 곧은 꼴 — 받침 꼴, ㄸ·ㅃ·ㅉ는 가로 모음 위 꼴). 글자는 `text-indent`로 밀어 둔다. `spec/html-cases.json` 직렬화에는 들지 않는다
   - 글꼴 팔레트(ADR-025 §9): 글꼴 글자 재료(`device`)에 글꼴 디자인(`mode: "font"`)이 걸리면 자모 노드마다 고른 글꼴을 inline `font-family`(·`font-weight`·`font-style`)로 두고, 한 노드를 조각마다 다른 글꼴이나 조립식으로 그리면 노드에 `data-fy-leaves`를 찍고 조각마다 `<span part="leaf" data-leaf-source="<소스>" data-leaf-path="<조각 경로>">낱자</span>`(inline `--fy-leaf-size`·`--fy-leaf-x`·`--fy-leaf-y`·`--fy-leaf-scale-x`·`--fy-leaf-scale-y`, 노드 `::before`와 같은 맞춤)를 넣는다. 그 노드는 `::before`를 그리지 않는다
   - 문자 매핑(ADR-032 §12): 측정이 끝난 의미 자모 노드에 `data-fy-glyph-mapped`가 붙고, 그릴 글자마다 `<span part="leaf" lang="zxx" data-fy-glyph-text="<글자>" data-leaf-source data-leaf-path>`가 든다(후보면 `data-fy-glyph-candidate`). 맞춤은 위 `--fy-leaf-*`에 회전 `--fy-leaf-rotate`(곧은 획을 따라 놓을 때)를 더한다. 가로·세로 마디로 된 자모는 글자 하나를 여러 잎으로 잘라 그린다 — 잎마다 `data-fy-glyph-slice="<0부터>"`와 inline `clip-path: polygon(…)`(글자 em)이 붙는다. 잎 수는 글자 수가 아니다. `lang="zxx"`는 일반 글꼴 낱말(`sans-serif` 등)이 측정 캔버스와 같은 글꼴로 풀리게 한다. 읽는 글은 `sr-source`다
-- `data-fy-layout="<profile>"` — 글꼴 모양(배치 프로파일, [ADR-026](../../../docs/ADR/ADR-026-sebul-fixed-layout.md)·[ADR-028](../../../docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md)). 글꼴을 밝히지 않은 바탕 요소는 기본 `sebul-cases-v1`(세벌식, case-fixed), 글꼴 CSS가 `--fy-font-layout`을 밝히면 그 배치(`jikgyeol` → `sebul-fixed-v1` 직결식, fixed-three), 1.2 디자인은 자기 `layout`(디자인이 이긴다). 그 밖의 글꼴을 밝힌 바탕 요소는 지금 배치라 속성이 없다. 배치를 적지 않은 디자인은 다음 출처의 배치를 물려받고, `--fy-design: legacy`는 디자인만 끈다 — 문맥 배치는 `--fy-layout: square-context-v1`로 고른다(ADR-031, 2026-10-18). 모양의 모델(case-fixed·fixed-three·adaptive-square)은 바탕 요소에 적지 않고 `FontKku.layoutProfiles[이름].model`로 읽는다(2026-10-17 `data-fy-layout-model` 없앰, ADR-030 D6). 고정 글꼴 모양(세벌식·직결식)의 기본 자모 깊이는 `split`/`whole`(합자 모음은 조각 둘, 겹받침은 통짜)이고 페이지 깊이 변수와 글꼴 CSS `@layer font-kku.tune`의 `--fy-font-*-depth`로 통짜 모음·머리 음절·겹받침 낱을 고른다(§3.3, ADR-030 §4). 자모 노드(머리 `[part~="head"]` 포함)의 자리·크기·굵기는 코어 CSS의 모양 값 규칙(`@layer font-kku.shape`의 `--fy-shape-*`)이 이 속성·글자 칸의 짜임·자모로 골라 준다(§7) — 런타임은 노드에 값을 적지 않는다. 네 언어 정적 렌더러(`render_html`)도 글꼴을 밝히지 않은 호출(font 없음·빈 문자열, `FontDefinition` 없음)에 같은 표면을 쓴다 — host `font` 속성 없음, `data-fy-layout`은 `data-fy-coda-depth` 바로 뒤, 그 뒤 `data-fy-face="element"`와 원소 획(ADR-027). 자리는 함께 싣는 코어 CSS가 정한다. `spec/html-cases.json`의 `implicitFont` 사례가 이 표면을 정합 계약으로 고정한다(원소 층은 `spec/element-layer.json`)([언어 공통 렌더 계약](../../../docs/ARCHITECTURE/renderer-contracts.md#기본-배치세벌식))
+  - D16 채택 opt-in: 연결된 managed host에 `refreshAll(host,{materialCSS:true})`를 호출하면 구조화 font 시각 잎/임시 측정 잎에 `data-fy-material-{jamo,root,role,path,source}`를 붙여 glyph-text/candidate 선택을 읽는다. 기존 semantic CSS/direct/none가 먼저다. 칠은 평소 CSS, 선택은 마지막 capture이며 false가 해제한다. source/design/revision/font/layout/depth/composition 변경은 INVALIDATED와 함께 폐기하므로 true 재호출이 필요하다. connected 숨김 head는 선택만 선수집하고 유효 기하 전에는 원문 fallback/HEAD_UNSUPPORTED를 유지한다. detached는 연결 뒤 true가 필요하다. `data-fy-material-probe`는 내부 임시 표식이며 새 semantic data-jamo/seed/저장 field를 만들지 않는다. 2026-10-26 사용자 승인으로 master에 채택했다([수용안](../../../docs/ADR/ADR-032-hangul-structure-and-materials.md)).
+  - D17 채택(2026-10-26): fixed/cases의 유효 통짜 모음 영역에서는 semantic CSS quoted text를 기존 JSON direct와 같은 한 재료 요청/측정으로 그린다. 디자인은 필수가 아니며 여러 clipped paint cells를 쓸 수 있다. effective candidate-only·CSS head/영역 없음·축·정적/TTF는 기존 진단을 유지한다. 일반 `refreshAll`로 CSS를 읽고 semantic 값 제거 시 D16 capture를 복원한다([ADR-032 §12.3](../../../docs/ADR/ADR-032-hangul-structure-and-materials.md)).
+  - D18 채택(2026-10-26): 위 fixed/cases whole의 candidate-only를 해당 font 디자인의 whole 자모/medial/source/path[] 항목 ID로 선택한다. 등록 lock이 CSS ID보다 우선하며 recipe 멤버에서 후보를 추론하지 않는다. 없는 whole/ID는 CANDIDATE_MISSING 전체 fallback, candidate:none는 무진단 원문이다. [정확 계약/예시](../../../docs/ADR/ADR-032-hangul-structure-and-materials.md#124-고정-통짜-모음의-semantic-css-후보-id-2026-10-26-채택-d18).
+- `data-fy-layout="<profile>"` — 글꼴 모양(배치 프로파일, [ADR-026](../../../docs/ADR/ADR-026-sebul-fixed-layout.md)·[ADR-028](../../../docs/ADR/ADR-028-sebeol-cases-and-jikgyeol.md)). 글꼴을 밝히지 않은 바탕 요소는 기본 `sebul-cases-v1`(세벌식, case-fixed), 글꼴 CSS가 `--fy-font-layout`을 밝히면 그 배치(`jikgyeol` → `sebul-fixed-v1` 직결식, fixed-three), 1.2 디자인은 자기 `layout`(디자인이 이긴다). 그 밖의 글꼴을 밝힌 바탕 요소는 지금 배치라 속성이 없다. 배치를 적지 않은 디자인은 다음 출처의 배치를 물려받고, `--fy-design: legacy`는 디자인만 끈다 — 네모꼴은 `--fy-layout: square-context-v1`로 고른다(ADR-031, 2026-10-18). 모양의 모델(case-fixed·fixed-three·adaptive-square)은 바탕 요소에 적지 않고 `FontKku.layoutProfiles[이름].model`로 읽는다(2026-10-17 `data-fy-layout-model` 없앰, ADR-030 D6). 고정 글꼴 모양(세벌식·직결식)의 기본 음절 나누기는 `split`/`whole`(합자 모음은 조각 둘, 겹받침은 통짜)이고 페이지 깊이 변수와 글꼴 CSS `@layer font-kku.tune`의 `--fy-font-*-depth`로 통짜 모음·머리 음절·겹받침 낱을 고른다(§3.3, ADR-030 §4). 자모 노드(머리 `[part~="head"]` 포함)의 자리·크기·굵기는 코어 CSS의 모양 값 규칙(`@layer font-kku.shape`의 `--fy-shape-*`)이 이 속성·글자 칸의 짜임·자모로 골라 준다(§7) — 런타임은 노드에 값을 적지 않는다. 네 언어 정적 렌더러(`render_html`)도 글꼴을 밝히지 않은 호출(font 없음·빈 문자열, `FontDefinition` 없음)에 같은 표면을 쓴다 — host `font` 속성 없음, `data-fy-layout`은 `data-fy-coda-depth` 바로 뒤, 그 뒤 `data-fy-face="element"`와 원소 획(ADR-027). 자리는 함께 싣는 코어 CSS가 정한다. `spec/html-cases.json`의 `implicitFont` 사례가 이 표면을 정합 계약으로 고정한다(원소 층은 `spec/element-layer.json`)([언어 공통 렌더 계약](../../../docs/ARCHITECTURE/renderer-contracts.md#기본-배치세벌식))
 - `data-fy-design="<name>"`, `data-fy-design-status` — 디자인([ADR-025](../../../docs/ADR/ADR-025-hangul-composition-design.md), 실험). 글꼴 `--fy-font-design`·페이지 `--fy-design`이 `FontKku.registerDesign`으로 등록한 이름을 고르면 `data-fy-design`이 붙고 재료(`data-fy-face`)·그림 세트·직접/조합 규칙을 그 디자인이 정한다(같은 페이지 레벨의 `jamo-set`·`--fy-face`보다 우선; 글꼴 레벨 디자인은 페이지 재료가 이김). 고르지 못하면 지금 설정으로 그리고 `data-fy-design-status`에 까닭을 남긴다 — `DESIGN_TOKEN_INVALID`(이름 문법), `DESIGN_NOT_REGISTERED`(미등록·`unregisterDesign`으로 지움 — 등록되는 순간 다시 그린다), `DESIGN_UNSUPPORTED_FONT`(이 글꼴은 디자인을 받지 않는다 — 그림 자소 재료이거나 표준 잉크 상자 `--fy-font-ink-boxes`를 밝히지 않았거나 페이지가 `--fy-ink-boxes: none`으로 껐다. 이름 문법이 틀리면 `DESIGN_TOKEN_INVALID`가 먼저, 등록해도 바뀌지 않는다). `fontInfo(host).designStatus`·`traceOf(host).designStatus`도 같은 값이다. 디자인을 `registerDesign(name, json, { replace: true })`로 바꾸면 그 이름을 고른 바탕 요소가 다시 그린다. `legacy`는 물려받은 선택을 끊는다. 자모 노드 DOM은 같은 꼴(`part="hoek"`·`part="element"`)이고, 어느 조각을 어느 소스·규칙으로 그렸는지는 DOM이 아니라 `FontKku.traceOf(host)`가 돌려준다
 - `data-fy-stroke-depth="stroke|jamo"` — 획 깊이를 요청했을 때만(§3.4). 벡터 자소면 `stroke`, 획으로 쪼갤 수 없는 재료(기기 글꼴·자소판)면 `jamo`로 되돌린 것을 알린다
 - `data-source`
@@ -130,9 +133,9 @@ decorator의 `data-font`/`data-profile`/`data-size`/`data-spacing`/`data-wrap-un
 
 ### 3.3 두 개의 독립 축 — expression mode와 jamo depth
 
-폰트 선택에는 서로 **유도 관계가 없는** 두 축이 있다: 디자인 축 `--fy-expression-mode`(sebeol/general)와 메커니즘 축인 자모 깊이. 어느 한쪽이 다른 쪽을 결정하지 않는다.
+폰트 선택에는 서로 **유도 관계가 없는** 두 축이 있다: 디자인 축 `--fy-expression-mode`(sebeol/general)와 메커니즘 축인 음절 나누기(jamo depth). 어느 한쪽이 다른 쪽을 결정하지 않는다.
 
-자모 깊이는 다시 **서로 독립인 두 옵션**으로 이뤄진다. CSS shorthand/longhand 관례를 따른다 — 짧게 한 번에 정할 수도, 축별로 세밀하게 정할 수도 있다.
+음절 나누기는 다시 **서로 독립인 두 옵션**으로 이뤄진다. CSS shorthand/longhand 관례를 따른다 — 짧게 한 번에 정할 수도, 축별로 세밀하게 정할 수도 있다.
 
 | 변수 | 값 | 결정하는 것 |
 |---|---|---|
@@ -169,7 +172,7 @@ decorator의 `data-font`/`data-profile`/`data-size`/`data-spacing`/`data-wrap-un
 
 ### 3.4 획 깊이 — 자모 아래 단위(ADR-018)
 
-자모 깊이(§3.3)와 독립인 셋째 축이다. 자모 노드는 그대로 두고 **그 안의 그림을 획으로 쪼갠다** — 자모 노드의 자리·slot·역할 계약과 기존 CSS는 그대로 듣는다.
+음절 나누기(§3.3)와 독립인 셋째 축이다. 자모 노드는 그대로 두고 **그 안의 그림을 획으로 쪼갠다** — 자모 노드의 자리·slot·역할 계약과 기존 CSS는 그대로 듣는다.
 
 | 값 | 단위 | 예 |
 |---|---|---|
@@ -492,7 +495,7 @@ font CSS가 하지 않는 것: 코어 소유 속성(`margin`, `inset`, `transfor
 - `FontKku.bootstrap(root)`
 - `FontKku.render(target, options)`
 - `FontKku.refresh(target, options)`
-- `FontKku.refreshAll(root)` — font 메타데이터·depth·expression mode를 다시 해석해 구조가 바뀐 host만 attribute를 다시 읽어 재렌더, id/contract만 바뀌면 상태만 갱신. shadow root 안 host 포함 (stylesheet `load`는 자동 처리)
+- `FontKku.refreshAll(root)` — font 메타데이터·depth·expression mode를 다시 해석해 구조가 바뀐 host만 attribute를 다시 읽어 재렌더, id/contract만 바뀌면 상태만 갱신, 그림 자소 칠(`--fy-sprite-paint`)만 바뀌면 `data-fy-sprite-paint`와 칸만 고친다(`restyle`, 관리 DOM·JS 옵션 그대로). shadow root 안 host 포함 (stylesheet `load`는 자동 처리)
 - `FontKku.loadFont(href, { root }?)` — stylesheet `<link>`를 삽입(같은 URL이면 재사용)하고 load 뒤 `refreshAll`. 대기·성공 중에는 같은 Promise, 실패하면 link를 지우고 reject(재호출 시 재시도). `Promise<HTMLElement[]>`
 - 이벤트 `font-kku:render` — 모든 렌더(자동 재렌더 포함) 뒤 host에서 발생(bubbles, composed). `detail = { reason, font, source, resolved }`, reason은 `render | refresh | upgrade | connect | attribute | mutation | restyle` — 숨은 채 그려진 원소·SVG 바탕 요소가 보여 굵기·머리를 다시 맞추면 `restyle`
 - opt-in `jamo-seeds`(decorator `data-jamo-seeds`, JS `jamoSeeds`) — 렌더마다 host seed를 반영한 `--fy-jamo-seed`를 자모 노드에 다시 건다. 켜면 host에 `data-fy-jamo-seeds="true"`가 찍힌다(기본 DOM 계약 불변, 사이드카 미지원)
@@ -514,6 +517,6 @@ font CSS가 하지 않는 것: 코어 소유 속성(`margin`, `inset`, `transfor
 
 ## 설정 출처와 진단 (ADR-031, 2026-10-18)
 
-배치는 페이지 디자인 layout → 페이지 `--fy-layout` → 글꼴 디자인 layout → `--fy-font-layout` → 기본값 차례다. 생략된 디자인 layout은 상속한다. `--fy-layout`은 `sebul-cases-v1`, `sebul-fixed-v1`, `square-context-v1`을 받는다. `legacy`는 디자인만 끄며 문맥 배치를 원하면 마지막 값을 명시한다.
+글꼴 모양은 페이지 디자인 layout → 페이지 `--fy-layout` → 글꼴 디자인 layout → `--fy-font-layout` → 기본값 차례다. 생략된 디자인 layout은 상속한다. `--fy-layout`은 `sebul-cases-v1`, `sebul-fixed-v1`, `square-context-v1`을 받는다. `legacy`는 디자인만 끄며 네모꼴을 원하면 마지막 값(`square-context-v1`)을 명시한다.
 
 페이지 재료·그림 세트는 글꼴 디자인의 재료/조립 적용을 끄되 배치는 유지한다(`DESIGN_OVERRIDDEN_BY_PAGE`). 같은 레벨에서는 디자인이 우선한다. 그림 세트가 없는 svg 재료 요청은 element + `SVG_REQUIRES_BOX_SET`이다. 배치 이름 오류는 `LAYOUT_NOT_REGISTERED`, 지원 불가 배치·재료는 `LAYOUT_UNSUPPORTED_FONT`·`FACE_UNSUPPORTED_FONT`다. 잘못된 재료 값은 `FACE_TOKEN_INVALID`로 알리고 하위의 유효한 설정을 유지한다. 바탕 요소 `data-fy-face-status`·`data-fy-layout-status`와 `fontInfo().faceStatus`·`.layoutStatus`로 읽고 정상일 때는 속성을 없앤다.

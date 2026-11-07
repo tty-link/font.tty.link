@@ -1,11 +1,14 @@
 # ADR-026: 세벌 고정 배치 — 배치 프로파일과 기본 세벌
 
 ## Status
-Accepted (2026-10-12) — 최종 설계 v1.2(`docs/PLAN/ponkku-final-design-v1.2/`)의 배치 계약(§10)을 저장소에 들였다.
+Accepted — 일부 대체: ADR-028, ADR-030 (2026-10-12) — 최종 설계 v1.2(`docs/PLAN/ponkku-final-design-v1.2/`)의 배치 계약(§10)을 저장소에 들였다.
 [ADR-025](ADR-025-hangul-composition-design.md)(디자인·해석기)의 디자인 형식에 배치를 더한다.
-기본 배치는 [ADR-028](ADR-028-sebeol-cases-and-jikgyeol.md)(2026-10-14, Proposed)이 세벌식 `sebul-cases-v1`로 바꾼다 — 이 문서의 세벌 고정
-`sebul-fixed-v1`@3은 값 그대로 '직결식'(글꼴 `jikgyeol`)으로 남고, 배치 프로파일·도장·디자인 `layout`·정적 렌더러의 틀은 그대로 쓴다.
-2026-10-16: [ADR-030](ADR-030-one-engine-glyph-shapes.md)이 배치 모델·역할 도장 경로를 글꼴 모양 값(같은 변수 계층)으로 대신하자고 제안했고, 2026-10-17 1단계로 대신했다(Accepted — 도장·`data-fy-layout-model` 없앰, 값은 코어 CSS `@layer font-kku.shape`). 모양 값의 정본·짓기는 이 문서 그대로 쓴다.
+- 기본 배치는 [ADR-028](ADR-028-sebeol-cases-and-jikgyeol.md)(2026-10-15 Accepted)이 세벌식 `sebul-cases-v1`로 바꿨다. 이 문서의 세벌 고정
+  `sebul-fixed-v1`@3은 값 그대로 '직결식'(글꼴 `jikgyeol`)으로 남는다.
+- [ADR-030](ADR-030-one-engine-glyph-shapes.md)(2026-10-17 Accepted)이 배치 모델·역할 도장 경로를 글꼴 모양 값(코어 CSS `@layer font-kku.shape`)으로
+  대신했다. 노드에 적던 도장(`data-fy-stamp`·`--fy-stamp-*`)과 `data-fy-layout-model`은 없다. 역할 상자·맞춤 규칙·revision 같은 모양 값의 정본과
+  짓기는 이 문서 그대로 쓴다.
+- 대체된 문단에는 '→ 대체' 표시를 달았다. 표시가 없는 결정은 지금도 유효하다.
 
 ## Date
 2026-10-12
@@ -37,6 +40,9 @@ Accepted (2026-10-12) — 최종 설계 v1.2(`docs/PLAN/ponkku-final-design-v1.2
 |---|---|---|---|
 | `sebul-fixed-v1`@3 (기본) | `fixed-three` | jamo·role | 역할 도장 67개, 글자 칸 0.917 × 1.204em(간격 0, 낱말 사이 0.32em). revision 1·2 디자인을 받는다(`accepts`) |
 | `square-context-v1`@1 | `adaptive-square` | jamo·role·vowelLayout·hasFinal | 글꼴 CSS의 짜임별 slot 그대로(새 좌표 없음) |
+
+> → 대체(2026-10-15 [ADR-028](ADR-028-sebeol-cases-and-jikgyeol.md)): 기본 배치는 `sebul-cases-v1`(세벌식)이다(`spec/layout-profiles.json`의 `default`).
+> 이 표의 `sebul-fixed-v1`은 직결식 글꼴 `jikgyeol`과 이 프로파일을 적은 디자인이 쓴다.
 
 `scripts/build_layout_profiles.js`가 정본을 검사하고, 런타임 표 `LAYOUT_PROFILES`(`font-kku.js` 생성 구간)와 프로파일별
 글자 칸 CSS(`font-kku.css` 생성 구간)를 만든다. 공개 사본은 얼린 `FontKku.layoutProfiles`다.
@@ -125,7 +131,7 @@ revision 2(2026-10-13)부터 도장은 sebul의 네모 문맥에서 재지 않�
     둘이라 지킬 수 없기 때문이다(L13). 몰래 조각으로 바꾸지 않는다. 조각마다 원본을 고르는 조립식 규칙은 받는다.
   - 배치를 적지 않은 1.0·1.1 디자인은 지금 배치(legacy)로 그린다.
 - **디자인이 없는 바탕 요소는 글꼴을 밝혔는지에 따라 갈린다.**
-  - 글꼴을 밝히지 않았으면(`font`·`profile`·`data-font` 없음) 기본 배치 `sebul-fixed-v1`을 쓴다.
+  - 글꼴을 밝히지 않았으면(`font`·`profile`·`data-font` 없음) 기본 배치 `sebul-fixed-v1`을 쓴다. (→ 대체 2026-10-15 ADR-028: 기본 배치는 `sebul-cases-v1`이다.)
   - 글꼴을 밝혔거나(`font="sebul"` 포함) `--fy-design: legacy`를 주면 지금 배치다. 고르지 못한 디자인 이름은 디자인이 없는 경우와 같다.
     (2026-10-18 [ADR-031](ADR-031-explicit-options-and-review-evidence.md)이 바꿈: `legacy`는 디자인만 끄고, 배치를 적지 않은 디자인은 배치를 물려받는다. 문맥 배치는 `--fy-layout: square-context-v1`.)
 - **세벌 고정으로 그릴 때:**
@@ -137,8 +143,11 @@ revision 2(2026-10-13)부터 도장은 sebul의 네모 문맥에서 재지 않�
   - 초성에는 그림 문맥 `data-fy-draw`를 적는다. 원소·그림 재료의 초성 꼴은 모음 짜임 대신 이 값으로 정해진다.
   - 코어 CSS(`[data-fy-layout-model="fixed-three"] [data-fy-stamp]`)는 slot 값을 도장에서 받는다. 글꼴 CSS의 slot·역할·자모·문맥
     보정과 자르기, 묶음 변환은 끈다. 이 값들은 이웃 자모에 따라 달라지기 때문이다. 페이지 변수(`--fy-top`·`--fy-scale-x` 같은)는 그대로 받는다.
+  > → 대체(2026-10-17 [ADR-030](ADR-030-one-engine-glyph-shapes.md) 1단계): 렌더는 노드에 도장을 적지 않는다. 고정 모양의 자리·크기·굵기는 코어 CSS
+  > `@layer font-kku.shape` 생성 구간이 역할·자모·짜임 선택자로 주고, 손 보정은 같은 변수 계층(`@layer font-kku.tune`)에서 받는다.
+  > `data-fy-stamp`·`--fy-stamp-*`와 위 코어 규칙은 없다. 초성 그림 문맥 `data-fy-draw`는 남는다.
 - **공개 표면:**
-  - 바탕 요소: `data-fy-layout`(프로파일), `data-fy-layout-model`. 지금 배치면 둘 다 없다. HTML 정합 계약
+  - 바탕 요소: `data-fy-layout`(프로파일), `data-fy-layout-model`. 지금 배치면 둘 다 없다(→ `data-fy-layout-model`은 ADR-030이 없앴다, html-cases 1.10). HTML 정합 계약
     (`spec/html-cases.json` 1.9)은 이 표면과 도장을 어휘에 넣고 글꼴을 밝히지 않은 사례 6건을 더했다(글꼴을 밝힌 사례는 그대로).
   - `FontKku.fontInfo(host).layout`: `{ profile, revision, model }` 또는 null.
   - `FontKku.layoutProfiles`.
@@ -166,7 +175,7 @@ revision 2(2026-10-13)부터 도장은 sebul의 네모 문맥에서 재지 않�
   revision 1은 여섯 지표 모두에서 걸린다(칸 밖 0.11, 줄 −0.04, 이웃 −0.065, 떨어짐 0.19, 두 층 0.41, 낱말 12쌍).
 - **검수 시트:** `scripts/review_sheets.py`가 첫 화면 제목·낱말·문단(24·48px)·1,000자 격자·확대 칸·재료·작은 글씨(1x·2x)·꾸밈을
   그리고, `--before <checkout>`이면 전·후를 나란히 붙인다. 배치·재료·꾸밈을 바꾸면 눈으로 본다(`skills/font-kku/references/legibility.md`).
-- **정적 출력:** `scripts/build_static_primitive.py --font default`가 세벌 고정을 JS 없이 낸다. 도장이 인라인 변수라 그대로 실린다.
+- **정적 출력:** `scripts/build_static_primitive.py --font default`가 세벌 고정을 JS 없이 낸다. 도장이 인라인 변수라 그대로 실린다(→ ADR-030 뒤로는 모양 값이 코어 CSS에 있어 그 CSS를 함께 싣는다).
 - **네 언어 정적 렌더러:** 글꼴을 밝히지 않은 `render_html` 호출이 같은 도장을 쓴다. html-cases의 `implicitFont` 사례 6건이 도장 열쇠
   74개를 모두 그리고, 네 언어 시험이 속성·style을 부재까지 대조하며, `tests/static_html_parity.py`가 런타임과 좌표를 비교한다.
   그 호출은 원소 획도 런타임처럼 그린다 — [ADR-027](ADR-027-static-element-face.md)(원소 획 표, `spec/element-layer.json`).
@@ -230,6 +239,8 @@ revision 2(2026-10-13)부터 도장은 sebul의 네모 문맥에서 재지 않�
   [ADR-024](ADR-024-hangul-principle-rendering.md), [ADR-023](ADR-023-device-face-fit.md), [ADR-008](ADR-008-font-contract-v2.md)
 
 ## Change Log
+- 2026-10-31: Status를 '일부 대체: ADR-028, ADR-030'으로 정리하고 기본 배치·도장 표면 문단에 '→ 대체' 표시(PLAN-DOCS-001 문서 정비)
+- 2026-10-17: ADR-030 1단계 — 노드 도장·`data-fy-layout-model`을 코어 CSS 모양 값으로 대신했다. 모양 값의 정본·짓기는 이 문서 그대로
 - 2026-10-14: ADR-028 — 기본 배치를 세벌식(짜임 고정)으로, 이 세벌 고정은 직결식(글꼴 `jikgyeol`, `--fy-font-layout`)으로 남김. 값·revision 그대로
 - 2026-10-13: revision 3 — 0.1.2 공개 뒤 런타임 검수에서 ㅗ·ㅜ 꼭지·다리가 0.08em라 24–32px에서 고/그·우/으가 같아 보였다(0.1.1보다
   나빠진 회귀). 가로 모음 띠 0.18 → 0.26em(꼭지 0.16em), 초성 0.41 → 0.36em, 받침 0.35 → 0.315em·받침 위 틈 0.05em, 글자 칸 높이

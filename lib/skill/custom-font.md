@@ -14,7 +14,7 @@
 ```
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/font-kku.min.js" data-fonts="sebul"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/font-kku.min.js" data-fonts="sebul"></script>
 <link rel="stylesheet" href="./my-font.css" />
 <font-kku font="sebul" class="kku-berry" size="56">딸기 우유</font-kku>
 ```

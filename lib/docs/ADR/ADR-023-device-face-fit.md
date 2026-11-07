@@ -57,6 +57,8 @@ Accepted
    ascent·descent가 정한다). 결과는 글꼴 목록과 글자별로 캐시한다.
 5. **웹 글꼴은 받은 뒤 다시 잰다.** 받는 중인 글꼴은 `document.fonts`의 FontFace 상태(`loading`)로 찾아 기다린 뒤 캐시를 비우고
    맞춘 노드의 값을 다시 적는다. WebKit은 `loadingdone`을 보내지 않고, 받는 중에도 `fonts.check()`가 true여서 둘 다 쓰지 않는다.
+   그때 떨어져 있던 꾸밈 바탕 요소는 다시 붙은 뒤 첫 화면 프레임에 나누기 맞춤과 글자 후보를 마저 맞춘다(2026-11-02, 전용 태그는
+   연결 확인이 한다).
 6. `fontInfo(host).face`가 `"device"` 또는 null이다(재료 축은 ADR-024에서 `element`를 더했다).
 
 ## Consequences
@@ -102,3 +104,9 @@ Accepted
 ### 노드 자기 글자를 `text-indent: -9999em`으로 밀기(0.1.0–0.1.1)
 - 자모나 바탕 요소가 돌면 밀어 둔 글자가 아래쪽 스크롤 영역을 늘렸고, 빛 filter 영역도 그 글자까지 넓어져 느렸다(2026-10-13).
   `::first-letter`의 글자 색으로 숨기기도 안 된다 — `-webkit-text-fill-color`를 받지 않아 꾸밈이 채움 색을 주면 비쳤다.
+
+## Change Log
+- 2026-10-11: Accepted — Android 조합 흩어짐을 표준 잉크 상자(`spec/jamo-ink-boxes.json`)와 `--fy-font-ink-boxes: standard` 맞춤으로 고쳤다(문서 커밋 2026-10-12)
+- 2026-10-13: 노드 자기 글자를 `::first-letter { font-size: 0 }`으로 숨긴다(전에는 `text-indent` — 돌린 글자가 스크롤 영역을 늘림). 세벌 고정 도장 노드의 `stampInset`
+- 2026-10-21: 빛 칠(ADR-021)과 겹치면 노드를 숨기지 않는다 — clip은 `::before`가 받는다
+- 2026-10-31: Change Log 절을 더했다(PLAN-DOCS-001 문서 정비)

@@ -1,6 +1,6 @@
 # 조합 체계 — 여섯 축과 테마
 
-> Status: Implemented
+> 상태: 현행 · 마지막 갱신 2026-10-31 · 관련 결정: [ADR-017](../ADR/ADR-017-composition-axes-and-themes.md), [ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md)
 > Scope: 글꼴·꾸밈·변주·움직임·상호작용·바탕 여섯 축, 테마, 정본 `spec/themes.json`과 생성물, 확장 세 파일(`font-kku-looks.css`·`font-kku-motion.css`·`font-kku-fx.js`)의 구조와 경계
 
 ## 목표
@@ -11,14 +11,14 @@
 
 ## Related Documents
 - ADR: [ADR-017 조합 체계](../ADR/ADR-017-composition-axes-and-themes.md), [ADR-010 파생 글꼴](../ADR/ADR-010-derived-fonts-and-script-loader.md), [ADR-014 마스크 칠](../ADR/ADR-014-sprite-mask-paint.md), [ADR-016 씨앗 반응 글꼴](../ADR/ADR-016-seed-aware-fonts.md)
-- Architecture: [스타일 글꼴 체계](./style-profile-system.md), [움직임과 변주](./animation-and-variation.md), [그림 자소 글꼴](./image-sprite-fonts.md)
+- Architecture: [글꼴 모양·재료·디자인](./shape-material-design.md)(글꼴 축의 안쪽), [스타일 글꼴 체계](./style-profile-system.md), [움직임과 변주](./animation-and-variation.md), [그림 자소 글꼴](./image-sprite-fonts.md)
 - Demo: [글꼴 — 테마 갤러리와 조합기](https://font.tty.link/fonts.html), [움직임](https://font.tty.link/effects.html)
 
 ## 여섯 축
 
 | 축 | 정하는 것 | 쓰는 법 | 원천 | 목록 |
 | --- | --- | --- | --- | --- |
-| 글꼴 | 뼈대 — 짜임(자모 배치) × 획(재료·획 표현) | `font="gothic"` | `profiles/*.css` | `spec/themes.json` `fonts` |
+| 글꼴 | 글꼴 모양(자모를 놓는 자리·크기) + 재료·획 표현 | `font="gothic"` | `profiles/*.css` | `spec/themes.json` `fonts` |
 | 꾸밈 | 칠 — 색·외곽선·그림자, 자모 역할별 | `class="kku-look-neon"` | `font-kku-looks.css` | `looks` |
 | 변주 | 씨앗만큼 자모마다 조금씩 | `seed="auto" jamo-seeds class="kku-vary-tilt"` | `font-kku-looks.css` | `variations` |
 | 움직임 | 애니메이션 — 글자 또는 자모 단위 | `animate="wave"` | `font-kku.css`(글자) · `font-kku-motion.css`(자모) | `motions` |
@@ -35,11 +35,13 @@
 | 움직임 | `animation` — 글자 노드의 transform, 자모 노드의 `translate`·`rotate`·`opacity`·`color` |
 | 상호작용 | 자모 노드의 인라인 `translate`·`rotate`, 바탕 요소의 `seed`, 다시 그리기 |
 
-### 글꼴 — 짜임 × 획
+### 글꼴 — 글꼴 모양 × 재료·획 표현
 
-| 무리 | 글꼴 | 짜임 | 획 |
+글꼴 축의 안쪽(모양·재료·디자인·짓는 방식)은 [글꼴 모양·재료·디자인](./shape-material-design.md)이 다룬다. 이 절은 기본 제공 글꼴을 무리로 나눠 보인다. 예전 이름 '짜임 × 획'의 '짜임'은 지금 '글꼴 모양'이다(ADR-030 §1).
+
+| 무리 | 글꼴 | 글꼴 모양 | 재료·획 |
 | --- | --- | --- | --- |
-| 세벌·고딕 계열 | `sebul` 세벌, `gothic` 고딕, `malang` 말랑 (글꼴을 밝히지 않으면 `sebul`을 세벌식 배치로, `jikgyeol`은 직결식 배치) | 세벌식 탈네모 / 네모꼴 / 세벌 + 자리별 기울기 | 원소 — CSS 선·원(ADR-024). 페이지 `--fy-face: device`면 기기 한글 글꼴 |
+| 세벌·고딕 계열 | `sebul` 세벌, `gothic` 고딕, `malang` 말랑 (글꼴을 밝히지 않으면 `sebul`을 세벌식 모양 `sebul-cases-v1`으로, `jikgyeol`은 직결식 모양 `sebul-fixed-v1`) | `sebul` 자기 모양(탈네모 세벌꼴, 네모꼴 모델) / `gothic` 네모꼴 / `sebul` 모양 + 자리별 기울기 | 원소 — CSS 선·원(ADR-024). 페이지 `--fy-face: device`면 기기 한글 글꼴 |
 | 그림 자소 | `sprite-system` 그림 자소, `pilgi` 필기, `dunggeun` 둥근, `butgeul` 붓 | 그림 자소 실측(6행 93칸) | 곧은 · 필기 · 둥근 · 붓 (획 뼈대) |
 | 획 표현 | `pixel` 도트, `dojang` 도장, `chalk` 분필, `crayon` 크레용, `jasu` 자수 | 그림 자소 실측 | 곧은 획 + `dot`·`stamp`·`chalk`·`crayon`·`stitch` |
 | 출발용 | `sprite-example` | 배치 기본값 | 곧은 획 |
@@ -56,14 +58,16 @@
 - 속 빈 꾸밈(`"hollow": true` — `neon`·`blueprint`·`outline`)은 기기 글꼴에서 글자 외곽선으로 속이 빈다. 그림 자소 글꼴에서는 외곽선 색으로 꽉 채운다(자소판 모양 안에서 색만 바뀐다) — 다만 `outline`은 정본 `sprite.rim`·`sprite.core`로 옅은 속 칠에 글자 단위 테두리(반투명 질감은 먼저 속 색으로 채운 뒤 테 그림자 넷, 화면 1.1px 이상)를 두른다(2026-10-13). 원소·SVG 재료에서는 꾸밈의 `element` 구간대로 옅은 속 칠(`core`)에 자모 하나의 바깥 윤곽(`rim` — 자모 노드 그림자 넷)을 두른다. `outline`은 고른 선 폭 `--kku-look-stroke`(0.04em)와 옅은 채움을 쓴다.
 - 원소·SVG 재료의 빛·그림자는 자모마다(`element.glow`, 역할별 가능 — 자모 노드 `--fy-font-glow`)이고 한글 글자의 글자 단위 filter는 `element.glyphFilter`로 바꾼다. 역할 칠은 `element.paint`(불투명 잉크 + 자모 투명도).
 
+이 절의 '기기 글꼴'은 글꼴 글자 재료(`device`) 또는 표준 잉크 상자를 밝히지 않은 CSS 글꼴, 곧 기기·웹 글꼴의 글자를 그대로 그리는 바탕 요소를 말한다. 아래 선택자는 줄여 적었다(정본 `font-kku-looks.css`).
+
 ```text
 :where(.kku-look-X)                         초기화 — 글자색 상속, 그림자 끔, 채움·외곽선 = currentColor,
                                             --fy-sprite-paint: mask, hostVars(--fy-font-stroke)
 :where(.kku-look-X) [part~="jamo"]          자모 칠을 상속으로 되돌림(글꼴의 역할 색을 지운다)
-:where(.kku-look-X:not([data-fy-material])) …   기기 글꼴: 칠 전부
+:where(.kku-look-X:not([data-fy-material], [data-fy-face="element"], [data-fy-face="svg"])) …   기기 글꼴: 칠 전부
 :where(.kku-look-X[data-fy-material]) …         그림·벡터 자소: color만(속 빈 꾸밈은 외곽선 색으로)
 :where(.kku-look-X[data-fy-material]) [part="glyph"]   그림자 → drop-shadow (sprite.glyphFilter)
-:where(.kku-look-X:is(element, svg)) …          element 구간: 속 칠·테두리(rim)·자모 빛(--fy-font-glow)·한글 글자 filter
+:where(.kku-look-X:is([data-fy-face="element"], [data-fy-face="svg"])) …   element 구간: 속 칠·테두리(rim)·자모 빛(--fy-font-glow)·한글 글자 filter
 :where(.kku-look-X:is([data-fy-layout="sebul-cases-v1"], …)) :is([part~="choseong"], …)   속 빈 꾸밈의 선 폭(고정 글꼴 모양의 기기 글꼴, 모양 값 획 보정 대신)
 :where(:is(…looks…):is([data-fy-font=…]))   외곽선 폭 되돌리기 — 글꼴이 선언한 --fy-font-stroke
 ```
@@ -104,11 +108,13 @@
 ## 레이어 순서
 
 ```text
-font-kku.font < font-kku.jamo < font-kku.context < font-kku.look < font-kku.motion < (레이어 밖) 페이지 CSS
-코어 font-kku.css 규칙은 레이어 밖이지만 변수로만 자모 자리를 정하므로 칠과 다투지 않는다
+font-kku.font < font-kku.jamo < font-kku.context < font-kku.shape < font-kku.tune < font-kku.look < font-kku.motion < (레이어 밖) 페이지 CSS
+코어 font-kku.css의 소비 규칙은 레이어 밖이지만 변수로만 자모 자리를 정하므로 칠과 다투지 않는다
 ```
 
-`font-kku-looks.css`와 `font-kku-motion.css`는 같은 순서 문을 되풀이한다. 그래서 불러온 순서와 무관하게 꾸밈은 글꼴을, 움직임은 꾸밈을 이긴다. 페이지 CSS는 언제나 마지막에 이긴다.
+- `font-kku.shape`·`font-kku.tune`은 코어 `font-kku.css`가 둘째 순서 문으로 더하는 글꼴 모양 계층이다(ADR-030 §2). 고정 글꼴 모양의 모양 값과 손 보정이 산다. 위 차례는 코어를 먼저 불러오는 보통의 경우다.
+- `font-kku-looks.css`와 `font-kku-motion.css`는 글꼴 세 계층에 자기 계층을 붙인 순서 문을 되풀이한다. 그래서 불러온 순서와 무관하게 꾸밈은 글꼴을, 움직임은 꾸밈을 이긴다. 페이지 CSS는 언제나 마지막에 이긴다.
+- 모양 계층은 자리 변수만, 꾸밈은 칠 속성과 획 폭만 쓰므로 둘이 같은 값을 두고 다투지 않는다.
 
 ## 정본과 생성물
 
@@ -157,3 +163,6 @@ profiles/<꾸러미>.css 꾸밈 구간 ──────────┘└─> 
 - 그림 자소에서 꾸밈은 색과 글자 단위 그림자만 낸다. 자모 역할별 그림자·속 빈 외곽선은 기기 글꼴에서만 된다.
 - 변주 폭은 겹침 감사가 정해 은은하다. 눈에 띄는 무작위는 칠(색조·농담)과 씨앗 반응 글꼴이 낸다.
 - 확장 세 파일과 새 글꼴은 npm 첫 공개판 0.1.0(2026-10-11)부터 패키지에 들어 있다.
+
+## Change Log
+- 2026-10-31: 머리말을 공통 형식으로. 글꼴 축을 '짜임 × 획'에서 '글꼴 모양 + 재료·획 표현'으로(ADR-030 §1, 용어집), 레이어 차례에 `font-kku.shape`·`font-kku.tune` 추가, 꾸밈 선택자를 재료 축(`data-fy-face`) 기준으로 고침(PLAN-DOCS-001)

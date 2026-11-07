@@ -13,7 +13,7 @@ Accepted
 - **attribute(custom element) / `data-*`(decorator)가 지속(persistent) 옵션 소스다.** `refresh()`와 재렌더 경로는 매번 attribute를 재독한다. 이전 호출의 해석 결과는 옵션으로 승계되지 않는다.
 - **JS 옵션(`render(target, options)` / `refresh(target, options)`)은 해당 호출 1회에만 적용된다.** 지속시키려면 호출자가 attribute로 쓴다.
 - 같은 호출 안의 우선순위: 명시적 JS 옵션 > attribute > 기본값. `font`가 `profile`(alias)보다 우선. JS 옵션의 `undefined`·`null`·빈 문자열은 명시가 아니라 attribute로 폴백한다.
-- 자동 재렌더(attribute 변경, 원문 변경, font CSS 재해석)도 같은 규칙으로 attribute를 재독한다. 예외는 분리 상태 렌더의 연결 시 완료뿐이다 — 스타일을 해석하지 못한 그 호출을 마치는 것이라 그 호출의 JS 옵션을 쓴다.
+- 자동 재렌더(attribute 변경, 원문 변경, font CSS 재해석)도 같은 규칙으로 attribute를 재독한다. 예외는 분리 상태 렌더의 연결 시 완료뿐이다 — 스타일을 해석하지 못한 그 호출을 마치는 것이라 그 호출의 JS 옵션을 쓴다. 그림 자소 칠만 바뀐 재해석은 다시 그리지 않으므로(도장과 칸만 고침, 2026-10-23) 직전 호출의 JS 옵션이 그대로 남는다.
 - `seed`가 `auto`/`random`이면 렌더마다 새 값으로 재해석한다.
 - **decorator의 authored `data-*`와 resolved output을 같은 key에 쓰지 않는다.** `data-font`/`data-profile`/`data-size`/`data-spacing`/`data-wrap-unit`/`data-animate`/`data-seed`는 입력으로 보존하고, 정규화 결과는 `data-fy-font`/`data-fy-profile`/`data-fy-size`/`data-fy-spacing`/`data-fy-wrap-unit`/`data-fy-animate`/`data-fy-seed`에 쓴다.
 - custom element는 입력이 `font`/`profile`/`size`/`spacing`/`wrap-unit`/`animate`/`seed`이므로 namespace 충돌이 없다. 모든 `data-fy-*` 정본 출력을 쓰면서 기존 `data-font`/`data-profile`/`data-size`/`data-wrap-unit`/`data-animate`/`data-seed` mirror도 하위 호환으로 유지한다.
@@ -50,6 +50,7 @@ Accepted
 - Review: [docs/REVIEW/2026-07-09-deep-review.md](../REVIEW/2026-07-09-deep-review.md) (R-01, R-04, R-13, R-42)
 
 ## Change Log
+- 2026-10-23: 그림 자소 칠(`--fy-sprite-paint`)만 바뀐 재해석(움직임 줄이기 설정 바꿈 — 움직임 확장의 cycle·shine 마스크 칠, 꾸밈 `kku-look-*` 클래스, 페이지 값)은 다시 그리지 않는다 — 칠은 관리 DOM을 바꾸지 않아 `data-fy-sprite-paint`와 칸만 그 자리에서 고치고 `restyle`을 낸다. 그래서 직전 호출의 JS 옵션이 그대로다. 'font CSS 재해석도 attribute를 재독한다'는 구조가 바뀐 재해석에만 적용된다(속성 animate를 지우거나 더해 칠만 바뀌는 속성 갱신도 비구조로 노드를 유지한다). 사용자 결정 2026-10-23 '기본값으로 진행'(다섯째 라운드 병합 목록 5)
 - 2026-09-27: 자동 재렌더 경로를 통일 — font CSS 재해석(restyle)도 attribute를 재독하고 직전 호출의 JS 옵션을 승계하지 않는다(attribute 원문이 그대로인 seed만 해석값 유지). 분리 상태에서 한 렌더를 연결 시 마치는 재렌더는 같은 호출의 완료라 그 호출의 JS 옵션을 쓴다. JS 옵션의 `undefined`·`null`·빈 문자열은 attribute로 폴백(`seed: null`도 동일). opt-in 옵션 `jamo-seeds`/`data-jamo-seeds`/`jamoSeeds`(출력 `data-fy-jamo-seeds`, 켰을 때만) 추가 — 같은 우선순위 규칙을 따른다
 - 2026-07-10: decorator 입력과 canonical `data-fy-*` 출력 namespace를 분리하고 custom element legacy mirror 범위를 명시 (TRK-031)
 - 2026-07-09: 최초 작성 (TRK-030)

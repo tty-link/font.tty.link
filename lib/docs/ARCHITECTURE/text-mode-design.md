@@ -1,7 +1,8 @@
 # 평문 모드 설계
 
-> Status: Implemented
-> Scope: 터미널 환경용 2줄 자소 분리 평문 출력기
+> 상태: 현행 · 마지막 갱신 2026-10-31 · 관련 결정: [ADR-004](../ADR/ADR-004-sidecar-contract-canonicalization.md)·[ADR-020](../ADR/ADR-020-rendering-boundaries-and-recovery.md)
+>
+> 요약: 터미널 환경용 2줄 자소 분리 평문 출력기(`FontKku.renderText()`, `bin/font-kku-text.js`, 네 언어의 `render_text`)
 
 ## 왜 필요한가
 
@@ -40,12 +41,12 @@ Line 2 (하단):  종성 또는 하단 모음
 
 - `안`(세로모음+종성): L1 = `ㅇㅏ`, L2 = `  ㄴ`
 - `요`(가로모음, 종성 없음): L1 = `ㅇ `, L2 = ` ㅛ`
-- `봔`(섞임모음+종성): L1 = `보ㅏ` (ㅂ+ㅗ 합자 + ㅏ), L2 = `  ㄴ`
+- `봔`(합자 모음+종성): L1 = `보ㅏ` (ㅂ+ㅗ 합자 + ㅏ), L2 = `  ㄴ`
 - `습`(가로모음+종성): L1 = `스 ` (ㅅ+ㅡ 합자), L2 = ` ㅂ`
 
 ## 축별 배치 규칙
 
-`jungLayout`(세로모음 `right` / 가로모음 `bottom` / 섞임모음 `split-right`)과 `jongLayout`(민글자 `none` / 홑받침 `single` / 겹받침 `double`)의 조합으로 각 칸의 내용이 정해진다.
+`jungLayout`(세로모음 `right` / 가로모음 `bottom` / 합자모음 `split-right`)과 `jongLayout`(민글자 `none` / 홑받침 `single` / 겹받침 `double`)의 조합으로 각 칸의 내용이 정해진다.
 
 ### 세로모음 짜임 (ㅏ ㅐ ㅑ ㅒ ㅓ ㅔ ㅕ ㅖ ㅣ)
 
@@ -76,7 +77,7 @@ Line 2 (하단):  종성 또는 하단 모음
 
 합자: `초+중`을 유니코드 완성형 음절로 조합한다 (종성 없는 음절). 예: ㅅ+ㅡ → 스, ㅇ+ㅗ → 오.
 
-### 섞임모음 짜임 (ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ)
+### 합자모음 짜임 (ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ)
 
 복합 모음을 base + tail로 나눠 초+base를 합자로 만든다.
 
@@ -246,6 +247,7 @@ echo "한글 테스트" | node ./bin/font-kku-text.js
 - 글꼴 기반 위치 보정은 평문 모드에 해당하지 않는다. 순수 자소 분리만 수행한다.
 
 ## Change Log
+- 2026-10-31: 머리말을 문서 표준(상태·마지막 갱신·관련 결정·요약)으로
 - 2026-10-17: 놀이터 페이지 경로를 사이트 저장소 `src/`로(ADR-029)
 - 2026-10-11: 고정 Unicode 숫자·문장부호 분류, 생성된 HTML 표시 계획·의미 역할, 호출별 `FontDefinition`과 평문/HTML 책임 경계 반영
 - 2026-09-27: 비한글 칸 표시 폭 규칙(East_Asian_Width 기반, `spec/tables.json` v1.3 `unicode.displayWidth`) — 좁은 비ASCII가 받침 열을 밀던 문제 수정, 한글 음절 + 뒤 코드포인트 grapheme을 비한글 글자로 그림, Go/Rust 분절 서술을 공유 UAX #29 표 + 한글 전용 NFC로 갱신 (spec text v1.4, html v1.7)

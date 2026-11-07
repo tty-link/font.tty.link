@@ -2,11 +2,29 @@
 
 ## Status
 
-Proposed / 구현 진행 (2026-10-18). 사용자의 옛한글 확장, 영문·숫자·기호로 한글 만들기 요구를 반영한다. 사용자 후속 요청으로 H0·H3a–d의 첫 범위를 구현해 2026-10-18 master 로컬 병합했다(`e92249e`, 병합 전 결정은 사용자 위임으로 에이전트가 정함). 실제 계약과 검증 범위는 §12 및 기능 보존 원장에 기록한다. H1 이후 문자 구조 분석·전체 계획·옛한글 렌더링은 후속 설계다. 공개 승인은 별도다.
+Proposed (2026-10-18) — 일부 수용. 옛한글 확장과 영문·숫자·기호로 한글을 만드는 설계 전체는 제안이고, 아래 단계만 사용자 승인으로 master에 반영해 수용했다. 공개 승인은 별도다.
+
+수용된 부분:
+- H0 (2026-10-18): 해석기가 명시적 pair/add 조립과 base binding을 지킨다. 그런 지정을 담은 저장 디자인의 출력이 바뀌는 의도적 변경이다(§11). 병합 전 결정은 사용자 위임으로 기본값대로 정했다.
+- H3a–d 첫 범위 (2026-10-18): §12 계약 — `source.kind: "font"`의 `glyphs`, 디자인 판 2.0, CSS `--fy-glyph-text`·`--fy-glyph-candidate`, 문자 맞춤, 작업실 문자 매핑. 전체 H3 완료가 아니다(§12 '초기 구현의 지원 경계').
+- 결정 D14·D15 (2026-10-26): 구조화 font 디자인의 머리 음절·통짜 합자 모음 매핑을 고정 두 배치와 네모꼴로 넓혔다(§12).
+- 결정 D16 (2026-10-26): CSS 시각잎의 명시 갱신 `FontKku.refreshAll(host, { materialCSS })`(§12.1).
+- 결정 D17·D18 (2026-10-26): 고정 통짜 모음의 semantic CSS 문자열과 후보 ID(§12.3·§12.4).
+
+D14–D18·D7·D13은 [PLAN-STABILITY-001](../PLAN/stability-followup-2026-10.md)의 결정 번호다.
+
+수용하지 않은 것: §12.2 H6 첫 공개 범위(미채택 — 내부 비교 도구만 반영), H1a 내부 분석·개발 보기 prototype(2026-10-25 반영, 공개 분석 API·기본 TextModel/DOM이 아니다), H1 공개·H2·H4–H7, §2–§8의 나머지 설계.
+
+수용 기준: 단계 하나를 더 수용하려면 [PLAN-HANGUL-001](../PLAN/hangul-composition-refactor.md) 확장 단계 H 표의 완료 조건을 넘기고 §11 기능 보존 원장을 채운 뒤 사용자가 master 반영을 승인해야 한다. 이 ADR 전체를 Accepted로 바꾸려면 §9 수용표를 모두 통과하고(남는 미지원은 승인된 범위 축소로 적는다) H6 첫 공개 범위를 사용자가 정해야 한다.
+
+단계별 커밋·검증 수치·개발 사이트 반영은 [ADR-032 진행 기록](../NOTES/hangul-structure-adr032-log.md)에 둔다.
 
 이 설계는 [ADR-025](ADR-025-hangul-composition-design.md)의 조립 해석기, [ADR-030](ADR-030-one-engine-glyph-shapes.md)의 공통 모양·편집 체계, [ADR-031](ADR-031-explicit-options-and-review-evidence.md)의 설정·검수 근거를 확장한다. 구현 순서는 [PLAN-HANGUL-001](../PLAN/hangul-composition-refactor.md)의 확장 단계 H에 둔다.
 
 2026-10-18: 나누기 × 조각 깊이를 하나로 고르는 짓는 방식 프리셋은 [ADR-034](ADR-034-composition-modes.md)다. 조각 깊이 자료(`levels`)는 옛자모 조립식을 받게 두고(§2.2·§2.3), 옛한글 묶음에는 H6 전까지 적용하지 않는다.
+
+## Date
+2026-10-18
 
 ## 1. 목표와 핵심 선택
 
@@ -339,23 +357,13 @@ H0와 H3a·H3b·H3c·H3d 각각의 변경에 §9의 항목별로 **유지 / 개�
 2026-10-18 H3 착수 전 보강: 씨앗 계산을 바탕 씨앗을 인자로 받는 순수 함수로 공용화하고 맞춤 전에 사용하도록 정했다. CSS 저작 값은 런타임이 측정한 뒤 내부 결과로 반영한다. CSS만 있는 정적 출력은 기존 한글로 남기며 검출 범위 밖의 CSS까지 미지원 진단한다고 약속하지 않는다. 쉬운 선택자와 린트 경고, H3a–d의 독립 수용·병합 경계를 추가했다. 이 보강은 구현 착수 전 설계 기록이다. 이후 사용자 개발 요청에 따른 구현은 §12에 기록한다.
 
 
-### 첫 구현 묶음의 보존 원장 (2026-10-18)
+### 첫 구현 묶음의 보존 원장 요약 (2026-10-18)
 
-| 단계 | 유지·개선·의도적 변경 | 확인 근거와 남은 경계 |
-|---|---|---|
-| H0 | 개선: 명시적 pair/add 조립과 base binding 적용. 의도적 변경: 무시되던 지정이 적용되어 해당 저장 디자인의 출력이 바뀜 | `tests/glyph_mapping_runtime.test.js`, 전후 trace/시트 `tmp/h3-review/h0-*`. 일반 auto 및 무매핑 font는 기존 경로. 병합 전 호환 결정 필요 |
-| H3a | 유지: 원문·의미 노드·복사·씨앗 키/순번/사용자 hash. 개선: CSS 직접 문자열, 실제 문맥 측정 후 표시, 해제·늦은 글꼴 처리 | `tests/test_glyph_mapping.py`, `tests/test_glyph_runtime.py`: CSS 우선순위/none·seed auto/잠금·사용자 hash 횟수·한글 복사·JS 없는 CSS 대체·재맞춤 잎 보존 |
-| H3a | 유지: CSS 직접 저작과 역할/부모 자리/자리/자모/문맥 계층, 페이지 우선. 개선: 쉬운 선택자·이스케이프/중첩 선택자 경고 | `tests/font_lint.test.js`, registry 생성 대조. 새 문자열을 코어 content에 직접 연결하지 않음 |
-| H3b | 개선: 구조화 font 매핑의 미지정 자모는 기존 조립식·가획·binding 재사용; 원형 8→24→40 계획 | `tests/glyph_mapping_runtime.test.js`, `tests/studio_f/glyphs_model.test.js`. 원본 없는 일반 font는 준비 완료로 세지 않고 허용된 매핑 대체를 따로 셈. CSS 가상 잎 매핑은 남음 |
-| H3b | 유지: 세 모양×여섯 깊이의 의미/깊이와 기존 재료 경로. 미지원 추가 기능: 문자 머리·고정 통짜 합자 모음 | `tests/test_glyph_mapping.py`의 18조합. 원래 한글과 진단을 유지하며 몰래 split으로 바꾸지 않음. 기존 통짜 깊이 기능을 삭제하지 않음 |
-| H3a·d | 유지: 위치/배율/회전·글자 굵기·역할 칠·빛·그림자·자모 움직임. 개선: 실제 문자 잉크 선택/손잡이 | mapped device/element/SVG+neon 검사, `tests/test_studio_glyphs.py` 회전 O 선택, 데스크톱/모바일 시트. 실제 획 없는 문자 draw·획 편집은 미지원으로 안내; 지원 못 하는 축/기능 설정은 진단 |
-| H3c | 유지: 1.x 읽기·기존 font 설정/원본 선택. 개선: 2.0 후보·잠금·역할·출처·미리보기 seed 저장, 알 수 없는 새 필드/판 손실 없는 거부 | 모델·런타임 음성/양성 검사와 묶음 재열기, literal `<i>`/따옴표 이스케이프. 일반 원본 옆에 쓰지 않는 매핑 원본을 추가해도 기존 맞춤 유지 |
-| H3c | 유지: CSS 저장·정적 한글 출력. 미지원 추가 기능: 매핑 글꼴 파일/정적 구조화 출력 | 내보내기 사전 및 실제 렌더 진단, 작업실 CSS 저장에는 후보 JSON이 포함되지 않는다는 안내. 프로젝트/묶음/디자인 코드로 보존 |
-| H3d | 개선: 기존 font 재료의 문자 매핑 칸·후보/역할/잠금·변주·원형 진행률·실제 조립 미리보기. 유지: 디자인/고치기/자소판/검수·프로젝트/초안/묶음·undo/redo | `tests/test_studio_glyphs.py`, 기존 mount/review 스모크. 무효 입력은 작업 초안을 유지하고 적용하지 않음 |
-| 공통 | 유지: 옛한글 symbol 출력·분절·복사, 기존 정적 렌더러/설치/효과, 원소 판의 Canvas 비의존성. gzip 보고만 | 문자 모델 재작성 없음. 정적·시각·조립·렌더러 회귀는 통합 검증으로 확인. H1 이후는 미구현 |
-| H3b·H3a 후속 (2026-10-18) | 개선: 문자를 자모 획 모양으로 고쳐 놓는다(§12 문자 맞춤) — 사용자 지적 "글, 꾸 어려운건 개선해줘. 그대로 조합하는게 아니라 css나 자바스크립트로 비슷하게 만들어서 활용해야 해". 의도적 변경: 디자인 `family`의 CSS 일반 글꼴 낱말을 따옴표 없이 쓴다(전에는 그 이름의 글꼴을 찾다 기본 한글 글꼴로 떨어졌다). 고침: 캔버스 `fontStretch`에 백분율을 넣어 경고가 나고 무시되던 것 | `tests/test_glyph_mapping.py::test_glyph_mapping_reshapes_characters_into_jamo_strokes` — 같은 글을 한글 글꼴로 그린 잉크와의 일치(2px 허용, 둘 중 작은 덮음): 글 0.56→0.96, 꾸 0.35→1.0, ㅅ 없는 사 0.61→0.89, ㅡ→- 0.65→0.90, ㅣ→1 0.60→0.86(문턱 0.8). 전후 시트 `tmp/glyph-fit/before-after.png`, 16·24·48px `tmp/glyph-fit/sizes.png`. 기존 59개 매핑·작업실 시험 그대로 통과 |
-
-검증: `verify:fast` PASS(Node 427개·문서·배포 자산), `verify` 일상 층 PASS(브라우저 139개, 정적 시각 패리티 41/41, 시각 기준선 8/8, 조립 42설정×1,059자, 겹침·획·가독성 감사). 통합 검증 중 발견한 글꼴 실패 재시도 수정 뒤 빠른 층과 매핑/기존 글꼴 로딩 대상 스모크 13개를 다시 통과했다. 로그는 `tmp/h3-review/verify-summary.json`, `verify-fast-final.log`, `mapping-smoke-final.log`다. 공개 검증은 아니며 임의 새 기준선·허용 오차·gzip 한도는 만들지 않았다. 시각 예제의 원형 조립 성공은 모든 문자열·크기의 가독성을 보장하지 않는다.
+단계별 원장 표(유지·개선·의도적 변경·미지원 추가 기능과 근거 시험·시트)와 그때의 검증 기록은 [ADR-032 진행 기록](../NOTES/hangul-structure-adr032-log.md)에 옮겼다. 페이지와 디자인을 쓰는 사람에게 보이는 차이는 다음과 같다.
+- 의도적 변경: H0 — 무시되던 명시적 pair/add·base binding 지정이 적용되어 그런 지정을 담은 저장 디자인의 출력이 바뀐다. 디자인 `family`의 CSS 일반 글꼴 낱말(`sans-serif` 등)은 따옴표 없이 쓴다(전에는 그 이름의 글꼴을 찾다 기본 한글 글꼴로 떨어졌다).
+- 개선: CSS 직접 문자열과 구조화 매핑(원형 8 → 24 → 40 조립식 재사용), 문자를 자모 획 모양으로 고쳐 놓는 문자 맞춤, 디자인 2.0의 후보·잠금·미리보기 씨앗 저장, 작업실 문자 매핑 칸과 실제 잉크 선택.
+- 유지: 원문·의미 노드·복사·씨앗 키와 순번, CSS 직접 저작 계층, 1.x 디자인 읽기, 세 모양 × 여섯 깊이의 기존 재료 경로, 꾸밈·움직임·직접 조작, 옛한글 symbol 출력·분절·복사, 기존 정적 렌더러.
+- 미지원 추가 기능(진단하고 원래 한글을 유지): 매핑 글꼴 파일·정적 구조화 출력, 실제 획이 없는 문자의 draw·획 편집. 처음에 미지원이던 문자 머리·고정 통짜 합자 모음은 결정 D14·D15(2026-10-26)로 구조화 디자인에서 지원한다.
 
 ## 12. H3 구현 계약 (2026-10-18)
 
@@ -398,4 +406,116 @@ FontKku.registerDesign("symbols", {
 H7 전 정적 HTML은 CSS만으로 후보를 적용하지 않고 기존 한글로 표시한다. 구조화 매핑을 지원하지 않는 출력으로 가져가려 하면 명시적으로 거부한다. 현재 글꼴 파일 내보내기도 매핑 디자인을 거부한다. 묵시적으로 후보를 버린 파일을 성공 결과로 내지 않는다.
 
 
-초기 구현의 지원 경계: 구조화 `glyphs`는 조립식 내부 원형·가획을 재사용한다. CSS 직접 문자열은 실제 의미 자소 노드를 대상으로 하며, CSS만으로 가상 조립 잎에 매핑하는 어댑터는 아직 없다. 머리 음절 및 고정 배치의 통짜 합자 모음에서 문자 매핑은 명시적으로 진단하고 기존 한글로 남는다. 기존 재료의 해당 깊이 지원은 유지한다. 임의 가변 축·글꼴 기능을 캔버스 측정과 일치시킬 수 없는 경우에도 성공으로 표시하지 않는다. 통짜 글자를 실제 획으로 나눈 draw 움직임은 제공하지 않는다. 이 경계가 남은 동안 H3 전체 수용표를 완료로 표시하지 않는다.
+초기 구현의 지원 경계: 구조화 `glyphs`는 조립식 내부 원형·가획을 재사용한다. CSS 직접 문자열은 실제 의미 자소 노드를 대상으로 하며, CSS만으로 가상 조립 잎에 매핑하는 어댑터는 아직 없다. 기존 재료의 깊이 지원은 유지한다. 임의 가변 축·글꼴 기능을 캔버스 측정과 일치시킬 수 없는 경우에도 성공으로 표시하지 않는다. 통짜 글자를 실제 획으로 나눈 draw 움직임은 제공하지 않는다. 이 경계가 남은 동안 H3 전체 수용표를 완료로 표시하지 않는다.
+
+지원 확대(결정 D14, 2026-10-26 사용자 "반영"으로 채택): `sebul-fixed-v1`·`sebul-cases-v1`처럼 고정 부분 영역이 있는 배치의 구조화 font `glyphs` 디자인은 머리 음절의 초성/모음과 통짜 합자 모음을 기존 부분 영역에 맞춘다. recipe/binding/path를 유지하고 새 의미 자소·씨앗 순번을 만들지 않는다. 명시적인 direct 통짜 후보는 한 drawing으로 유지한다. 이 조합의 `GLYPH_HEAD_UNSUPPORTED`/`GLYPH_LAYOUT_UNSUPPORTED`가 실제 매핑으로 바뀌는 공개 지원 의미 변화를 사용자가 승인했다. 이 부분 채택이 전체 H3/H1/H6 완료나 공개 배포를 뜻하지 않는다. CSS head/whole 직접 문자열, 네모꼴 머리, 부분 영역이 없는 배치는 기존 진단·한글 대체를 유지한다. 정적/TTF·임의 축/기능·실제 획 draw 지원이 확대된 것은 아니다.
+
+결정 D15(2026-10-26 사용자 "진행"으로 채택): `square-context-v1`과 기존 unprofiled 네모꼴 경로에서 구조화 font glyph 디자인의 머리 음절도 기존 head-part 탐침으로 초성/모음 비례를 재서 `headTargets`→`fitGlyphParts`로 맞춘다. 같은 fitted skeleton을 square 잎 사상에 사용해 두 번 옮기지 않고 노드 WeakMap으로 host별 문맥을 분리한다. 예를 들어 gothic의 음절 깊이 `회`를 그릴 때 구조화 디자인으로 고른 `ㅎ`·`ㅗ` 문자 재료가 이전에는 `GLYPH_HEAD_UNSUPPORTED`와 한글 대체였고, 이 지원에서는 머리 `호`의 실제 두 부분 영역에 맞춰 표시된다. 읽는 원문/복사는 계속 `회`이며 semantic 자소·씨앗 순번·recipe/binding/path는 바꾸지 않는다. CSS head 직접 문자열과 측정 영역이 없는 경우는 기존 진단·대체, 숨긴 host는 보일 때까지 지연, 웹 글꼴은 pending 뒤 현재 사상으로 복구한다. D14 fixed/기본 unmapped·축/정적/TTF의 지원은 그대로다. 조건 명세는 `glyphMaterials.measuredStructuredHeadMapping`이며 head 전체 지원으로 일반화하지 않는다.
+
+H6의 내부 비교 도구(내부 CLI가 명시로 고르는 `araea-context-v2`, 2026-10-26)는 공개 모델·기본 렌더가 아니다. U+11A1 같은 원문을 분해하지 않고 시각적으로만 조립하며, 공개 범위는 §12.2에서 정하지 않았다.
+
+### 12.1 CSS 시각잎의 명시 갱신 계약 (2026-10-26 채택, D16)
+
+현재 실제 의미 자소에 주는 CSS와 구조화 디자인은 그대로 둔다. 가상 조립잎의 CSS 문맥을 명시적으로 읽어 현재 재료 측정/표시 경로에 연결하는 opt-in이다. 2026-10-26 사용자 "진행"으로 API와 선택자를 채택했다(결정 D16). 공개 push/npm/사이트 배포, 아래아 공개 지원·D7/D13 후보 채택은 포함하지 않는다.
+
+```js
+FontKku.refreshAll(host, { materialCSS: true });  // 이 범위의 현재 시각잎 CSS를 읽어 적용
+FontKku.refreshAll(host);                        // 기존 명시 capture를 유지하며 평소처럼 갱신
+FontKku.refreshAll(host, { materialCSS: false }); // capture 해제 후 원래 디자인/CSS로 복귀
+```
+
+| 상황 | 제안한 상태/실패 의미 |
+|---|---|
+| 기존 1인자 호출·한번도 opt-in하지 않은 host | 기존 의미/출력 그대로, capture를 자동 생성하지 않음 |
+| 명시 true | 현재 source/rootJamo/role/recipe path의 시각잎 glyph-text/glyph-candidate 선택을 읽음. 직접 semantic CSS 문자열/none가 먼저이며 등록 후보 선택 규칙을 유지 |
+| CSS만 바꾼 뒤 평소 refresh/font-ready | 마지막 문자/후보 capture를 유지. 새 선택은 다시 true로 읽을 때 반영, 준비된 같은 글꼴의 실제 맞춤은 현재 회차에서 수행. 칠은 평소 CSS cascade를 따르며 snapshot으로 고정하지 않음 |
+| false 또는 디자인/source revision·원문·폰트/배치/깊이/조립 변경 | false는 해제, context 변경은 현재 선택 폐기와 `GLYPH_MATERIAL_CSS_INVALIDATED`. true 재수집 또는 false 해제 전에는 무효 상태를 유지. 늦게 끝난 웹 글꼴·이전 capture가 현재 상태를 되살리지 않음 |
+| 조립에 필요한 후보/잎이 없거나 측정 실패 | 해당 의미 자소 전체를 원문 경로로 대체하고 이유를 남김. 부분만 성공한 모양으로 표시하지 않음 |
+
+구현 제안 hook은 `data-fy-material-jamo/root/role/path/source`이며 개념 identity는 materialJamo/rootJamo/role/recipePath/sourceId다. opt-in 실제 시각잎과 임시 측정 잎에만 생기고 새 semantic `data-jamo`, 자모 씨앗 순번, 저장한 design field가 아니다. `data-fy-material-probe`는 임시 내부표식으로 공개 선택 계약에 넣지 않는다. 다음은 기존 2.0 구조화 font 디자인을 지정한 `.demo` host에서 ㅎ 조립 재료를 고르는 제안 예다.
+
+```css
+.demo [data-fy-material-jamo="ㅇ"] { --fy-glyph-text: "@"; }
+.demo [data-fy-material-path="bar"] { --fy-glyph-text: "="; }
+```
+
+위 CSS를 고친 뒤 `refreshAll(host,{materialCSS:true})`로 다시 읽고, false로 해제한다. 잎의 `none`는 `GLYPH_MATERIAL_CSS_DISABLED`와 의미 자소 전체 fallback, 잘못된 문자열/후보는 기존 진단을 유지한다. snapshot은 문자열/선택만 보유하고 DOM 노드를 붙잡지 않는다. 자동 DOM 감시·입력 저장 migration·임의축/획 draw·CSS head/whole의 미정 문자열 해석으로 범위를 넓히지 않는다. 이 opt-in의 채택은 다음 미지원 조합이나 공개 배포의 승인이 아니다.
+
+true는 연결된 managed host에 호출한다. connected 숨김 head에서는 CSS 선택만 먼저 수집하고 측정 전 `GLYPH_HEAD_UNSUPPORTED`/원문 fallback을 유지하며, 보인 뒤 유효 부분 영역으로 그린다. detached host는 기존 isConnected guard를 유지하므로 연결 후 true를 다시 호출해야 한다. 자동으로 capture 기간을 연장하지 않는다. 이 범위를 font-ready·ordinary refresh의 기존 capture 유지와 혼동하지 않는다.
+
+### 12.2 H6 첫 공개 범위·문장 표현 수용안 (2026-10-26 미채택)
+
+이번 완료 단위는 내부 문장 비교 보기와 아래 선택 자료다. `FontKku.render`의 기본 출력·공개 exports/types·디자인/프로젝트 schema는 바꾸지 않는다. 내부 분석·재료 존재·계산 기하·브라우저 표본·사람 읽힘을 각각 표시하며 한 단계의 성공을 다음 단계의 지원으로 승격하지 않는다.
+
+| 공개 범위 선택 | 포함/제외와 필요한 근거 |
+|---|---|
+| 내부 검수만 유지(이번 기본값) | v1/v2와 새 문장 검토 HTML로 범위/복사/배치를 비교. 공개 지원/API·역사적 타당성을 약속하지 않음 |
+| 첫 공개를 U+119E 아래아로 제한 | 단일 현대 초성 또는 U+115F, 아래아, 현대 종성0/1, 방점0/1의 명시 선택부터. 새 layout/재료 preset 이름·폰트 범위·문장 배치를 채택해야 함 |
+| 현재 v2의 U+119E+U+11A1을 함께 제한 공개 | 위 조건에 아래아-이를 포함하되 U+11A1 단일 원문/range를 그대로 보존. 점+I는 시각 recipe이며 Unicode 분해로 소개하지 않음. 두 모음의 LV/LVT·방점·실제 크기 비교를 모두 봄 |
+
+공통 추천 실패 정책은 **지원하지 않는 분석 단위 전체를 원문 기기 글꼴로 돌리고 이유를 제공**하는 것이다. 복수 초중종성·다른 옛자모·없는 재료·복수 방점·출력기가 지원하지 않는 조합을 일부만 그리지 않는다. 원문의 UTF16/코드포인트 범위·채움·방점·공백/CRLF/혼합 문자는 보존한다. 첫 공개에서 구조/분석만 공개할지도 별도 선택이며, 현 내부 `idStability:this-analysis-only`를 분석 호출 간 영구 ID로 약속하지 않는다. 공개 반환은 source/dataVersion/unicodeVersion/원문 범위와 분석·조립·배치·재료·출력기별 상태/이유를 갖추는 안으로 검토한다. 함수 이름/별도 entry/host 옵션과 저장 판은 실제 필요와 수용 범위가 정해진 뒤 확정한다.
+
+문장 보기의 수용 조건은 native 원문/기존 runtime/명시 v2를 구분해 16·24·32px, 좁고 넓은 줄에서 비교하는 것이다. 합성 문장에 LV/LVT·두 모음·채움/방점·지원불가 단위와 현대/Latin/emoji를 섞는다. 한 단위 전체·여러 단위·일부·문장+바깥 텍스트 선택의 복사를 확인하고, 범위를 벗어난 선택을 보고 handler가 가로채지 않아야 한다. 제안 배치의 줄바꿈/폭·방점/행간·재료 비율은 측정/그림으로 드러내고, 기존 renderer나 원문의 줄배치가 이 제안을 이미 채택했다고 하지 않는다. 원본 v1/v2 보기·바이트는 새 모드를 고르지 않으면 그대로여야 한다. 현재 1064 계산행을 전체 raster/가독성 검수로 표시하지 않는다.
+
+복사 지원을 입증하는 범위는 **완전한 원문 단위·여러 완전 단위·문장 전체**로 한정한다. 부분 EGC(한 grapheme 내부의 코드포인트 일부)·바깥 선택은 브라우저 기본에 맡기며 새 handler가 보장하지 않는다. 이번 Chromium 대조에서 `ᄒᆡᆫ〯` 내부 일부 Range의 문자열이 있어도 Selection 문자열/실제 clipboard는 native 동일 원문에서도 같은 제약을 보였다. 이는 H6만의 새 결함이나 모든 브라우저의 같은 동작으로 일반화하지 않고 원본 대조와 함께 기록한다. 이 경계를 우회하려고 기존 복사/원문을 강제로 바꾸지 않는다.
+
+문장 비교에서 새로 드러난 공개 전 과제: 현대 글자·기기 글꼴 옆에서 옛한글 재료가 작고 가늘게 보이는 비율 문제가 남았다(측정값은 [ADR-032 진행 기록](../NOTES/hangul-structure-adr032-log.md)). 초성 폭·LVT 받침 영역·줄 흐름·방점과 혼합 재료 비율을 실제 시트로 수용하기 전에는 공개 표현으로 채택하지 않는다. 이번에는 형상을 고치지 않았으며 계산 1064 PASS로 읽힘을 승격하지 않는다.
+
+2026-10-28 후속 수용안: 공개 범위 선택은 위 세 안으로 유지하고 기존 U+119E/U+11A1 표본 밖으로 지원을 늘리지 않는다. 새 `balanced-weight-v1`은 context-v2의 **내부 명시 시안** 한 개다. 초성·받침·I를 .055em으로 맞추고 X .24–.94/advance1em/baseline.88을 유지하며 LVT의 초성Y .04–.43·아래아 .47–.61·I .46–.62·받침 .66–.96으로 공간을 재분배한다. 방점은 원문/중심을 유지한 r.05 가설이다. 16px 명목 .88px 획/1.6px 방점 지름·쌍점 .64px 틈과 ㄹ의1.08px 산술 틈을 실제 raster/읽힘 보장으로 승격하지 않는다. 실제 간격·내부 counter·쌍점 합쳐짐·하단 여유/혼합문장/복사 비용을 드러내고, 기존 v1/v2/wide/flag없는 출력은 바이트로 보존한다. 첫 공개의 단일 아래아 또는 아래아-이 포함 선택·글꼴/혼합비율 수용은 시안을 본 뒤 별도로 결정한다. 이 단계는 기본 renderer나 공개 schema/exports 지원 채택이 아니다.
+
+2026-10-29 승인 반영은 위 balanced 내부 비교 도구와 내부 측정 경계뿐이다. 기본 비율·공개 옛한글·임의축 지원은 채택하지 않았고, H6은 계속 내부(needs-fix, 권고 C)이며 결정 D7·D13·실자료 이행 경계도 그대로다.
+
+### 12.3 고정 통짜 모음의 semantic CSS 문자열 (2026-10-26 채택, D17)
+
+`sebul-fixed-v1`/`sebul-cases-v1`에서 유효한 통짜 합자 모음 부분 영역이 있을 때 명시 semantic CSS quoted text를 **한 통글자 direct 재료 요청/측정**으로 해석한다. 기존 `glyphFit`이 여러 clipped paint cells로 그릴 수 있으므로 DOM leaf 1개를 약속하는 뜻은 아니다. square의 기존 whole CSS 경로의 뜻은 바꾸지 않으며 CSS head 문자열은 계속 `GLYPH_HEAD_UNSUPPORTED`다. (2026-11-03 결함 A 고침, 사용자 결정 D23: 기기 글꼴 나누기 맞춤이 옮긴 노드에서는 후보 잎을 조각 자리의 합 상자로 옮긴다. 디자인 길과 같은 자리다.) 새 함수/selector/저장 field 없이 기존 CSS 입력의 미지원→지원 범위를 넓히는 계약이다. 2026-10-26 사용자 승인으로 채택했다(결정 D17). H6 기본/공개 비율·결정 D7/D13 후보·공개 배포는 포함하지 않는다.
+
+```css
+.demo { --fy-layout: sebul-cases-v1; --fy-vowel-depth: whole; }
+.demo [data-sprite-jamo="ㅘ"] { --fy-glyph-text: "W"; }
+```
+
+CSS 변경 뒤 기존 `FontKku.refreshAll(host)`로 해석한다(D16 capture flag가 필수인 경로가 아니다). 디자인 없이도 computed CSS font를 쓰며, 디자인이 있으면 기존 whole direct JSON과 같은 source 선택/기하/fit을 재사용한다. 이 요청이 원형별 recipe를 추정하거나 자모/씨앗/path 순번을 더하지 않는다. alt source serif/700·locked 후보가 있는 JSON direct와 같은 텍스트/seed의 전체 fit/clip이 일치하는 것이 oracle다.
+
+D17 채택 당시의 candidate 우선순위는 유지한다(후속 채택 D18은 §12.4). 이 D17 범위에서 effective candidate-only whole은 `GLYPH_LAYOUT_UNSUPPORTED`, `candidate:none` 또는 unquoted `none`는 원문 대체/무진단이며 quoted `"none"`는 문자다. 잘못된 문자열은 `GLYPH_TEXT_INVALID`, 잉크를 못 재면 `GLYPH_MEASUREMENT_UNAVAILABLE`, 부분 영역이 없으면 `GLYPH_LAYOUT_UNSUPPORTED`다. semantic CSS는 D16 시각 capture보다 우선하고 제거하면 이전 capture가 복원된다. pending/404/face 교체는 현재 CSS 값과 요청 회차를 쓰며 오래된 완료가 해제/교체한 선택을 되살리지 않는다.
+
+범위는 고정 두 배치의 quoted text뿐이다. candidate-only의 새 whole 선택 의미, CSS head, 임의축/feature의 측정 불일치, 실제 획 draw, 정적 CSS/폰트 파일 출력은 이 계약으로 지원되지 않는다. 기본 모양·새 정책 예외·저장 migration도 없다. 이 채택을 공개 배포나 전체 H3 완료로 표시하지 않는다.
+
+### 12.4 고정 통짜 모음의 semantic CSS 후보 ID (2026-10-26 채택, D18)
+
+D17의 다음 수용 단위다. `sebul-fixed-v1`/`sebul-cases-v1`의 유효 통짜 합자 모음 부분 영역에서 **명시 semantic CSS candidate ID**를 기존 whole direct 요청의 font source·호환 자모·`rootRole:medial`·`path:[]`에 맞는 `glyphs` 항목에서 고른다. 2026-10-26 사용자 승인으로 채택했다(결정 D18). 공개·기본 모양 변경은 없다. 새로운 함수/selector/저장 field·기본 모양·정책 예외를 추가하지 않는다.
+
+```js
+FontKku.registerDesign("whole-candidates", {
+  version: "2.0", mode: "font",
+  sources: {s: {kind: "font", family: "serif", glyphs: [
+    {jamo: "ㅘ", role: "medial", candidates: [
+      {id: "a", text: "W"}, {id: "b", text: "Q"}
+    ], selected: "a"}
+  ]}}, defaults: {source: "s"}
+});
+```
+
+```css
+.demo { --fy-design: whole-candidates; --fy-layout: sebul-cases-v1; --fy-vowel-depth: whole; }
+.demo [data-sprite-jamo="ㅘ"] { --fy-glyph-candidate: b; }
+```
+
+`과`의 원문/복사·자모/씨앗 순번은 그대로 두고 ㅘ 자리에 후보 b의 Q를 한 direct 재료 요청/측정으로 맞춘다. 내부 clipped paint cells가 여럿일 수 있다. CSS 변경 뒤 기존 `FontKku.refreshAll(host)`로 읽으며 D16 capture는 필수가 아니다. D17 quoted text는 디자인 없이 computed font로도 계속 쓸 수 있지만 이 **후보 선택에는 해당 font 디자인/whole glyph 항목이 필요**하다.
+
+이것은 명시 semantic CSS override의 지원 확대다. root에 compose 규칙이 있어도 whole 항목을 direct로 쓰고 recipe로 구제하지 않는다. 무선택 디자인 조립이나 `planJamo`의 기존 candidate 옵션/출력 의미는 바꾸지 않는다.
+
+후보는 배열 순번이 아닌 `readIdent`/기존 ID 문법 `^[A-Za-z0-9][A-Za-z0-9._-]*$`의 ID다. 숫자 token도 그 이름의 ID가 있어야 한다. source는 기존 whole 요청의 binding/규칙 선택을 재사용하고 다른 source/원형·조각 recipe의 후보를 빌리지 않는다. 같은 whole 자모의 역할별 항목이 generic 항목보다 우선한다. 등록 `locked`가 명시 CSS ID보다 앞서고, 나머지는 기존 명시 ID→seed→selected/default 선택 규칙이다. 따라서 잠긴 a는 CSS `missing`이어도 a를 유지한다. 잠금이 없으면 candidate b와 quoted text W 또는 text none를 함께 적어도 b가 우선하며 `candidate:none`은 둘 다 끄고 원문/무진단으로 돌아간다.
+
+없는 디자인·whole 항목·source/role 일치·후보 ID, 빈/잘못된 ID, glyphs 없는 옛 font source는 `GLYPH_CANDIDATE_MISSING`과 소유 의미 자소 전체 원문 fallback이다. `glyphs[].candidates:[]` 같은 잘못된 디자인은 기존 `DESIGN_GLYPHS_INVALID` 등록 거부이며 렌더 fallback과 다르다. 잉크 없음은 `GLYPH_MEASUREMENT_UNAVAILABLE`, 영역 없음은 `GLYPH_LAYOUT_UNSUPPORTED`, CSS head는 `GLYPH_HEAD_UNSUPPORTED`다. pending/실패/교체·D16 복원과 현재 회차 보호는 기존 경로를 쓴다. 임의축/feature·실제 획 draw·정적 CSS/폰트 파일 출력은 여전히 미지원이다.
+
+시험은 기존 whole JSON direct의 전체 fit/clip·source·seed·원문을 정답으로 쓴다. 결정 D7의 별도 시안·H6 공개 지원·D13 기본 채택과는 다른 결정이다. 임의축은 [필요 측정 계약](../NOTES/glyph-material-fit-2026-10-18.md#2026-10-26-임의축을-runtime에-연결하기-전-필요한-측정-계약)을 갖춘 backend가 후속 선행이며 이 지원으로 진단을 제거하지 않는다.
+
+## Change Log
+- 2026-11-06: 결정 D19·D21을 기본값으로 받음(H6 공개 범위 C 내부만, 공개 계약 시점 ①–④ 뒤로) — Proposed 그대로. 경위는 [진행 기록](../NOTES/hangul-structure-adr032-log.md)
+- 2026-10-31: Status를 '일부 수용' 목록·수용 기준으로 다시 쓰고, §11 원장 표와 §12의 커밋·검증·개발 사이트 반영 기록을 [ADR-032 진행 기록](../NOTES/hangul-structure-adr032-log.md)으로 옮겼다. 띄어쓰기가 빠진 문장을 되살렸다(PLAN-DOCS-001 문서 정비)
+- 2026-10-29: H6 balanced 내부 비교 도구 반영 경계(§12.2)
+- 2026-10-28: H6 `balanced-weight-v1` 내부 시안 수용안(§12.2)
+- 2026-10-26: 결정 D14·D15(구조화 디자인의 머리·통짜 모음 매핑), D16(§12.1 `materialCSS`), D17(§12.3), D18(§12.4) 채택. §12.2 H6 첫 공개 범위는 미채택
+- 2026-10-25: H1a 내부 분석·개발 보기 prototype 반영(공개 API 아님)
+- 2026-10-18: H0·H3a–d 첫 범위를 구현해 master에 로컬 병합(§11 원장, §12 계약). 짓는 방식 프리셋은 ADR-034로
+- 2026-10-18: Proposed — 사용자의 옛한글 확장과 영문·숫자·기호 재료 요구를 반영한 설계

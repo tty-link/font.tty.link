@@ -1,7 +1,8 @@
 # 움직임과 런타임 변주
 
-> Status: Implemented
-> Scope: 자소 단위 움직임, 순번 변수, 씨앗값(`seed`), 도우미 함수, 바탕 요소 상태 기반 변주의 공개 계약과 조합 확장(자모 움직임 `font-kku-motion.css`, 상호작용 `font-kku-fx.js`, 변주 클래스 `kku-vary-*`)
+> 상태: 현행 · 마지막 갱신 2026-10-31 · 관련 결정: [ADR-016](../ADR/ADR-016-seed-aware-fonts.md)·[ADR-017](../ADR/ADR-017-composition-axes-and-themes.md)·[ADR-018](../ADR/ADR-018-stroke-depth.md)·[ADR-020](../ADR/ADR-020-rendering-boundaries-and-recovery.md)
+>
+> 요약: 자소 단위 움직임, 순번 변수, 씨앗값(`seed`), 도우미 함수, 바탕 요소 상태 기반 변주의 공개 계약과 조합 확장(자모 움직임 `font-kku-motion.css`, 상호작용 `font-kku-fx.js`, 변주 클래스 `kku-vary-*`)
 
 ## 목표
 
@@ -85,7 +86,7 @@
 
 - 자모 노드는 개별 속성 `translate`·`rotate`와 `opacity`·`color`로만 움직인다. `transform`은 코어가 자모 자리에 쓰므로 키프레임에 쓰지 않는다.
 - 시차는 `--fy-glyph-index`와 역할 단계 `--kku-step`(초성·head 0, 중성 1, 받침 2)으로 준다. `--fy-jamo-index`는 자모 표 번호라 순서로 쓰지 않는다.
-- 그림 자소에서 색을 바꾸는 `cycle`·`shine`은 바탕 요소에 마스크 칠을 켜서 자소판 모양에 글자 색을 칠한다. 이동·투명도 움직임은 재료와 무관하다.
+- 그림 자소에서 색을 바꾸는 `cycle`·`shine`은 바탕 요소에 마스크 칠을 켜서 자소판 모양에 글자 색을 칠한다. 움직임 줄이기에서는 켜지 않아 정지 렌더와 같은 그림이다(자소판 고유의 색·투명도) — 설정이 바뀌면 런타임이 칠과 칸만 그 자리에서 고친다(관리 DOM·JS 옵션 그대로, `font-kku:render` `restyle`). JS 옵션으로만 준 움직임(`render(host, { animate: "cycle" })`)도 같다. 이동·투명도 움직임은 재료와 무관하다.
 - 한 번 도는 움직임은 다시 그리면 다시 돈다 — `FontKku.refresh(host)` 또는 `FontKkuFx.replay(host)`.
 - 조절 손잡이: `--kku-motion-duration`, `--kku-motion-stagger`. `data-kku-paused`(바탕 요소나 조상)는 스크롤 조립을 뺀 움직임을 그 자리에 세우고, `prefers-reduced-motion: reduce`는 모두 끈다(레이어 안 `!important` — 획순 그리기의 획까지).
 
@@ -417,6 +418,7 @@ document.addEventListener("font-kku:render", (event) => {
 - 씨앗값을 넣은 난수 생성기(RNG) 상태를 별도 런타임 객체로 보존하는 API
 
 ## Change Log
+- 2026-10-31: 머리말을 문서 표준(상태·마지막 갱신·관련 결정·요약)으로
 - 2026-10-17: 데모 페이지 경로를 사이트 저장소 `src/`로(ADR-029), 움직임 훅 페이지의 단추 이름을 실제 문구로
 - 2026-10-11: scatter·magnet 이동 속성의 controller별 소유권, 명시적 우선순위, 작성자 인라인 복원 및 공유 포커스·클래스 수명 계약 추가
 - 2026-10-10: 조합 확장(ADR-017) — 자모 움직임 7종(`font-kku-motion.css`), 상호작용 `FontKkuFx`(`font-kku-fx.js`), 공용 변주 클래스 `kku-vary-*`와 변주 겹침 감사 절 추가. "역할별 내장 움직임 라이브러리"를 범위 밖에서 뺌

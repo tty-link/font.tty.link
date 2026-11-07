@@ -451,6 +451,16 @@
     --fy-ml-top: -0.95%;
   }
 
+  :where([data-fy-font="saekdong"]) [part="glyph"][data-fy-jamos~="ᄎ"]:is([data-fy-at-trs="ᅡ"], [data-fy-at-trs="ᅵ"]) [data-fy-pos="ml"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-ml-top: 2.44%;
+    --fy-ml-clip: inset(34% -1em -1em -1em);
+  }
+
+  :where([data-fy-font="saekdong"]) [part="glyph"][data-fy-jamos~="ᄌ"][data-fy-at-trs="ᅵ"] [data-fy-pos="ml"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
+    --fy-ml-top: 1.99%;
+    --fy-ml-clip: inset(32.8% -1em -1em -1em);
+  }
+
   :where([data-fy-font="saekdong"]) [part="glyph"][data-fy-at-trs][data-fy-at-trs="ᅡ"] [data-fy-pos="ml"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-ml-left: -0.26%;
   }

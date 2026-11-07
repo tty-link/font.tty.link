@@ -1,6 +1,6 @@
 # 텍스트 분절 모델
 
-> Status: Implemented
+> 상태: 현행 · 마지막 갱신 2026-10-31 · 관련 결정: [ADR-003](../ADR/ADR-003-accessibility-contract.md), [ADR-020](../ADR/ADR-020-rendering-boundaries-and-recovery.md)
 > Scope: 런타임의 텍스트 단위 구성과 줄바꿈 동작
 
 ## 문제 진단
@@ -192,7 +192,7 @@ type WrapUnit = "glyph" | "word" | "line";
 
 예를 들면 레거시의 `tr`와 `ml`은 새 시스템에서 각각 별도 클래스가 아니라 아래 선택자로 표현된다.
 
-- `tr`: `[part~="jungseong"]` 또는 섞임모음 짜임에서는 `[part~="jungseong-tail"]`
+- `tr`: `[part~="jungseong"]` 또는 합자모음 짜임에서는 `[part~="jungseong-tail"]`
 - `ml`: `[data-jung-layout="split-right"] [part~="jungseong-base"]`
 
 ### 비한글 계약
@@ -240,8 +240,11 @@ type WrapUnit = "glyph" | "word" | "line";
 1. 문자열을 바로 DOM으로 만들지 말고 `TextModel`로 정규화
 2. `TextModel`에서 단어와 공백을 따로 보존한 채 `wrap-unit`을 반영해 DOM 생성
 3. 글자 내부에서만 자소 분해와 배치 수행
-4. 접근성용 원문은 바탕 요소에 유지
+4. 접근성·복사용 원문은 바탕 요소 안 `part="sr-source"` 노드 하나에 둔다(ADR-003)
 
 ## 결론
 
 새 프레임워크는 자소 배치 엔진이면서 동시에 텍스트 세그먼트 엔진이어야 한다. 줄/단어/글자 단위가 먼저 있어야 성능, 줄바꿈, 움직임, 접근성 모두를 안정적으로 제어할 수 있다.
+
+## Change Log
+- 2026-10-31: 머리말을 공통 형식으로, 구현 지침의 원문 보존을 `sr-source` 노드 계약(ADR-003)에 맞춤(PLAN-DOCS-001)

@@ -52,7 +52,8 @@ Accepted
 - Plan: [TRK-032 historical track](../../archive/tasks/2026-07/trk-032-post-refactor-product-closure.md)
 
 ## Change Log
-- 2026-09-25: PoC 제거 — `site/font-editor.js`와 그 slot-contract 생성 블록을 PoC와 함께 없앴다. `--write`/`--check`의 생성 대상은 이제 `font-kku.css`의 dispatch 블록과 `site/font-studio-model.js`의 studio slot contract(`studio-slot-contract` marker)다. Decision의 font-editor 문구는 당시 기록으로 남긴다
+- 2026-10-31: 2026-09-25 항목의 생성 대상 경로에 지금 정본(`generatedTargets`) 표시(PLAN-DOCS-001 문서 정비)
+- 2026-09-25: PoC 제거 — (→ 지금 생성 대상은 `spec/css-variables.json`의 `generatedTargets`가 정본이다: `font-kku.css`의 cluster·dispatch 블록, `authoring/font-studio-model.js`의 studio slot contract, `authoring/font-kku-lint.js`의 lint registry — 2026-10-16 ADR-029로 `site/`에서 `authoring/`으로 옮겼다) `site/font-editor.js`와 그 slot-contract 생성 블록을 PoC와 함께 없앴다. `--write`/`--check`의 생성 대상은 이제 `font-kku.css`의 dispatch 블록과 `site/font-studio-model.js`의 studio slot contract(`studio-slot-contract` marker)다. Decision의 font-editor 문구는 당시 기록으로 남긴다
 - 2026-09-24: ADR-008 폰트 계약 v2 — registry v2.0(slot `parent`, weight/stroke, 보정·메타데이터 변수). base CSS의 slot·role 디스패치 블록은 이제 registry에서 생성한다(`--write`/`--check`). 나머지 base CSS는 손으로 쓴 실행 정본으로 유지
 - 2026-08-13: depth/head 확장 뒤에도 유지되도록 변동 variable/slot 수를 checker 출력으로 위임
 - 2026-07-10: TRK-032 registry/checker/editor codegen 구현과 함께 Accepted

@@ -102,3 +102,7 @@ Accepted (1–3단계 구현, 4단계 연구는 남음)
 - [ADR-013](./ADR-013-vector-jamo.md) 벡터 자소
 - [ADR-017](./ADR-017-composition-axes-and-themes.md) 조합 체계
 - `skills/font-kku/references/legibility.md` — 배율이 곧 획 두께
+
+## Change Log
+- 2026-10-11: Accepted — `stroke-depth="stroke"`로 벡터 자소를 획 노드(`part="hoek"`)로 쪼개고, 움직임 `draw`·변주 `kku-vary-hoek`·정본 `spec/strokes.json`을 더했다(1–3단계). 4단계 연구는 남는다
+- 2026-10-31: Change Log 절을 더했다(PLAN-DOCS-001 문서 정비)

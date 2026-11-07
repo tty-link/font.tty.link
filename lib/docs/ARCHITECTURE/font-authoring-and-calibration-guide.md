@@ -1,6 +1,6 @@
 # 글꼴 저작·교정 안내
 
-> Status: Implemented
+> 상태: 현행 · 마지막 갱신 2026-10-31 · 관련 결정: [ADR-008](../ADR/ADR-008-font-contract-v2.md), [ADR-024](../ADR/ADR-024-hangul-principle-rendering.md), [ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md), [ADR-032](../ADR/ADR-032-hangul-structure-and-materials.md)
 > Scope: 사용자와 AI 에이전트가 `font-kku`용 글꼴을 만들고 교정할 때 따라가는 실무 절차
 
 ## 목표
@@ -15,6 +15,7 @@
 
 ## 관련 문서
 
+- [글꼴 모양·재료·디자인](./shape-material-design.md) — 글꼴 = 글꼴 모양 + 재료, 짓는 방식, 편집 범위
 - [프레임워크 안내](./framework-guide.md)
 - [스타일 글꼴 체계](./style-profile-system.md)
 - [일반 글꼴 그룹 목록](./general-font-group-catalog.md)
@@ -31,14 +32,14 @@
   - 현재 기본 제공 일반 글꼴 교정에서 가장 자주 보는 축은 `right` / `bottom` / `split-right`다.
   - `right` — 세로모음 짜임(중성이 오른쪽). 예: `가`, `장`, `밟`.
   - `bottom` — 가로모음 짜임(중성이 아래). 예: `오`, `울`, `흙`.
-  - `split-right` — 섞임모음 짜임(가로·세로 모음이 섞인 복합 중성). 예: `과`, `왕`, `괆`.
+  - `split-right` — 합자모음 짜임(가로·세로 모음이 섞인 복합 중성). 예: `과`, `왕`, `괆`.
 - **받침(coda)** — 한 음절의 받침 구조. 값은 `none`(민글자) / `single`(홑받침) / `double`(겹받침) 셋.
 - **짜임 키(layout-key)** — 짜임과 받침의 `topology:coda` 조합. 예: `right:none`, `bottom:single`, `split-right:double`. 글자 노드에 `data-layout-key`로 노출된다.
 - **자리(slot)** — 자소를 배치하는 논리 위치. `--fy-<slot>-top`, `--fy-<slot>-left`, `--fy-<slot>-size`, `--fy-<slot>-scale-*`, `--fy-<slot>-rotate`, `--fy-<slot>-weight`, `--fy-<slot>-stroke`, `--fy-<slot>-clip`, `--fy-<slot>-dilate`(그림 자소) 같은 CSS 변수로 조정한다. 배치 토큰과 이름이 같다. 모든 접미사가 자리 → 부모 자리 → 역할 순으로 대체된다.
-- **레벨 / 레이어** — 글꼴이 자모 노드를 제어하는 단계(글꼴 → 자리 → 자모 → 문맥)와 그 단계를 담는 cascade layer(`font-kku.font`, `font-kku.jamo`, `font-kku.context`). 정본은 [ADR-008](../ADR/ADR-008-font-contract-v2.md), 요약은 [스타일 글꼴 체계](./style-profile-system.md)의 `글꼴 계약 v2 — 레이어와 레벨` 절.
+- **레벨 / 레이어** — 글꼴이 자모 노드를 제어하는 단계(글꼴 → 자리 → 자모 → 같은 짜임 → 문맥 → 이 글자만)와 그 단계를 담는 cascade layer(`font-kku.font`, `font-kku.jamo`, `font-kku.context`). 고정 글꼴 모양(세벌식·직결식)의 손 보정은 `font-kku.tune`에 쓴다(ADR-030). 정본은 [ADR-008](../ADR/ADR-008-font-contract-v2.md), 요약은 [스타일 글꼴 체계](./style-profile-system.md)의 `글꼴 계약 v2 — 레이어와 레벨` 절.
 - **배치 토큰(placement token)** — 글자 안 자소 노드의 `data-fy-pos` 값. 예: `tlo`, `tro`, `mtl`, `bbrs`. 자리 변수 이름의 중간 약어와 대응한다.
 - **묶음(cluster)** — 복합 중성(`jungseong-cluster`)과 겹받침(`jongseong-cluster`)을 감싸는 요소. `--fy-jung-cluster-*`, `--fy-jong-cluster-*`로 조정한다.
-- **표현 방식(expression mode)** — 글꼴 CSS가 `--fy-expression-mode`로 선언하는 값. **런타임이 인정하는 정규화 출력은 `sebeol` 과 `general` 둘뿐**이다(`font-kku.js`의 `normalizeExpressionMode`). 값을 생략하거나 다른 값을 쓰면 `sebeol`로 돌아가며, `gothic`은 입력 시 `general`로 정규화되는 옛 별칭이다. 정규화 결과는 바탕 요소의 `data-fy-expression`으로 노출된다.
+- **표현 방식(expression mode)** — 글꼴 CSS가 `--fy-expression-mode`로 선언하는 값. **런타임이 인정하는 정규화 출력은 `sebeol` 과 `general` 둘뿐**이다(`font-kku.js`의 `normalizeExpressionMode`). 값을 생략하거나 다른 값을 쓰면 `sebeol`로 돌아가며, `gothic`은 입력 시 `general`로 정규화되는 옛 별칭이다. 정규화 결과는 바탕 요소의 `data-fy-expression`으로 노출된다. 표현 방식은 글꼴의 성격을 적는 값일 뿐 자리 값을 고르지 않는다. 세벌식·직결식·네모꼴은 글꼴 모양(`--fy-font-layout`, 페이지 `--fy-layout`)으로 고른다([글꼴 모양·재료·디자인](./shape-material-design.md#글꼴-모양)).
 
 ## `data-fy-*` 계약은 어디를 보나
 
@@ -61,8 +62,9 @@
 
 ### 1. 어떤 종류의 글꼴인가
 
-- **CSS 글꼴**
-  - 기기의 한글 글꼴 또는 브라우저 기본 글꼴을 재료로 쓴다.
+- **CSS 글꼴**(`--fy-material: system`)
+  - 자모를 그리는 재료를 고른다(ADR-024). 기본 제공 `sebul`·`gothic`·`malang`·`jikgyeol`은 원소(`element` — 획을 CSS 상자로)가 기본이고, 페이지 `--fy-face: device`면 기기 한글 글꼴의 낱자를 표준 잉크 상자에 맞춰 그린다(ADR-023). 칸 계약 그림 세트(`svg`)도 고를 수 있다.
+  - 표준 잉크 상자(`--fy-font-ink-boxes: standard`)를 밝히지 않은 글꼴은 기기 한글 글꼴 또는 브라우저 기본 글꼴의 조합용 자모를 그대로 쓴다.
   - 현재 기본 제공되는 기준 글꼴은 `profiles/sebul.css`(둥근 세벌식 기본)과 `profiles/gothic.css`(일반 글꼴).
   - `profiles/default.css`와 `profiles/classic.css`는 `sebul.css`를 import하는 폐기 예정 별칭, `profiles/gothic2.css`는 `gothic.css`를 import하는 폐기 예정 별칭이다. 새 작업은 별칭을 건드리지 않는다.
   - 위치, 크기, 회전, 간격, 묶음 상자를 CSS 변수로 조정한다.
@@ -74,6 +76,8 @@
 
 ### 2. 어떤 표현 방식인가
 
+표현 방식(`--fy-expression-mode`)은 글꼴의 성격을 밝히는 값이고, 자리 값은 고르지 않는다. 시작점이 될 글꼴 CSS를 고르는 기준으로 쓴다.
+
 - **`sebeol`**
   - 세벌식처럼 자소 분리감이 드러나는 표현.
   - 시작점은 `profiles/sebul.css`.
@@ -81,7 +85,9 @@
 - **`general`**
   - 일반 글꼴처럼 음절 결속이 중요하고 문장 리듬이 핵심인 표현.
   - 시작점은 `profiles/gothic.css`.
-  - 가장 위험한 영역은 섞임모음 짜임(`split-right`)과 문장 수준 잔차다.
+  - 가장 위험한 영역은 합자모음 짜임(`split-right`)과 문장 수준 잔차다.
+
+글꼴 모양은 이와 따로 고른다(ADR-030). `font="sebul"`·`font="gothic"`처럼 글꼴을 밝히면 그 글꼴 CSS 자신의 네모꼴 자리 값으로 그린다. 세벌식(`sebul-cases-v1`)·직결식(`sebul-fixed-v1`)은 모양 값이 코어 CSS에 있어 어느 글꼴 위에도 입힐 수 있고(`--fy-font-layout`, 페이지 `--fy-layout`), 그 위 손 보정은 글꼴 CSS의 `@layer font-kku.tune`에 쓴다. 글꼴을 밝히지 않은 바탕 요소는 `sebul` 글꼴에 세벌식 모양이다.
 
 ## 작업 파일 지도
 
@@ -140,7 +146,7 @@ python3 -m http.server 8000
 
 아래 레벨이 위 레벨을 이기는 것은 선택자 특이도나 파일 위치가 아니라 레이어다. 그래서 "어느 레벨에 쓰는가"만 맞게 고르면 규칙 순서를 신경 쓸 필요가 없다. 대신 **같은 변수는 대체된다**는 점을 기억한다. 자모 규칙과 문맥 규칙이 둘 다 `--fy-jamo-dy`를 쓰면 누적이 아니라 뒤 레이어 값 하나만 남는다. 문맥 보정은 `--fy-ctx-*`에 쓴다.
 
-글꼴은 코어가 소유한 속성(`margin`, `inset`, `transform`, `font-size`, `font-weight`, `-webkit-text-stroke`, `clip-path`, 그림 자소 재료의 `background*`·`filter`·`inline-size`·`block-size`·`width`·`height`·`overflow` 등)과 페이지 전용 변수(`--fy-top`, `--fy-left`, `--fy-font-size`, `--fy-weight`, `--fy-stroke`, `--fy-clip`, `--fy-scale-x`, `--fy-scale-y`, `--fy-rotate`, `--fy-sprite-filter`, `--fy-optical-sprite-*`, 깊이 `--fy-jamo-depth`/`--fy-vowel-depth`/`--fy-coda-depth`, 짓는 방식 `--fy-composition`)를 선언하지 않는다. 글꼴의 기본 자모 깊이는 `--fy-font-jamo-depth`(또는 `--fy-font-vowel-depth`/`--fy-font-coda-depth`)로 선언한다. 글꼴의 기본 짓는 방식을 밝히고 싶으면 `--fy-font-composition: <프리셋>`을 쓴다(밝히지 않아도 된다. 같은 글꼴의 깊이 변수가 그 프리셋의 축을 이긴다 — [ADR-034](../ADR/ADR-034-composition-modes.md)). 자모별 잘라내기는 자모 레이어에서 자리 clip(`--fy-mt-clip` 등)을, 자모 회전은 자리 rotate나 `--fy-jamo-rotate`/`--fy-ctx-rotate`를 쓴다. `node scripts/check_css_contract.js --check`가 이를 검사한다.
+글꼴은 코어가 소유한 속성(`margin`, `inset`, `transform`, `font-size`, `font-weight`, `-webkit-text-stroke`, `clip-path`, 그림 자소 재료의 `background*`·`filter`·`inline-size`·`block-size`·`width`·`height`·`overflow` 등)과 페이지 전용 변수(`--fy-top`, `--fy-left`, `--fy-font-size`, `--fy-weight`, `--fy-stroke`, `--fy-clip`, `--fy-scale-x`, `--fy-scale-y`, `--fy-rotate`, `--fy-sprite-filter`, `--fy-optical-sprite-*`, 깊이 `--fy-jamo-depth`/`--fy-vowel-depth`/`--fy-coda-depth`, 짓는 방식 `--fy-composition`)를 선언하지 않는다. 글꼴의 기본 음절 나누기는 `--fy-font-jamo-depth`(또는 `--fy-font-vowel-depth`/`--fy-font-coda-depth`)로 선언한다. 글꼴의 기본 짓는 방식을 밝히고 싶으면 `--fy-font-composition: <프리셋>`을 쓴다(밝히지 않아도 된다. 같은 글꼴의 깊이 변수가 그 프리셋의 축을 이긴다 — [ADR-034](../ADR/ADR-034-composition-modes.md)). 자모별 잘라내기는 자모 레이어에서 자리 clip(`--fy-mt-clip` 등)을, 자모 회전은 자리 rotate나 `--fy-jamo-rotate`/`--fy-ctx-rotate`를 쓴다. `node scripts/check_css_contract.js --check`가 이를 검사한다.
 
 ### 3. 교정은 항상 고정 샘플 세트로 한다
 
@@ -184,9 +190,9 @@ python3 -m http.server 8000
 | `t` | 가로모음·민글자 초성 | `오` / `우` / `그`의 ㅇ·ㄱ |
 | `tlo` | 세로모음·민글자 초성 | `가` / `저` / `비`의 초성 |
 | `tlc` | 세로모음·받침 글자 초성 | `한` / `장` / `읽`의 초성 |
-| `tls` | 섞임모음·민글자 초성 | `과` / `왜` / `외` / `의`의 초성 |
+| `tls` | 합자모음·민글자 초성 | `과` / `왜` / `외` / `의`의 초성 |
 | `tt` | 가로모음·받침 글자 초성 | `울` / `늘` / `글`의 ㅇ·ㄴ·ㄱ |
-| `ttl` | 섞임모음·받침 글자 초성 | `왕` / `권` / `획`의 초성 |
+| `ttl` | 합자모음·받침 글자 초성 | `왕` / `권` / `획`의 초성 |
 
 ### 중성
 
@@ -194,12 +200,12 @@ python3 -m http.server 8000
 | ---- | --------- | ---- |
 | `tro` | 세로모음·민글자 중성 | `가` / `저` / `비`의 ㅏ·ㅓ·ㅣ |
 | `trc` | 세로모음·받침 글자 중성 | `한` / `장` / `읽`의 ㅏ·ㅣ |
-| `trs` | 섞임모음·민글자 세로 부분(tail) | `과` / `왜` / `외` / `의`의 세로 부분 |
-| `ttr` | 섞임모음·받침 글자 세로 부분(tail) | `왕` / `획`의 세로 부분 |
+| `trs` | 합자모음·민글자 세로 부분(tail) | `과` / `왜` / `외` / `의`의 세로 부분 |
+| `ttr` | 합자모음·받침 글자 세로 부분(tail) | `왕` / `획`의 세로 부분 |
 | `m` | 가로모음·민글자 중성 | `오` / `우` / `그`의 ㅗ·ㅜ·ㅡ |
-| `ml` | 섞임모음·민글자 가로 부분(base) | `과` / `왜` / `의`의 가로 부분 |
+| `ml` | 합자모음·민글자 가로 부분(base) | `과` / `왜` / `의`의 가로 부분 |
 | `mt` | 가로모음·받침 글자 중성 | `울` / `늘` / `글`의 ㅜ·ㅡ |
-| `mtl` | 섞임모음·받침 글자 가로 부분(base) | `왕` / `권` / `획`의 가로 부분 |
+| `mtl` | 합자모음·받침 글자 가로 부분(base) | `왕` / `권` / `획`의 가로 부분 |
 
 ### 종성
 
@@ -211,9 +217,9 @@ python3 -m http.server 8000
 | `brd` | 세로모음·겹받침 오른쪽 | `밟`의 ㅂ, `닭`의 ㄱ |
 | `bl` | 가로모음·겹받침 왼쪽 | `흙` / `긁`의 ㄹ |
 | `br` | 가로모음·겹받침 오른쪽 | `흙` / `긁`의 ㄱ |
-| `bbl` | 섞임모음·겹받침 왼쪽 | `괆`의 ㄹ |
-| `bbrs` | 섞임모음·홑받침 종성 | `왕` / `획`의 ㅇ·ㄱ |
-| `bbrd` | 섞임모음·겹받침 오른쪽 | `괆`의 ㅁ |
+| `bbl` | 합자모음·겹받침 왼쪽 | `괆`의 ㄹ |
+| `bbrs` | 합자모음·홑받침 종성 | `왕` / `획`의 ㅇ·ㄱ |
+| `bbrd` | 합자모음·겹받침 오른쪽 | `괆`의 ㅁ |
 | `bb` | 폐기 예정인 옛 하단 중앙 자리 | 현재 배치표에서 쓰지 않음, 새로 저작하지 않음 |
 
 각 자리는 `--fy-<token>-top`, `-left`, `-size`, `-scale-x`, `-scale-y`, `-rotate`, `-weight`, `-stroke`, `-clip`, `-dilate`를 받는다. 자식 자리 값이 없으면 부모 자리 → 역할 순으로 대체된다(scale도 곱하지 않고 대체). 부모 자리는 노드로 출력되지 않고 자식과 역할이 같다: `tc`(t·tt), `tl`(tlo·tlc·tls·ttl), `h`(hs·hts), `tr`(tro·trc), `mc`(m·mt), `mx`(mw·mtw), `xb`(ml·mtl), `xt`(trs·ttr), `bs`(b·brs·bbrs), `bx`(bw·brw·bbw), `xl`(bl·blr·bbl), `xr`(br·brd·bbrd). 정본은 레지스트리의 `parent`·`role`이다. `blb`/`brb`는 예약(reserved), `bb`/`bbr`은 폐기 예정(deprecated)이므로 새 글꼴에서 선언하지 않는다. 전체 변수·상태·기본값 정본은 `spec/css-variables.json`, 검사는 `node scripts/check_css_contract.js --check`, 글꼴 작업실의 자리 계약 갱신은 `--write`를 사용한다. 상세 방향은 [ADR-007](../ADR/ADR-007-css-variable-registry-and-editor-codegen.md)을 본다.
@@ -296,7 +302,7 @@ python3 -m http.server 8000
 
 ### 4. 짜임별 자리를 맞춘다
 
-이제 세로모음(`right`), 가로모음(`bottom`), 섞임모음(`split-right`), 겹받침(`double coda`)처럼 실제로 깨지는 짜임을 순서대로 맞춘다.
+이제 세로모음(`right`), 가로모음(`bottom`), 합자모음(`split-right`), 겹받침(`double coda`)처럼 실제로 깨지는 짜임을 순서대로 맞춘다.
 
 권장 순서:
 
@@ -483,7 +489,7 @@ python3 scripts/build_sprite.py --from-font /path/to/font.ttf --out my-sprite.pn
   - 결과: 뒤 레이어 값이 앞 값을 대체한다. 문맥 보정은 `--fy-ctx-*`, 자모 보정은 `--fy-jamo-*`로 분리한다.
 - **자모 규칙을 글꼴 레이어에 둔다**
   - 결과: 검사는 통과하지만 같은 레이어의 자리 단위 노드 규칙(`[data-fy-pos]`, 그림 자소 행 선택)과의 우선순위가 특이도·파일 순서에 다시 의존한다. `[data-jamo]`·`[data-jamo-base]` 규칙은 `font-kku.jamo`, `:has()` 규칙은 `font-kku.context`에 둔다.
-- **섞임모음 짜임(`split-right`)을 초반에 크게 건드린다**
+- **합자모음 짜임(`split-right`)을 초반에 크게 건드린다**
   - 결과: 다른 짜임 기준선이 같이 흔들린다.
 - **교정 중 움직임·씨앗값을 켠다**
   - 결과: 시각 비교가 불안정해진다.
@@ -516,16 +522,6 @@ verify: <commands>          # 예: python -m pytest tests/test_playwright_smoke.
 후속 이슈: <list or none>
 ```
 
-## Change Log
-
-- 2026-10-17: ADR-029 뒤 경로 정리 — 데모 페이지는 사이트 저장소 `src/`, 로컬 확인은 `tests/fixtures/runtime/`·`studio/index.html`, 스모크 경로 모드(직접 실행 `--mode both`, pytest 기본 서버)
-- 2026-09-27: 계약 정규화 — 모든 자리 접미사(scale 포함)가 자리 → 부모 자리 → 역할 대체 체인, 자리 접미사에 rotate·clip·dilate 추가, 부모 자리 트리 완성(`tc`/`mc`/`mx`/`xb`/`xt`/`bs`/`bx`/`xl`/`xr`), `--fy-clip`·`--fy-sprite-filter`는 페이지 전용, 검사에 `spec/fonts.json` 역방향 대조 추가
-- 2026-09-25: 그림 자소 재료 코어화(ADR-008 §5) 반영 — 생성 CSS 점검 항목을 `--fy-sprite-*` 변수로 교체, 검사의 그림 자소 재료 속성·자소판 변수 항목 추가
-- 2026-09-24: 글꼴 계약 v2(ADR-008) 반영 — 레이어·레벨 작업 순서, 바탕 요소 블록 메타데이터, 자리 weight/stroke, 그림 자소 `--fy-sprite-row`와 생성 마커, v2 검사 항목
-- 2026-07-10: TRK-032 CSS 변수 레지스트리, active/reserved/deprecated 자리 상태와 계약 검사 명령 반영
-- 2026-04-19: 사용자와 AI 에이전트를 위한 글꼴 제작/교정 상세 안내 초안 추가
-- 2026-04-19: 에이전트 활용도 보강 — 용어 요약, 자리 변수 요약표, `data-fy-*` 계약 참조 위치, 데모 로컬 서버 명령, `--fy-expression-mode` 허용 값 단언, 글꼴 별칭 분류, 검증 기준을 스크린샷 비교 절차로 구체화, 작업 로그 양식 추가
-
 ## 문자로 자모 그리기 (ADR-032)
 
 한글의 의미 구조를 유지하면서 그리는 글자만 바꾼다. 현재 구현은 브라우저 런타임 전용이며, 원문 선택·복사는 한글로 남는다. 기존 글꼴 파일의 레이어·범위 안에서 직접 쓴다.
@@ -543,7 +539,7 @@ verify: <commands>          # 예: python -m pytest tests/test_playwright_smoke.
 
 `data-sprite-jamo="ㅇ"`는 초성·받침의 ㅇ을 함께 고른다. `data-jamo`는 첫가끝 문자이므로 같은 선택자가 아니다. CSS를 바꾼 뒤 `FontKku.refreshAll(host)`를 호출한다. 매핑을 끄려면 해당 선언을 지우거나 더 높은 범위에 `none`을 쓴다. `"none"`은 문자 재료로 해석된다.
 
-직접 문자열의 우선순위는 페이지 `--fy-glyph-text` → `--fy-tune-glyph-text` → `--fy-ctx-glyph-text` → `--fy-jamo-glyph-text` → 자리/부모 자리/역할 `--fy-<이름>-glyph-text` → `--fy-font-glyph-text`다. 후보 ID 변수는 같은 위치의 `glyph-candidate`이며 같은 단계에서는 후보가 직접 문자열보다 우선한다. `--fy-face-glyph`와 맞춤 수치는 런타임 결과이므로 저작하지 않는다.
+직접 문자열의 우선순위는 페이지 `--fy-glyph-text` → `--fy-tune-glyph-text` → `--fy-syl-glyph-text` → `--fy-ctx-glyph-text` → `--fy-case-glyph-text` → `--fy-jamo-glyph-text` → 자리/부모 자리/역할 `--fy-<이름>-glyph-text` → `--fy-font-glyph-text`다. 후보 ID 변수는 같은 위치의 `glyph-candidate`이며 같은 단계에서는 후보가 직접 문자열보다 우선한다. `--fy-face-glyph`와 맞춤 수치는 런타임 결과이므로 저작하지 않는다.
 
 여러 후보·잠금·조립식 재사용은 디자인 2.0의 기존 `font` 원본에 `glyphs`를 지정한다. [ADR-032 §12](../ADR/ADR-032-hangul-structure-and-materials.md#12-h3-구현-계약-2026-10-18)의 실제 JSON 예제를 따른다. 작업실 디자인 페이지의 문자 매핑 칸에서 후보를 바꾸고, 준비된 원형 8·기본 24·확장 40과 빠진 자모를 확인한다. 후보 변주는 `jamo-seeds`를 켰을 때만 동작하며 `seed="auto"`만으로 켜지지 않는다. 잠금은 변주에도 선택한 후보를 유지한다.
 
@@ -552,3 +548,14 @@ verify: <commands>          # 예: python -m pytest tests/test_playwright_smoke.
 문자 매핑은 기존 기기 글꼴 잉크 맞춤과 글자 칠을 사용한다. 글꼴 굵기·자모 위치·크기·회전을 조정할 수 있지만 통짜 O의 획을 원소처럼 직접 편집하거나 획 단위로 그리는 움직임을 만들지는 않는다. 실제 처리와 실패 이유는 `FontKku.fontInfo(host).glyphMapping`으로 확인한다. 머리 음절·고정 배치 통짜 합자 모음·지원하지 않는 글꼴 설정은 원래 한글과 진단을 유지한다. CSS만으로 가상 조립 잎을 선택하는 확장은 후속 작업이다.
 
 JS 없는 정적 HTML에서는 위 저작 변수를 그림으로 바꾸지 않고 원래 한글을 표시한다. 디자인 JSON·프로젝트·묶음은 후보를 보존하지만 글꼴 파일 내보내기는 문자 매핑을 아직 지원하지 않아 명시적으로 거부한다. 기존 1.x 디자인은 계속 읽으며, 매핑을 추가한 디자인만 2.0으로 저장한다.
+
+## Change Log
+- 2026-10-31: 머리말을 공통 형식으로. CSS 글꼴의 재료를 원소 기본(ADR-024)으로 고침, 표현 방식과 글꼴 모양(ADR-030)의 관계를 적음, 레벨에 같은 짜임·이 글자만과 `font-kku.tune` 추가, 문자 매핑 우선순위에 `--fy-syl-*`·`--fy-case-*` 추가(ADR-035), Change Log를 문서 끝으로 옮김(PLAN-DOCS-001)
+
+- 2026-10-17: ADR-029 뒤 경로 정리 — 데모 페이지는 사이트 저장소 `src/`, 로컬 확인은 `tests/fixtures/runtime/`·`studio/index.html`, 스모크 경로 모드(직접 실행 `--mode both`, pytest 기본 서버)
+- 2026-09-27: 계약 정규화 — 모든 자리 접미사(scale 포함)가 자리 → 부모 자리 → 역할 대체 체인, 자리 접미사에 rotate·clip·dilate 추가, 부모 자리 트리 완성(`tc`/`mc`/`mx`/`xb`/`xt`/`bs`/`bx`/`xl`/`xr`), `--fy-clip`·`--fy-sprite-filter`는 페이지 전용, 검사에 `spec/fonts.json` 역방향 대조 추가
+- 2026-09-25: 그림 자소 재료 코어화(ADR-008 §5) 반영 — 생성 CSS 점검 항목을 `--fy-sprite-*` 변수로 교체, 검사의 그림 자소 재료 속성·자소판 변수 항목 추가
+- 2026-09-24: 글꼴 계약 v2(ADR-008) 반영 — 레이어·레벨 작업 순서, 바탕 요소 블록 메타데이터, 자리 weight/stroke, 그림 자소 `--fy-sprite-row`와 생성 마커, v2 검사 항목
+- 2026-07-10: TRK-032 CSS 변수 레지스트리, active/reserved/deprecated 자리 상태와 계약 검사 명령 반영
+- 2026-04-19: 사용자와 AI 에이전트를 위한 글꼴 제작/교정 상세 안내 초안 추가
+- 2026-04-19: 에이전트 활용도 보강 — 용어 요약, 자리 변수 요약표, `data-fy-*` 계약 참조 위치, 데모 로컬 서버 명령, `--fy-expression-mode` 허용 값 단언, 글꼴 별칭 분류, 검증 기준을 스크린샷 비교 절차로 구체화, 작업 로그 양식 추가

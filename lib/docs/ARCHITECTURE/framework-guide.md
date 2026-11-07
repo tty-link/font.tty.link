@@ -1,5 +1,9 @@
 # 프레임워크 안내
 
+> 상태: 현행 · 마지막 갱신 2026-10-31 · 관련 결정: [ADR-002](../ADR/ADR-002-option-priority-contract.md)·[ADR-003](../ADR/ADR-003-accessibility-contract.md)·[ADR-008](../ADR/ADR-008-font-contract-v2.md)·[ADR-019](../ADR/ADR-019-load-on-demand.md)·[ADR-028](../ADR/ADR-028-sebeol-cases-and-jikgyeol.md)·[ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md)
+>
+> 요약: 처음 쓰는 사람을 위한 입문 안내 — 설치, 바탕 요소 두 방식, 옵션과 기본값, JS API 사용법, 생성 DOM, 새 글꼴 만들기. 공개 API 전체 목록은 [브라우저 런타임 설계](./browser-runtime-design.md) '명령형 API'와 `font-kku.d.ts`가 정본이다.
+
 `font-kku`(폰꾸)는 한글 완성형 음절을 초성·중성·종성으로 나누어 다시 조립하고, CSS·이미지·씨앗값(`seed`)/상태 기반 변형으로 한글 스타일을 코드처럼 만들고 제어할 수 있게 한 런타임이다. 브라우저에서는 DOM + CSS + 그림 자소로, 필요하면 2줄 평문 모드(`text`)로도 같은 분해 구조를 출력할 수 있다. 핵심 구조는 단순하다. `font-kku.js`가 텍스트를 분해하고, 브라우저 모드에서는 DOM을 만들며, `font-kku.css`가 그 DOM을 배치하고, 글꼴 CSS가 실제 모양을 정한다.
 
 이 문서는 세 가지를 한 번에 설명한다.
@@ -15,6 +19,7 @@
 - [스타일 글꼴 체계](./style-profile-system.md)
 - [일반 글꼴 그룹 목록](./general-font-group-catalog.md)
 - [평문 모드 설계](./text-mode-design.md)
+- [글꼴 모양·재료·디자인](./shape-material-design.md) — 세벌식·직결식·네모꼴과 원소·기기 글꼴·그림 재료를 어떻게 고르는지
 
 ## 1. 어떤 프레임워크인가
 
@@ -35,7 +40,7 @@
 
 ## 2. 런타임을 구성하는 파일
 
-배포 기준으로 필요한 파일은 세 종류다.
+런타임을 이루는 파일은 세 종류다.
 
 | 파일 | 역할 | 필수 여부 |
 | --- | --- | --- |
@@ -49,7 +54,7 @@
 - `font-kku.css` 없이 글꼴 CSS만 있으면 DOM은 만들어져도 자소가 정상 배치되지 않는다.
 - 글꼴 CSS 없이 `font-kku.css`만 있으면 구조는 생기지만 원하는 스타일 값이 없다.
 
-즉 현재 배포 구조에서는 `font-kku.js + font-kku.css + font CSS`를 함께 로드하는 것이 기본 계약이다.
+셋 다 있어야 그려지지만, 페이지가 셋을 모두 직접 실을 필요는 없다. 한 줄 설치(`<script src=".../font-kku.js" data-fonts="…">`)로 실으면 런타임이 스크립트 주소를 기준으로 `font-kku.css`와 적은 글꼴 CSS를 붙이고, 적지 않은 글꼴도 그 글꼴을 쓰는 바탕 요소가 화면 가까이 오면 `profiles/<글꼴>.css`를 스스로 받는다(필요할 때 받기, [ADR-019](../ADR/ADR-019-load-on-demand.md)). 번들러·ESM에서는 `FontKkuConfig.fontBase`로 그 주소를 알려 준다. 끄려면 `data-autoload="false"` 또는 `FontKkuConfig.autoload = false`를 쓰고, 아래 3.1의 `<link>`처럼 직접 싣는다.
 
 단, `renderText()`로 2줄 평문만 출력할 때는 `font-kku.js`만 있으면 된다. 이 경로는 글꼴 CSS나 브라우저 DOM을 사용하지 않는다.
 
@@ -57,24 +62,27 @@
 
 ### 3.1 브라우저 모드
 
-빌드 없이 바로 쓰는 최소 예시는 아래다.
+빌드 없이 바로 쓰는 가장 짧은 예시는 한 줄 설치다.
+
+```html
+<script src="./font-kku.js" data-fonts="sebul"></script>
+
+<font-kku size="32">광화문</font-kku>
+<span class="font-kku" data-font="gothic" data-size="24">안녕하세요</span>
+```
+
+`data-fonts`에는 첫 화면에 보이는 글꼴만 적는다(미리 받기). 위의 `gothic`처럼 적지 않은 글꼴은 필요할 때 받는다. 글꼴을 비운 바탕 요소도 기본 글꼴 `sebul`의 CSS를 쓰므로 `sebul`을 적어 두면 첫 화면이 빨리 그려진다.
+
+필요할 때 받기를 끄거나 파일을 직접 고르고 싶으면 셋을 직접 싣는다. 순서는 보통 `font-kku.css` → 쓸 글꼴 CSS → `font-kku.js`다.
 
 ```html
 <link rel="stylesheet" href="./font-kku.css" />
 <link rel="stylesheet" href="./profiles/sebul.css" />
+<link rel="stylesheet" href="./profiles/gothic.css" />
 <script src="./font-kku.js"></script>
-
-<font-kku font="sebul" size="32">광화문</font-kku>
-<span class="font-kku" data-font="sebul" data-size="24">안녕하세요</span>
 ```
 
-로드 순서는 보통 이렇게 잡으면 된다.
-
-1. `font-kku.css`
-2. 사용할 글꼴 CSS
-3. `font-kku.js`
-
-아래 예제에서 `gothic`을 사용할 때는 `profiles/gothic.css`도 같은 방식으로 로드한다. 바탕 요소의 `font` 이름만 바꾸고 해당 글꼴 CSS를 생략하면 원하는 모양이 적용되지 않는다.
+이때는 바탕 요소의 `font` 이름만 바꾸고 그 글꼴 CSS를 싣지 않으면 원하는 모양이 적용되지 않는다(`data-fonts`가 없는 `<script>`는 받을 자리를 모르므로 스스로 받지 않는다 — 번들러·ESM은 `FontKkuConfig.fontBase`).
 
 `font-kku.js`는 로드되면 DOMContentLoaded 시점에 자동으로 `bootstrap(document)`를 호출한다. 즉 대부분의 경우 아래를 직접 쓸 필요가 없다.
 
@@ -125,8 +133,11 @@ FontKku.renderText("안녕하세요 반갑습니다").forEach(function (line) {
 - `wrap-unit`
 - `animate`
 - `seed`
+- `jamo-seeds`
+- `jamo-set`
+- `stroke-depth`
 
-`<font-kku>`는 `font`, `profile`, `size`, `spacing`, `wrap-unit`, `animate`, `seed`, `jamo-seeds` 속성 변경을 자동 감지해서 다시 그린다. 값이 그대로인 쓰기는 무시하고, 업그레이드(연결) 때는 한 번만 그린다.
+`<font-kku>`는 이 속성들의 변경을 자동 감지해서 다시 그린다. 값이 그대로인 쓰기는 무시하고, 업그레이드(연결) 때는 한 번만 그린다.
 
 ### 4.2 클래스 방식
 
@@ -146,8 +157,11 @@ FontKku.renderText("안녕하세요 반갑습니다").forEach(function (line) {
 - `data-wrap-unit`
 - `data-animate`
 - `data-seed`
+- `data-jamo-seeds`
+- `data-jamo-set`
+- `data-stroke-depth`
 
-런타임은 클래스 방식 바탕 요소의 텍스트와 위 속성들(과 켜야 동작하는 `data-jamo-seeds`)을 `MutationObserver`로 감시하고, 값이 바뀌면 다시 그린다. 바탕 요소 자신의 속성만 본다 — 생성된 자모 노드에 페이지가 `data-*`를 써도 다시 그리지 않는다. 이 `data-*`는 작성자가 쓴 지속 입력이라 런타임이 덮어쓰지 않는다. 확정된 상태는 별도 `data-fy-font`/`data-fy-profile`/`data-fy-size`/`data-fy-spacing`/`data-fy-wrap-unit`/`data-fy-animate`/`data-fy-seed`에 기록한다.
+런타임은 클래스 방식 바탕 요소의 텍스트와 위 속성들을 `MutationObserver`로 감시하고, 값이 바뀌면 다시 그린다. 바탕 요소 자신의 속성만 본다 — 생성된 자모 노드에 페이지가 `data-*`를 써도 다시 그리지 않는다. 이 `data-*`는 작성자가 쓴 지속 입력이라 런타임이 덮어쓰지 않는다. 확정된 상태는 별도 `data-fy-font`/`data-fy-profile`/`data-fy-size`/`data-fy-spacing`/`data-fy-wrap-unit`/`data-fy-animate`/`data-fy-seed`에 기록한다.
 
 ## 5. 옵션과 기본값
 
@@ -155,32 +169,36 @@ FontKku.renderText("안녕하세요 반갑습니다").forEach(function (line) {
 
 | 의미 | 전용 태그 | 클래스 방식 | 기본값 |
 | --- | --- | --- | --- |
-| 글꼴 | `font` | `data-font` | `sebul` |
+| 글꼴 | `font` | `data-font` | 없음 — 글꼴 `sebul`을 세벌식 모양으로 |
 | 크기 | `size` | `data-size` | `24px` |
 | 간격 | `spacing` | `data-spacing` | 없음 |
 | 줄바꿈 단위 | `wrap-unit` | `data-wrap-unit` | `word` |
 | 움직임 | `animate` | `data-animate` | 없음 |
 | 씨앗값 | `seed` | `data-seed` | 없음 |
 | 자모별 씨앗값 (켜야 동작) | `jamo-seeds` | `data-jamo-seeds` | 꺼짐 |
+| 그림 세트 | `jamo-set` | `data-jamo-set` | 없음 |
+| 획 깊이 | `stroke-depth` | `data-stroke-depth` | 없음(`stroke`면 벡터 자소를 획 노드로) |
+
+옵션 이름의 정본은 런타임의 `OPTION_KEYS`(`font-kku.js`)이고, 타입은 `font-kku.d.ts`의 `RenderOptions`다.
 
 ### `font`
 
-- 런타임 기본값은 `sebul`이다.
-- 정본 기본 파일은 [`profiles/sebul.css`](../../profiles/sebul.css)다.
-- `default`와 `classic`은 모두 `sebul`의 하위 호환 별칭이다.
-- 문서와 예제에서는 새 이름인 `sebul`을 우선 쓴다.
+글꼴을 **비우는 것과 `sebul`을 밝히는 것은 출력이 다르다**([ADR-028](../ADR/ADR-028-sebeol-cases-and-jikgyeol.md), [ADR-030](../ADR/ADR-030-one-engine-glyph-shapes.md)).
 
-예시 글꼴은 다음과 같다.
+| 쓰는 법 | 글꼴 | 글꼴 모양 | 바탕 요소 |
+| --- | --- | --- | --- |
+| `font` 없음(빈 문자열도) | `sebul`([`profiles/sebul.css`](../../profiles/sebul.css)) | 세벌식 `sebul-cases-v1` — 받침 없는 글자는 아래를 비우고, 받침 있는 글자는 칸을 다 쓴다 | `data-fy-font="sebul"`, `data-fy-layout="sebul-cases-v1"` |
+| `font="sebul"` | `sebul` | 글꼴 CSS가 정한 네모꼴(문맥) 배치 | `data-fy-font="sebul"`, `data-fy-layout` 없음 |
+| `font="jikgyeol"` | `jikgyeol` | 직결식 `sebul-fixed-v1` — 같은 역할의 같은 자모는 어디서나 같은 자리·크기 | `data-fy-layout="sebul-fixed-v1"` |
 
-- `sebul`: 기본 세벌식 표현 (둥근 변형)
-- `default`: `sebul` 별칭
-- `gothic`: 단순 일반 글꼴 표현
-- `classic`: `sebul` 별칭
-- `gothic2`: `gothic` 별칭, 폐기 예정
+- 기본 출력(세벌식)을 원하면 `font`를 쓰지 않는다. 글꼴을 밝히면서 세벌식 모양을 원하면 페이지 CSS에 `--fy-layout: sebul-cases-v1`을 준다. 네모꼴을 밝히려면 `--fy-layout: square-context-v1`이다. 고른 결과와 진단은 `FontKku.fontInfo(host).layout`·`layoutStatus`로 본다.
+- sebul·gothic·malang은 기본으로 원소 재료(획을 CSS 상자로 그림 — 기기 한글 글꼴과 무관)를 쓴다. 기기 글꼴 글자로 그리려면 페이지 `--fy-face: device`를 준다. 재료와 모양을 고르는 법은 [글꼴 모양·재료·디자인](./shape-material-design.md)을 본다.
+- `default`·`classic`은 `sebul`의, `gothic2`는 `gothic`의 하위 호환 별칭이다. 별칭도 글꼴을 밝힌 것이라 네모꼴 배치다.
+- 기본 제공 글꼴 목록과 기본 깊이의 정본은 [`spec/fonts.json`](../../spec/fonts.json)이다. 갈래는 아래 '10. 기본 제공 글꼴을 어떻게 이해하면 되나'를 본다.
 
 별칭은 런타임(JS)이 정규화한다. `font="default"`나 클래스 방식의 `data-font="default"`로 써도 바탕 요소의 정본 `data-fy-font`/`data-fy-profile`에는 `sebul`이 기록되므로, 글꼴 CSS는 `[data-fy-font="sebul"]` 하나로만 적용 범위를 걸면 된다.
 
-중요한 점은 표현 방식이 JS 옵션이 아니라 글꼴 CSS의 `--fy-expression-mode`에서 결정된다는 것이다. 런타임은 그 결과를 바탕 요소의 `data-fy-expression="sebeol|general"`로 정규화한다. `profile` / `data-profile` / `profile` 옵션도 호환 별칭으로 계속 읽는다.
+표현 방식(`sebeol|general`)은 JS 옵션이 아니라 글꼴 CSS의 `--fy-expression-mode`에서 결정된다. 이것은 자모 노드를 어떤 갈래로 짓는지 정하는 값이고, 위의 글꼴 모양(세벌식·직결식·네모꼴)과는 다른 축이다. 런타임은 그 결과를 바탕 요소의 `data-fy-expression="sebeol|general"`로 정규화한다. `profile` / `data-profile` / `profile` 옵션도 호환 별칭으로 계속 읽는다.
 
 ### `size`
 
@@ -228,10 +246,10 @@ FontKku.renderText("안녕하세요 반갑습니다").forEach(function (line) {
 - 생략 — `--fy-seed` 없음
 
 ```html
-<font-kku font="drift" seed="auto">흔들리는 글자</font-kku>
+<font-kku font="crayon" seed="auto" jamo-seeds>흔들리는 글자</font-kku>
 ```
 
-문자열 씨앗값은 런타임이 결정적인 0~1 값으로 해시해 CSS `calc()`에서 바로 쓸 수 있게 한다.
+씨앗값에 반응하는 기본 제공 글꼴(씨앗 반응 글꼴, [ADR-016](../ADR/ADR-016-seed-aware-fonts.md))은 `crayon`·`chalk`·`malang`처럼 글꼴 CSS가 `--fy-seed`·`--fy-jamo-seed`를 읽는 글꼴이다. 다른 글꼴에는 변주 클래스(`kku-vary-*`)로 더한다. 문자열 씨앗값은 런타임이 결정적인 0~1 값으로 해시해 CSS `calc()`에서 바로 쓸 수 있게 한다.
 
 ### `jamo-seeds`
 
@@ -283,9 +301,12 @@ window.FontKku.renderText("안녕하세요");
 window.FontKku.isHangulSyllable("가");
 window.FontKku.hashSeed("poster-v1");
 window.FontKku.applyJamoSeeds(host);
+window.FontKku.sourceRange(host, range);
 window.FontKku.placementTable;
 window.FontKku.version;
 ```
+
+자주 쓰는 것만 적었다. 그 밖의 공개 API — 그림 세트 등록 `registerJamo`, 디자인 등록 `registerDesign`·`validateDesign`, 기기 한글 글꼴 확인 `hasHangulFont`, 고정 글꼴 모양 점검 `layoutStability`, 짓는 방식 `resolveComposition` 등 — 는 [브라우저 런타임 설계](./browser-runtime-design.md) '명령형 API'에 모아 두었다. 정본은 `font-kku.d.ts`다.
 
 `placementTable`은 런타임이 실제로 쓰는 짜임 키(layout-key) 9개와 역할별 배치 토큰 배열을 담은, 동결(frozen)된 방어적 복사본이다.
 
@@ -388,7 +409,7 @@ window.FontKku.upgradeAll(modal);
 
 - `refreshAll(root?)`: 현재 스타일로 글꼴 메타데이터를 다시 해석해 구조가 바뀐 바탕 요소만 다시 그린다(속성을 다시 읽음). 스타일시트 `load`는 자동 처리되므로 `adoptedStyleSheets`·`<style>` 텍스트 교체 뒤에만 부른다. shadow root 안의 바탕 요소도 포함한다.
 - `loadFont(href, { root }?)`: 글꼴 CSS를 `<link>`로 불러온 뒤 바탕 요소를 다시 해석하는 정적 도우미 함수. 같은 URL은 같은 Promise, 실패는 reject(다음 호출이 재시도). shadow root 안의 바탕 요소에 쓸 글꼴은 `{ root: shadowRoot }`로 그 root에 넣는다.
-- `fontInfo(host)`: 직전에 그린 결과의 `{ font, id, contract, material, loaded }`.
+- `fontInfo(host)`: 직전에 그린 결과의 글꼴 정보 — `{ font, id, contract, material, face, layout, design, composition?, loaded }`와 진단(`faceStatus`·`layoutStatus`·`designStatus`·`jamoSetStatus`). 필드 뜻은 `font-kku.d.ts`의 `FontInfo`가 정본이다.
 
 ### `decomposeGlyph(char)`
 
@@ -444,7 +465,7 @@ window.FontKku.renderText("안녕하세요 반갑습니다");
 1. 입력 텍스트를 줄 단위로 분리한다.
 2. 각 줄을 단어와 공백 세그먼트로 정규화한다.
 3. 문자마다 글자를 만들고, 한글이면 초/중/종성으로 분해한다.
-4. 중성 구조에 따라 세로모음(`right`)·가로모음(`bottom`)·섞임모음(`split-right`) 짜임으로 분류한다.
+4. 중성 구조에 따라 세로모음(`right`)·가로모음(`bottom`)·합자모음(`split-right`) 짜임으로 분류한다.
 5. 종성 구조에 따라 민글자(`none`)·홑받침(`single`)·겹받침(`double`)으로 분류한다.
 6. 조합 결과로 `placementKey`와 `layoutBucket`를 계산한다.
 7. 그 정보를 담은 DOM을 만들고, CSS 변수 분기(dispatch)로 자소를 배치한다.
@@ -459,16 +480,16 @@ window.FontKku.renderText("안녕하세요 반갑습니다");
 | `bottom:none` | `오` | 가로모음, 민글자 |
 | `bottom:single` | `울` | 가로모음, 홑받침 |
 | `bottom:double` | `흙` | 가로모음, 겹받침 |
-| `split-right:none` | `과` | 섞임모음, 민글자 |
-| `split-right:single` | `왕` | 섞임모음, 홑받침 |
-| `split-right:double` | `괆` | 섞임모음, 겹받침 |
+| `split-right:none` | `과` | 합자모음, 민글자 |
+| `split-right:single` | `왕` | 합자모음, 홑받침 |
+| `split-right:double` | `괆` | 합자모음, 겹받침 |
 
 ## 8. 생성되는 DOM 구조
 
 한글 글자는 대략 이런 구조로 그려진다.
 
 ```html
-<font-kku data-fy-upgraded="true" data-fy-host="custom-element" data-fy-font="gothic" data-fy-profile="gothic" data-fy-size="24px" data-fy-wrap-unit="word" data-fy-expression="general" aria-label="왕" data-source="왕">
+<font-kku data-fy-upgraded="true" data-fy-host="custom-element" data-fy-font="gothic" data-fy-profile="gothic" data-fy-size="24px" data-fy-wrap-unit="word" data-fy-expression="general" data-source="왕">
   <span part="root" data-fy-root="true" aria-hidden="true">
     <span part="line">
       <span part="word">
@@ -501,7 +522,9 @@ window.FontKku.renderText("안녕하세요 반갑습니다");
 </font-kku>
 ```
 
-관리 루트는 `aria-hidden="true"`로 숨겨지고, 형제 `part="sr-source"` 노드(시각적으로 숨김)가 원문을 담는다.
+관리 루트는 `aria-hidden="true"`로 숨겨지고, 형제 `part="sr-source"` 노드(시각적으로 숨김)가 원문을 담는다. 바탕 요소에는 `aria-label`·`role`을 쓰지 않는다([ADR-003](../ADR/ADR-003-accessibility-contract.md)).
+
+위 예는 글꼴을 밝힌 `gothic`이다. 글꼴을 비운 바탕 요소에는 `data-fy-layout="sebul-cases-v1"`과 재료 표시 `data-fy-face="element"`가 더 붙고, 자모 노드 안에 원소 획 노드(`[part="hoek"]` > `[part="element"]`)가 들어간다. 확정 DOM 계약의 정본은 [`spec/html-cases.json`](../../spec/html-cases.json)이다.
 
 비한글 글자는 단순하다.
 
@@ -521,6 +544,7 @@ window.FontKku.renderText("안녕하세요 반갑습니다");
 | 바탕 요소 | `data-fy-font`, `data-fy-profile`, `data-fy-size`, `data-fy-spacing`, `data-fy-wrap-unit`, `data-fy-animate`, `data-fy-seed` | 정본으로 정규화한 옵션 상태 |
 | 클래스 방식 바탕 요소 | `data-font`, `data-profile`, `data-size`, `data-spacing`, `data-wrap-unit`, `data-animate`, `data-seed` | 작성자가 쓴 지속 입력 |
 | 바탕 요소 | `data-source` | 원문 호환용 속성 |
+| 바탕 요소 | `data-fy-layout`, `data-fy-face`, `data-fy-design`, `data-fy-composition`과 각 `-status` | 고른 글꼴 모양·재료·디자인·짓는 방식과 진단(고른 것이 있을 때만) |
 | 글자 | `data-jung-layout`, `data-jong-layout` | 중성/종성 구조 |
 | 글자 | `data-layout-key` | 최종 짜임 키 |
 | 글자 | `data-fy-layout-bucket` | `right-open`, `split-closed` 같은 큰 그룹 |
@@ -560,53 +584,53 @@ window.FontKku.renderText("안녕하세요 반갑습니다");
 
 ## 10. 기본 제공 글꼴을 어떻게 이해하면 되나
 
-### `sebul`
+기본 제공 글꼴의 목록은 [`spec/fonts.json`](../../spec/fonts.json)이 정본이다. 여기서는 갈래만 설명한다.
 
-- 세벌식 기본 글꼴 (둥근 변형)
-- 기준이 되는 예시 글꼴
-- `default`, `classic`과 사실상 같은 값
-
-### `gothic`
-
-- 일반 글꼴 표현 방식의 글꼴
-- 현재는 한 블록 저작(one-block)을 기준으로 유지
-- 더 세분된 자리 변수와 묶음 변수만으로 짜임 차이를 흡수
-
-### `gothic2`
-
-- 더 이상 별도 전략이 아니다
-- 현재는 `gothic.css`를 불러오는 폐기 예정 별칭이다
+- **바탕 글꼴** `sebul`·`gothic`·`malang`: 자리 변수로 뼈대를 잡은 CSS 글꼴이다. 기본 재료는 원소(획을 CSS 상자로)다. `sebul`은 글꼴을 비운 바탕 요소가 쓰는 기본 글꼴이고, 밝히면 네모꼴 배치다(위 `font`). `gothic`은 한 블록 저작(one-block)을 기준으로, 더 잘게 나뉜 자리 변수와 묶음 변수로 짜임 차이를 흡수한다.
+- **직결식** `jikgyeol`: 같은 역할의 같은 자모를 어디서나 같은 자리·크기로 그리는 고정 글꼴 모양의 글꼴이다(0.1.1–0.1.3의 기본 배치).
+- **꾸러미 글꼴**(`neon`·`chalk`·`pixel` 등): 바탕 글꼴 위에 칠·획 표현을 더한 파생 글꼴이다. 칠만 다른 표현은 꾸밈(`kku-look-*`)으로도 고를 수 있다([조합 체계](./composition-axes.md)).
+- **그림 자소 글꼴**(`sprite-system`·`pilgi`·`dunggeun`·`butgeul` 등): 자소판 그림으로 그린다([그림 자소 글꼴](./image-sprite-fonts.md)).
+- 별칭 `default`·`classic`(→ `sebul`)·`gothic2`(→ `gothic`)는 하위 호환용이다. 새 코드는 정본 이름을 쓴다.
 
 ## 11. 새 글꼴을 만드는 방법
 
-가장 쉬운 방법은 기존 글꼴 하나를 복사해서 이름만 바꾸는 것이다.
+가장 쉬운 방법은 글꼴 작업실에서 기존 글꼴을 열어 '이 글꼴로 새 글꼴'로 저장하는 것이다([글꼴 작업실](./font-studio.md)). 손으로 쓸 때는 기존 글꼴 하나를 복사해서 이름만 바꾼다. 글꼴 CSS는 글꼴 계약 v2([ADR-008](../ADR/ADR-008-font-contract-v2.md))를 따른다 — 레이어 선언, 글꼴 레이어 안의 `:where([data-fy-font="<이름>"])` 블록, 메타데이터 `--fy-font-id`(이름과 같게)·`--fy-contract: 2`.
 
 ```css
-:where([data-fy-font="poster"]) {
-  --fy-expression-mode: general;
-  --fy-glyph-width: 1em;
-  --fy-glyph-height: 1.24em;
-  --fy-body-x: -0.01em;
-  --fy-body-y: -0.01em;
+@layer font-kku.font, font-kku.jamo, font-kku.context;
 
-  --fy-tlo-top: -2%;
-  --fy-tlo-left: -2%;
-  --fy-tlo-size: 0.88em;
+@layer font-kku.font {
+  :where([data-fy-font="poster"]) {
+    --fy-font-id: poster;
+    --fy-contract: 2;
+    --fy-material: system;
+    --fy-expression-mode: general;
+    --fy-glyph-width: 1em;
+    --fy-glyph-height: 1.24em;
+    --fy-body-x: -0.01em;
+    --fy-body-y: -0.01em;
 
-  --fy-tro-top: 5%;
-  --fy-tro-left: 35%;
-  --fy-tro-size: 0.92em;
+    --fy-tlo-top: -2%;
+    --fy-tlo-left: -2%;
+    --fy-tlo-size: 0.88em;
 
-  --fy-brs-top: 40%;
-  --fy-brs-left: 5%;
-  --fy-brs-size: 0.72em;
+    --fy-tro-top: 5%;
+    --fy-tro-left: 35%;
+    --fy-tro-size: 0.92em;
+
+    --fy-brs-top: 40%;
+    --fy-brs-left: 5%;
+    --fy-brs-size: 0.72em;
+  }
 }
 ```
+
+`node scripts/check_css_contract.js --check`와 작업실이 같은 검사(`authoring/font-kku-lint.js`)로 계약을 본다. 레이어마다 쓸 수 있는 변수와 전체 예시는 [스타일 글꼴 체계](./style-profile-system.md)를 따른다.
 
 권장 순서는 다음과 같다.
 
 1. 바탕 요소 블록에서 공통 폭, 높이, 본체(body) 값을 먼저 잡는다.
-2. 자리 변수로 세로모음(`right`)·가로모음(`bottom`)·섞임모음(`split-right`) 짜임의 큰 차이를 맞춘다.
+2. 자리 변수로 세로모음(`right`)·가로모음(`bottom`)·합자모음(`split-right`) 짜임의 큰 차이를 맞춘다.
 3. 묶음 변수가 필요할 때만 `jung-cluster`, `jong-cluster`를 조정한다.
 4. 정말 필요할 때만 `data-fy-role`, `data-layout-key`, `data-fy-layout-bucket` 선택자를 추가한다.
 
@@ -665,7 +689,7 @@ window.FontKku.refresh(host, {
 
 ### 글꼴 CSS만 로드하면 된다고 생각하는 경우
 
-안 된다. `font-kku.css`가 없으면 런타임 DOM은 만들어져도 자소 배치가 성립하지 않는다.
+안 된다. `font-kku.css`가 없으면 런타임 DOM은 만들어져도 자소 배치가 성립하지 않는다. 한 줄 설치(`data-fonts`)로 실으면 런타임이 `font-kku.css`를 붙여 준다.
 
 ### 바탕 요소 내부 DOM을 직접 붙잡고 수정하는 경우
 
@@ -679,9 +703,9 @@ window.FontKku.refresh(host, {
 
 `upgradeAll(root)`는 컨테이너 내부의 `font-kku, .font-kku`를 찾는다. root 하나만 업그레이드하려면 `upgrade(root)`를 쓴다.
 
-### 글꼴을 생략하면 예전 `default`가 자동 적용된다고 생각하는 경우
+### 글꼴을 비우는 것과 `font="sebul"`이 같다고 생각하는 경우
 
-실제 런타임 기본값은 `sebul`이다. `default`와 `classic`은 `sebul`의 별칭일 뿐이므로, 새 코드에서는 `font="sebul"`을 명시하는 편이 낫다.
+다르다. 글꼴을 비우면 글꼴 `sebul`을 **세벌식 모양**(`sebul-cases-v1`)으로 그리고, `font="sebul"`(별칭 `default`·`classic` 포함)을 밝히면 그 글꼴 CSS의 **네모꼴(문맥) 배치**로 그린다. 기본 출력을 원하면 `font`를 쓰지 않는다. 글꼴을 밝히면서 세벌식을 원하면 페이지 CSS에 `--fy-layout: sebul-cases-v1`을 준다. 0.1.0의 네모꼴 출력을 지키려면 `font="sebul"`을 밝힌다.
 
 ## 14. 디버깅 방법
 
@@ -706,27 +730,25 @@ FontKku.renderText("외국어를 읽고 왕과 획을 본다");
 
 ### 개발자 도구에서 확인할 것
 
-- 바탕 요소의 `data-fy-font`, `data-fy-expression`
+- 바탕 요소의 `data-fy-font`, `data-fy-expression`, `data-fy-layout`, `data-fy-face`(그리고 `FontKku.fontInfo(host)`)
 - 글자의 `data-layout-key`, `data-fy-layout-bucket`
 - 자모의 `data-fy-pos`, `data-fy-role`
 - 적용된 CSS 변수 값
 
 ## 15. 검증 방법
 
-기본 확인 절차는 아래다.
+빠른 확인은 아래다.
 
 ```bash
-node --check font-kku.js
 node -e "const FontKku=require('./font-kku.js'); console.log(FontKku.renderText('안녕하세요 반갑습니다').join('\n'))"
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install -r requirements-dev.txt
-python -m playwright install chromium
-python -m pytest tests/test_playwright_smoke.py -q
+npm run verify:fast      # 빠른 계약 층 — 단위 시험·문서·생성물 어긋남
 ```
 
-테스트 방법 전체는 [`TESTING.md`](../../TESTING.md)를 본다.
+검증은 세 층(`verify:fast` · 일상 `verify` · 공개 전 `verify:release`)이다. 브라우저 스모크를 좁혀 도는 법(`-k`)과 `.venv` 준비는 [`TESTING.md`](../../TESTING.md)를 본다.
 
 ## 16. 한 문장으로 정리하면
 
 `font-kku`는 "JS가 한글을 구조로 분해하고, 브라우저에서는 `font-kku.css`가 그 구조를 배치하고, 필요하면 같은 구조를 2줄 평문 모드(`text`)로도 보여주는" 한글 조형 프레임워크다.
+
+## Change Log
+- 2026-10-31: 기본 글꼴 안내 바로잡기 — 글꼴을 비우면 세벌식 모양, `font="sebul"`을 밝히면 네모꼴(ADR-028·030). '`font="sebul"`을 명시하라'는 권고 삭제. 한 줄 설치·필요할 때 받기(ADR-019)를 기본 시작으로, 옵션 표에 `jamo-set`·`stroke-depth`, DOM 예시의 바탕 요소 `aria-label` 삭제(ADR-003), 새 글꼴 예시를 글꼴 계약 v2 꼴로(레이어·`--fy-font-id`·`--fy-contract`), 기본 제공 글꼴 절을 갈래 설명과 `spec/fonts.json` 안내로, 씨앗 예시의 없는 글꼴 `drift`를 씨앗 반응 글꼴 `crayon`으로, 검증 절을 세 층 안내로, 머리말과 이 Change Log 추가

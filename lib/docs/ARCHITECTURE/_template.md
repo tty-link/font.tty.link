@@ -1,5 +1,9 @@
 # ARCH-[DOMAIN]-[NNN]: [Title]
 
+> 상태: 현행 | 대체됨 · 마지막 갱신 YYYY-MM-DD · 관련 결정: `[ADR-NNN](../ADR/ADR-NNN-제목.md)`
+>
+> 요약: (한두 문장 — 이 문서가 다루는 것과 다루지 않는 것)
+
 ## Summary
 이 문서는 [서비스/도메인/컴포넌트] 의 상세 아키텍처를 정의한다.
 
@@ -65,4 +69,4 @@
 - 이유:
 
 ## Change Log
-- YYYY-MM-DD: [변경 내용]
+- YYYY-MM-DD: [변경 내용] — Change Log는 문서 맨 끝에 둔다. 새 절은 그 위에 더한다

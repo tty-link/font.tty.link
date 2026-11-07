@@ -32,7 +32,7 @@ declare namespace FontKku {
     /**
      * 필요할 때 받기(ADR-019)의 기준 주소 — `profiles/<font>.css`·`profiles/<set>.jamo.js`가 그 아래에 있다.
      * 한 줄 설치(`<script src=".../font-kku.js" data-fonts=…>`)는 스크립트 주소에서 스스로 정한다.
-     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4-rc.4/").
+     * 번들러·ESM에서 쓸 때만 준다(예: "https://cdn.jsdelivr.net/npm/@tty.link/font-kku@0.1.4/").
      */
     fontBase?: string;
     /** false면 아직 받지 않은 글꼴·자소 세트를 스스로 받지 않는다(기본 true). */
@@ -95,8 +95,9 @@ declare namespace FontKku {
     material: "system" | "sprite" | "bundled" | string;
     /**
      * 재료(ADR-024). 글꼴이 표준 잉크 상자(`--fy-font-ink-boxes: standard`)를 밝혀 자모를 그 상자에 그리면
-     * `"element"`(원소를 CSS 상자로 — sebul·gothic·malang 기본), `"device"`(기기 한글 글꼴을 맞춰, ADR-023 — 꾸러미 글꼴
-     * 기본이고 페이지 `--fy-face: device`로 고른다) 또는 `"svg"`(칸 계약 그림 세트 `jamo-set`). 아니면(그림 자소 재료,
+     * `"element"`(원소를 CSS 상자로 — sebul·gothic·malang·jikgyeol과 글꼴을 비운 글의 기본), `"device"`(기기 한글 글꼴을
+     * 맞춰, ADR-023 — 꾸러미 글꼴 8종의 기본이고, 잉크 상자를 밝힌 글꼴이 `--fy-font-face`를 비웠거나 페이지가 `--fy-face: device`를
+     * 주면 이 값) 또는 `"svg"`(칸 계약 그림 세트 `jamo-set`). 아니면(그림 자소 재료,
      * 페이지 `--fy-ink-boxes: none`) null.
      */
     face: "element" | "device" | "svg" | null;
@@ -194,7 +195,7 @@ declare namespace FontKku {
     resolved: boolean;
   }
 
-  /** host에서 발생하는 `font-kku:render` 이벤트 (bubbles, composed). */
+  /** host에서 발생하는 `font-kku:render` 이벤트 (bubbles, composed). 웹 글꼴을 받은 뒤의 다시 맞추기(refit)는 이 이벤트를 내지 않는다. */
   type RenderEvent = CustomEvent<RenderEventDetail>;
 
   interface LoadFontOptions {
@@ -698,11 +699,18 @@ declare namespace FontKku {
      * 현재 스타일로 폰트 메타데이터(depth, expression mode, material, font id)를 다시
      * 해석한다. 구조가 바뀐 host는 attribute를 다시 읽어 재렌더하고(해석된 seed는 유지),
      * font id/contract만 바뀐 host는 DOM을 다시 만들지 않고 `fontInfo()`만 갱신한다.
+     * 그림 자소 칠(`--fy-sprite-paint`)만 바뀐 host는 DOM과 직전 호출의 JS 옵션을 그대로 두고
+     * `data-fy-sprite-paint`와 칸만 고친다(reason `"restyle"`).
      * shadow root 안의 host도 포함한다(`root`가 범위를 좁힌다). stylesheet `load`
      * 이벤트는 자동 처리되고, adoptedStyleSheets·`<style>` 텍스트 교체 뒤에는 직접 호출한다.
      * @returns 해석 결과가 바뀐 host 목록
+     * @param options.materialCSS 명시 opt-in: 연결된 host에 true를 주면 구조화 font 잎의 CSS 선택을 다시 읽고,
+     * false는 해제한다. 생략한 ordinary refresh/비동기 글꼴 완료는 마지막 선택을 유지한다.
+     * 연결 전에 호출했으면 연결 뒤 true를 다시 호출한다.
+     * 원문·design/revision·폰트/배치/깊이/조립 구조가 바뀌면 이전 선택을 폐기하고
+     * GLYPH_MATERIAL_CSS_INVALIDATED를 알린다. 2026-10-26 D16으로 채택한 계약이다.
      */
-    refreshAll(root?: ParentNode): HTMLElement[];
+    refreshAll(root?: ParentNode, options?: { materialCSS?: boolean }): HTMLElement[];
     /** 현재 URL의 자동 로딩 실패를 지우고 다시 시도한다. 진행 중 요청은 공유한다. */
     retryFont(host: HTMLElement): HTMLElement | null;
     /**

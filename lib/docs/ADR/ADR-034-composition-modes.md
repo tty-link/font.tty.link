@@ -11,6 +11,9 @@ Accepted (2026-10-18, 사용자 "병합"). C0–C5를 같은 날 브랜치 `feat
 
 구현 순서는 [PLAN-COMPOSE-001](../PLAN/composition-options.md)이다. 상태 조사와 시트는 [글자를 짓는 방식 노트](../NOTES/composition-options-2026-10-18.md)에 있다.
 
+## Date
+2026-10-18
+
 ## Context
 
 글자를 짓는 장치는 이미 둘 있다. 다만 따로 있다.

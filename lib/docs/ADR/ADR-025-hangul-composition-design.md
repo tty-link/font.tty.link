@@ -1,8 +1,17 @@
 # ADR-025: 한글 조립 디자인 — 세 재료의 공통 해석기, 직접·조합 정책, 글꼴 팔레트
 
 ## Status
-Proposed (2026-10-12) — 실행은 [리팩토링 계획](../PLAN/hangul-composition-refactor.md)이다. 단계마다 수용 기준을 넘긴 부분부터
-Accepted로 바꾼다. 받아들이면 [ADR-024](ADR-024-hangul-principle-rendering.md) §5의 깊이 고정과 원형 목록을 대체한다.
+Accepted (부분, 2026-10-31) — 2026-10-12 Proposed. 실행은 [리팩토링 계획](../PLAN/hangul-composition-refactor.md)(PLAN-HANGUL-001)이다.
+"단계마다 수용 기준을 넘긴 부분부터 Accepted로 바꾼다"는 처음 기준대로, 2026-10-12–18에 구현해 master에 들어간 절을 수용한다.
+- 수용: §1 재료 값 대응, §2 디자인 JSON 등록과 CSS 선택(`registerDesign`·`validateDesign`·`designs`, 0.1.1부터 공개), §3 순수 해석기와
+  브라우저 어댑터, §4 정책, §5 조립식 정본(`spec/jamo-recipes.json`, 선 조립식 기본), §6 역할·문맥 토큰·낱자·머리 음절, §7 원형 8과 제작
+  안내, §8 `--fy-draw-depth` 제거, §9 글꼴 팔레트, §10 출처 기록(`planJamo`·`traceOf` — 타입 선언은 아직 '실험'), §11 정적 출력의 원소 경로
+  ([ADR-027](ADR-027-static-element-face.md)), §12 원문·접근성, §13 기준선 규칙.
+- 남은 제안(Proposed): 위 자모를 따라가는 조각 보정(§5), 디자인을 아는 네 언어 정적 렌더러 이식(§11), 원소 전용 묶음의 물리적 분리·배포(§3),
+  글꼴 낱자 → SVG(§9 — 외곽선 추출은 약속하지 않는다), 머리 음절의 팔레트 잎·`planJamo` 머리 글자·역할 칠, 글꼴 팔레트의 WebKit·Android
+  확인(PLAN-HANGUL-001 E 게이트). 이 항목을 구현하고 사용자가 반영을 승인하면 수용 목록으로 옮긴다.
+- [ADR-024](ADR-024-hangul-principle-rendering.md) §5의 깊이 고정과 원형 목록은 이 ADR §7·§8이 대체했다(2026-10-12). 디자인의 `layout`은
+  [ADR-026](ADR-026-sebul-fixed-layout.md)·[ADR-031](ADR-031-explicit-options-and-review-evidence.md), 짓는 방식 프리셋은 [ADR-034](ADR-034-composition-modes.md)가 잇는다.
 
 ## Date
 2026-10-12
@@ -200,6 +209,9 @@ v1.1 §25.16 절차(어댑터·진단·전환 기간 뒤 제거)를 따른다.
 
 받는 쪽 JS 없이 보이는 원소 재료 HTML은 두 길이다(2026-10-12 정정, [ADR-027](ADR-027-static-element-face.md)).
 
+> 2026-10-31 표시: 기본 배치는 2026-10-15부터 세벌식 `sebul-cases-v1`이고([ADR-028](ADR-028-sebeol-cases-and-jikgyeol.md)), 2026-10-17부터
+> 노드마다 적던 도장은 코어 CSS의 모양 값으로 바뀌었다([ADR-030](ADR-030-one-engine-glyph-shapes.md)). 네 언어 렌더러가 원소 획 표를 붙이는 길은 그대로다.
+
 - **기본 배치(세벌 고정)는 네 언어 정적 렌더러가 직접 낸다.** 세벌 고정에서는 자모 노드의 변환이 도장 배율 하나(`scale(sx, sy)`)라
   굵기 보정(`balanceElementStrokes`)이 계산된 변환에서 재던 값이 도장 표만으로 정해진다 — "배치에 브라우저가 필요하다"는 이 배치에서는
   맞지 않았다. 생성기가 획을 런타임 문자열로 굽고(원소 획 표, 런타임 정답 `spec/element-layer.json`), 렌더러는 붙이기만 한다.
@@ -287,6 +299,7 @@ v1.1 §25.16 절차(어댑터·진단·전환 기간 뒤 제거)를 따른다.
   [ADR-018](ADR-018-stroke-depth.md), [ADR-013](ADR-013-vector-jamo.md), [ADR-008](ADR-008-font-contract-v2.md), [ADR-003](ADR-003-accessibility-contract.md)
 
 ## Change Log
+- 2026-10-31: Accepted (부분) — 구현·병합한 §1–§13의 결정을 수용하고 남은 제안을 Status에 나열했다(PLAN-DOCS-001 문서 정비). §11에 기본 배치(ADR-028)와 도장 경로(ADR-030)가 바뀐 표시
 - 2026-10-18: §5의 "규칙·binding이 고른 조립식은 재료 없이도 따른다"가 원소 재료 출력과 다름을 확인(ㅎ `hieut-circle-o`를 골라도 원소는 세 획 그대로, [노트](../NOTES/composition-options-2026-10-18.md)). 고침과 나누기·조립식을 묶어 고르는 프리셋은 [ADR-034](ADR-034-composition-modes.md)
 - 2026-10-13: §2 디자인은 JSON 데이터 — 자기를 가리키는 고리·BigInt는 `DESIGN_NOT_OBJECT`(path는 그 자리) 하나로, `validateDesign`과 `registerDesign`이
   같은 오류를 낸다(전에는 검증은 ok, 등록은 revision 직렬화에서 code 없는 스택 넘침). §12 줄 끝을 지나 끌어 놓기·묶음당 선택 한 번 읽기

@@ -331,7 +331,8 @@
    * 노드 상자에 갇혀 네모로 잘린다. 굵기 보상 외곽선(0.04em)도 필요 없어 font 기본으로 돌린다.
    * 받침 없는 m 자리 꼭지는 0.29em에서 시작한다(막대 위로 0.14em, 2026-10-21) — 예전 0.333em(0.10em)은 16–24px에서
    * 1–2px라 소/스·노/느가 같은 꼴이었다(헷갈리는 짝 감사). 기본 배치 records-2의 문턱(0.14em)과 같은 원칙이다. 초성 밑이
-   * 꼭지 자리까지 내려오는 ㄹ·ㅌ(0.30em)은 context 레이어가 예전 자리에 둔다. */
+   * 꼭지 자리까지 내려오는 ㅇ·ㅎ·ㄹ·ㅌ은 context 레이어가 초성을 세로로 줄여 밑을 다른 초성 밑선(0.25em)에 맞춘다.
+   * 내림획이 꼭지와 같은 열에 서는 ㄲ + ㅗ·ㅛ, ㄱ·ㅋ + ㅛ는 내림획을 0.25em에서 자른다(2026-10-23). */
   :where([data-fy-font="sebul"]) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-top: -14.9%;
     --fy-m-scale-y: 1.083;
@@ -411,14 +412,37 @@
 }
 
 @layer font-kku.context {
-  /* ㅇ/ㅎ 초성 + ㅗ/ㅛ — 링이 길어(받침 글자의 tt ㅇ 끝 0.293em) 막대를 [0.357,0.457]로 조금
-   * 내리고, 꼭지는 링 아랫선(0.343 / 0.26em)에서 시작하게 위쪽만 자른다. 세로 배율(두께)은
-   * 자모 규칙 그대로다. */
-  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄋ"], [data-fy-jamos~="ᄒ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"]):is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
-    --fy-m-top: -14.12%;
-    --fy-m-clip: inset(46.9% -1em -1em -1em);
+  /* ㅇ/ㅎ 초성 + 받침 있는 ㅗ/ㅛ — 링이 길어(받침 글자의 tt ㅇ 끝 0.293em) 막대를 [0.357,0.457]로 조금
+   * 내리고, 꼭지는 링 아랫선(0.26em)에서 시작하게 위쪽만 자른다. 세로 배율(두께)은 자모 규칙 그대로다. */
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄋ"], [data-fy-jamos~="ᄒ"]) [data-fy-pos="mt"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-mt-top: -21.53%;
     --fy-mt-clip: inset(47.7% -1em -1em -1em);
+  }
+  /* 초성 + 받침 없는 ㅗ/ㅛ — 초성 밑이 꼭지 자리(막대 위 0.14em)까지 내려오는 ㅇ·ㅎ·ㄹ·ㅌ은 초성을 세로로 줄여 밑을
+   * 다른 초성 밑선(ㄴ·ㅅ 0.245–0.255em)에 맞추고, 꼭지는 일반 ㅗ처럼 막대 위 0.14em(0.29em)에서 시작한다(2026-10-23).
+   * 예전에는 초성을 그대로 두고 꼭지를 0.10em만 남겨(ㅇ·ㅎ은 막대도 0.01em 내림) 16–24px에서 1–2px 토막이
+   * 초성 밑에 붙어 오/으·로/르·토/트·호/흐가 같은 꼴이었다(헷갈리는 짝 감사). 윗선은 그대로 두고 줄인다 —
+   * ㅇ은 세로로 긴 고리(0.345 × 0.43em)가 둥근 고리(0.345 × 0.345em)가 된다. ㄹ·ㅌ도 밑을 0.25em에 맞춘다(2026-10-23 둘째) —
+   * 처음에는 가로획 셋 사이 틈을 아껴 덜 줄이고(밑 0.26–0.265em) 꼭지를 0.30em에서 시작했으나(따로 둔 m-clip 44%) 꼭지가
+   * 0.13em라 Firefox 100px에서 12px로 탐침 문턱(records-14)과 같았다. 이제 꼭지는 노·도와 같은 자리(일반 ㅗ 규칙)다.
+   * 르·트·으·흐(ㅡ)·우·루(ㅜ)의 초성과 받침 있는 롱·옹은 그대로다.
+   * 원소 재료는 줄여도 획 굵기를 되돌린다 — 다만 ㄹ·ㅌ은 가로획 셋 사이 틈이 좁아 밀도 굵기 계수가 틈(0.0575em)을 지키고 획을
+   * 가늘게 한다(르의 ㄹ 0.100em → 로 0.090em, 트 0.101 → 토 0.088). 기기 글꼴 재료는 가로획이 7–18% 가늘어진다(획 굵기 감사 통과). */
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄋ"] {
+    --fy-t-top: -20.2%;
+    --fy-t-scale-y: 1.229;
+  }
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄒ"] {
+    --fy-t-top: -21.27%;
+    --fy-t-scale-y: 0.724;
+  }
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄅ"] {
+    --fy-t-top: -23.94%;
+    --fy-t-scale-y: 0.797;
+  }
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-at-m]:is([data-fy-at-m="ᅩ"], [data-fy-at-m="ᅭ"]) [data-fy-pos="t"][data-jamo="ᄐ"] {
+    --fy-t-top: -24.89%;
+    --fy-t-scale-y: 0.824;
   }
 
   /* ㄱ/ㅋ 초성 + ㅗ/ㅛ — J의 고/곡은 기둥이 길게 올라가 ㄱ 내림획과 나란히 선다
@@ -435,10 +459,10 @@
   /* 인터리브는 기둥 하나가 ㄱ 속 빈자리에 설 때만 성립한다. ㅛ의 오른 기둥은 ㄱ 내림획과,
    * ㄲ 속 ㅗ 기둥은 앞 ㄱ 내림획과 포개진다(쿅 26%, 굑 20%, 쿄 23%, 꼬 18%). 두꺼운 bar는
    * 두고 기둥 윗부분만 잘라 초성 밑에서 시작하게 한다 — 같은 specificity라 위 규칙 뒤에 둔다.
-   * 자를 y — 받침 없음 0.343em, 받침 0.227em(노드 원점·배율은 위 ㄱ 문맥 규칙). */
-  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄁ"], [data-fy-jamos~="ᄏ"]) :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅭ"],
-  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"] :is([data-fy-pos="m"], [data-fy-pos="mt"])[data-jamo="ᅩ"] {
-    --fy-m-clip: inset(47.4% -1em -1em -1em);
+   * 받침 자리(mt)만 여기서 자른다 — 자를 y 0.227em(노드 원점·배율은 위 ㄱ 문맥 규칙). 받침 없는 m 자리는 아래 ㄲ·ㄱ·ㅋ 규칙이
+   * 내림획을 자르고 꼭지를 0.29em에서 시작한다(2026-10-23 전에는 여기서 0.343em에서 잘랐다). */
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄁ"], [data-fy-jamos~="ᄏ"]) [data-fy-pos="mt"][data-jamo="ᅭ"],
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"] [data-fy-pos="mt"][data-jamo="ᅩ"] {
     --fy-mt-clip: inset(47.5% -1em -1em -1em);
   }
   /* ㄲ 초성 + 받침 없는 ㅗ/ㅛ — 앞 ㄱ 내림획(x 0.35–0.45em)이 꼭지와 같은 열에서 막대 0.03em 위(0.40em)까지 내려와
@@ -451,9 +475,15 @@
   :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos][data-fy-jamos~="ᄁ"] [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
     --fy-m-clip: inset(42.5% -1em -1em -1em);
   }
-  /* ㄹ·ㅌ 초성 + 받침 없는 ㅗ/ㅛ — 초성 밑획이 0.30–0.305em까지 내려온다. 꼭지는 예전 자리(0.333em)에서 시작해 밑획과 띄운다 */
-  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄅ"], [data-fy-jamos~="ᄐ"]) [data-fy-pos="m"]:is([data-jamo="ᅩ"], [data-jamo="ᅭ"]) {
-    --fy-m-clip: inset(46.8% -1em -1em -1em);
+  /* ㄱ·ㅋ 초성 + 받침 없는 ㅛ — ㅛ 오른 꼭지가 ㄱ·ㅋ 내림획과 같은 열이라 내림획(막대 0.05em 위까지)에 가렸다 — 교가 그로,
+   * 쿄가 크로 읽혔다. ㅗ(고·코)는 꼭지 하나가 ㄱ 속 빈자리에 서지만 ㅛ는 그럴 수 없으니 ㄲ + ㅗ·ㅛ와 같이 내림획을 다른
+   * 초성 밑선(0.25em)에서 자르고 꼭지 둘을 0.29em(막대 위 0.16em)에서 시작한다(2026-10-23). ㅋ은 가운데 가로획 아래 다리가
+   * 0.025–0.045em 남는다 */
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄏ"])[data-fy-at-m][data-fy-at-m="ᅭ"] [data-fy-pos="t"]:is([data-jamo="ᄀ"], [data-jamo="ᄏ"]) {
+    --fy-t-clip: inset(-1em -1em 48.6% -1em);
+  }
+  :where([data-fy-font="sebul"]) [part="glyph"][data-fy-jamos]:is([data-fy-jamos~="ᄀ"], [data-fy-jamos~="ᄏ"]) [data-fy-pos="m"][data-jamo="ᅭ"] {
+    --fy-m-clip: inset(42.5% -1em -1em -1em);
   }
 
   /* ㄱ/ㄲ/ㅋ 초성 + ㅖ — 두 팔이 초성 내림획(x ≈0.46em)을 뚫는다(곗 19%, 계 18%).
