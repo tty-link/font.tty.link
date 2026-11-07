@@ -1169,6 +1169,13 @@ def assert_landing_problems(page, url: str, label: str) -> None:
 
     # 칸을 직접 그으면 'landing-draw' 세트가 등록되고, 바뀐 글자 수를 세고, 내 페이지 코드가 그 칸을 담는다
     page.locator("[data-maker]").scroll_into_view_if_needed()
+    # 칸에 커서를 올리면 그 칸으로 짓는 자모(ㅅ → ㅈ·ㅊ)와 그 칸이 든 글자 수가 보이고, 떼면 안내로 돌아간다
+    page.hover("[data-maker-cell='ㅅ']")
+    page.wait_for_function(
+        """() => { const t = document.querySelector('[data-maker-derive]').textContent; return t.startsWith('ㅅ 칸으로 짓는 자모') && /ㅈ/.test(t) && /\\d,\\d{3}자/.test(t); }"""
+    )
+    page.mouse.move(0, 0)
+    page.wait_for_function("() => document.querySelector('[data-maker-derive]').textContent.startsWith('칸을 누르면')")
     page.click("[data-maker-cell='ㄱ']")
     page.wait_for_selector("[data-maker-pad]:not([hidden])")
     box = page.locator("[data-maker-canvas]").bounding_box()
@@ -1211,18 +1218,21 @@ def assert_landing_problems(page, url: str, label: str) -> None:
     )
     page.click("[data-maker-set='claude-marker-1']")
 
-    # 씨앗 변주: 같은 AI 마커 세트로 그린 글자(음절) 노드 넷에 화면의 6줄을 그대로 돌린다 — 글꼴은 같고
-    # 흔드는 단위만 자모와 다르다. 이름 씨앗은 두 번 그려도 씨앗값이 같다
+    # 씨앗 변주: 한 무대를 변주 끔(씨앗 속성과 .k-hand를 뗀다 — 네 글자가 같다)·켬으로 토글한다. 이름 씨앗은 두 번 그려도 씨앗값이 같다
     page.locator("#vary").scroll_into_view_if_needed()
     page.wait_for_function(
-        """() => { const g = [...document.querySelectorAll('[data-vary-js] [part~="glyph"]')];
-          return g.length === 4 && g.every((n) => /deg$/.test(n.style.rotate)); }"""
+        """() => { const h = document.querySelector('[data-vary-host]'); return h.getAttribute('jamo-set') === 'claude-marker-1' && h.dataset.fyJamoSeeds === 'true'
+          && h.querySelectorAll('[part~="glyph"]').length === 4; }"""
     )
-    jitter = page.evaluate(
-        """() => [document.querySelector('[data-vary-js]').getAttribute('jamo-set'), document.querySelector('[data-vary-js-code]').textContent.split('\\n').length]"""
+    page.click("[data-vary-mode='off']")
+    page.wait_for_function(
+        """() => { const h = document.querySelector('[data-vary-host]'); return !h.hasAttribute('jamo-seeds') && !h.classList.contains('k-hand')
+          && document.querySelector('[data-vary-mode="off"]').getAttribute('aria-pressed') === 'true'; }"""
     )
-    if jitter != ["claude-marker-1", 6]:
-        raise AssertionError(f"{label}: the per-syllable JS jitter should run the 6 lines it shows on the same AI set {jitter!r}")
+    page.click("[data-vary-mode='on']")
+    page.wait_for_function(
+        """() => { const h = document.querySelector('[data-vary-host]'); return h.hasAttribute('jamo-seeds') && h.classList.contains('k-hand') && h.dataset.fyJamoSeeds === 'true'; }"""
+    )
     page.wait_for_function("() => document.querySelector('[data-name-check]').textContent.startsWith('✓')")
     page.click("[data-vary-fix]")
     fixed = page.evaluate("""() => { const h = document.querySelector('[data-vary-host]'); const seed = h.getAttribute('seed'); const code = document.querySelector('#vary-code').textContent;

@@ -237,6 +237,47 @@
     });
   }
 
+  // ── 칸에 커서를 올리면: 그 칸으로 짓는 자모와 그 칸이 든 글자 수 ─────────
+  /* "8칸으로 어떻게 11,172자가 나오나"의 답을 증명 보기(자모 지도)를 펼치기 전에 칸 위에서 보인다. 짓는 자모는 조립 계획(deps)에서
+   * 그 칸을 쓰는 초성·중성이고, 글자 수는 칸마다 글자 수(affected)와 같은 셈이다. 그리기 모드에서 칸을 아직 하나도 긋지 않았으면
+   * 세트가 비어 셀 수 없다 — 안내만 둔다 */
+  var deriveOut = $("[data-maker-derive]", maker);
+  var DERIVE_DEFAULT = deriveOut ? deriveOut.textContent : "";
+  function derivedJamo(setName, key) {
+    var d = deps(setName);
+    var out = [];
+    CHO.forEach(function (j, i) { if (j !== key && (d.cho[i].cho[key] || d.cho[i].bar[key])) out.push(j); });
+    JUNG.forEach(function (j, i) { if (j !== key && d.jung[i][key]) out.push(j); });
+    return out;
+  }
+  function showDerive(key) {
+    if (!deriveOut) return;
+    if (!key || (state.mode === "draw" && !Object.keys(currentCells()).length)) {
+      deriveOut.textContent = DERIVE_DEFAULT;
+      return;
+    }
+    var setName = currentSet();
+    var list = derivedJamo(setName, key);
+    var label = key === "ㆍ" ? "짧은 획" : key;
+    deriveOut.innerHTML = "<strong>" + label + " 칸</strong>" +
+      (list.length ? "으로 짓는 자모 " + list.map(function (j) { return "<b>" + j + "</b>"; }).join(" ") : "은 그대로 쓰입니다") +
+      " · 이 칸이 든 글자 <strong>" + num(affected(setName, key)) + "</strong>자 — 누르면 이 칸을 고칩니다";
+  }
+  if (deriveOut) {
+    cellsMount.addEventListener("pointerover", function (event) {
+      var cell = event.target.closest("[data-maker-cell]");
+      if (cell) showDerive(cell.getAttribute("data-maker-cell"));
+    });
+    cellsMount.addEventListener("pointerleave", function () { showDerive(null); });
+    cellsMount.addEventListener("focusin", function (event) {
+      var cell = event.target.closest("[data-maker-cell]");
+      if (cell) showDerive(cell.getAttribute("data-maker-cell"));
+    });
+    cellsMount.addEventListener("focusout", function (event) {
+      if (!cellsMount.contains(event.relatedTarget)) showDerive(null);
+    });
+  }
+
   // ── 따라 그리는 바탕 요소 ─────────────────────────────────────
   var host = $("[data-maker-host]", maker);
 
