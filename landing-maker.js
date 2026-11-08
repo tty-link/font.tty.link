@@ -1,8 +1,10 @@
-/* 소개의 '8칸 만들기' — 히어로 데모와, 그 세트를 따라 그리는 '하나 · 직접 만드는 한글 글꼴'·'다섯 · 내 페이지에 쓰기'.
+/* 소개의 '8칸 만들기' — 글꼴 바(세트 탭)와 무대(8칸·큰 문장), 그 세트를 따라 그리는 증명(자모 지도·칸마다 글자 수·11,172자)과
+ * '5 · 내 페이지에' 코드. [data-maker]는 main 전체라 글꼴 바가 페이지를 따라다닌다.
  *
- * 세트는 src/landing-ai-sets.js가 AI 답 HTML 그대로 등록한 칸 계약 그림 세트(frame: "box")다. 히어로에서 세트를 고르거나
+ * 세트는 src/landing-ai-sets.js가 AI 답 HTML 그대로 등록한 칸 계약 그림 세트(frame: "box")다. 글꼴 바에서 세트를 고르거나
  * 칸을 직접 그으면(직접 그리기 = 고른 세트를 복사한 'landing-draw' 세트를 registerJamo로 다시 등록) [data-follow-set]
- * 바탕 요소(히어로 제목 둘째 줄 포함)가 모두 그 세트로 다시 그려진다.
+ * 바탕 요소(페이지 제목·구획 제목·견본)가 모두 그 세트로 다시 그려진다. 다른 구획은 window.FontKkuLanding.on으로 따라온다
+ * (src/landing-sections.js).
  *
  * 그린 칸은 이 브라우저(localStorage 'font-kku:landing-draft')에 남아 다시 와서 '✎ 이어 그리기'로 연다. 작업실로 넘길 때는
  * 'font-kku:studio-handoff'에 칸을 남기고 font-studio.html#draw로 간다 — 작업실이 한 번 읽고 지운다(font-studio-draw.js).
@@ -465,9 +467,18 @@
 
   /* 좁은 화면에서는 그리기 칸(위)과 문장(아래)이 세로로 놓인다. 둘이 한 화면에 들어가면 둘 다 보이게 옮겨, 한 획을 그을
    * 때마다 문장이 바뀌는 것을 보며 그린다. 안 들어가면 그리기 칸만 다 보이게 */
+  /* 화면 위에 붙어 있는 것(머리말·글꼴 바)의 아래 끝 — 그 아래가 보이는 자리다 */
+  function stuckBottom() {
+    var bottom = 0;
+    [".k-header", ".k-fontbar"].forEach(function (selector) {
+      var node = $(selector);
+      if (node && getComputedStyle(node).position !== "static") bottom = Math.max(bottom, node.getBoundingClientRect().bottom);
+    });
+    return bottom;
+  }
+
   function revealPad() {
-    var header = $(".k-header");
-    var top = header && getComputedStyle(header).position !== "static" ? header.getBoundingClientRect().bottom : 0;
+    var top = stuckBottom();
     var room = window.innerHeight - top;
     var cv = canvas.getBoundingClientRect();
     var stage = $("[data-maker-stage]", maker).getBoundingClientRect();
@@ -481,6 +492,8 @@
     } else if (cv.top < top + margin) {
       by = cv.top - top - margin;
     }
+    /* 무대를 다 보이려고 내려도 8칸 줄이 붙은 머리말·글꼴 바 밑으로 들어가지는 않게 — 어느 칸을 고치는지 보여야 한다 */
+    if (by > 0) by = Math.min(by, Math.max(0, cellsMount.getBoundingClientRect().top - top - margin));
     /* 바로 옮긴다 — 부드럽게 옮기면 옮기는 사이에 그은 획이 엇나간다. site.css의 html { scroll-behavior: smooth }를
      * 따르지 않게 instant를 밝힌다(모르는 브라우저는 그냥 옮긴다) */
     if (Math.abs(by) > 1) jumpTo(window.scrollY + by);
@@ -823,9 +836,9 @@
   /* 사례·글꼴 페이지의 '8칸 그리러 가기'가 여기로 온다. 데모로 옮기고 '✎ 직접 그리기'(남겨 둔 그림이 있으면 '이어 그리기')를
    * 누른 것처럼 그리기 칸을 연다. #maker는 id라 브라우저가 옮긴다 — 둘 다 landing.css의 scroll-margin-top으로 붙은 머리말 아래 */
   var DRAW_HASH = "#maker-draw";
+  /* 8칸 줄을 붙은 머리말·글꼴 바 바로 아래에 세운다 — [data-maker]는 main 전체라 그 위치로는 옮길 수 없다 */
   function toMaker() {
-    var margin = parseFloat(getComputedStyle(maker).scrollMarginTop) || 0;
-    jumpTo(window.scrollY + maker.getBoundingClientRect().top - margin);
+    jumpTo(window.scrollY + cellsMount.getBoundingClientRect().top - stuckBottom() - 12);
     revealPad();
   }
   function followHash() {
@@ -842,11 +855,23 @@
   syncDrawTab();
   applyHeroOptions();
   if (followHash()) {
-    /* 위쪽 글꼴이 다 그려지기 전에 옮겼다면, 그동안 사용자가 움직이지 않았을 때만 다시 맞춘다 */
-    var landedAt = window.scrollY;
-    window.addEventListener("load", function () {
-      if (location.hash === DRAW_HASH && Math.abs(window.scrollY - landedAt) < 2) toMaker();
-    }, { once: true });
+    /* 위쪽 제목이 다 그려지기 전에 옮겼다면 8칸 줄이 아래로 밀리고, 브라우저도 그때 스크롤을 스스로 고친다(scroll anchoring).
+     * 잠깐 동안 다시 맞추되, 사용자가 손을 댄(휠·터치·키·포인터) 뒤에는 건드리지 않는다 */
+    var userMoved = false;
+    ["wheel", "touchstart", "keydown", "pointerdown"].forEach(function (type) {
+      window.addEventListener(type, function () { userMoved = true; }, { passive: true, once: true });
+    });
+    var settle = function () {
+      if (location.hash !== DRAW_HASH || userMoved) return false;
+      toMaker();
+      return true;
+    };
+    window.addEventListener("load", settle, { once: true });
+    var settleTries = 0;
+    var settleTimer = setInterval(function () {
+      settleTries += 1;
+      if (!settle() || settleTries >= 12) clearInterval(settleTimer);
+    }, 200);
   } else {
     intro();
   }
