@@ -230,18 +230,20 @@ def assert_demo(page, label: str) -> None:
         if not bundle.startswith("---\nname: font-kku-use") or len(parts) != 10 or "# 붙이기 — 스크립트 한 줄과 속성" not in bundle:
             raise AssertionError(f"{label}: the copied guide should be SKILL.md plus its 10 topic files, got {parts!r}")
 
-    # 히어로의 세 갈래: 작업실 그리기 탭으로 바로(#draw), AI에게 맡길 문장 복사(→ #ai), 내 페이지에 쓰는 코드(#web).
-    # 제목은 고정 문장 하나다 — 무작위로 바꿔 치는 타자 제목은 없다
+    # 히어로의 두 갈래: 작업실 그리기 탭으로 바로(#draw), AI에게 맡기기(→ #ai). 제목은 고정 문장 하나다 — 무작위로 바꿔 치는
+    # 타자 제목은 없다. 글꼴 바(세트 탭)는 머리말 아래 붙어 페이지를 따라다닌다
     hero = page.evaluate(
         """() => ({
           links: [...document.querySelectorAll('.k-land-actions a')].map((a) => a.getAttribute('href')),
-          prompt: document.querySelector('.k-land-actions [data-copy-prompt]')?.getAttribute('data-copy-prompt'),
           title: [...document.querySelectorAll('#hero-title .font-kku')].map((h) => h.dataset.source).join(' '),
-          typing: document.querySelectorAll('[data-hero-type], .k-hero-ghost').length,
+          typing: document.querySelectorAll('[data-hero-type], .k-hero-ghost, .k-intro').length,
+          bar: getComputedStyle(document.querySelector('.k-fontbar')).position,
+          tabs: [...document.querySelectorAll('.k-fontbar [data-maker-set]')].map((b) => b.dataset.makerSet),
         })"""
     )
-    if hero != {"links": ["./font-studio.html#draw", "#web"], "prompt": "#ai", "title": "8칸만 그리면, 세상에 없던 한글 글꼴", "typing": 0}:
-        raise AssertionError(f"{label}: the hero should lead to drawing, the AI prompt and the page code under one fixed title {hero!r}")
+    if hero != {"links": ["./font-studio.html#draw", "#ai"], "title": "8칸만 그리면 세상에 없던 한글 글꼴", "typing": 0, "bar": "sticky",
+                "tabs": ["claude-marker-1", "claude-balloon-2", "claude-pen-1", "draw"]}:
+        raise AssertionError(f"{label}: the hero should lead to drawing and the AI section under one fixed title, with the sticky font bar {hero!r}")
 
     # 랜딩은 한 줄 설치로 런타임·바탕 CSS·세벌(data-fonts="sebul" — 글꼴을 비운 기본 세벌식도 이 CSS 위에 짓는다)과
     # 꾸밈·움직임 확장만 미리 받는다. 다른 글꼴은 그 글꼴을 쓰는 요소가 화면 가까이 올 때 런타임이 CSS 한 장씩 받는다
@@ -256,9 +258,12 @@ def assert_demo(page, label: str) -> None:
     first = profile_links()
     if not first or first[0] != "font-kku.css" or "sebul.css" not in first or len(first) > 8 or "pixel.css" in first:
         raise AssertionError(f"{label}: the landing should fetch only a few font CSS files up front {first!r}")
-    page.locator("[data-fxgrid]").scroll_into_view_if_needed()
+    # 특장점 타일 열 개 — 타일마다 살아 있는 견본 하나(평문 2줄 타일은 런타임 renderText가 푼 두 줄)
+    page.locator("[data-tiles]").scroll_into_view_if_needed()
     page.wait_for_function(
-        """() => [...document.querySelectorAll('[data-fxgrid] font-kku')].every((host) => host.querySelector('[part~="glyph"]'))""",
+        """() => document.querySelectorAll('[data-tiles] > .k-tile').length === 10
+          && [...document.querySelectorAll('[data-tiles] font-kku')].every((host) => host.querySelector('[part~="glyph"]'))
+          && document.querySelector('[data-plain-sample]').textContent.split('\\n').length === 2""",
         timeout=15000,
     )
     if page.evaluate("document.querySelectorAll('style[data-font-kku-loader]').length") != 0:
@@ -359,21 +364,18 @@ def assert_demo(page, label: str) -> None:
     if element_host.get_attribute("data-fy-upgraded") != "true" or element_host.get_attribute("data-fy-expression") != "sebeol":
         raise AssertionError(f"{label}: the hero custom element was not upgraded in 세벌 expression mode")
 
-    decorator_host = page.locator("#make-title .font-kku").first
+    decorator_host = page.locator("#fix-title .font-kku").first
     if decorator_host.get_attribute("data-fy-host") != "decorator":
         raise AssertionError(f"{label}: decorator mode host not marked correctly")
     if decorator_host.get_attribute("data-fy-expression") != "sebeol" or decorator_host.get_attribute("data-fy-layout") != "sebul-cases-v1":
         raise AssertionError(f"{label}: section titles should draw in the default 세벌식")
 
-    # 하나: 글꼴 모양 × 재료 — 세 모양(줄) × 세 재료(칸)가 CSS 한 줄씩만 달리 그대로 그려진다. 그린 8칸 칸은 고른 세트를 따라간다
-    shape_grid = page.evaluate(
-        """() => [...document.querySelectorAll('.k-shape-table tbody tr')].map((row) =>
-          [...row.querySelectorAll('font-kku')].map((host) => [host.dataset.fyLayout, host.dataset.fyFace, host.dataset.fyLayoutStatus || null]))"""
+    # 넷: 글꼴 모양 × 재료 타일 — 세 모양이 CSS 한 줄씩만 달리 같은 그린 8칸(svg 재료)으로 그려진다
+    shape_row = page.evaluate(
+        """() => [...document.querySelectorAll('[data-shape] font-kku')].map((host) => [host.dataset.fyLayout, host.dataset.fyFace, host.dataset.fyLayoutStatus || null])"""
     )
-    want_grid = [[[layout, face, None] for face in ("element", "svg", "device")]
-                 for layout in ("sebul-cases-v1", "sebul-fixed-v1", "square-context-v1")]
-    if shape_grid != want_grid:
-        raise AssertionError(f"{label}: the shape × material grid should draw every layout with every material {shape_grid!r}")
+    if shape_row != [[layout, "svg", None] for layout in ("sebul-cases-v1", "sebul-fixed-v1", "square-context-v1")]:
+        raise AssertionError(f"{label}: the shape tile should draw every layout with the drawn cells {shape_row!r}")
     compose = page.evaluate(
         """() => [...document.querySelectorAll('[data-compose] font-kku')].map((host) => [host.dataset.fyComposition, host.dataset.fyCompositionStatus || null,
           [...host.querySelector('[part~="glyph"]').querySelectorAll('[part~="jamo"]')].length])"""
@@ -1125,8 +1127,8 @@ LANDING_SETS = ("claude-marker-1", "claude-marker-2", "claude-brush-1", "claude-
 def assert_landing_problems(page, url: str, label: str) -> None:
     """소개 '8칸 만들기'와 그 증명(PRD-USE-001): AI 답 세트가 원형 8칸 그대로 등록되고 문장의 자모가 모두 그 8칸에서
     나온다, 칸 하나가 들어가는 글자 수(ㄱ 3,444자)를 조립 계획으로 센다, 칸을 직접 그으면 그 자모가 든 글자가 바뀌고
-    '내 페이지에 쓰기' 코드가 따라온다, 자모 지도 41칸, 씨앗 변주(같은 AI 세트의 글자 노드에 6줄 JS 흔들기 · 이름 씨앗), NFD 대조, 좁은 화면 넘침 없음.
-    서버에서는 11,172자를 모두 그려 자모 노드가 모두 8칸에서 왔는지도 센다."""
+    '내 페이지에' 코드가 따라온다, 자모 지도 41칸, 칸 하나를 고치면(ㅅ 칸만 바꾼 세트에서 그 칸의 획만 빨갛다), AI 느낌 칩,
+    좁은 화면 넘침 없음. 서버에서는 11,172자를 모두 그려 자모 노드가 모두 8칸에서 왔는지도 센다."""
     page.goto(url, wait_until="load")
     page.wait_for_function("() => document.querySelectorAll('[data-maker-cells] [data-maker-cell]').length === 8")
     # AI 답(landing-ai-sets.js)은 답 HTML의 등록 코드를 그대로 돌려 원형 8칸 칸 계약 세트로 등록된다
@@ -1211,41 +1213,40 @@ def assert_landing_problems(page, url: str, label: str) -> None:
         raise AssertionError(f"{label}: a closed stroke should survive, and drawing should offer keep actions and save a draft {kept!r}")
     page.click("[data-maker-set='claude-pen-1']")
     page.wait_for_function("() => document.querySelector('[data-web-host]').getAttribute('jamo-set') === 'claude-pen-1'")
-    # 모양 × 재료 표의 '그린 8칸' 칸도 고른 세트를 따라간다. 짓는 방식 견본은 원소 획 그대로다(8칸 세트에는 ㅘ 칸이 없다)
+    # 글꼴 바로 고른 세트를 구획 제목과 모양 × 재료 타일도 따라간다. 짓는 방식 견본은 원소 획 그대로다(8칸 세트에는 ㅘ 칸이 없다)
     page.wait_for_function(
-        """() => [...document.querySelectorAll('.k-shape-table [data-follow-set]')].every((h) => h.getAttribute('jamo-set') === 'claude-pen-1' && h.dataset.fyFace === 'svg')
+        """() => [...document.querySelectorAll('[data-shape] [data-follow-set], .k-sec-h2 [data-follow-set]')].every((h) => (h.getAttribute('jamo-set') || h.dataset.jamoSet) === 'claude-pen-1' && h.dataset.fyFace === 'svg')
           && [...document.querySelectorAll('[data-compose] font-kku')].every((h) => !h.hasAttribute('jamo-set') && h.dataset.fyFace === 'element')"""
     )
     page.click("[data-maker-set='claude-marker-1']")
 
-    # 씨앗 변주: 한 무대를 변주 끔(씨앗 속성과 .k-hand를 뗀다 — 네 글자가 같다)·켬으로 토글한다. 이름 씨앗은 두 번 그려도 씨앗값이 같다
-    page.locator("#vary").scroll_into_view_if_needed()
+    # 둘 · 칸 하나를 고치면: ㅅ 칸만 바꾼 'landing-fix' 세트로 견본을 다시 그리고, ㅅ 칸으로 그은 획([data-hoek-drawing="ㅅ"])만 빨갛다.
+    # 같이 바뀌는 자모(ㅅ ㅆ ㅈ ㅉ ㅊ …)와 든 글자 수(ㅅ 5,292자)는 조립 계획으로 센다
+    page.locator("#fix").scroll_into_view_if_needed()
+    page.click("[data-fix-variant='sharp']")
     page.wait_for_function(
-        """() => { const h = document.querySelector('[data-vary-host]'); return h.getAttribute('jamo-set') === 'claude-marker-1' && h.dataset.fyJamoSeeds === 'true'
-          && h.querySelectorAll('[part~="glyph"]').length === 4; }"""
+        """() => { const h = document.querySelector('[data-fix-host]'); const t = document.querySelector('[data-fix-caption]').textContent;
+          return h.getAttribute('jamo-set') === 'landing-fix' && h.querySelectorAll('[data-hoek-drawing="ㅅ"]').length >= 6
+            && /ㅅㅆㅈㅉㅊ/.test(t.replace(/\\s+/g, '')) && t.includes('5,292') && document.querySelector('[data-fix-variant="sharp"]').getAttribute('aria-pressed') === 'true'; }"""
     )
-    page.click("[data-vary-mode='off']")
-    page.wait_for_function(
-        """() => { const h = document.querySelector('[data-vary-host]'); return !h.hasAttribute('jamo-seeds') && !h.classList.contains('k-hand')
-          && document.querySelector('[data-vary-mode="off"]').getAttribute('aria-pressed') === 'true'; }"""
+    red = page.evaluate(
+        """() => { const h = document.querySelector('[data-fix-host]'); const red = getComputedStyle(document.querySelector('.k-red')).color;
+          const from = [...h.querySelectorAll('[part~="hoek"]')].map((n) => [n.dataset.hoekDrawing === 'ㅅ', getComputedStyle(n).color === red]);
+          return [from.length > 0, from.every((pair) => pair[0] === pair[1]), document.querySelector('[data-fix-svg]').querySelectorAll('path').length]; }"""
     )
-    page.click("[data-vary-mode='on']")
-    page.wait_for_function(
-        """() => { const h = document.querySelector('[data-vary-host]'); return h.hasAttribute('jamo-seeds') && h.classList.contains('k-hand') && h.dataset.fyJamoSeeds === 'true'; }"""
-    )
-    page.wait_for_function("() => document.querySelector('[data-name-check]').textContent.startsWith('✓')")
-    page.click("[data-vary-fix]")
-    fixed = page.evaluate("""() => { const h = document.querySelector('[data-vary-host]'); const seed = h.getAttribute('seed'); const code = document.querySelector('#vary-code').textContent;
-      return [/^[a-z0-9]{4}$/.test(seed), document.querySelector('[data-vary-seed]').textContent === seed, code.includes('seed="' + seed + '"') && code.includes('jamo-seeds')]; }""")
-    if fixed != [True, True, True]:
-        raise AssertionError(f"{label}: '이 모양 고정' should pin the short seed it shows {fixed!r}")
+    if red != [True, True, 2]:
+        raise AssertionError(f"{label}: only the strokes drawn from the ㅅ cell should turn red, and the big cell should show the variant {red!r}")
 
-    # 자모 단위: NFD로 푼 span(이 브라우저가 실제로 그린 것)과 폰꾸가 입력한 문장을 따라간다
-    page.fill("[data-jamo-form] input", "닉네임 뷁")
-    page.wait_for_function("() => document.querySelector('[data-jamo-host]').dataset.source === '닉네임 뷁'")
-    nfd = page.evaluate("() => [document.querySelectorAll('[data-nfd] span').length, [...document.querySelectorAll('[data-fx-tile]')].every((h) => h.dataset.source === '닉네임 뷁' || h.hasAttribute('data-fx-type'))]")
-    if nfd != [11, True]:
-        raise AssertionError(f"{label}: the NFD comparison and the motion tiles should follow the typed sentence {nfd!r}")
+    # 셋 · AI: 느낌 칩 하나가 프롬프트의 느낌 줄·큰 견본·답 원문 목록의 표시를 함께 고른다
+    page.locator("#ai").scroll_into_view_if_needed()
+    page.click("[data-ai-preset='1']")
+    page.wait_for_function(
+        """() => document.querySelector('[data-answer-host]').getAttribute('jamo-set') === 'claude-brush-1'
+          && document.querySelector('#ai-prompt').textContent.includes('느낌: ' + FontKkuLandingSets.BRUSH)
+          && [...document.querySelectorAll('.k-answer[data-active="true"]')].map((c) => c.dataset.answer).join() === 'claude-brush-1'
+          && document.querySelector('[data-answer-meta]').textContent.includes('고치지 않음')"""
+    )
+    page.click("[data-ai-preset='0']")
 
     # 좁은 화면: 가로 넘침이 없고, 데모(8칸)가 첫 화면 안에 있다
     page.set_viewport_size({"width": 390, "height": 844})
@@ -1272,19 +1273,20 @@ def assert_landing_problems(page, url: str, label: str) -> None:
             raise AssertionError(f"{label}: at {width}x{height} the main button should be fully visible without scrolling {fold!r}")
     page.set_viewport_size({"width": 1280, "height": 720})
 
-    # 다른 페이지의 '8칸 그리러 가기'(index.html#maker-draw): 데모를 머리말 아래로 옮겨 '✎ 직접 그리기'를 연 채로 연다
+    # 다른 페이지의 '8칸 그리러 가기'(index.html#maker-draw): 8칸 줄을 붙은 머리말·글꼴 바 아래로 옮겨 '✎ 직접 그리기'를 연 채로 연다
     jump = page.context.browser.new_page(viewport={"width": 1280, "height": 800})
     try:
         jump.goto(url + "#maker-draw", wait_until="load")
         jump.wait_for_selector("[data-maker-pad]:not([hidden])")
         landed = poll(
             jump,
-            """() => { const m = document.querySelector('#maker').getBoundingClientRect(); const c = document.querySelector('[data-maker-canvas]').getBoundingClientRect();
-              return [document.querySelector('[data-maker-tabs] [aria-selected="true"]').dataset.makerSet, m.top >= 64 && m.top <= 100, c.top >= 0 && c.bottom <= innerHeight]; }""",
+            """() => { const m = document.querySelector('[data-maker-cells]').getBoundingClientRect(); const c = document.querySelector('[data-maker-canvas]').getBoundingClientRect();
+              const stuck = document.querySelector('.k-fontbar').getBoundingClientRect().bottom;
+              return [document.querySelector('[data-maker-tabs] [aria-selected="true"]').dataset.makerSet, m.top >= stuck && m.top <= stuck + 40, c.top >= stuck && c.bottom <= innerHeight]; }""",
             lambda value: value == ["draw", True, True],
         )
         if landed != ["draw", True, True]:
-            raise AssertionError(f"{label}: index.html#maker-draw should land on the maker with the drawing pad open {landed!r}")
+            raise AssertionError(f"{label}: index.html#maker-draw should land on the 8 cells with the drawing pad open below the font bar {landed!r}")
     finally:
         jump.close()
 
