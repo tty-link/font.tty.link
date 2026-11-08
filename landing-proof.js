@@ -3,9 +3,9 @@
  * - AI: 느낌마다 프롬프트(src/landing-ai-sets.js의 프롬프트에 느낌만 바꿔 넣는다)와, 그 프롬프트로 실제로 받은 답(HTML 원문
  *   그대로)을 같은 문장·같은 크기로 나란히 그린 줄. 고른 느낌의 답 줄이 표시된다. 히어로의 'AI에게 맡길 문장 복사'도 여기서
  *   지금 프롬프트를 복사한다.
- * - 씨앗 변주: 같은 AI 마커 세트에 화면에 보인 6줄 그대로 돌린 글자 단위 JS 흔들기와 폰꾸 자모 단위(.k-hand) — 글꼴은 같고
- *   흔드는 단위(음절 대 자모)만 다르다. 씨앗은 짧은 이름으로 정해 옮겨 적기 쉽게 한다. 이름 씨앗 셋은 다시 그려도 자모
- *   씨앗값이 그대로인지 이 브라우저가 견준다.
+ * - 씨앗 변주: 같은 AI 마커 세트의 '깔깔깔깔' 하나를 변주 끔(보통 글꼴처럼 넷이 같다)·켬(자모마다 씨앗, .k-hand)으로
+ *   토글한다. 씨앗은 짧은 이름으로 정해 옮겨 적기 쉽게 한다. 이름 씨앗 셋은 다시 그려도 자모 씨앗값이 그대로인지 이
+ *   브라우저가 견준다.
  * - 자모 단위: 입력한 문장을 NFD로 풀어 span마다 색을 준 것(이 브라우저가 실제로 그린 모습)과 폰꾸를 나란히, 움직임 타일도
  *   입력한 문장으로 다시 그린다.
  * - 덤: examples/index.json에서 사례 수·제목을 읽어, 쓰임이 다른 카드 셋(PICKS)과 모든 사례 제목 한 줄을 그린다. */
@@ -119,25 +119,6 @@
   });
 
   // ── 셋: 씨앗 변주 ───────────────────────────────────────────
-  /* 화면에 보이는 6줄 그대로다 — 이 글을 new Function으로 돌린다. 웹폰트 글에 Splitting.js로 글자마다 span을 씌워 흔드는
-   * 것과 같은 일을, 폰꾸가 같은 AI 마커 세트로 그린 글자(음절) 노드에 한다 — 글꼴은 같고 흔드는 단위만 자모와 다르다.
-   * 색은 바꾸지 않는다(모양 차이만 견준다) */
-  var JS_JITTER = [
-    "// el: 같은 세트로 그린 글 — 글자(음절)마다 통째로",
-    "el.querySelectorAll('[part~=\"glyph\"]').forEach((glyph) => {",
-    "  const r = Math.random;",
-    "  glyph.style.rotate = `${(r() - .5) * 12}deg`;",
-    "  glyph.style.translate = `${(r() - .5) * .06}em ${(r() - .5) * .06}em`;",
-    "});"
-  ].join("\n");
-  var jitter = null;
-  try {
-    /* eslint-disable-next-line no-new-func */
-    jitter = new Function("el", JS_JITTER);
-  } catch (error) {
-    jitter = null;
-  }
-
   /* 짧은 씨앗 이름 — 해석된 숫자 대신 사람이 옮겨 적을 수 있는 네 글자 */
   function shortSeed() {
     var abc = "abcdefghjkmnpqrstuvwxyz23456789";
@@ -148,30 +129,41 @@
 
   var vary = $("[data-vary]");
   if (vary) {
-    var jsRow = $("[data-vary-js]");
-    var jsCode = $("[data-vary-js-code]");
     var varyHost = $("[data-vary-host]");
     var seedOut = $("[data-vary-seed]");
     var codeBox = $("[data-vary-code-box]");
     var code = $("#vary-code code");
-    jsCode.textContent = JS_JITTER;
+    var modeButtons = $$("[data-vary-mode]", vary);
+    var varyOn = true;
 
-    /* 바탕 요소는 화면 가까이 와서야 그려지고, 다시 그리면 글자 노드가 새로 생긴다 — 그릴 때마다 흔든다 */
-    var shake = function () {
-      if (jitter) jitter(jsRow);
-    };
-    jsRow.addEventListener("font-kku:render", shake);
     var reseed = function () {
       var seed = shortSeed();
       varyHost.setAttribute("seed", seed);
       seedOut.textContent = seed;
       return seed;
     };
+    /* 끄면 씨앗 속성을 떼고 .k-hand를 벗긴다(보통 글꼴처럼 네 글자가 같다). 씨앗 이름은 남겨 두어 다시 켜면 같은 모양이다 */
+    var applyMode = function () {
+      varyHost.classList.toggle("k-hand", varyOn);
+      if (varyOn) varyHost.setAttribute("jamo-seeds", "");
+      else varyHost.removeAttribute("jamo-seeds");
+      FK.refresh(varyHost);
+      vary.toggleAttribute("data-vary-off", !varyOn);
+      modeButtons.forEach(function (button) {
+        button.setAttribute("aria-pressed", String((button.getAttribute("data-vary-mode") === "on") === varyOn));
+      });
+    };
 
-    shake();
     reseed();
+    modeButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var want = button.getAttribute("data-vary-mode") === "on";
+        if (want === varyOn) return;
+        varyOn = want;
+        applyMode();
+      });
+    });
     $("[data-vary-reroll]").addEventListener("click", function () {
-      shake();
       reseed();
       codeBox.hidden = true;
     });

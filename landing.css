@@ -46,7 +46,8 @@
 .k-intro-title {
   display: grid;
   margin: 0;
-  color: var(--k-ink);
+  /* 제목 셋이 겨루지 않게 — 띠는 h1보다 작고 옅다(붉은 둘째 줄은 그대로) */
+  color: var(--k-ink-2);
   /* 라틴 글자·숫자('AI', '5,292')는 기기 글꼴로 그린다 — 획 굵기에 맞춰 굵게 */
   font-weight: 700;
 }
@@ -226,6 +227,42 @@
 .k-maker-cell:hover {
   border-color: var(--k-ink);
   transform: translateY(-1px);
+}
+
+/* 눌러서 고칠 수 있다는 표시 — 커서를 올리거나 포커스하면 연필이 보인다 */
+.k-maker-cell::after {
+  content: "✎";
+  position: absolute;
+  inset-inline-start: 0.3rem;
+  inset-block-start: 0.05rem;
+  color: var(--k-muted);
+  font-size: 0.78rem;
+  line-height: 1.2;
+  opacity: 0;
+  transition: opacity 160ms var(--k-ease);
+}
+
+.k-maker-cell:hover::after,
+.k-maker-cell:focus-visible::after {
+  opacity: 1;
+}
+
+/* 칸 아래 한 줄 — 누르면 고친다는 안내, 커서를 올린 칸으로 짓는 자모와 그 칸이 든 글자 수. 두 줄 높이를 잡아 둬 글이 바뀌어도 들썩이지 않는다 */
+.k-maker-derive {
+  margin: -0.35rem 0 0;
+  min-block-size: 2.7em;
+  color: var(--k-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.k-maker-derive strong {
+  color: var(--k-ink);
+}
+
+.k-maker-derive b {
+  font-weight: 700;
+  color: var(--k-red);
 }
 
 .k-maker-cell:focus-visible {
@@ -507,19 +544,37 @@
 
 /* ── 새 판 띠: 히어로와 '하나' 사이 — 0.1.3에서 바뀐 넷 ─────────── */
 .k-new {
-  display: grid;
-  gap: 0.7rem;
-  margin-block: 2.5rem;
-  padding: 1.1rem 1.25rem 1.2rem;
+  margin-block: 1.5rem 2rem;
+  padding: 0.7rem 1.1rem;
   border: 1.5px solid var(--k-ink);
   border-radius: var(--k-radius-sm);
   background: var(--k-paper);
-  box-shadow: 5px 5px 0 var(--k-yellow);
+  box-shadow: 4px 4px 0 var(--k-yellow);
 }
 
 .k-new-title {
   margin: 0;
   font-weight: 800;
+  cursor: pointer;
+}
+
+.k-new-hint {
+  margin-inline-start: 0.5rem;
+  color: var(--k-blue);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.k-new[open] .k-new-hint {
+  display: none;
+}
+
+.k-new[open] > .k-new-title {
+  margin-block-end: 0.8rem;
+}
+
+.k-new > .k-new-list {
+  margin-block-end: 0.7rem;
 }
 
 .k-new-title strong {
@@ -1051,38 +1106,20 @@
   gap: 0.6rem;
 }
 
-.k-vary-row {
-  display: grid;
-  grid-template-columns: 12rem minmax(0, 1fr);
-  gap: 1rem;
-  align-items: center;
-}
-
-.k-vary-row .k-stage {
-  min-block-size: 7.5rem;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.k-vary-row--us .k-stage {
+.k-vary-stage {
+  --fy-element-width: 0.13em;
+  min-block-size: 9rem;
   border: 1.5px solid var(--k-ink);
 }
 
-.k-vary-label {
-  display: grid;
-  gap: 0.1rem;
-  font-weight: 800;
+.k-vary [data-vary-modes] button[aria-pressed="true"] {
+  cursor: default;
 }
 
-.k-vary-label small {
-  color: var(--k-muted);
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.k-vary-color {
-  --fy-element-width: 0.13em;
-  color: #1f4fd1;
+.k-vary [data-vary-mode="on"][aria-pressed="false"] ~ *,
+.k-vary[data-vary-off] :is([data-vary-reroll], [data-vary-fix]) {
+  opacity: 0.45;
+  pointer-events: none;
 }
 
 .k-vary-detail {
@@ -1107,7 +1144,7 @@
 }
 
 /* 그린 세트의 잉크는 글자 상자 위쪽에 몰려 있어 무대 가운데보다 높아 보인다 — 눈대중으로 조금 내린다 */
-:is(.k-vary-row, .k-names) .k-stage font-kku {
+:is(.k-vary-stage, .k-names .k-stage) font-kku {
   translate: 0 0.06em;
 }
 
@@ -1124,6 +1161,14 @@
 
 .k-vary-codes .k-vary-detail {
   margin-block: 0.75rem 0;
+}
+
+/* 영어 구획 제목 — 한글이 없어 기기 글꼴로 */
+.k-h2-plain {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 /* 긴 구획 제목은 두 토막 — 넓으면 한 줄, 좁으면 토막마다 줄을 바꿔 낱말 하나만 남지 않는다 */
@@ -1272,9 +1317,10 @@
 
 /* ── 좁은 화면 ────────────────────────────────────────── */
 @media (max-width: 960px) {
+  /* 데모(8칸)가 증명이라 버튼보다 먼저 — 주 버튼은 데모 아래로 */
   .k-land-hero {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "head" "lead" "actions" "demo";
+    grid-template-areas: "head" "lead" "demo" "actions";
     grid-template-rows: none;
     gap: 0.9rem;
   }
@@ -1289,6 +1335,11 @@
 }
 
 @media (max-width: 720px) {
+  /* 좁은 화면은 소개 띠를 숨긴다 — 같은 뜻을 h1이 말하고, 8칸 데모를 첫 화면에 넣는 것이 먼저다(index.html 띠 주석) */
+  .k-intro {
+    display: none;
+  }
+
   .k-maker {
     padding: 0.75rem;
     box-shadow: 5px 5px 0 var(--k-ink);
@@ -1349,11 +1400,6 @@
 
   .k-land-lead-more {
     display: none;
-  }
-
-  .k-vary-row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.4rem;
   }
 
   .k-jamomap-grid {
